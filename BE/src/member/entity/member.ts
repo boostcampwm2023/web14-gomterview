@@ -1,4 +1,5 @@
 import { DefaultEntity } from 'src/app.entity';
+import { OAuthRequest } from 'src/auth/dto/auth.interface';
 import { Column, Entity } from 'typeorm';
 
 @Entity()
@@ -13,4 +14,17 @@ export class Member extends DefaultEntity {
     length: 1000,
   })
   readonly profileImg: string;
+
+  constructor(
+    id: number,
+    email: string,
+    nickname: string,
+    profileImg: string,
+    createdAt: Date,
+  ) {
+    super(id, createdAt);
+    this.email = email;
+    this.nickname = nickname;
+    this.profileImg = profileImg;
+  }
 }

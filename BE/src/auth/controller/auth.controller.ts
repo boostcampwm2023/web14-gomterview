@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
+import { OAuthRequest } from '../dto/auth.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -15,6 +16,6 @@ export class AuthController {
     @Res() res: Response,
   ): Promise<void> {
     const { user } = req;
-    console.log(user);
+    const userRequest = user as OAuthRequest;
   }
 }
