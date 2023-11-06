@@ -1,21 +1,43 @@
 {
-	"root": true,
-	"parser": "@typescript-eslint/parser",
-	"env": {
-		"browser": true,
-		"node": true
-	},
-	"parserOptions": {
-		"project": ["./tsconfig.json"]
-	},
-	"plugins": ["@typescript-eslint", "prettier"],
-	"extends": [
-		"eslint:recommended", // eslint 기본 추천 규칙
-		"plugin:@typescript-eslint/recommended", // ts 기본 추천 규칙
-		"plugin:@typescript-eslint/recommended-requiring-type-checking", // 타입 정보를 필요로 하는 특정 규칙들 포함
-		"plugin:react/recommended", // 리액트에 필요한 규칙
-		"plugin:react/jsx-runtime", // react를 import 하지 않아도 되도록 인식하는 규칙
-		"plugin:react-hooks/recommended", // react-hooks에 관한 규칙
-		"prettier" // pre
-	]
+  "root": false,
+  "parser": "@typescript-eslint/parser",
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "ignorePatterns": ["webpack.config.js"],
+  "parserOptions": {
+    "project": ["./FE/tsconfig.json"]
+  },
+  "plugins": ["@typescript-eslint", "prettier", "unused-imports"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:react-hooks/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "no-console": "warn",
+    "react/no-unknown-property": ["error", { "ignore": ["css"] }]
+  },
+  "settings": {
+    "react": {
+      "version": "detect" // 자동으로 리액트 버전 감지
+    }
+  }
 }
