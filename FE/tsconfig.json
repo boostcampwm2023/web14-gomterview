@@ -5,7 +5,9 @@
     "esModuleInterop": true, // import시 namespace alias 가능
     "moduleResolution": "node",
     "jsx": "react-jsx",
-    "jsxImportSource": "@emotion/react"
+    "jsxImportSource": "@emotion/react",
+    "strict": true,
+    "noImplicitAny": true
   },
   "include": ["src"]
 }
