@@ -10,7 +10,7 @@ export class MemberRepository {
   ) {}
 
   async save(member: Member) {
-    await this.memberRepository.save(member);
+    return await this.memberRepository.save(member);
   }
 
   async findById(id: number) {
