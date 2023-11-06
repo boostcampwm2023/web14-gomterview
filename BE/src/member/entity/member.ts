@@ -9,6 +9,8 @@ export class Member extends DefaultEntity {
   @Column()
   readonly nickname: string;
 
-  @Column()
+  @Column({
+    length: 1000,
+  })
   readonly profileImg: string;
 }
