@@ -5,7 +5,7 @@ const webpack = require('webpack');
 module.exports = {
   mode: process.env.production === 'true' ? 'production' : 'development',
   devtool: process.env.production === 'true' ? 'hidden-source-map' : 'eval',
-  entry: './src/index.ts',
+  entry: './src/index.tsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
@@ -17,6 +17,19 @@ module.exports = {
     hot: true,
     static: path.resolve(__dirname, 'dist'),
   },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.json'],
+    alias: {
+      // src 폴더를 '@' 별칭으로 설정
+      '@': path.resolve(__dirname, 'src/'),
+      '@components': path.resolve(__dirname, 'src/components/'),
+      '@common': path.resolve(__dirname, 'src/components/common/'),
+      '@foundation': path.resolve(__dirname, 'src/components/foundation/'),
+      '@page': path.resolve(__dirname, 'src/page/'),
+      '@constants': path.resolve(__dirname, 'src/constants/'),
+    },
+  },
+
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html',
@@ -45,8 +58,5 @@ module.exports = {
         },
       },
     ],
-  },
-  resolve: {
-    extensions: ['.js', '.ts', '.jsx', '.tsx'],
   },
 };
