@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { css, Global, ThemeProvider } from '@emotion/react';
-import { theme } from './styles/theme';
+import { theme } from '@styles/theme';
 import _global from '@styles/_global';
 
 const EmotionStyledDiv = styled.div`
