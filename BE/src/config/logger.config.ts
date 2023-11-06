@@ -12,7 +12,7 @@ export class LoggerService implements LS {
       transports: [
         new winston.transports.File({
           level: 'error',
-          filename: `error-${new Date().toLocaleString()}.log`,
+          filename: `error-${getDateForm()}.log`,
           dirname: 'logs',
           maxsize: 5000000,
           format: combine(
@@ -34,7 +34,7 @@ export class LoggerService implements LS {
         }),
 
         new winston.transports.File({
-          filename: `application-${new Date().toLocaleString()}.log`,
+          filename: `application-${getDateForm()}.log`,
           dirname: 'logs',
           maxsize: 5000000,
           format: combine(
@@ -67,3 +67,8 @@ export class LoggerService implements LS {
     this.logger.verbose(message);
   }
 }
+
+const getDateForm = () => {
+  const date = new Date();
+  return `${date.getFullYear()}_${date.getMonth()}_${date.getDate()}`;
+};
