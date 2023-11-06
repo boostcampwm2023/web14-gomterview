@@ -1,4 +1,6 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { Member } from 'src/member/entity/member';
+import 'dotenv/config';
 
 export const MYSQL_OPTION: TypeOrmModuleOptions = {
   type: 'mysql',
@@ -7,7 +9,7 @@ export const MYSQL_OPTION: TypeOrmModuleOptions = {
   username: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE,
-  entities: [],
+  entities: [Member],
   synchronize: true,
   autoLoadEntities: true,
 };
