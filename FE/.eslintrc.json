@@ -1,0 +1,21 @@
+{
+	"root": true,
+	"parser": "@typescript-eslint/parser",
+	"env": {
+		"browser": true,
+		"node": true
+	},
+	"parserOptions": {
+		"project": ["./tsconfig.json"]
+	},
+	"plugins": ["@typescript-eslint", "prettier"],
+	"extends": [
+		"eslint:recommended", // eslint 기본 추천 규칙
+		"plugin:@typescript-eslint/recommended", // ts 기본 추천 규칙
+		"plugin:@typescript-eslint/recommended-requiring-type-checking", // 타입 정보를 필요로 하는 특정 규칙들 포함
+		"plugin:react/recommended", // 리액트에 필요한 규칙
+		"plugin:react/jsx-runtime", // react를 import 하지 않아도 되도록 인식하는 규칙
+		"plugin:react-hooks/recommended", // react-hooks에 관한 규칙
+		"prettier" // pre
+	]
+}
