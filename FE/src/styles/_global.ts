@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-const resetCss = css`
+const _global = css`
   html,
   body,
   div,
@@ -159,4 +159,4 @@ const resetCss = css`
     font-style: normal;
   }
 `;
-export default resetCss;
+export default _global;
