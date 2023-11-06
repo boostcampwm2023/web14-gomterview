@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
-import { css, ThemeProvider } from '@emotion/react';
+import { css, Global, ThemeProvider } from '@emotion/react';
 import { theme } from './styles/theme';
+import resetCss from './styles/resetCss';
 
 const EmotionStyledDiv = styled.div`
   color: red;
@@ -9,6 +10,7 @@ const EmotionStyledDiv = styled.div`
 function App() {
   return (
     <ThemeProvider theme={theme}>
+      <Global styles={resetCss} />
       <div>
         asdfasdfasdfasdfasdfasdfasdf
         <EmotionStyledDiv>hihi</EmotionStyledDiv>Hello
