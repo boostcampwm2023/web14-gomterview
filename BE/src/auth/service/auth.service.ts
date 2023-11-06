@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { MemberRepository } from 'src/member/repository/member.repository';
 import { OAuthRequest } from '../dto/auth.interface';
 import { Member } from 'src/member/entity/member';
+import { isEmpty } from 'class-validator';
 
 @Injectable()
 export class AuthService {
@@ -10,10 +11,11 @@ export class AuthService {
   async login(oauthRequest: OAuthRequest) {
     let member = await this.memberRepository.findByEmail(oauthRequest.email);
 
-    if (isMemberNotFound(member)) {
+    if (isEmpty(member)) {
       member = await this.createMember(oauthRequest);
     }
-    // 3. finally 토큰 반환(일단 json반환)
+
+    return JSON.stringify(member);
   }
 
   private async createMember(oauthRequest: OAuthRequest) {
@@ -27,5 +29,3 @@ export class AuthService {
     return await this.memberRepository.save(member);
   }
 }
-
-const isMemberNotFound = (member: Member | undefined) => member === undefined;
