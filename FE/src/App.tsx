@@ -18,6 +18,8 @@ function App() {
         <div
           css={css`
             color: ${theme.colors.point.primary};
+            font-family: 'Pretendard', serif;
+            font-weight: 600;
           `}
         >
           Styled with Emotion!
