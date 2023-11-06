@@ -15,7 +15,8 @@
       "@common/*": ["./src/components/common/*"],
       "@foundation/*": ["./src/components/foundation/*"],
       "@page/*": ["./src/page/*"],
-      "@constants/*": ["./src/constants/*"]
+      "@constants/*": ["./src/constants/*"],
+      "@styles/*": ["./src/styles/*"]
     }
   },
   "include": ["src"]
