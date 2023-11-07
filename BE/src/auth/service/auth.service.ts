@@ -5,6 +5,8 @@ import { Member } from 'src/member/entity/member';
 import { isEmpty } from 'class-validator';
 import {TokenService} from "../../token/service/token.service";
 
+const BEARER_PREFIX:string = "Bearer ";
+
 @Injectable()
 export class AuthService {
   constructor(private memberRepository: MemberRepository, private tokenService:TokenService) {}
@@ -17,7 +19,7 @@ export class AuthService {
     }
 
 
-    return await this.tokenService.assignToken((member.id));
+    return  BEARER_PREFIX + (await this.tokenService.assignToken((member.id)));
   }
 
   private async createMember(oauthRequest: OAuthRequest) {
