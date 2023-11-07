@@ -1,3 +1,3 @@
 export interface TokenPayload {
-    id:number;
+  id: number;
 }

@@ -1,5 +1,4 @@
 import { DefaultEntity } from 'src/app.entity';
-import { OAuthRequest } from 'src/auth/interface/auth.interface';
 import { Column, Entity } from 'typeorm';
 
 @Entity()

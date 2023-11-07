@@ -4,4 +4,4 @@ interface OAuthRequest {
   img: string;
 }
 
-export {OAuthRequest}
+export { OAuthRequest };
