@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import {Controller, Delete, Get, Post, Req, Res, UseGuards} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import {OAuthRequest} from '../interface/auth.interface';
@@ -29,6 +29,18 @@ export class AuthController {
   ): Promise<void> {
     const { user } = req;
     const userRequest = user as OAuthRequest;
-    res.json({accessToken: await this.authService.login(userRequest)});
+    res.status(201).json({accessToken: await this.authService.login(userRequest)});
+  }
+
+  @Delete('logout')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status:204,
+    description: '로그아웃 api, 회원의 토큰 정보를 db에서 삭제한다.'
+  })
+  async logout(@Req() request:Request, @Res() res: Response){
+    const token = request.header("Authorization").split(" ").pop();
+    await this.authService.logout(token);
+    res.status(204).send();
   }
 }
