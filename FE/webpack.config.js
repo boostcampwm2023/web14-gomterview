@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: process.env.production === 'true' ? 'production' : 'development',
@@ -37,6 +38,9 @@ module.exports = {
       filename: 'index.html',
     }),
     new webpack.HotModuleReplacementPlugin(),
+    new CopyPlugin({
+      patterns: [{ from: 'public/mockServiceWorker.js', to: '' }],
+    }),
   ],
   module: {
     rules: [
