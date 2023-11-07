@@ -8,6 +8,7 @@ import {MemberRepository} from "../member/repository/member.repository";
 import {PassportModule} from "@nestjs/passport";
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import {JwtModule} from "@nestjs/jwt";
+import 'dotenv/config';
 
 @Module({
   imports:[TypeOrmModule.forFeature([Token, Member]),
@@ -16,12 +17,10 @@ import {JwtModule} from "@nestjs/jwt";
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get("JWT_SECRET"),
-        signOptions: {
-          expiresIn: `${configService.get("JWT_EXPIRATION_TIME")}s`,
-        },
+        secret: process.env.JWT_SECRET,
       }),
     }),],
-  providers: [TokenService, TokenRepository, MemberRepository]
+  providers: [TokenService, TokenRepository, MemberRepository],
+  exports: [TokenService]
 })
 export class TokenModule {}
