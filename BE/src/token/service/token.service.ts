@@ -4,6 +4,11 @@ import { MemberRepository } from '../../member/repository/member.repository';
 import { JwtService } from '@nestjs/jwt';
 import { Token } from '../entity/token';
 import { TokenPayload } from '../interface/token.interface';
+import {
+  InvalidTokenException,
+  ManipulatedTokenNotFiltered,
+  TokenExpiredException,
+} from '../exception/token.exception';
 
 const ACCESS_TOKEN_EXPIRES_IN = '1h'; // 1 시간
 const REFRESH_TOKEN_EXPIRES_IN = '7d'; // 7 일
@@ -24,12 +29,12 @@ export class TokenService {
     const memberId = (await this.getPayload(accessToken)).id;
     const token = await this.tokenRepository.findByAccessToken(accessToken);
 
-    if (!token) {
-      throw new Error('토큰 주작');
-    }
-
-    if (!memberId || !(await this.memberRepository.findById(memberId))) {
-      throw new Error('토큰 뚫림 ㅅㄱ');
+    if (
+      !token ||
+      !memberId ||
+      !(await this.memberRepository.findById(memberId))
+    ) {
+      throw new ManipulatedTokenNotFiltered();
     }
 
     await this.tokenRepository.remove(token);
@@ -49,13 +54,13 @@ export class TokenService {
       case 'INVALID_TOKEN':
       case 'TOKEN_IS_ARRAY':
       case 'NO_USER':
-        throw new Error('401 유효하지 않은 토큰입니다.');
+        throw new InvalidTokenException();
 
       case 'EXPIRED_TOKEN':
-        throw new Error('410 토큰이 만료되었습니다.');
+        throw new TokenExpiredException();
 
       default:
-        throw new Error('500 서버 오류입니다.');
+        throw new Error(message);
     }
   }
 
