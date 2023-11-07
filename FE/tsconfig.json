@@ -16,7 +16,8 @@
       "@foundation/*": ["./src/components/foundation/*"],
       "@page/*": ["./src/page/*"],
       "@constants/*": ["./src/constants/*"],
-      "@styles/*": ["./src/styles/*"]
+      "@styles/*": ["./src/styles/*"],
+      "@layout/*": ["./src/layout/*"]
     }
   },
   "include": ["src"]
