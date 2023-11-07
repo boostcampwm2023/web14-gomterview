@@ -1,17 +1,16 @@
-import {BaseEntity, Column, Entity, PrimaryColumn} from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
-export class Token extends BaseEntity{
+export class Token extends BaseEntity {
+  @PrimaryColumn()
+  readonly refreshToken: string;
 
-    @PrimaryColumn()
-    readonly refreshToken:string;
+  @Column()
+  readonly accessToken: string;
 
-    @Column()
-    readonly accessToken:string;
-
-    constructor(refreshToken:string, accessToken:string) {
-        super();
-        this.refreshToken = refreshToken;
-        this.accessToken = accessToken;
-    }
+  constructor(refreshToken: string, accessToken: string) {
+    super();
+    this.refreshToken = refreshToken;
+    this.accessToken = accessToken;
+  }
 }

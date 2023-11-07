@@ -8,7 +8,12 @@ import { AuthModule } from './auth/auth.module';
 import { TokenModule } from './token/token.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(MYSQL_OPTION), MemberModule, AuthModule, TokenModule],
+  imports: [
+    TypeOrmModule.forRoot(MYSQL_OPTION),
+    MemberModule,
+    AuthModule,
+    TokenModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

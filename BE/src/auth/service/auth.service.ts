@@ -3,13 +3,16 @@ import { MemberRepository } from 'src/member/repository/member.repository';
 import { OAuthRequest } from '../interface/auth.interface';
 import { Member } from 'src/member/entity/member';
 import { isEmpty } from 'class-validator';
-import {TokenService} from "../../token/service/token.service";
+import { TokenService } from '../../token/service/token.service';
 
-const BEARER_PREFIX:string = "Bearer ";
+const BEARER_PREFIX: string = 'Bearer ';
 
 @Injectable()
 export class AuthService {
-  constructor(private memberRepository: MemberRepository, private tokenService:TokenService) {}
+  constructor(
+    private memberRepository: MemberRepository,
+    private tokenService: TokenService,
+  ) {}
 
   async login(oauthRequest: OAuthRequest) {
     let member = await this.memberRepository.findByEmail(oauthRequest.email);
@@ -18,11 +21,11 @@ export class AuthService {
       member = await this.createMember(oauthRequest);
     }
 
-    return  BEARER_PREFIX + (await this.tokenService.assignToken((member.id)));
+    return BEARER_PREFIX + (await this.tokenService.assignToken(member.id));
   }
 
-  async logout(accessToken:string) {
-    await this.tokenService.removeToken((accessToken));
+  async logout(accessToken: string) {
+    await this.tokenService.removeToken(accessToken);
   }
 
   private async createMember(oauthRequest: OAuthRequest) {
