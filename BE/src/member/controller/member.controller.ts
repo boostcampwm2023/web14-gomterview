@@ -1,11 +1,19 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { MemberService } from '../service/member.service';
+import { AuthGuard } from '@nestjs/passport';
+import { Request } from 'express';
 
-@Controller('member')
+@Controller('/api/member')
 export class MemberController {
   constructor(private memberService: MemberService) {}
 
-  async getMyInfo() {
-    this.memberService.getMyInfo(null); // accessToken에서 해당 유저의 ID를 추출하여 서비스 단으로 넘기기
+  @Get()
+  @UseGuards(AuthGuard('jwt'))
+  async getMyInfo(@Req() req: Request) {
+    const token = getTokenValue(req);
+    this.memberService.getMyInfo(token);
   }
 }
+
+const getTokenValue = (request: Request) =>
+  request.header('Authorization').split(' ').pop(); // 리뷰 후 Util로 빼기
