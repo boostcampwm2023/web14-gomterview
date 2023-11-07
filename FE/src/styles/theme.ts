@@ -1,7 +1,8 @@
 import { colors } from './_colors';
 import { typography } from './_typography';
+import { shadow } from '@styles/_shadow';
 
-export const theme = { colors, typography };
+export const theme = { colors, typography, shadow };
 export type ThemeType = typeof theme;
 
 /*
