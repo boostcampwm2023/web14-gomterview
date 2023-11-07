@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Req, Res, UseGuards } from '@nestjs/common';
+import {Controller, Delete, Get, Patch, Req, Res, UseGuards} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { OAuthRequest } from '../interface/auth.interface';
@@ -41,8 +41,20 @@ export class AuthController {
     description: '로그아웃 api, 회원의 토큰 정보를 db에서 삭제한다.',
   })
   async logout(@Req() request: Request, @Res() res: Response) {
-    const token = request.header('Authorization').split(' ').pop();
-    await this.authService.logout(token);
+    await this.authService.logout(getTokenValue(request));
     res.status(204).send();
   }
+
+  @Patch('reissue')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: 200,
+    description: '토큰 재발행 api, 회원의 access token을 새롭게 반환한다.',
+    type: TokenResponse,
+  })
+  async reissue(@Req() request: Request) {
+    return {accessToken: await this.authService.reissue(getTokenValue(request))} as TokenResponse;
+  }
 }
+
+const getTokenValue = (request:Request) => request.header('Authorization').split(' ').pop();

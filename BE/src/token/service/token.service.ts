@@ -54,7 +54,7 @@ export class TokenService {
     return await this.tokenRepository.findByAccessToken(accessToken);
   }
 
-  async getPayload(singleToken: string) {
+  private async getPayload(singleToken: string) {
     try {
       return (await this.jwtService.verify(singleToken)) as TokenPayload;
     } catch (error) {
@@ -62,7 +62,7 @@ export class TokenService {
     }
   }
 
-  async updateToken(token:Token) {
+  private async updateToken(token:Token) {
     await this.validateRefreshToken(token.refreshToken);
     const payload = await this.getPayload(token.accessToken);
     const newToken = await this.signToken(payload.id, ACCESS_TOKEN_EXPIRES_IN);
@@ -71,7 +71,7 @@ export class TokenService {
     return newToken;
   }
 
-  async validateRefreshToken(refreshToken:string) {
+  private async validateRefreshToken(refreshToken:string) {
     try {
       await this.jwtService.verify(refreshToken);
     }catch(e) {
