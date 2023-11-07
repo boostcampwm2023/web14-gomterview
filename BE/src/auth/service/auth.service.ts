@@ -18,7 +18,6 @@ export class AuthService {
       member = await this.createMember(oauthRequest);
     }
 
-
     return  BEARER_PREFIX + (await this.tokenService.assignToken((member.id)));
   }
 
