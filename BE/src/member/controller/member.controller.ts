@@ -11,7 +11,7 @@ export class MemberController {
   @UseGuards(AuthGuard('jwt'))
   async getMyInfo(@Req() req: Request) {
     const token = getTokenValue(req);
-    this.memberService.getMyInfo(token);
+    return await this.memberService.getMyInfo(token);
   }
 }
 
