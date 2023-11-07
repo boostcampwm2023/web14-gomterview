@@ -51,6 +51,11 @@ export class TokenService {
     return this.updateToken(token);
   }
 
+  async findMemberbyAccessToken(accessToken: string) {
+    const id = (await this.getPayload(accessToken)).id;
+    return await this.memberRepository.findById(id);
+  }
+
   private async findByAccessToken(accessToken: string) {
     return await this.tokenRepository.findByAccessToken(accessToken);
   }

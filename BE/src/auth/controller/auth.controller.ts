@@ -13,6 +13,7 @@ import { OAuthRequest } from '../interface/auth.interface';
 import { AuthService } from '../service/auth.service';
 import { ApiCreatedResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TokenResponse } from '../dto/tokenResponse';
+import { getTokenValue } from 'src/util/token.util';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -66,6 +67,3 @@ export class AuthController {
     } as TokenResponse;
   }
 }
-
-const getTokenValue = (request: Request) =>
-  request.header('Authorization').split(' ').pop();
