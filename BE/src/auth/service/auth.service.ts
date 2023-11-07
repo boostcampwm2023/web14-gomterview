@@ -3,10 +3,11 @@ import { MemberRepository } from 'src/member/repository/member.repository';
 import { OAuthRequest } from '../dto/auth.interface';
 import { Member } from 'src/member/entity/member';
 import { isEmpty } from 'class-validator';
+import {TokenService} from "../../token/service/token.service";
 
 @Injectable()
 export class AuthService {
-  constructor(private memberRepository: MemberRepository) {}
+  constructor(private memberRepository: MemberRepository, private tokenService:TokenService) {}
 
   async login(oauthRequest: OAuthRequest) {
     let member = await this.memberRepository.findByEmail(oauthRequest.email);
@@ -15,7 +16,8 @@ export class AuthService {
       member = await this.createMember(oauthRequest);
     }
 
-    return JSON.stringify(member);
+
+    return await this.tokenService.assignToken((member.id));
   }
 
   private async createMember(oauthRequest: OAuthRequest) {
