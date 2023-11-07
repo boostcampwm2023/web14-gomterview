@@ -1,8 +1,8 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { theme } from '@/styles/theme';
+import { theme } from '@styles/theme';
 import { HTMLElementTypes } from '@/types/utils';
-import { buttonSize } from '@components/Button/Button.styles';
+import { buttonSize } from '@foundation/Button/Button.styles';
 
 type ButtonProps = {
   size?: 'sm' | 'md' | 'lg';
