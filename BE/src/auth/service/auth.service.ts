@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MemberRepository } from 'src/member/repository/member.repository';
-import { OAuthRequest } from '../dto/auth.interface';
+import { OAuthRequest } from '../interface/auth.interface';
 import { Member } from 'src/member/entity/member';
 import { isEmpty } from 'class-validator';
 import {TokenService} from "../../token/service/token.service";
