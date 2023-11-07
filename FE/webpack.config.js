@@ -7,6 +7,7 @@ module.exports = {
   devtool: process.env.production === 'true' ? 'hidden-source-map' : 'eval',
   entry: './src/index.tsx',
   output: {
+    publicPath: '/',
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
     clean: true,
