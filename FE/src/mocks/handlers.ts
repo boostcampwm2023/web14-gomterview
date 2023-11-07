@@ -1,7 +1,10 @@
 import { http, HttpResponse } from 'msw';
+import memberHandlers from './handlers/member';
+import questionHandlers from './handlers/question';
+import answerHandlers from './handlers/answer';
 
 export const handlers = [
-  http.get('/pets', ({ request, params, cookies }) => {
-    return HttpResponse.json(['Tom', 'Jerry', 'Spike']);
-  }),
+  ...memberHandlers,
+  ...questionHandlers,
+  ...answerHandlers,
 ];
