@@ -2,7 +2,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
-
 module.exports = {
   mode: process.env.production === 'true' ? 'production' : 'development',
   devtool: process.env.production === 'true' ? 'hidden-source-map' : 'eval',
@@ -29,6 +28,7 @@ module.exports = {
       '@page': path.resolve(__dirname, 'src/page/'),
       '@constants': path.resolve(__dirname, 'src/constants/'),
       '@styles': path.resolve(__dirname, 'src/styles/'),
+      '@layout': path.resolve(__dirname, 'src/layout/'),
     },
   },
 
