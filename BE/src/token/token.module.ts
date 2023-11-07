@@ -9,6 +9,7 @@ import {PassportModule} from "@nestjs/passport";
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import {JwtModule} from "@nestjs/jwt";
 import 'dotenv/config';
+import {AccessTokenStrategy} from "./strategy/access.token.strategy";
 
 @Module({
   imports:[TypeOrmModule.forFeature([Token, Member]),
@@ -20,7 +21,7 @@ import 'dotenv/config';
         secret: process.env.JWT_SECRET,
       }),
     }),],
-  providers: [TokenService, TokenRepository, MemberRepository],
+  providers: [TokenService, TokenRepository, MemberRepository, AccessTokenStrategy],
   exports: [TokenService]
 })
 export class TokenModule {}

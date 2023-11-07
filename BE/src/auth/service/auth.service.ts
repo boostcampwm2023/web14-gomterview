@@ -21,6 +21,10 @@ export class AuthService {
     return  BEARER_PREFIX + (await this.tokenService.assignToken((member.id)));
   }
 
+  async logout(accessToken:string) {
+    await this.tokenService.removeToken((accessToken));
+  }
+
   private async createMember(oauthRequest: OAuthRequest) {
     const member = new Member(
       undefined,
