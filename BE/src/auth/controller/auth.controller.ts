@@ -20,6 +20,6 @@ export class AuthController {
   ): Promise<void> {
     const { user } = req;
     const userRequest = user as OAuthRequest;
-    res.json(await this.authService.login(userRequest));
+    res.json({accessToken: await this.authService.login(userRequest)});
   }
 }
