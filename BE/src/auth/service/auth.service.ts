@@ -28,6 +28,10 @@ export class AuthService {
     await this.tokenService.removeToken(accessToken);
   }
 
+  async reissue(accessToken:string) {
+    return BEARER_PREFIX + (await this.tokenService.reissue(accessToken));
+  }
+
   private async createMember(oauthRequest: OAuthRequest) {
     const member = new Member(
       undefined,
