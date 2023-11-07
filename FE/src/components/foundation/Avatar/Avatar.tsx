@@ -1,4 +1,4 @@
-import { theme } from '@/styles/theme';
+import { theme } from '@styles/theme';
 import { HTMLElementTypes } from '@/types/utils';
 import { css } from '@emotion/react';
 import React from 'react';
