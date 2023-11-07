@@ -6,7 +6,7 @@ import { Token } from '../entity/token';
 import { TokenPayload } from '../interface/token.interface';
 import {
   InvalidTokenException,
-  ManipulatedTokenNotFiltered,
+  ManipulatedTokenNotFiltered, NeedToLoginException,
   TokenExpiredException,
 } from '../exception/token.exception';
 
@@ -27,7 +27,7 @@ export class TokenService {
 
   async removeToken(accessToken: string) {
     const memberId = (await this.getPayload(accessToken)).id;
-    const token = await this.tokenRepository.findByAccessToken(accessToken);
+    const token = await this.findByAccessToken(accessToken);
 
     if (
       !token ||
@@ -40,11 +40,43 @@ export class TokenService {
     await this.tokenRepository.remove(token);
   }
 
+  async reissue(accessToken:string) {
+    const token = await this.findByAccessToken(accessToken);
+
+    if(!token) {
+      throw new ManipulatedTokenNotFiltered();
+    }
+
+    return this.updateToken(token);
+  }
+
+  private async findByAccessToken(accessToken:string) {
+    return await this.tokenRepository.findByAccessToken(accessToken);
+  }
+
   async getPayload(singleToken: string) {
     try {
       return (await this.jwtService.verify(singleToken)) as TokenPayload;
     } catch (error) {
       await this.parseJwtError(error.message);
+    }
+  }
+
+  async updateToken(token:Token) {
+    await this.validateRefreshToken(token.refreshToken);
+    const payload = await this.getPayload(token.accessToken);
+    const newToken = await this.signToken(payload.id, ACCESS_TOKEN_EXPIRES_IN);
+    token.updateAccessToken(newToken);
+    await this.tokenRepository.save(token);
+    return newToken;
+  }
+
+  async validateRefreshToken(refreshToken:string) {
+    try {
+      await this.jwtService.verify(refreshToken);
+    }catch(e) {
+      this.tokenRepository.deleteByRefreshToken(refreshToken);
+      throw new NeedToLoginException();
     }
   }
 

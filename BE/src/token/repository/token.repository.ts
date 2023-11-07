@@ -20,4 +20,8 @@ export class TokenRepository {
   async remove(token: Token) {
     await this.tokenRepository.remove(token);
   }
+
+  async deleteByRefreshToken(refreshToken:string) {
+    await this.tokenRepository.delete({'refreshToken': refreshToken});
+  }
 }

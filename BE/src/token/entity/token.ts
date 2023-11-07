@@ -6,11 +6,15 @@ export class Token extends BaseEntity {
   readonly refreshToken: string;
 
   @Column()
-  readonly accessToken: string;
+  accessToken: string;
 
   constructor(refreshToken: string, accessToken: string) {
     super();
     this.refreshToken = refreshToken;
     this.accessToken = accessToken;
+  }
+
+  updateAccessToken(newToken:string) {
+    this.accessToken = newToken;
   }
 }

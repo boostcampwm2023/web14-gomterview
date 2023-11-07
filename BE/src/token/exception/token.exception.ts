@@ -18,8 +18,15 @@ class ManipulatedTokenNotFiltered extends HttpException {
   }
 }
 
+class NeedToLoginException extends HttpException {
+  constructor() {
+    super('다시 로그인해주세요.', 401);
+  }
+}
+
 export {
   InvalidTokenException,
   TokenExpiredException,
   ManipulatedTokenNotFiltered,
+  NeedToLoginException
 };
