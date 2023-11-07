@@ -15,4 +15,8 @@ export class TokenRepository {
     async findByAccessToken(accessToken:string) {
         return await this.tokenRepository.findOneBy({accessToken:accessToken});
     }
+
+    async remove(token:Token) {
+        await this.tokenRepository.remove(token);
+    }
 }

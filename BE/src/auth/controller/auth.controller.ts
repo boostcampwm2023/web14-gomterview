@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
-import {OAuthRequest} from '../dto/auth.interface';
+import {OAuthRequest} from '../interface/auth.interface';
 import { AuthService } from '../service/auth.service';
 import {ApiCreatedResponse, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {TokenResponse} from "../dto/auth.dto";
+import {TokenResponse} from "../dto/tokenResponse";
 
 @Controller('auth')
 @ApiTags('auth')
