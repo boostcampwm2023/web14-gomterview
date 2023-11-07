@@ -1,4 +1,12 @@
-import {Controller, Delete, Get, Patch, Req, Res, UseGuards} from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { OAuthRequest } from '../interface/auth.interface';
@@ -53,8 +61,11 @@ export class AuthController {
     type: TokenResponse,
   })
   async reissue(@Req() request: Request) {
-    return {accessToken: await this.authService.reissue(getTokenValue(request))} as TokenResponse;
+    return {
+      accessToken: await this.authService.reissue(getTokenValue(request)),
+    } as TokenResponse;
   }
 }
 
-const getTokenValue = (request:Request) => request.header('Authorization').split(' ').pop();
+const getTokenValue = (request: Request) =>
+  request.header('Authorization').split(' ').pop();

@@ -28,7 +28,7 @@ export class AuthService {
     await this.tokenService.removeToken(accessToken);
   }
 
-  async reissue(accessToken:string) {
+  async reissue(accessToken: string) {
     return BEARER_PREFIX + (await this.tokenService.reissue(accessToken));
   }
 
