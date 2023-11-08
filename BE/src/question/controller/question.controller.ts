@@ -5,6 +5,7 @@ import { Request } from 'express';
 import { getTokenValue } from 'src/util/token.util';
 import { TokenService } from 'src/token/service/token.service';
 import { QuestionListResponse } from '../dto/questionListResponse';
+import { createApiResponseOption } from '../../util/swagger.util';
 
 @Controller('api/question')
 @ApiTags('question')
@@ -15,11 +16,13 @@ export class QuestionController {
   ) {}
 
   @Get('')
-  @ApiResponse({
-    status: 200,
-    description: '카테고리별 게시물 조회 api',
-    type: QuestionListResponse,
-  })
+  @ApiResponse(
+    createApiResponseOption(
+      200,
+      '카테고리별 게시물 조회 api',
+      QuestionListResponse,
+    ),
+  )
   async findAllByCategory(
     @Param('category') category: string,
     @Req() request: Request,
