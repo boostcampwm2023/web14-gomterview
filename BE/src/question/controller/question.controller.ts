@@ -4,9 +4,9 @@ import { QuestionService } from '../service/question.service';
 import { Request } from 'express';
 import { getTokenValue } from 'src/util/token.util';
 import { TokenService } from 'src/token/service/token.service';
-import {MemberService} from "../../member/member.service";
+import { QuestionListResponse } from '../dto/questionListResponse';
 
-@Controller('question')
+@Controller('api/question')
 export class QuestionController {
   constructor(
     private questionService: QuestionService,
@@ -14,7 +14,11 @@ export class QuestionController {
   ) {}
 
   @Get('')
-  @ApiResponse({ status: 200, description: '회원가입을 위한 요청 api' })
+  @ApiResponse({
+    status: 200,
+    description: '회원가입을 위한 요청 api',
+    type: QuestionListResponse,
+  })
   async findAllByCategory(
     @Param('category') category: string,
     @Req() request: Request,

@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {Question} from "../entity/question";
-import {SingleQuestionResponse} from "./singleQuestionResponse";
+import { Question } from '../entity/question';
+import { SingleQuestionResponse } from './singleQuestionResponse';
 
 export class QuestionListResponse {
-    @ApiProperty({
-        example: `
+  @ApiProperty({
+    example: `
         [
             {
                 id: 1,
@@ -24,15 +24,15 @@ export class QuestionListResponse {
             }
         ]
         `,
-        description: '질문 dto의 리스트',
-    })
-    readonly questionsList: SingleQuestionResponse[];
+    description: '질문 dto의 리스트',
+  })
+  readonly questionsList: SingleQuestionResponse[];
 
-    constructor(questionDtoList:SingleQuestionResponse[]) {
-        this.questionsList = questionDtoList;
-    }
+  constructor(questionDtoList: SingleQuestionResponse[]) {
+    this.questionsList = questionDtoList;
+  }
 
-    static from(question:Question[]) : QuestionListResponse{
-        return new QuestionListResponse(question.map(SingleQuestionResponse.from));
-    }
+  static from(question: Question[]): QuestionListResponse {
+    return new QuestionListResponse(question.map(SingleQuestionResponse.from));
+  }
 }

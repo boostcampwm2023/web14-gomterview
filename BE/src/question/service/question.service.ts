@@ -5,12 +5,15 @@ import { Member } from 'src/member/entity/member';
 import { Question } from '../entity/question';
 import { isEmpty } from 'class-validator';
 import { isCategoryCustom } from '../util/question.util';
-import {MemberRepository} from "../../member/repository/member.repository";
-import {QuestionListResponse} from "../dto/questionListResponse";
+import { MemberRepository } from '../../member/repository/member.repository';
+import { QuestionListResponse } from '../dto/questionListResponse';
 
 @Injectable()
 export class QuestionService {
-  constructor(private questionRepository: QuestionRepository, private memberRepository:MemberRepository) {}
+  constructor(
+    private questionRepository: QuestionRepository,
+    private memberRepository: MemberRepository,
+  ) {}
 
   async createQuestion(
     createQuestionRequest: CreateQuestionRequest,
@@ -26,10 +29,11 @@ export class QuestionService {
     }
 
     const member = await this.memberRepository.findById(memberId);
-    const questionList =  await this.questionRepository.findAllByCategoryOrderByCreatedAtDesc(
-      category,
-      isEmpty(member) ? undefined : memberId,
-    );
+    const questionList =
+      await this.questionRepository.findAllByCategoryOrderByCreatedAtDesc(
+        category,
+        isEmpty(member) ? undefined : memberId,
+      );
 
     return QuestionListResponse.from(questionList);
   }

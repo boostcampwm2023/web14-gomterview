@@ -17,9 +17,9 @@ const REFRESH_TOKEN_EXPIRES_IN = '7d'; // 7 일
 @Injectable()
 export class TokenService {
   constructor(
-      readonly tokenRepository: TokenRepository,
-      readonly memberRepository: MemberRepository,
-      readonly jwtService: JwtService,
+    readonly tokenRepository: TokenRepository,
+    readonly memberRepository: MemberRepository,
+    readonly jwtService: JwtService,
   ) {}
 
   async assignToken(memberId: number) {
@@ -31,9 +31,9 @@ export class TokenService {
     const token = await this.findByAccessToken(accessToken);
 
     if (
-        !token ||
-        !memberId ||
-        !(await this.memberRepository.findById(memberId))
+      !token ||
+      !memberId ||
+      !(await this.memberRepository.findById(memberId))
     ) {
       throw new ManipulatedTokenNotFiltered();
     }
@@ -83,7 +83,7 @@ export class TokenService {
 
   private async parseJwtError(message: string) {
     switch (message) {
-        // 토큰에 대한 오류를 판단합니다.
+      // 토큰에 대한 오류를 판단합니다.
       case 'INVALID_TOKEN':
       case 'TOKEN_IS_ARRAY':
       case 'NO_USER':
@@ -100,8 +100,8 @@ export class TokenService {
   private async createToken(memberId: number) {
     const accessToken = await this.signToken(memberId, ACCESS_TOKEN_EXPIRES_IN);
     const refreshToken = await this.signToken(
-        memberId,
-        REFRESH_TOKEN_EXPIRES_IN,
+      memberId,
+      REFRESH_TOKEN_EXPIRES_IN,
     );
     const token = new Token(refreshToken, accessToken);
     await this.tokenRepository.save(token);
