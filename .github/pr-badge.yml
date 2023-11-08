@@ -2,5 +2,5 @@
   message: "$issuePrefix"
   icon: "jira"
   color: "blue"
-  url: "https://jira.company.com/browse/$issuePrefix"
+  url: "https://milk717.atlassian.net/browse/$issuePrefix"
   when: "$issuePrefix"
