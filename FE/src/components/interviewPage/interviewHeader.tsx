@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-const InterViewHeader: React.FC = () => {
+const InterviewHeader: React.FC = () => {
   return (
     <div
       css={css`
@@ -16,4 +16,4 @@ const InterViewHeader: React.FC = () => {
     </div>
   );
 };
-export default InterViewHeader;
+export default InterviewHeader;

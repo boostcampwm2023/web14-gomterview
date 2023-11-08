@@ -1,13 +1,14 @@
 import InterviewPageLayout from '@/components/interviewPage/Layout';
-import InterViewHeader from '@/components/interviewPage/Header';
-import InterViewCamera from '@/components/interviewPage/InterViewCamera';
-import InterViewFooter from '@/components/interviewPage/InterViewFooter';
+import InterviewHeader from '@/components/interviewPage/interviewHeader';
+import InterviewCamera from '@/components/interviewPage/InterviewCamera';
+import InterviewFooter from '@/components/interviewPage/InterviewFooter';
+
 const InterviewPage: React.FC = () => {
   return (
     <InterviewPageLayout>
-      <InterViewHeader />
-      <InterViewCamera />
-      <InterViewFooter />
+      <InterviewHeader />
+      <InterviewCamera />
+      <InterviewFooter />
     </InterviewPageLayout>
   );
 };
