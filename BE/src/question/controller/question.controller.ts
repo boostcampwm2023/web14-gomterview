@@ -4,6 +4,7 @@ import { QuestionService } from '../service/question.service';
 import { Request } from 'express';
 import { getTokenValue } from 'src/util/token.util';
 import { TokenService } from 'src/token/service/token.service';
+import {MemberService} from "../../member/member.service";
 
 @Controller('question')
 export class QuestionController {
@@ -27,7 +28,7 @@ export class QuestionController {
   private async findMember(request: Request) {
     try {
       const token = getTokenValue(request);
-      return await this.tokenService.findMemberbyAccessToken(token);
+      return Number((await this.tokenService.getPayload(token)).id);
     } catch (e) {
       return undefined;
     }
