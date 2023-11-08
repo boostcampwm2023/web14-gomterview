@@ -76,7 +76,7 @@ export class TokenService {
     try {
       await this.jwtService.verify(refreshToken);
     } catch (e) {
-      await this.tokenRepository.deleteByRefreshToken(refreshToken);
+      this.tokenRepository.deleteByRefreshToken(refreshToken);
       throw new NeedToLoginException();
     }
   }
