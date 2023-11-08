@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Req } from '@nestjs/common';
-import {ApiResponse, ApiTags} from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { QuestionService } from '../service/question.service';
 import { Request } from 'express';
 import { getTokenValue } from 'src/util/token.util';

@@ -1,6 +1,4 @@
 import { ApiPropertyOptions } from '@nestjs/swagger/dist/decorators/api-property.decorator';
-import { Type } from '@nestjs/common';
-import { TokenResponse } from '../auth/dto/tokenResponse';
 import { ApiResponseOptions } from '@nestjs/swagger';
 
 export const createPropertyOption = (
