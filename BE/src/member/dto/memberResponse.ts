@@ -26,11 +26,20 @@ class MemberResponse {
   })
   private profileImg: string;
 
-  constructor(member: Member) {
-    this.id = member.id;
-    this.email = member.email;
-    this.nickname = member.nickname;
-    this.profileImg = member.profileImg;
+  constructor(id: number, email: string, nickname: string, profileImg: string) {
+    this.id = id;
+    this.email = email;
+    this.nickname = nickname;
+    this.profileImg = profileImg;
+  }
+
+  static from(user: Member) {
+    return new MemberResponse(
+      user.id,
+      user.email,
+      user.nickname,
+      user.profileImg,
+    );
   }
 }
 
