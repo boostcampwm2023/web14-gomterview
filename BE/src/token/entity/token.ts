@@ -14,7 +14,7 @@ export class Token extends BaseEntity {
     this.accessToken = accessToken;
   }
 
-  updateAccessToken(newToken:string) {
+  updateAccessToken(newToken: string) {
     this.accessToken = newToken;
   }
 }

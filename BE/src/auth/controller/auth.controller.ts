@@ -1,10 +1,19 @@
-import {Controller, Delete, Get, Patch, Req, Res, UseGuards} from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { OAuthRequest } from '../interface/auth.interface';
 import { AuthService } from '../service/auth.service';
 import { ApiCreatedResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TokenResponse } from '../dto/tokenResponse';
+import { getTokenValue } from 'src/util/token.util';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -53,8 +62,8 @@ export class AuthController {
     type: TokenResponse,
   })
   async reissue(@Req() request: Request) {
-    return {accessToken: await this.authService.reissue(getTokenValue(request))} as TokenResponse;
+    return {
+      accessToken: await this.authService.reissue(getTokenValue(request)),
+    } as TokenResponse;
   }
 }
-
-const getTokenValue = (request:Request) => request.header('Authorization').split(' ').pop();

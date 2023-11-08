@@ -1,7 +1,7 @@
 import { DefaultEntity } from 'src/app.entity';
 import { Column, Entity } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'Member' })
 export class Member extends DefaultEntity {
   @Column()
   readonly email: string;
