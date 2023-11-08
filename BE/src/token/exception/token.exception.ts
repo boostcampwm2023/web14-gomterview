@@ -28,5 +28,5 @@ export {
   InvalidTokenException,
   TokenExpiredException,
   ManipulatedTokenNotFiltered,
-  NeedToLoginException
+  NeedToLoginException,
 };
