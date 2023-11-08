@@ -6,7 +6,7 @@ import { ApiResponseOptions } from '@nestjs/swagger';
 export const createPropertyOption = (
   example: unknown,
   description: string,
-  type: Type,
+  type: unknown,
 ): ApiPropertyOptions => {
   return {
     example: example,
