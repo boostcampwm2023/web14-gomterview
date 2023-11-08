@@ -10,6 +10,7 @@ import {
   ApiHeader,
 } from '@nestjs/swagger';
 import { Member } from '../entity/member';
+import { createApiResponseOption } from 'src/util/swagger.util';
 
 @Controller('/api/member')
 @ApiTags('member')
@@ -27,11 +28,13 @@ export class MemberController {
     description: 'Access Token (Bearer Token)',
     required: true,
   })
-  @ApiResponse({
-    status: 200,
-    description: '현재 사용자의 정보를 반환한다.',
-    type: MemberResponse,
-  })
+  @ApiResponse(
+    createApiResponseOption(
+      200,
+      '현재 사용자의 정보를 반환한다.',
+      MemberResponse,
+    ),
+  )
   async getMyInfo(@Req() req: Request) {
     return MemberResponse.from(req.user as Member);
   }
