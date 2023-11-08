@@ -29,7 +29,6 @@ module.exports = {
       '@page': path.resolve(__dirname, 'src/page/'),
       '@constants': path.resolve(__dirname, 'src/constants/'),
       '@styles': path.resolve(__dirname, 'src/styles/'),
-      '@layout': path.resolve(__dirname, 'src/layout/'),
     },
   },
 
