@@ -6,6 +6,7 @@ import { Question } from '../entity/question';
 import { isEmpty } from 'class-validator';
 import { isCategoryCustom } from '../util/question.util';
 import {MemberRepository} from "../../member/repository/member.repository";
+import {QuestionListResponse} from "../dto/questionListResponse";
 
 @Injectable()
 export class QuestionService {
@@ -25,10 +26,11 @@ export class QuestionService {
     }
 
     const member = await this.memberRepository.findById(memberId);
-
-    return await this.questionRepository.findAllByCategoryOrderByCreatedAtDesc(
+    const questionList =  await this.questionRepository.findAllByCategoryOrderByCreatedAtDesc(
       category,
       isEmpty(member) ? undefined : memberId,
     );
+
+    return QuestionListResponse.from(questionList);
   }
 }
