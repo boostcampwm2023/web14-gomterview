@@ -11,7 +11,7 @@ type Props = {
   children: ReactNode;
 };
 
-export const Typography: React.FC<Props> = ({
+const Typography: React.FC<Props> = ({
   component,
   variant = 'body1',
   noWrap,
@@ -42,3 +42,5 @@ export const Typography: React.FC<Props> = ({
     </Component>
   );
 };
+
+export default Typography;

@@ -33,7 +33,8 @@
       }
     ],
     "no-console": "warn",
-    "react/no-unknown-property": ["error", { "ignore": ["css"] }]
+    "react/no-unknown-property": ["error", { "ignore": ["css"] }],
+    "react/prop-types": "off"
   },
   "settings": {
     "react": {
