@@ -10,7 +10,10 @@ import {
   ApiHeader,
 } from '@nestjs/swagger';
 import { Member } from '../entity/member';
-import { createApiResponseOption } from 'src/util/swagger.util';
+import {
+  createApiHeaderOption,
+  createApiResponseOption,
+} from 'src/util/swagger.util';
 
 @Controller('/api/member')
 @ApiTags('member')
@@ -23,11 +26,9 @@ export class MemberController {
   @ApiOperation({
     summary: '회원 정보를 반환하는 메서드',
   })
-  @ApiHeader({
-    name: 'Authorization',
-    description: 'Access Token (Bearer Token)',
-    required: true,
-  })
+  @ApiHeader(
+    createApiHeaderOption('Authorization', 'Access Token (Bearer Token)', true),
+  )
   @ApiResponse(
     createApiResponseOption(
       200,
