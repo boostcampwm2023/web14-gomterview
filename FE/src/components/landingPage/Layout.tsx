@@ -26,9 +26,8 @@ const LandingPageLayout: React.FC<LandingPageLayoutProps> = ({ children }) => {
           grid-template-rows: 3fr 1fr;
           justify-items: center;
           align-items: center;
-          gap: 1rem;
+          column-gap: 15rem;
           margin: 0 auto;
-          max-width: 70rem;
 
           > *:nth-child(3) {
             grid-area: 1 / 2 / 3 / 3;

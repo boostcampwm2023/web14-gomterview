@@ -1,9 +1,33 @@
 import Typography from '@foundation/Typography/Typography';
+import { css, keyframes } from '@emotion/react';
 
 const WelcomeBlurb: React.FC = () => {
   return (
-    <Typography>곰터뷰에서 로그인 없이 면접 준비를 시작해보세요</Typography>
+    <Typography
+      paragraph
+      variant={'title3'}
+      css={css`
+        font-size: 2rem;
+        line-height: 3rem;
+        animation: ${fadeInUp} 1.5s ease forwards;
+      `}
+    >
+      {`로그인 없는 
+간편한 면접 서비스
+곰터뷰`}
+    </Typography>
   );
 };
+
+const fadeInUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
 
 export default WelcomeBlurb;
