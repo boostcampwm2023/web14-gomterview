@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { MemberService } from './service/member.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Member } from './entity/member';
 import { MemberRepository } from './repository/member.repository';
@@ -8,7 +7,7 @@ import { TokenModule } from 'src/token/token.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Member]), TokenModule],
-  providers: [MemberRepository, MemberService],
+  providers: [MemberRepository],
   exports: [MemberRepository],
   controllers: [MemberController],
 })
