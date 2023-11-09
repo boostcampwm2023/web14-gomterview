@@ -76,6 +76,21 @@ const InterviewCamera: React.FC = () => {
     setRecording(false);
   };
 
+  const handleDownload = () => {
+    const blob = new Blob(recordedBlobs, { type: selectedMimeType });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = 'recorded.webm';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }, 100);
+  };
+
   const getSupportedMimeTypes = () => {
     const types = [
       'video/webm; codecs=vp8',
