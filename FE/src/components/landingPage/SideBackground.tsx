@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import LandingBear from '@assets/images/landing-bear.png';
+import LandingBear from '@assets/images/landing-bear2.png';
 
 const SideBackground: React.FC = () => {
   return (
@@ -16,7 +16,7 @@ const SideBackground: React.FC = () => {
         src={LandingBear}
         alt={'노트북을 하는 곰돌이의 뒷모습'}
         css={css`
-          height: 33rem;
+          height: 37rem;
         `}
       />
     </div>
