@@ -17,6 +17,18 @@ const InterviewCamera: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (!stream) {
+      void getMedia();
+    }
+
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, [stream]);
+
   const getMedia = async () => {
     try {
       const constraints = {
