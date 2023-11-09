@@ -1,11 +1,10 @@
 import { ApiPropertyOptions } from '@nestjs/swagger/dist/decorators/api-property.decorator';
-import { Type } from '@nestjs/common';
 import { ApiHeaderOptions, ApiResponseOptions } from '@nestjs/swagger';
 
 export const createPropertyOption = (
   example: unknown,
   description: string,
-  type: Type,
+  type: unknown,
 ): ApiPropertyOptions => {
   return {
     example: example,
