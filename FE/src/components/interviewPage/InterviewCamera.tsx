@@ -9,6 +9,22 @@ const InterviewCamera: React.FC = () => {
 
   const gumVideoRef = useRef<HTMLVideoElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+
+  useLayoutEffect(() => {
+    const mimeTypes = getSupportedMimeTypes();
+    if (mimeTypes.length > 0) {
+      setSelectedMimeType(mimeTypes[0]);
+    }
+  }, []);
+  const getSupportedMimeTypes = () => {
+    const types = [
+      'video/webm; codecs=vp8',
+      'video/webm; codecs=vp9',
+      'video/webm; codecs=h264',
+      'video/mp4; codecs=h264',
+    ];
+    return types.filter((type) => MediaRecorder.isTypeSupported(type));
+  };
   return (
     <div
       css={css`
