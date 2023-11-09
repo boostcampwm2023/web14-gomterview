@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import Logo from '@common/Logo/Logo';
+import GoogleLoginButton from '@components/landingPage/GoogleLoginButton';
 
 const Header: React.FC = () => {
   return (
@@ -12,7 +13,7 @@ const Header: React.FC = () => {
       `}
     >
       <Logo />
-      <button>구글로 시작하기</button>
+      <GoogleLoginButton />
     </div>
   );
 };
