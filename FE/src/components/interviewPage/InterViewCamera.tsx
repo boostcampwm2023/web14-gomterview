@@ -50,6 +50,24 @@ const InterviewCamera: React.FC = () => {
       console.log(`현재 마이크와 카메라가 연결되지 않았습니다`);
     }
   };
+
+  const handleStartRecording = () => {
+    setRecordedBlobs([]);
+    try {
+      mediaRecorderRef.current = new MediaRecorder(stream as MediaStream, {
+        mimeType: selectedMimeType,
+      });
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) {
+          setRecordedBlobs((prev) => [...prev, event.data]);
+        }
+      };
+      mediaRecorderRef.current.start();
+      setRecording(true);
+    } catch (e) {
+      console.log(`MediaRecorder error`);
+    }
+  };
   const getSupportedMimeTypes = () => {
     const types = [
       'video/webm; codecs=vp8',
