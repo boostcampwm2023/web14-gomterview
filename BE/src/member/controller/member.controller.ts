@@ -1,5 +1,4 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
-import { MemberService } from '../service/member.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { MemberResponse } from '../dto/memberResponse';
@@ -10,11 +9,17 @@ import {
   ApiOperation,
   ApiHeader,
 } from '@nestjs/swagger';
+import { Member } from '../entity/member';
+import {
+  createApiHeaderOption,
+  createApiResponseOption,
+} from 'src/util/swagger.util';
+import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
 
 @Controller('/api/member')
 @ApiTags('member')
 export class MemberController {
-  constructor(private memberService: MemberService) {}
+  constructor() {}
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
@@ -22,21 +27,18 @@ export class MemberController {
   @ApiOperation({
     summary: '회원 정보를 반환하는 메서드',
   })
-  @ApiHeader({
-    name: 'Authorization',
-    description: 'Access Token (Bearer Token)',
-    required: true,
-  })
-  @ApiResponse({
-    status: 200,
-    description: '현재 사용자의 정보를 반환한다.',
-    type: MemberResponse,
-  })
-  async getMyInfo(@Req() req: Request) {
-    const token = getTokenValue(req);
-    return await this.memberService.getMyInfo(token);
+  @ApiHeader(
+    createApiHeaderOption('Authorization', 'Access Token (Bearer Token)', true),
+  )
+  @ApiResponse(
+    createApiResponseOption(
+      200,
+      '현재 사용자의 정보를 반환한다.',
+      MemberResponse,
+    ),
+  )
+  getMyInfo(@Req() req: Request) {
+    if (!req.user) throw new ManipulatedTokenNotFiltered();
+    return MemberResponse.from(req.user as Member);
   }
 }
-
-const getTokenValue = (request: Request) =>
-  request.header('Authorization').split(' ').pop(); // 리뷰 후 Util로 빼기
