@@ -14,6 +14,7 @@ import {
   createApiHeaderOption,
   createApiResponseOption,
 } from 'src/util/swagger.util';
+import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
 
 @Controller('/api/member')
 @ApiTags('member')
@@ -37,6 +38,7 @@ export class MemberController {
     ),
   )
   getMyInfo(@Req() req: Request) {
+    if (!req.user) throw new ManipulatedTokenNotFiltered();
     return MemberResponse.from(req.user as Member);
   }
 }
