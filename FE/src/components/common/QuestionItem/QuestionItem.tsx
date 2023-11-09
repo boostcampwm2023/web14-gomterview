@@ -1,7 +1,7 @@
 import { FC, MouseEventHandler, SyntheticEvent } from 'react';
 import { css } from '@emotion/react';
 import { QuestionItemStyles } from '@common/QuestionItem/QuestionItem.styles';
-import { Typography } from '@foundation/Typography/Typography';
+import Typography from '@foundation/Typography/Typography';
 import { LeadingDot } from '@foundation/LeadingDot/LeadingDot';
 import {
   Accordion,
