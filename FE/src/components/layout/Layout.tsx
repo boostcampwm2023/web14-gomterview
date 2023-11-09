@@ -1,15 +1,17 @@
 import { css } from '@emotion/react';
+import { HTMLElementTypes } from '@/types/utils';
 
 type MainProps = {
   full?: boolean;
   direction: 'column' | 'row';
   children: React.ReactNode;
-};
+} & HTMLElementTypes<HTMLDivElement>;
 
 const Layout: React.FC<MainProps> = ({
   full = false,
   direction = 'row',
   children,
+  ...args
 }) => {
   return (
     <main
@@ -21,6 +23,7 @@ const Layout: React.FC<MainProps> = ({
         height: 100vh;
         margin: 0 auto;
       `}
+      {...args}
     >
       {children}
     </main>
