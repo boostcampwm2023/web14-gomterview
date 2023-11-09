@@ -16,6 +16,28 @@ const InterviewCamera: React.FC = () => {
       setSelectedMimeType(mimeTypes[0]);
     }
   }, []);
+
+  const getMedia = async () => {
+    try {
+      const constraints = {
+        audio: {
+          echoCancellation: { exact: true },
+        },
+        video: {
+          width: 1280,
+          height: 720,
+        },
+      };
+      const mediaStream =
+        await navigator.mediaDevices.getUserMedia(constraints);
+      setStream(mediaStream);
+      if (gumVideoRef.current) {
+        gumVideoRef.current.srcObject = mediaStream;
+      }
+    } catch (e) {
+      console.log(`현재 마이크와 카메라가 연결되지 않았습니다`);
+    }
+  };
   const getSupportedMimeTypes = () => {
     const types = [
       'video/webm; codecs=vp8',
