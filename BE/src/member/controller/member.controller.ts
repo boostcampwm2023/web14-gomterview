@@ -36,7 +36,7 @@ export class MemberController {
       MemberResponse,
     ),
   )
-  async getMyInfo(@Req() req: Request) {
+  getMyInfo(@Req() req: Request) {
     return MemberResponse.from(req.user as Member);
   }
 }
