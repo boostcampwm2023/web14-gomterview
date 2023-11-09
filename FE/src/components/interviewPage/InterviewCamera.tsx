@@ -68,6 +68,14 @@ const InterviewCamera: React.FC = () => {
       console.log(`MediaRecorder error`);
     }
   };
+
+  const handleStopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+    }
+    setRecording(false);
+  };
+
   const getSupportedMimeTypes = () => {
     const types = [
       'video/webm; codecs=vp8',
