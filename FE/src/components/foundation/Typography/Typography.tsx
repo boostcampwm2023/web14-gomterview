@@ -1,6 +1,7 @@
 import React, { ElementType, ReactNode } from 'react';
 import { css, Theme } from '@emotion/react';
 import { theme } from '@styles/theme';
+import { HTMLElementTypes } from '@/types/utils';
 
 type Props = {
   component?: ElementType;
@@ -9,7 +10,7 @@ type Props = {
   paragraph?: boolean;
   color?: string;
   children: ReactNode;
-};
+} & HTMLElementTypes<HTMLDivElement>;
 
 const Typography: React.FC<Props> = ({
   component,
@@ -18,6 +19,7 @@ const Typography: React.FC<Props> = ({
   paragraph,
   color,
   children,
+  ...args
 }) => {
   const Component = component || (paragraph ? 'p' : 'span');
 
@@ -37,6 +39,7 @@ const Typography: React.FC<Props> = ({
         `,
         theme.typography[variant],
       ]}
+      {...args}
     >
       {children}
     </Component>

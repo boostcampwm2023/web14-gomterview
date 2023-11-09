@@ -12,12 +12,21 @@ export const typography = {
   /**
    * 탭이나 모달의 제목에 사용됩니다.
    * 마이페이지의 사용자 닉네임에도 사용됩니다
-   * 큰 버튼의 텍스트로도 사용됩니다.
    */
   title2: {
     fontFamily: 'Pretendard',
     fontStyle: 'normal',
     fontWeight: 700,
+    fontSize: '1.5rem',
+  },
+
+  /**
+   * 큰 버튼의 텍스트, 랜딩 페이지의 소개문구에 사용됩니다.
+   */
+  title3: {
+    fontFamily: 'Pretendard',
+    fontStyle: 'normal',
+    fontWeight: 600,
     fontSize: '1.5rem',
   },
 
