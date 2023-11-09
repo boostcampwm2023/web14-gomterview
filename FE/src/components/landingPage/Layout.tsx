@@ -8,7 +8,14 @@ type LandingPageLayoutProps = {
 
 const LandingPageLayout: React.FC<LandingPageLayoutProps> = ({ children }) => {
   return (
-    <Layout full direction="column">
+    <Layout
+      full
+      direction="column"
+      css={css`
+        padding: 1rem;
+        row-gap: 1rem;
+      `}
+    >
       <Header />
       <div
         css={css`

@@ -7,8 +7,7 @@ const Header: React.FC = () => {
         display: flex;
         justify-content: space-between;
         align-items: center;
-
-        padding: 1.5rem;
+        padding: 1rem;
       `}
     >
       <div>로고 들어갈 자리</div>
