@@ -7,12 +7,10 @@ const SideBackground: React.FC = () => {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 50%;
-        height: 100%;
-        border: 1px solid red;
+        height: 30rem;
       `}
     >
-      조금 이쁜 랜딩 입니다
+      랜딩 일러스트 들어갈 영역
     </div>
   );
 };

@@ -1,14 +1,14 @@
 import LandingPageLayout from '@/components/landingPage/Layout';
 import SideBackground from '@/components/landingPage/SideBackground';
 import Intro from '@/components/landingPage/Intro';
-import Header from '@components/landingPage/Header';
+import WelcomeBlurb from '@components/landingPage/WelcomeBlurb';
 
 const RenderingPage: React.FC = () => {
   return (
     <LandingPageLayout>
-      <Header />
-      <SideBackground />
+      <WelcomeBlurb />
       <Intro />
+      <SideBackground />
     </LandingPageLayout>
   );
 };
