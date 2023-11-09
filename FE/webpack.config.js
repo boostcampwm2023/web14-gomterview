@@ -2,6 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
+
 module.exports = {
   mode: process.env.production === 'true' ? 'production' : 'development',
   devtool: process.env.production === 'true' ? 'hidden-source-map' : 'eval',
@@ -60,6 +61,13 @@ module.exports = {
             ],
             plugins: ['@emotion/babel-plugin'],
           },
+        },
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        loader: 'file-loader',
+        options: {
+          outputPath: 'assets/images',
         },
       },
     ],
