@@ -7,8 +7,8 @@ const WelcomeBlurb: React.FC = () => {
       paragraph
       variant={'title3'}
       css={css`
-        font-size: 2rem;
-        line-height: 3rem;
+        font-size: 3rem;
+        line-height: 4rem;
         animation: ${fadeInUp} 1.5s ease forwards;
       `}
     >

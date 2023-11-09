@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
-import LandingBear from '@assets/images/landing-bear2.png';
+import LandingBear from '@assets/images/landing-bear.png';
 
-const SideBackground: React.FC = () => {
+const LandingImage: React.FC = () => {
   return (
     <div
       css={css`
@@ -16,10 +16,12 @@ const SideBackground: React.FC = () => {
         src={LandingBear}
         alt={'노트북을 하는 곰돌이의 뒷모습'}
         css={css`
-          height: 37rem;
+          height: 40vw;
+          min-height: 30rem;
         `}
       />
     </div>
   );
 };
-export default SideBackground;
+
+export default LandingImage;

@@ -158,5 +158,11 @@ const _global = css`
     font-weight: 700;
     font-style: normal;
   }
+
+  @media (max-width: 576px) {
+    html {
+      font-size: 14px;
+    }
+  }
 `;
 export default _global;

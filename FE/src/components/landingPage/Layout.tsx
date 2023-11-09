@@ -19,24 +19,55 @@ const LandingPageLayout: React.FC<LandingPageLayoutProps> = ({ children }) => {
     >
       <Header />
       <div
-        css={css`
-          display: grid;
-          grid-template-columns: 1fr 2fr;
-          grid-template-rows: 3fr 1fr;
-          justify-items: center;
-          align-items: center;
-          column-gap: 15rem;
-          margin: auto;
+        css={[
+          css`
+            display: grid;
+            grid-template-columns: auto auto;
+            grid-template-rows: 3fr 1fr;
+            justify-content: space-evenly;
+            justify-items: center;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem;
+            margin: auto 0;
 
-          > *:nth-child(3) {
-            grid-area: 1 / 2 / 3 / 3;
-          }
-        `}
+            > *:nth-child(3) {
+              grid-area: 1 / 2 / 3 / 3;
+            }
+          `,
+          LandingPageResponsiveStyles,
+        ]}
       >
         {children}
       </div>
     </Layout>
   );
 };
+
+const LandingPageResponsiveStyles = css`
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+    justify-items: start;
+
+    > *:nth-child(1) {
+      grid-area: 1 / 1 / 1 / 2;
+    }
+
+    > *:nth-child(2) {
+      grid-area: 2 / 1 / 2 / 2;
+    }
+
+    > *:nth-child(3) {
+      grid-area: 1 / 1 / 3 / 3;
+    }
+  }
+
+  @media (max-width: 576px) {
+    justify-items: center;
+    > *:nth-child(3) {
+      display: none;
+    }
+  }
+`;
 
 export default LandingPageLayout;
