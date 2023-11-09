@@ -10,4 +10,9 @@ export const shadow = {
    * ex) 문제 선택기 박스 안에 있는 아이템
    */
   boxSmallShadow: `0px 4px 10px 0px rgba(0, 0, 0, 0.10)`,
+
+  /**
+   * 랜딩 페이지의 시작 버튼에 사용되는 그림자입니다.
+   */
+  buttonLargeShadow: `0px 6px 0px 0px #3056A2;`,
 };
