@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import Logo from '@common/Logo/Logo';
 
 const Header: React.FC = () => {
   return (
@@ -10,7 +11,7 @@ const Header: React.FC = () => {
         padding: 1rem;
       `}
     >
-      <div>로고 들어갈 자리</div>
+      <Logo />
       <button>구글로 시작하기</button>
     </div>
   );
