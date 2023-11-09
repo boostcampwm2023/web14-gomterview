@@ -21,7 +21,7 @@ const Typography: React.FC<Props> = ({
   children,
   ...args
 }) => {
-  const Component = component || (paragraph ? 'p' : 'span');
+  const Component = component || (paragraph ? 'pre' : 'span');
 
   return (
     <Component
