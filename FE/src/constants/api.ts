@@ -1,4 +1,4 @@
-const BASEURL = '';
+export const BASE_URL = '';
 
 type Id = number;
 
