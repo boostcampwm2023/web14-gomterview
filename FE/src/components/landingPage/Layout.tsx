@@ -13,7 +13,6 @@ const LandingPageLayout: React.FC<LandingPageLayoutProps> = ({ children }) => {
       full
       direction="column"
       css={css`
-        padding: 1rem;
         row-gap: 10rem;
         background: ${theme.gradient.linear.skyblue};
       `}
@@ -27,7 +26,7 @@ const LandingPageLayout: React.FC<LandingPageLayoutProps> = ({ children }) => {
           justify-items: center;
           align-items: center;
           column-gap: 15rem;
-          margin: 0 auto;
+          margin: auto;
 
           > *:nth-child(3) {
             grid-area: 1 / 2 / 3 / 3;
