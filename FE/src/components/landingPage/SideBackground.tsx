@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import LandingBear from '../../assets/images/landing-bear.png';
+import LandingBear from '@assets/images/landing-bear.png';
 
 const SideBackground: React.FC = () => {
   return (
