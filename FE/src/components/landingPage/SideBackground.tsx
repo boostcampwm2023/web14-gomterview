@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import LandingBear from '../../assets/images/landing-bear.png';
 
 const SideBackground: React.FC = () => {
   return (
@@ -7,10 +8,17 @@ const SideBackground: React.FC = () => {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 30rem;
+        justify-self: end;
+        align-self: end;
       `}
     >
-      랜딩 일러스트 들어갈 영역
+      <img
+        src={LandingBear}
+        alt={'노트북을 하는 곰돌이의 뒷모습'}
+        css={css`
+          height: 33rem;
+        `}
+      />
     </div>
   );
 };

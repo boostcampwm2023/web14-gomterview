@@ -14,7 +14,7 @@ const LandingPageLayout: React.FC<LandingPageLayoutProps> = ({ children }) => {
       direction="column"
       css={css`
         padding: 1rem;
-        row-gap: 1rem;
+        row-gap: 10rem;
         background: ${theme.gradient.linear.skyblue};
       `}
     >
