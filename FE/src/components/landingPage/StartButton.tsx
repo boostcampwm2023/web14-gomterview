@@ -22,16 +22,11 @@ const InterviewStartButton: React.FC<StartButton> = ({
             padding: 1.5rem 3rem;
             border-radius: 3.125rem;
             background: ${theme.gradient.linear.blue};
-            box-shadow: ${theme.shadow.buttonLargeShadow('6')};
+            box-shadow: ${theme.shadow.buttonLargeShadow(10)};
 
             &:hover {
-              transform: translateY(-4px);
-              box-shadow: ${theme.shadow.buttonLargeShadow('10')};
-            }
-
-            &:active {
-              transform: translateY(2px);
-              box-shadow: ${theme.shadow.buttonLargeShadow('4')};
+              transform: translateY(4px);
+              box-shadow: ${theme.shadow.buttonLargeShadow(6)};
             }
           `}
         >
