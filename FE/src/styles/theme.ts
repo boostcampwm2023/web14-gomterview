@@ -1,8 +1,10 @@
 import { colors } from './_colors';
 import { typography } from './_typography';
 import { shadow } from '@styles/_shadow';
+import { gradient } from '@styles/_gradient';
+import { breakpoints } from '@styles/_breakpoints';
 
-export const theme = { colors, typography, shadow };
+export const theme = { colors, typography, shadow, gradient, breakpoints };
 export type ThemeType = typeof theme;
 
 /*

@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import InterviewVideoPageLayout from '@/components/interviewVideoPage/Layout';
+import InterviewVideoPageLayout from '@components/interviewVideoPage/InterviewVideoPageLayout';
 
 const InterviewVideoPage: React.FC = () => {
   // Use the `useParams` hook to access the `videoId` parameter

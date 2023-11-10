@@ -1,7 +1,7 @@
-import InterviewPageLayout from '@/components/interviewPage/Layout';
-import InterviewHeader from '@/components/interviewPage/interviewHeader';
-import InterviewCamera from '@/components/interviewPage/InterviewCamera';
-import InterviewFooter from '@/components/interviewPage/InterviewFooter';
+import InterviewPageLayout from '@components/interviewPage/InterviewPageLayout';
+import InterviewHeader from '@components/interviewPage/interviewHeader';
+import InterviewCamera from '@components/interviewPage/InterviewCamera';
+import InterviewFooter from '@components/interviewPage/InterviewFooter';
 
 const InterviewPage: React.FC = () => {
   return (

@@ -17,6 +17,6 @@ export const buttonSize = {
   lg: css`
     padding: 0.7rem 1.2rem;
     border-radius: 1rem;
-    ${theme.typography.title2}
+    ${theme.typography.title3}
   `,
 };
