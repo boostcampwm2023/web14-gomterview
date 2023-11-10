@@ -4,11 +4,11 @@ import Button from '@foundation/Button/Button';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
 
-type StartButton = {
+type StartButtonProps = {
   text?: string;
 };
 
-const InterviewStartButton: React.FC<StartButton> = ({
+const InterviewStartButton: React.FC<StartButtonProps> = ({
   text = '비회원으로 시작하기',
 }) => {
   // 로그인 여부에 따라 버튼의 문구가 달라집니다.
