@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import Header from '@components/landingPage/Header';
+import LandingPageHeader from '@components/landingPage/LandingPageHeader';
 import Layout from '@components/layout/Layout';
 import { theme } from '@styles/theme';
 
@@ -17,7 +17,7 @@ const LandingPageLayout: React.FC<LandingPageLayoutProps> = ({ children }) => {
         background: ${theme.gradient.linear.skyblue};
       `}
     >
-      <Header />
+      <LandingPageHeader />
       <div
         css={[
           css`

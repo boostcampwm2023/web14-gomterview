@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import Logo from '@common/Logo/Logo';
 import GoogleLoginButton from '@components/landingPage/GoogleLoginButton';
 
-const Header: React.FC = () => {
+const LandingPageHeader: React.FC = () => {
   return (
     <div
       css={css`
@@ -21,4 +21,4 @@ const Header: React.FC = () => {
   );
 };
 
-export default Header;
+export default LandingPageHeader;
