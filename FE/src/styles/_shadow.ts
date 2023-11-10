@@ -14,5 +14,6 @@ export const shadow = {
   /**
    * 랜딩 페이지의 시작 버튼에 사용되는 그림자입니다.
    */
-  buttonLargeShadow: (y: number) => `0 ${y}px 0 0 #3056A2;`,
+  buttonLargeDefaultShadow: `0 0.625rem 0 0 #3056A2`,
+  buttonLargeHoverShadow: `0 0.375rem 0 0 #3056A2`,
 };
