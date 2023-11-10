@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { theme } from '@styles/theme';
 
 const _global = css`
   html,
@@ -159,7 +160,7 @@ const _global = css`
     font-style: normal;
   }
 
-  @media (max-width: 576px) {
+  @media (max-width: ${theme.breakpoints.mobileL}) {
     html {
       font-size: 14px;
     }

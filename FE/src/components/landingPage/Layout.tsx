@@ -45,7 +45,7 @@ const LandingPageLayout: React.FC<LandingPageLayoutProps> = ({ children }) => {
 };
 
 const LandingPageResponsiveStyles = css`
-  @media (max-width: 1024px) {
+  @media (max-width: ${theme.breakpoints.laptop}) {
     grid-template-columns: 1fr;
     justify-items: start;
 
@@ -61,11 +61,19 @@ const LandingPageResponsiveStyles = css`
       grid-area: 1 / 1 / 3 / 3;
     }
   }
-
-  @media (max-width: 576px) {
-    justify-items: center;
+  @media (max-width: ${theme.breakpoints.tablet}) {
     > *:nth-child(3) {
-      display: none;
+      opacity: 20%;
+    }
+  }
+
+  @media (max-width: ${theme.breakpoints.mobileL}) {
+    justify-items: center;
+    gap: 0;
+
+    > *:nth-child(3) {
+      align-self: center;
+      justify-self: center;
     }
   }
 `;
