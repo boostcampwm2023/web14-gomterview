@@ -12,23 +12,11 @@ const WelcomeBlurb: React.FC = () => {
         animation: ${fadeInUp} 1.5s ease forwards;
       `}
     >
-      {`로그인 없는 
-    <Typography
-      paragraph
-      variant={'title3'}
-      css={css`
-        font-size: 3rem;
-        line-height: 4rem;
-        animation: ${fadeInUp} 1.5s ease forwards;
-      `}
-    >
       로그인 없는
       <br />
       간편한 면접 서비스
       <br />
       곰터뷰
-    </Typography>
-곰터뷰`}
     </Typography>
   );
 };
