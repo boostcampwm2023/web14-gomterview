@@ -1,4 +1,4 @@
-import LandingPageLayout from '@/components/landingPage/Layout';
+import LandingPageLayout from '@/components/landingPage/LandingPageLayout';
 import StartButton from '@components/landingPage/StartButton';
 import WelcomeBlurb from '@components/landingPage/WelcomeBlurb';
 import LandingImage from '@components/landingPage/LandingImage';

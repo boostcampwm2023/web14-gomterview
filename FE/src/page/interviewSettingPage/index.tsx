@@ -1,4 +1,4 @@
-import InterviewSettingPageLayout from '@/components/interviewSettingPage/Layout';
+import InterviewSettingPageLayout from '@/components/interviewSettingPage/InterviewSettingPageLayout';
 import { css } from '@emotion/react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import SettingProgressBar from '@/components/interviewSettingPage/SettingProgressBar';
