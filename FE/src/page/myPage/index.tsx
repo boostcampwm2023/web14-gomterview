@@ -1,4 +1,4 @@
-import MyPageLayout from '@/components/myPage/Layout';
+import MyPageLayout from '@/components/myPage/MyPageLayout';
 import MyPageHeader from '@/components/myPage/MyPageHeader';
 import Profile from '@/components/myPage/Profile';
 

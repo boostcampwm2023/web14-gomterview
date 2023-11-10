@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 
-const InterViewFooter: React.FC = () => {
+const InterviewFooter: React.FC = () => {
   const navigate = useNavigate();
 
   return (
@@ -21,4 +21,4 @@ const InterViewFooter: React.FC = () => {
     </div>
   );
 };
-export default InterViewFooter;
+export default InterviewFooter;

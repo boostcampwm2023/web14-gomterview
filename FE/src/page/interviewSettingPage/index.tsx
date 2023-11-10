@@ -1,4 +1,4 @@
-import InterviewSettingPageLayout from '@/components/interviewSettingPage/Layout';
+import InterviewSettingPageLayout from '@/components/interviewSettingPage/InterviewSettingPageLayout';
 import { css } from '@emotion/react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import SettingProgressBar from '@/components/interviewSettingPage/SettingProgressBar';
@@ -26,6 +26,7 @@ const InterviewSettingPage: React.FC = () => {
         break;
     }
   }
+
   function navigatePrev() {
     switch (location.pathname) {
       case PATH.INTERVIEW_SETTING:
@@ -42,6 +43,7 @@ const InterviewSettingPage: React.FC = () => {
         break;
     }
   }
+
   return (
     <InterviewSettingPageLayout>
       <SettingProgressBar />
@@ -53,7 +55,7 @@ const InterviewSettingPage: React.FC = () => {
           align-items: center;
           justify-content: center;
           border: 1px solid red;
-          gap: 20px;
+          gap: 1.25rem;
         `}
       >
         <Button onClick={navigatePrev}>이전</Button>
