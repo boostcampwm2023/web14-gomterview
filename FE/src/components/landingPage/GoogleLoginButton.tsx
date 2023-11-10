@@ -13,12 +13,12 @@ const GoogleLoginButton: React.FC = () => {
         column-gap: 0.75rem;
         padding: 0.59375rem 0.75rem;
         border-radius: 50rem;
-        border: 1px solid ${theme.colors.border.default};
+        border: 0.0625rem solid ${theme.colors.border.default};
         transition: transform 0.15s ease-in-out;
         background-color: ${theme.colors.surface.default};
 
         &:hover {
-          transform: translateY(-4px);
+          transform: translateY(-0.25rem);
         }
       `}
     >

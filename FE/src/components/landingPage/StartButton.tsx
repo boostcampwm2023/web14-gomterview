@@ -26,7 +26,7 @@ const InterviewStartButton: React.FC<StartButtonProps> = ({
             z-index: 2;
 
             &:hover {
-              transform: translateY(4px);
+              transform: translateY(0.25rem);
               box-shadow: ${theme.shadow.buttonLargeShadow(6)};
             }
           `}

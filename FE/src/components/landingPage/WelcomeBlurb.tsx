@@ -22,7 +22,7 @@ const WelcomeBlurb: React.FC = () => {
 const fadeInUp = keyframes`
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(1.25rem);
   }
   to {
     opacity: 1;

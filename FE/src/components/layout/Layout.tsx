@@ -19,7 +19,7 @@ const Layout: React.FC<MainProps> = ({
         display: flex;
         flex-direction: ${direction};
         width: ${full ? '100%' : 'auto'};
-        max-width: ${full ? 'none' : '750px'};
+        max-width: ${full ? 'none' : '46.875rem'};
         height: 100vh;
         margin: 0 auto;
       `}
