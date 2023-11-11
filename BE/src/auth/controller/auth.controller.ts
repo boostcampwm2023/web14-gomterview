@@ -15,7 +15,7 @@ import { ApiCreatedResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TokenResponse } from '../dto/tokenResponse';
 import { getTokenValue } from 'src/util/token.util';
 
-@Controller('auth')
+@Controller('/api/auth')
 @ApiTags('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
