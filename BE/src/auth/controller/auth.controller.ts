@@ -65,9 +65,16 @@ export class AuthController {
     description: '토큰 재발행 api, 회원의 access token을 새롭게 반환한다.',
     type: TokenResponse,
   })
-  async reissue(@Req() request: Request) {
-    return {
-      accessToken: await this.authService.reissue(getTokenValue(request)),
-    } as TokenResponse;
+  async reissue(@Req() request: Request, @Res() res: Response) {
+    res
+      .cookie(
+        'accessToken',
+        await this.authService.reissue(getTokenValue(request)),
+        {
+          httpOnly: true,
+          path: '/',
+        },
+      )
+      .send();
   }
 }
