@@ -23,6 +23,14 @@ export class QuestionRepository {
       .getMany();
   }
 
+  async findById(id: number) {
+    return await this.questionRepository.findOneBy({ id: id });
+  }
+
+  async remove(question: Question) {
+    await this.questionRepository.remove(question);
+  }
+
   private async constructQueryBuilder(category: string, memberId: number) {
     const queryBuilder = this.questionRepository.createQueryBuilder('question');
 

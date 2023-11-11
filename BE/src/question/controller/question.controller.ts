@@ -1,11 +1,22 @@
-import { Controller, Get, Param, Req } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  Controller, Delete,
+  Get,
+  Param,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { QuestionService } from '../service/question.service';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { getTokenValue } from 'src/util/token.util';
 import { TokenService } from 'src/token/service/token.service';
 import { QuestionListResponse } from '../dto/questionListResponse';
 import { createApiResponseOption } from '../../util/swagger.util';
+import { AuthGuard } from '@nestjs/passport';
+import { CreateQuestionRequest } from '../dto/createQuestionRequest';
+import { Member } from '../../member/entity/member';
 
 @Controller('api/question')
 @ApiTags('question')
@@ -14,6 +25,18 @@ export class QuestionController {
     private questionService: QuestionService,
     private tokenService: TokenService,
   ) {}
+
+  @Post('')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @ApiResponse(createApiResponseOption(201, '커스텀 질문 생성', null))
+  async createQuestion(@Req() req: Request, @Res() res: Response) {
+    await this.questionService.createQuestion(
+      req.body as CreateQuestionRequest,
+      req.user as Member,
+    );
+    res.send(201);
+  }
 
   @Get('')
   @ApiResponse(
@@ -32,6 +55,8 @@ export class QuestionController {
       await this.findMember(request),
     );
   }
+
+  @Delete('')
 
   private async findMember(request: Request) {
     try {

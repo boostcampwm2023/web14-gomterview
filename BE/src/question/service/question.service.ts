@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { QuestionRepository } from '../repository/question.repository';
 import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 import { Member } from 'src/member/entity/member';
@@ -7,6 +7,7 @@ import { isEmpty } from 'class-validator';
 import { isCategoryCustom } from '../util/question.util';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { QuestionListResponse } from '../dto/questionListResponse';
+import { QuestionNotFoundException } from '../exception/question.exception';
 
 @Injectable()
 export class QuestionService {
@@ -36,5 +37,19 @@ export class QuestionService {
       );
 
     return QuestionListResponse.from(questionList);
+  }
+
+  async deleteById(id: number, member: Member) {
+    const question = await this.questionRepository.findById(id);
+
+    if (isEmpty(question)) {
+      throw new QuestionNotFoundException();
+    }
+
+    if (!(await question.members).includes(member)) {
+      throw new UnauthorizedException();
+    }
+
+    await this.questionRepository.remove(question);
   }
 }
