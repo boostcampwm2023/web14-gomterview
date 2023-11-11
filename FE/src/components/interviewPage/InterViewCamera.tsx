@@ -100,19 +100,44 @@ const InterviewCamera: React.FC = () => {
     ];
     return types.filter((type) => MediaRecorder.isTypeSupported(type));
   };
+
   return (
     <div
       css={css`
         display: flex;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
-        width: 100%;
-        height: 75%;
-        border: 1px solid red;
+        background-color: black;
       `}
     >
-      면접페이지의 카메라 입니다.
+      <video
+        ref={gumVideoRef}
+        playsInline
+        autoPlay
+        muted
+        css={css`
+          width: 100%;
+          height: 80%;
+          transform: scaleX(-1);
+        `}
+      />
+
+      <div>
+        <button onClick={handleStartRecording} disabled={recording}>
+          시작
+        </button>
+        <button onClick={handleStopRecording} disabled={!recording}>
+          종료
+        </button>
+        <button
+          onClick={handleDownload}
+          disabled={recording || recordedBlobs.length === 0}
+        >
+          저장
+        </button>
+      </div>
     </div>
   );
 };
+
 export default InterviewCamera;
