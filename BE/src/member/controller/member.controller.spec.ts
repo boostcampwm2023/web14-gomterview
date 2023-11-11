@@ -27,11 +27,11 @@ describe('MemberController', () => {
 
   it('should return member information as MemberResponse type', async () => {
     const mockUser = new Member(
-        1,
-        'test@example.com',
-        'TestUser',
-        'https://example.com',
-        new Date(),
+      1,
+      'test@example.com',
+      'TestUser',
+      'https://example.com',
+      new Date(),
     );
 
     const mockReq = { user: mockUser };
@@ -49,7 +49,7 @@ describe('MemberController', () => {
     const mockUser = undefined;
     const mockReq = { user: mockUser };
     expect(() =>
-        memberController.getMyInfo(mockReq as unknown as Request),
+      memberController.getMyInfo(mockReq as unknown as Request),
     ).toThrow(ManipulatedTokenNotFiltered);
   });
 });
@@ -77,13 +77,13 @@ describe('MemberController (E2E Test)', () => {
     } as OAuthRequest;
 
     const validToken = (await authService.login(oauthRequestFixture)).replace(
-        'Bearer ',
-        '',
+      'Bearer ',
+      '',
     );
     const response = await request(app.getHttpServer())
-        .get('/api/member')
-        .set('Authorization', `Bearer ${validToken}`)
-        .expect(200);
+      .get('/api/member')
+      .set('Authorization', `Bearer ${validToken}`)
+      .expect(200);
 
     console.log(response.body);
 
@@ -96,9 +96,9 @@ describe('MemberController (E2E Test)', () => {
     const invalidToken = 'INVALID_TOKEN';
 
     await request(app.getHttpServer())
-        .get('/api/member')
-        .set('Authorization', `Bearer ${invalidToken}`)
-        .expect(401);
+      .get('/api/member')
+      .set('Authorization', `Bearer ${invalidToken}`)
+      .expect(401);
   });
 
   afterAll(async () => {

@@ -1,5 +1,6 @@
 import {
-  Controller, Delete,
+  Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -57,7 +58,6 @@ export class QuestionController {
   }
 
   @Delete('')
-
   private async findMember(request: Request) {
     try {
       const token = getTokenValue(request);
