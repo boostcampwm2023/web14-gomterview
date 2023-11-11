@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Request, Response } from 'express';
+import { CookieOptions, Request, Response } from 'express';
 import { OAuthRequest } from '../interface/auth.interface';
 import { AuthService } from '../service/auth.service';
 import { ApiCreatedResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -40,10 +40,11 @@ export class AuthController {
     const userRequest = user as OAuthRequest;
     res
       .status(201)
-      .cookie('accessToken', await this.authService.login(userRequest), {
-        httpOnly: true,
-        path: '/',
-      })
+      .cookie(
+        'accessToken',
+        await this.authService.login(userRequest),
+        COOKIE_OPTIONS,
+      )
       .send();
   }
 
@@ -70,11 +71,13 @@ export class AuthController {
       .cookie(
         'accessToken',
         await this.authService.reissue(getTokenValue(request)),
-        {
-          httpOnly: true,
-          path: '/',
-        },
+        COOKIE_OPTIONS,
       )
       .send();
   }
 }
+
+const COOKIE_OPTIONS: CookieOptions = {
+  httpOnly: true,
+  path: '/',
+};
