@@ -7,7 +7,7 @@ const InterviewCamera: React.FC = () => {
   const [recordedBlobs, setRecordedBlobs] = useState<Blob[]>([]);
   const [selectedMimeType, setSelectedMimeType] = useState('');
 
-  const gumVideoRef = useRef<HTMLVideoElement>(null);
+  const mirrorVideoRef = useRef<HTMLVideoElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
   useLayoutEffect(() => {
@@ -43,8 +43,8 @@ const InterviewCamera: React.FC = () => {
       const mediaStream =
         await navigator.mediaDevices.getUserMedia(constraints);
       setStream(mediaStream);
-      if (gumVideoRef.current) {
-        gumVideoRef.current.srcObject = mediaStream;
+      if (mirrorVideoRef.current) {
+        mirrorVideoRef.current.srcObject = mediaStream;
       }
     } catch (e) {
       console.log(`현재 마이크와 카메라가 연결되지 않았습니다`);
@@ -111,7 +111,7 @@ const InterviewCamera: React.FC = () => {
       `}
     >
       <video
-        ref={gumVideoRef}
+        ref={mirrorVideoRef}
         playsInline
         autoPlay
         muted
