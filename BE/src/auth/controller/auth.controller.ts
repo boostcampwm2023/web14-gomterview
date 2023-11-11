@@ -12,8 +12,11 @@ import { CookieOptions, Request, Response } from 'express';
 import { OAuthRequest } from '../interface/auth.interface';
 import { AuthService } from '../service/auth.service';
 import { ApiCreatedResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { TokenResponse } from '../dto/tokenResponse';
 import { getTokenValue } from 'src/util/token.util';
+import {
+  createApiResponseOption,
+  createApiResponseOptionWithHeaders,
+} from 'src/util/swagger.util';
 
 @Controller('/api/auth')
 @ApiTags('auth')
@@ -22,16 +25,25 @@ export class AuthController {
 
   @Get('login')
   @UseGuards(AuthGuard('google'))
-  @ApiCreatedResponse({ description: '회원가입을 위한 요청 api' })
+  @ApiCreatedResponse({
+    description: '회원가입을 위한 요청 api, 구글 로그인 페이지로 리다이렉트',
+  })
   async oauthByGoogle(): Promise<void> {}
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  @ApiResponse({
-    status: 201,
-    description: '회원가입을 위한 응답 api',
-    type: TokenResponse,
-  })
+  @ApiResponse(
+    createApiResponseOptionWithHeaders(
+      201,
+      '로그인 응답 api, access token을 쿠키에 담아 반환한다.',
+      {
+        'Set-Cookie': {
+          description: 'Access Token Cookie',
+          schema: { type: 'string' },
+        },
+      },
+    ),
+  )
   async googleAuthCallback(
     @Req() req: Request,
     @Res() res: Response,
@@ -50,10 +62,13 @@ export class AuthController {
 
   @Delete('logout')
   @UseGuards(AuthGuard('jwt'))
-  @ApiResponse({
-    status: 204,
-    description: '로그아웃 api, 회원의 토큰 정보를 db에서 삭제한다.',
-  })
+  @ApiResponse(
+    createApiResponseOption(
+      200,
+      '로그아웃 api, 회원의 토큰 정보를 db에서 삭제한다.',
+      undefined,
+    ),
+  )
   async logout(@Req() request: Request, @Res() res: Response) {
     await this.authService.logout(getTokenValue(request));
     res.status(204).send();
@@ -61,11 +76,18 @@ export class AuthController {
 
   @Patch('reissue')
   @UseGuards(AuthGuard('jwt'))
-  @ApiResponse({
-    status: 200,
-    description: '토큰 재발행 api, 회원의 access token을 새롭게 반환한다.',
-    type: TokenResponse,
-  })
+  @ApiResponse(
+    createApiResponseOptionWithHeaders(
+      200,
+      '토큰 재발행 api, 새로운 access token을 쿠키에 담아 반환한다.',
+      {
+        'Set-Cookie': {
+          description: 'Access Token Cookie',
+          schema: { type: 'string' },
+        },
+      },
+    ),
+  )
   async reissue(@Req() request: Request, @Res() res: Response) {
     res
       .cookie(
