@@ -7,8 +7,9 @@ import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from 'src/app.module';
 import * as request from 'supertest';
-import { TokenModule } from 'src/token/token.module';
-import { TokenService } from 'src/token/service/token.service';
+import { AuthModule } from 'src/auth/auth.module';
+import { AuthService } from 'src/auth/service/auth.service';
+import { OAuthRequest } from 'src/auth/interface/auth.interface';
 
 describe('MemberController', () => {
   let memberController: MemberController;
@@ -55,29 +56,40 @@ describe('MemberController', () => {
 
 describe('MemberController (E2E Test)', () => {
   let app: INestApplication;
-  let tokenService: TokenService;
+  let authService: AuthService;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule, TokenModule],
+      imports: [AppModule, AuthModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
 
-    tokenService = moduleFixture.get<TokenService>(TokenService);
+    authService = moduleFixture.get<AuthService>(AuthService);
   });
 
   it('GET /api/member (회원 정보 반환 성공)', async () => {
-    const memberId = 1; // 항상 DB에 들어있는 회원의 ID로의 설정이 필요해보입니다.
-    const validToken = await tokenService.assignToken(memberId);
+    const oauthRequestFixture = {
+      email: 'fixture@example.com',
+      name: 'fixture',
+      img: 'https://test.com',
+    } as OAuthRequest;
 
+    const validToken = (await authService.login(oauthRequestFixture)).replace(
+      'Bearer ',
+      '',
+    );
     const response = await request(app.getHttpServer())
       .get('/api/member')
       .set('Authorization', `Bearer ${validToken}`)
       .expect(200);
 
-    expect(response.body.id).toBe(memberId);
+    console.log(response.body);
+
+    expect(response.body.email).toBe(oauthRequestFixture.email);
+    expect(response.body.nickname).toBe(oauthRequestFixture.name);
+    expect(response.body.profileImg).toBe(oauthRequestFixture.img);
   });
 
   it('GET /api/member (유효하지 않은 토큰 사용으로 인한 회원 정보 반환 실패)', async () => {
