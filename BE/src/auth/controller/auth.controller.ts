@@ -40,7 +40,11 @@ export class AuthController {
     const userRequest = user as OAuthRequest;
     res
       .status(201)
-      .json({ accessToken: await this.authService.login(userRequest) });
+      .cookie('accessToken', await this.authService.login(userRequest), {
+        httpOnly: true,
+        path: '/',
+      })
+      .send();
   }
 
   @Delete('logout')
