@@ -7,7 +7,6 @@ import { isEmpty } from 'class-validator';
 import { isCategoryCustom } from '../util/question.util';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { QuestionListResponse } from '../dto/questionListResponse';
-import { QuestionNotFoundException } from '../exception/question.exception';
 import { CustomQuestionRequest } from '../dto/customQuestionRequest';
 
 @Injectable()
@@ -53,10 +52,13 @@ export class QuestionService {
   }
 
   async deleteById(id: number, member: Member) {
-    const question = await this.questionRepository.findQuestionByIdAndMember_Id(id, member.id);
+    const question = await this.questionRepository.findQuestionByIdAndMember_Id(
+      id,
+      member.id,
+    );
 
     if (isEmpty(question)) {
-      throw new QuestionNotFoundException();
+      throw new UnauthorizedException();
     }
 
     await this.questionRepository.remove(question);

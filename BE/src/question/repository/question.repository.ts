@@ -27,8 +27,11 @@ export class QuestionRepository {
     return await this.questionRepository.findOneBy({ id: id });
   }
 
-  async findQuestionByIdAndMember_Id(questionId:number, memberId:number) {
-    return this.questionRepository.findOneBy({ members: { id: memberId }, id:questionId } );
+  async findQuestionByIdAndMember_Id(questionId: number, memberId: number) {
+    return this.questionRepository.findOneBy({
+      members: { id: memberId },
+      id: questionId,
+    });
   }
 
   async remove(question: Question) {
