@@ -1,25 +1,30 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
   Param,
   Post,
   Req,
-  Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { QuestionService } from '../service/question.service';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { getTokenValue } from 'src/util/token.util';
 import { TokenService } from 'src/token/service/token.service';
 import { QuestionListResponse } from '../dto/questionListResponse';
 import { createApiResponseOption } from '../../util/swagger.util';
 import { AuthGuard } from '@nestjs/passport';
 import { Member } from '../../member/entity/member';
-import {CustomQuestionRequest} from "../dto/customQuestionRequest";
+import { CustomQuestionRequest } from '../dto/customQuestionRequest';
 
-@Controller('api/question')
+@Controller('/api/question')
 @ApiTags('question')
 export class QuestionController {
   constructor(
@@ -30,13 +35,13 @@ export class QuestionController {
   @Post('')
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
+  @ApiOperation({ summary: '커스텀 질문 생성' })
   @ApiResponse(createApiResponseOption(201, '커스텀 질문 생성', null))
-  async createCustomQuestion(@Req() req: Request, @Res() res: Response) {
+  async createCustomQuestion(@Req() req: Request, @Body() customQuestionRequest: CustomQuestionRequest) {
     await this.questionService.createCustomQuestion(
-      req.body as CustomQuestionRequest,
+      customQuestionRequest,
       req.user as Member,
     );
-    res.send(201);
   }
 
   @Get('')
