@@ -4,7 +4,7 @@ import {
   Delete,
   Get,
   Param,
-  Post,
+  Post, Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -55,8 +55,9 @@ export class QuestionController {
       QuestionListResponse,
     ),
   )
+  @ApiOperation({ summary: '카테고리별 질문 조회' })
   async findAllByCategory(
-    @Param('category') category: string,
+    @Query('category') category: string,
     @Req() request: Request,
   ): Promise<any> {
     return await this.questionService.findByCategory(

@@ -19,7 +19,7 @@ export class QuestionRepository {
     memberId: number,
   ): Promise<Question[]> {
     return (await this.constructQueryBuilder(category, memberId))
-      .orderBy('question.createdAt', 'DESC')
+      .orderBy('Question.createdAt', 'DESC')
       .getMany();
   }
 
@@ -39,15 +39,16 @@ export class QuestionRepository {
   }
 
   private async constructQueryBuilder(category: string, memberId: number) {
-    const queryBuilder = this.questionRepository.createQueryBuilder('question');
+    const queryBuilder = this.questionRepository.createQueryBuilder('Question');
 
     if (category === 'CUSTOM') {
       return queryBuilder
-        .leftJoin('question.members', 'member')
-        .where('question.category = :category', { category })
+        .leftJoin('Question.id', 'QuestionMember')
+          .leftJoin('QuestionMember.memberId', 'Member')
+        .where('Question.category = :category', { category })
         .andWhere('member.id = :memberId', { memberId });
     }
 
-    return queryBuilder.where('question.category = :category', { category });
+    return queryBuilder.where('Question.category = :category', { category });
   }
 }
