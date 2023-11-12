@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -37,7 +38,10 @@ export class QuestionController {
   @ApiBearerAuth()
   @ApiOperation({ summary: '커스텀 질문 생성' })
   @ApiResponse(createApiResponseOption(201, '커스텀 질문 생성', null))
-  async createCustomQuestion(@Req() req: Request, @Body() customQuestionRequest: CustomQuestionRequest) {
+  async createCustomQuestion(
+    @Req() req: Request,
+    @Body() customQuestionRequest: CustomQuestionRequest,
+  ) {
     await this.questionService.createCustomQuestion(
       customQuestionRequest,
       req.user as Member,
@@ -62,7 +66,16 @@ export class QuestionController {
     );
   }
 
-  @Delete('')
+  @ApiOperation({ summary: '게시글 삭제 api' })
+  @Delete(':questionId')
+  @ApiResponse(createApiResponseOption(204, '게시글 삭제', null))
+  async deleteQuestion(
+    @Param('questionId') questionId: number,
+    @Req() req: Request,
+  ) {
+    await this.questionService.deleteById(questionId, req.user as Member);
+  }
+
   private async findMember(request: Request) {
     try {
       const token = getTokenValue(request);
