@@ -15,11 +15,12 @@ import {
   createApiResponseOption,
 } from 'src/util/swagger.util';
 import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
+import { MemberService } from '../service/member.service';
 
 @Controller('/api/member')
 @ApiTags('member')
 export class MemberController {
-  constructor() {}
+  constructor(private memberService: MemberService) {}
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
@@ -40,5 +41,10 @@ export class MemberController {
   getMyInfo(@Req() req: Request) {
     if (!req.user) throw new ManipulatedTokenNotFiltered();
     return MemberResponse.from(req.user as Member);
+  }
+
+  @Get('/name')
+  getNameForInterview() {
+    this.memberService.getNameForInterview();
   }
 }
