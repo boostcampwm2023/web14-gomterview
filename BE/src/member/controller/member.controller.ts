@@ -44,7 +44,7 @@ export class MemberController {
   }
 
   @Get('/name')
-  getNameForInterview(@Req() req: Request) {
-    return this.memberService.getNameForInterview(req);
+  async getNameForInterview(@Req() req: Request) {
+    return await this.memberService.getNameForInterview(req);
   }
 }
