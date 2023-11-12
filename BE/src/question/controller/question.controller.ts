@@ -67,6 +67,8 @@ export class QuestionController {
   }
 
   @ApiOperation({ summary: '게시글 삭제 api' })
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
   @Delete(':questionId')
   @ApiResponse(createApiResponseOption(204, '게시글 삭제', null))
   async deleteQuestion(
