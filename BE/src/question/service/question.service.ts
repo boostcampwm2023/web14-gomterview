@@ -53,14 +53,10 @@ export class QuestionService {
   }
 
   async deleteById(id: number, member: Member) {
-    const question = await this.questionRepository.findById(id);
+    const question = await this.questionRepository.findQuestionByIdAndMember_Id(id, member.id);
 
     if (isEmpty(question)) {
       throw new QuestionNotFoundException();
-    }
-
-    if (!(await question.members).includes(member)) {
-      throw new UnauthorizedException();
     }
 
     await this.questionRepository.remove(question);
