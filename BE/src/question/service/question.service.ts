@@ -8,6 +8,7 @@ import { isCategoryCustom } from '../util/question.util';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { QuestionListResponse } from '../dto/questionListResponse';
 import { QuestionNotFoundException } from '../exception/question.exception';
+import { CustomQuestionRequest } from '../dto/customQuestionRequest';
 
 @Injectable()
 export class QuestionService {
@@ -21,6 +22,18 @@ export class QuestionService {
     member: Member,
   ) {
     const question = Question.from(createQuestionRequest, member);
+    await this.questionRepository.save(question);
+  }
+
+  async createCustomQuestion(
+    customQuestionRequest: CustomQuestionRequest,
+    member: Member,
+  ) {
+    const questionRequest = {
+      category: 'CUSTOM',
+      content: customQuestionRequest.content,
+    } as CreateQuestionRequest;
+    const question = Question.from(questionRequest, member);
     await this.questionRepository.save(question);
   }
 
