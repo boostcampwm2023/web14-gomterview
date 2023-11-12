@@ -16,8 +16,8 @@ import { TokenService } from 'src/token/service/token.service';
 import { QuestionListResponse } from '../dto/questionListResponse';
 import { createApiResponseOption } from '../../util/swagger.util';
 import { AuthGuard } from '@nestjs/passport';
-import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 import { Member } from '../../member/entity/member';
+import {CustomQuestionRequest} from "../dto/customQuestionRequest";
 
 @Controller('api/question')
 @ApiTags('question')
@@ -31,9 +31,9 @@ export class QuestionController {
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @ApiResponse(createApiResponseOption(201, '커스텀 질문 생성', null))
-  async createQuestion(@Req() req: Request, @Res() res: Response) {
-    await this.questionService.createQuestion(
-      req.body as CreateQuestionRequest,
+  async createCustomQuestion(@Req() req: Request, @Res() res: Response) {
+    await this.questionService.createCustomQuestion(
+      req.body as CustomQuestionRequest,
       req.user as Member,
     );
     res.send(201);

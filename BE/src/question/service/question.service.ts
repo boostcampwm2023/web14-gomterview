@@ -17,13 +17,13 @@ export class QuestionService {
     private memberRepository: MemberRepository,
   ) {}
 
-  async createQuestion(
-    createQuestionRequest: CreateQuestionRequest,
-    member: Member,
-  ) {
-    const question = Question.from(createQuestionRequest, member);
-    await this.questionRepository.save(question);
-  }
+  // async createQuestion(
+  //   createQuestionRequest: CreateQuestionRequest,
+  //   member: Member,
+  // ) {
+  //   const question = Question.from(createQuestionRequest, member);
+  //   await this.questionRepository.save(question);
+  // }
 
   async createCustomQuestion(
     customQuestionRequest: CustomQuestionRequest,
