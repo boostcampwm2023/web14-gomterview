@@ -5,15 +5,11 @@ import { MemberResponse } from '../dto/memberResponse';
 import {
   ApiTags,
   ApiResponse,
-  ApiBearerAuth,
   ApiOperation,
-  ApiHeader,
+  ApiCookieAuth,
 } from '@nestjs/swagger';
 import { Member } from '../entity/member';
-import {
-  createApiHeaderOption,
-  createApiResponseOption,
-} from 'src/util/swagger.util';
+import { createApiResponseOption } from 'src/util/swagger.util';
 import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
 import { MemberService } from '../service/member.service';
 
@@ -24,13 +20,10 @@ export class MemberController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth() // 문서 상에 자물쇠 아이콘을 표시하여 JWT가 필요하다는 것을 나타냄
+  @ApiCookieAuth() // 문서 상에 자물쇠 아이콘을 표시하여 쿠키가 필요하다는 것을 나타냄
   @ApiOperation({
     summary: '회원 정보를 반환하는 메서드',
   })
-  @ApiHeader(
-    createApiHeaderOption('Authorization', 'Access Token (Bearer Token)', true),
-  )
   @ApiResponse(
     createApiResponseOption(
       200,
@@ -44,6 +37,17 @@ export class MemberController {
   }
 
   @Get('/name')
+  @ApiCookieAuth()
+  @ApiOperation({
+    summary: '면접 화면에 표출할 이름을 반환하는 메서드',
+  })
+  @ApiResponse(
+    createApiResponseOption(
+      200,
+      `면접 화면에 표출할 이름(회원의 경우 저장된 이름을, 비회원의 경우 '면접자')을 반환한다.`,
+      String,
+    ),
+  )
   async getNameForInterview(@Req() req: Request) {
     return await this.memberService.getNameForInterview(req);
   }
