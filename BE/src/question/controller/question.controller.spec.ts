@@ -6,12 +6,14 @@ import { CustomQuestionRequest } from '../dto/customQuestionRequest';
 import { mockReqWithMemberFixture } from '../../member/fixture/member.fixture';
 import { Request } from 'express';
 import { ContentEmptyException } from '../exception/question.exception';
+import {CategoriesResponse} from "../dto/categoriesResponse";
 
 describe('QuestionController', () => {
   let controller: QuestionController;
 
   const mockQuestionService = {
     createCustomQuestion: jest.fn(),
+    findCategories: jest.fn()
   };
 
   const mockTokenService = {};
@@ -45,10 +47,6 @@ describe('QuestionController', () => {
     expect(result).toEqual(undefined);
   });
 
-  /*
-  TODO: 카테고리별 질문 조회는 후에 Answer API를 생성 후에, Default Answer까지 붙여서 한번에 테스트하기 위해 보류
-   */
-
   it('커스텀 질문 생성 실패 => body === undefined | "" | null', async () => {
     const arr = [undefined, '', null];
     arr.forEach(async (value) => {
@@ -66,4 +64,14 @@ describe('QuestionController', () => {
       ).rejects.toThrow(ContentEmptyException);
     });
   });
+
+  /*
+  TODO: 카테고리별 질문 조회는 후에 Answer API를 생성 후에, Default Answer까지 붙여서 한번에 테스트하기 위해 보류
+   */
+
+  it('전체 카테고리를 조회한다.', async () => {
+    mockQuestionService.findCategories.mockReturnValue(['CS', 'BE', 'FE', '나만의 질문']);
+    const result = await controller.findAllCategories();
+    expect(result).toEqual(new CategoriesResponse(['CS', 'BE', 'FE', '나만의 질문']));
+  })
 });

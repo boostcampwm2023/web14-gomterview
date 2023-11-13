@@ -74,7 +74,7 @@ export class QuestionController {
   )
   @ApiOperation({ summary: '전체 카테고리 조회' })
   async findAllCategories(): Promise<any> {
-    return await this.questionService.findCategories();
+    return new CategoriesResponse(await this.questionService.findCategories());
   }
 
   @ApiOperation({ summary: '게시글 삭제 api' })

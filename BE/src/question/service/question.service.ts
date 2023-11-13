@@ -43,9 +43,7 @@ export class QuestionService {
   }
 
   async findCategories() {
-    return new CategoriesResponse(
-      await this.questionRepository.findCategories(),
-    );
+    return await this.questionRepository.findCategories();
   }
 
   async findByCategory(category: string, memberId?: number) {

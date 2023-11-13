@@ -63,7 +63,7 @@ describe('QuestionService 단위 테스트', () => {
     const categories = ['CS', 'BE', 'FE', '나만의 질문'];
     mockQuestionRepository.findCategories.mockReturnValue(categories);
     const result = await service.findCategories();
-    expect(result).toEqual(new CategoriesResponse(categories));
+    expect(result).toEqual(categories);
   });
 
   /*
