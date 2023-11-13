@@ -3,11 +3,15 @@ import { QuestionController } from './question.controller';
 import { QuestionService } from '../service/question.service';
 import { TokenService } from '../../token/service/token.service';
 import { CustomQuestionRequest } from '../dto/customQuestionRequest';
+import {mockReqWithMemberFixture} from "../../member/fixture/member.fixture";
+import {Request} from "express";
 
 describe('QuestionController', () => {
   let controller: QuestionController;
 
-  const mockQuestionService = {};
+  const mockQuestionService = {
+    createCustomQuestion: jest.fn()
+  };
 
   const mockTokenService = {};
 
@@ -30,6 +34,10 @@ describe('QuestionController', () => {
   });
 
   it('커스텀 질문을 생성할 때 토큰이 있고, body의 content가 문자열로 존재한다면 성공적으로 저장된다.', async () => {
+    mockQuestionService.createCustomQuestion.mockResolvedValue(undefined);
+
     const body = { content: 'test content' } as CustomQuestionRequest;
+    const result = await controller.createCustomQuestion(mockReqWithMemberFixture as unknown as Request, body);
+    expect(result).toEqual(undefined);
   });
 });

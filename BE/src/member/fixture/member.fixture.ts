@@ -14,3 +14,5 @@ export const oauthRequestFixture = {
   name: 'fixture',
   img: 'https://test.com',
 } as OAuthRequest;
+
+export const mockReqWithMemberFixture = { user: memberFixture };
