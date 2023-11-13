@@ -4,7 +4,6 @@ import { QuestionRepository } from '../repository/question.repository';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { CustomQuestionRequest } from '../dto/customQuestionRequest';
 import { ContentEmptyException } from '../exception/question.exception';
-import { CategoriesResponse } from '../dto/categoriesResponse';
 import { UnauthorizedException } from '@nestjs/common';
 import { memberFixture } from '../../member/fixture/member.fixture';
 import { questionFixture } from '../fixture/question.fixture';

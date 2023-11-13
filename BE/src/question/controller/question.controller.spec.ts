@@ -4,18 +4,17 @@ import { QuestionService } from '../service/question.service';
 import { TokenService } from '../../token/service/token.service';
 import { CustomQuestionRequest } from '../dto/customQuestionRequest';
 import { mockReqWithMemberFixture } from '../../member/fixture/member.fixture';
-import { Request } from 'express';
 import { ContentEmptyException } from '../exception/question.exception';
-import {CategoriesResponse} from "../dto/categoriesResponse";
-import {UnauthorizedException} from "@nestjs/common";
+import { CategoriesResponse } from '../dto/categoriesResponse';
+import { UnauthorizedException } from '@nestjs/common';
 
-describe('QuestionController', () => {
+describe('QuestionController 단위테스트', () => {
   let controller: QuestionController;
 
   const mockQuestionService = {
     createCustomQuestion: jest.fn(),
     findCategories: jest.fn(),
-    deleteById: jest.fn()
+    deleteById: jest.fn(),
   };
 
   const mockTokenService = {};
@@ -59,10 +58,7 @@ describe('QuestionController', () => {
       );
 
       await expect(
-        controller.createCustomQuestion(
-          mockReqWithMemberFixture as unknown as Request,
-          body,
-        ),
+        controller.createCustomQuestion(mockReqWithMemberFixture, body),
       ).rejects.toThrow(ContentEmptyException);
     });
   });
@@ -72,20 +68,30 @@ describe('QuestionController', () => {
    */
 
   it('전체 카테고리를 조회한다.', async () => {
-    mockQuestionService.findCategories.mockResolvedValue(['CS', 'BE', 'FE', '나만의 질문']);
+    mockQuestionService.findCategories.mockResolvedValue([
+      'CS',
+      'BE',
+      'FE',
+      '나만의 질문',
+    ]);
     const result = await controller.findAllCategories();
-    expect(result).toEqual(new CategoriesResponse(['CS', 'BE', 'FE', '나만의 질문']));
-  })
+    expect(result).toEqual(
+      new CategoriesResponse(['CS', 'BE', 'FE', '나만의 질문']),
+    );
+  });
 
   it('나만의 질문을 삭제한다', async () => {
     mockQuestionService.deleteById.mockResolvedValue(undefined);
     const result = await controller.deleteQuestion(1, mockReqWithMemberFixture);
     expect(result).toEqual(undefined);
-  })
+  });
 
   it('나만의 질문을 삭제 실패 => Unauthorized', async () => {
-    mockQuestionService.deleteById.mockRejectedValue(new UnauthorizedException());
-    await expect(controller.deleteQuestion(1, mockReqWithMemberFixture))
-        .rejects.toThrow(UnauthorizedException);
-  })
+    mockQuestionService.deleteById.mockRejectedValue(
+      new UnauthorizedException(),
+    );
+    await expect(
+      controller.deleteQuestion(1, mockReqWithMemberFixture),
+    ).rejects.toThrow(UnauthorizedException);
+  });
 });

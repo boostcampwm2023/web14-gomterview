@@ -8,7 +8,6 @@ import { isCategoryCustom } from '../util/question.util';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { QuestionListResponse } from '../dto/questionListResponse';
 import { CustomQuestionRequest } from '../dto/customQuestionRequest';
-import { CategoriesResponse } from '../dto/categoriesResponse';
 import { ContentEmptyException } from '../exception/question.exception';
 
 @Injectable()
