@@ -5,11 +5,13 @@ import {MemberRepository} from "../../member/repository/member.repository";
 import {CustomQuestionRequest} from "../dto/customQuestionRequest";
 import {Member} from "../../member/entity/member";
 import {ContentEmptyException} from "../exception/question.exception";
+import {CategoriesResponse} from "../dto/categoriesResponse";
 
 describe('QuestionService', () => {
   let service: QuestionService;
   const mockQuestionRepository = {
     save: jest.fn(),
+    findCategories: jest.fn()
   }
 
   const mockMemberRepository = {}
@@ -42,5 +44,12 @@ describe('QuestionService', () => {
     mockQuestionRepository.save.mockResolvedValue(undefined);
     await expect(service.createCustomQuestion(customQuestionRequest, memberFixture))
         .rejects.toThrow(ContentEmptyException);
+  })
+
+  it('카테고리 조회를 한다.', async () => {
+    const categories = ['CS', 'BE', 'FE', '나만의 질문'];
+    mockQuestionRepository.findCategories.mockReturnValue(categories);
+    const result = await service.findCategories();
+    expect(result).toEqual(new CategoriesResponse(categories));
   })
 });
