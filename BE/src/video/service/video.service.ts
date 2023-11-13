@@ -11,4 +11,8 @@ export class VideoService {
     const newVideo = Video.from(member, createVidoeRequest);
     await this.videoRepository.save(newVideo);
   }
+
+  async getPreSignedUrl(createPreSignedUrlRequest: any) {
+    throw new Error('Method not implemented.');
+  }
 }

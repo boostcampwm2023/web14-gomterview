@@ -32,4 +32,11 @@ export class VideoController {
   ) {
     this.videoService.createVideo(req.user as Member, createVidoeRequest);
   }
+
+  @Post('/pre-signed')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiCookieAuth()
+  async getPreSignedUrl(@Body() createPreSignedUrlRequest) {
+    this.videoService.getPreSignedUrl(createPreSignedUrlRequest);
+  }
 }
