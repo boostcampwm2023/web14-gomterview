@@ -8,6 +8,7 @@ import { isCategoryCustom } from '../util/question.util';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { QuestionListResponse } from '../dto/questionListResponse';
 import { CustomQuestionRequest } from '../dto/customQuestionRequest';
+import { CategoriesResponse } from '../dto/categoriesResponse';
 
 @Injectable()
 export class QuestionService {
@@ -34,6 +35,12 @@ export class QuestionService {
     } as CreateQuestionRequest;
     const question = Question.from(questionRequest, member);
     await this.questionRepository.save(question);
+  }
+
+  async findCategories() {
+    return new CategoriesResponse(
+      await this.questionRepository.findCategories(),
+    );
   }
 
   async findByCategory(category: string, memberId?: number) {

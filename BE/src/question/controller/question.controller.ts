@@ -4,7 +4,8 @@ import {
   Delete,
   Get,
   Param,
-  Post, Query,
+  Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -23,6 +24,7 @@ import { createApiResponseOption } from '../../util/swagger.util';
 import { AuthGuard } from '@nestjs/passport';
 import { Member } from '../../member/entity/member';
 import { CustomQuestionRequest } from '../dto/customQuestionRequest';
+import { CategoriesResponse } from '../dto/categoriesResponse';
 
 @Controller('/api/question')
 @ApiTags('question')
@@ -64,6 +66,15 @@ export class QuestionController {
       category,
       await this.findMember(request),
     );
+  }
+
+  @Get('/category')
+  @ApiResponse(
+    createApiResponseOption(200, '전체 카테고리 조회', CategoriesResponse),
+  )
+  @ApiOperation({ summary: '전체 카테고리 조회' })
+  async findAllCategories(): Promise<any> {
+    return await this.questionService.findCategories();
   }
 
   @ApiOperation({ summary: '게시글 삭제 api' })
