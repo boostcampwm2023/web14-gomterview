@@ -3,22 +3,11 @@ import { QuestionService } from './question.service';
 import { QuestionRepository } from '../repository/question.repository';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { CustomQuestionRequest } from '../dto/customQuestionRequest';
-import { Member } from '../../member/entity/member';
 import { ContentEmptyException } from '../exception/question.exception';
 import { CategoriesResponse } from '../dto/categoriesResponse';
 import { UnauthorizedException } from '@nestjs/common';
-import { Question } from '../entity/question';
-
-const memberFixture: Member = new Member(
-  100,
-  'test@test.com',
-  'test',
-  'http://localhost:8080',
-  new Date(),
-);
-const questionFixture: Question = new Question('CUSTOM', 'test content', [
-  memberFixture,
-]);
+import { memberFixture } from '../../member/fixture/member.fixture';
+import { questionFixture } from '../fixture/question.fixture';
 
 describe('QuestionService 단위 테스트', () => {
   let service: QuestionService;

@@ -2,14 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MemberController } from './member.controller';
 import { MemberResponse } from '../dto/memberResponse';
 import { Request } from 'express';
-import { Member } from '../entity/member';
 import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from 'src/app.module';
 import * as request from 'supertest';
 import { AuthModule } from 'src/auth/auth.module';
 import { AuthService } from 'src/auth/service/auth.service';
-import { OAuthRequest } from 'src/auth/interface/auth.interface';
+import { memberFixture, oauthRequestFixture } from '../fixture/member.fixture';
 
 describe('MemberController', () => {
   let memberController: MemberController;
@@ -26,19 +25,11 @@ describe('MemberController', () => {
   });
 
   it('should return member information as MemberResponse type', async () => {
-    const mockUser = new Member(
-      1,
-      'test@example.com',
-      'TestUser',
-      'https://example.com',
-      new Date(),
-    );
-
-    const mockReq = { user: mockUser };
+    const mockReq = { user: memberFixture };
     const result = memberController.getMyInfo(mockReq as unknown as Request);
 
     expect(result).toBeInstanceOf(MemberResponse);
-    expect(result).toEqual(MemberResponse.from(mockUser));
+    expect(result).toEqual(MemberResponse.from(memberFixture));
     expect(result['id']).toBe(1);
     expect(result['email']).toBe('test@example.com');
     expect(result['nickname']).toBe('TestUser');
@@ -70,12 +61,6 @@ describe('MemberController (E2E Test)', () => {
   });
 
   it('GET /api/member (회원 정보 반환 성공)', async () => {
-    const oauthRequestFixture = {
-      email: 'fixture@example.com',
-      name: 'fixture',
-      img: 'https://test.com',
-    } as OAuthRequest;
-
     const validToken = (await authService.login(oauthRequestFixture)).replace(
       'Bearer ',
       '',
