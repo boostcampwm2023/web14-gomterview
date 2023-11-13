@@ -1,13 +1,23 @@
-import React, { PropsWithChildren } from 'react';
+import React from 'react';
 import Box from '../Box/Box';
 import { css } from '@emotion/react';
 import { theme } from '@/styles/theme';
 
-const ModalLayout: React.FC<PropsWithChildren> = ({ children }) => {
+type ModalLayoutProps = {
+  children?: React.ReactNode;
+  isOpen: boolean;
+  closeModal: () => void;
+};
+
+const ModalLayout: React.FC<ModalLayoutProps> = ({
+  children,
+  isOpen,
+  closeModal,
+}) => {
   return (
     <div
       css={css`
-        display: flex;
+        display: ${isOpen ? 'flex' : 'none'};
         justify-content: center;
         align-items: center;
         position: absolute;
@@ -18,6 +28,9 @@ const ModalLayout: React.FC<PropsWithChildren> = ({ children }) => {
         height: 100%;
         background-color: ${theme.colors.shadow.modalShadow};
       `}
+      onClick={() => {
+        closeModal();
+      }}
     >
       <Box
         css={css`
@@ -26,6 +39,7 @@ const ModalLayout: React.FC<PropsWithChildren> = ({ children }) => {
           height: auto;
           width: auto;
         `}
+        onClick={(e) => e.stopPropagation()}
       >
         {children}
       </Box>
