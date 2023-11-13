@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { QuestionRepository } from '../repository/question.repository';
 import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 import { Member } from 'src/member/entity/member';
@@ -7,6 +7,7 @@ import { isEmpty } from 'class-validator';
 import { isCategoryCustom } from '../util/question.util';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { QuestionListResponse } from '../dto/questionListResponse';
+import { CustomQuestionRequest } from '../dto/customQuestionRequest';
 
 @Injectable()
 export class QuestionService {
@@ -15,11 +16,23 @@ export class QuestionService {
     private memberRepository: MemberRepository,
   ) {}
 
-  async createQuestion(
-    createQuestionRequest: CreateQuestionRequest,
+  // async createQuestion(
+  //   createQuestionRequest: CreateQuestionRequest,
+  //   member: Member,
+  // ) {
+  //   const question = Question.from(createQuestionRequest, member);
+  //   await this.questionRepository.save(question);
+  // }
+
+  async createCustomQuestion(
+    customQuestionRequest: CustomQuestionRequest,
     member: Member,
   ) {
-    const question = Question.from(createQuestionRequest, member);
+    const questionRequest = {
+      category: 'CUSTOM',
+      content: customQuestionRequest.content,
+    } as CreateQuestionRequest;
+    const question = Question.from(questionRequest, member);
     await this.questionRepository.save(question);
   }
 
@@ -36,5 +49,18 @@ export class QuestionService {
       );
 
     return QuestionListResponse.from(questionList);
+  }
+
+  async deleteById(id: number, member: Member) {
+    const question = await this.questionRepository.findQuestionByIdAndMember_Id(
+      id,
+      member.id,
+    );
+
+    if (isEmpty(question)) {
+      throw new UnauthorizedException();
+    }
+
+    await this.questionRepository.remove(question);
   }
 }
