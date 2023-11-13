@@ -8,13 +8,7 @@ import { VideoRepository } from '../repository/video.repository';
 export class VideoService {
   constructor(private videoRepository: VideoRepository) {}
   async createVideo(member: Member, createVidoeRequest: CreateVideoRequest) {
-    const newVideo = new Video(
-      member.id,
-      createVidoeRequest.questionId,
-      createVidoeRequest.name,
-      createVidoeRequest.url,
-      false,
-    );
+    const newVideo = Video.from(member, createVidoeRequest);
     await this.videoRepository.save(newVideo);
   }
 }

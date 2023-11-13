@@ -3,6 +3,7 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { DefaultEntity } from 'src/app.entity';
 import { Member } from 'src/member/entity/member';
 import { Question } from 'src/question/entity/question';
+import { CreateVideoRequest } from '../dto/CreateVideoRequest';
 
 @Entity({ name: 'Video' })
 export class Video extends DefaultEntity {
@@ -42,5 +43,15 @@ export class Video extends DefaultEntity {
     this.name = name;
     this.url = url;
     this.isPublic = isPublic;
+  }
+
+  static from(member: Member, createVidoeRequest: CreateVideoRequest): Video {
+    return new Video(
+      member.id,
+      createVidoeRequest.questionId,
+      createVidoeRequest.name,
+      createVidoeRequest.url,
+      false,
+    );
   }
 }
