@@ -47,6 +47,11 @@ export class QuestionRepository {
     await this.questionRepository.remove(question);
   }
 
+  async query(query:string) {
+    console.log(query);
+    await this.questionRepository.query(query);
+  }
+
   private async constructQueryBuilder(category: string, memberId: number) {
     const queryBuilder = this.questionRepository.createQueryBuilder('Question');
 

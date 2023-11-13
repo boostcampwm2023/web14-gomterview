@@ -3,13 +3,17 @@ import { QuestionController } from './question.controller';
 import { QuestionService } from '../service/question.service';
 import { TokenService } from '../../token/service/token.service';
 import { CustomQuestionRequest } from '../dto/customQuestionRequest';
-import { mockReqWithMemberFixture } from '../../member/fixture/member.fixture';
+import {mockReqWithMemberFixture, oauthRequestFixture} from '../../member/fixture/member.fixture';
 import { ContentEmptyException } from '../exception/question.exception';
 import { CategoriesResponse } from '../dto/categoriesResponse';
 import { INestApplication, UnauthorizedException } from '@nestjs/common';
 import { AppModule } from '../../app.module';
-import { AuthModule } from '../../auth/auth.module';
 import {QuestionRepository} from "../repository/question.repository";
+import {TypeOrmModule} from "@nestjs/typeorm";
+import {Member} from "../../member/entity/member";
+import {Question} from "../entity/question";
+import {multiQuestionFixture} from "../fixture/question.fixture";
+import * as request from "supertest";
 
 describe('QuestionController 단위테스트', () => {
   let controller: QuestionController;
@@ -106,18 +110,42 @@ describe('Question Controller 통합 테스트', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule, AuthModule],
+      imports: [AppModule, TypeOrmModule.forRoot({
+        type: 'sqlite', // 또는 다른 테스트용 데이터베이스 설정
+        database: ':memory:', // 메모리 데이터베이스 사용
+        entities: [Member, Question],
+        synchronize: true,
+      })],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
 
     questionService = moduleFixture.get<QuestionService>(QuestionService);
+    questionRepository = moduleFixture.get<QuestionRepository>(QuestionRepository);
   });
 
   it('전체 카테고리를 조회한다.', async () => {
-    await questionService.findCategories();
+    const savePromises = multiQuestionFixture.map((question) =>
+        questionRepository.save(question)
+    );
+
+    await Promise.all(savePromises)
+    request.agent(app.getHttpServer())
+        .get('/api/question/category')
+        .expect(200)
+        .then((response) => {
+          expect(response.body.categories).toBe(['BE', 'CS', 'FE', '나만의 질문']);
+        });
   });
 
+  afterEach(async () => {
+    // 테스트용 데이터베이스의 테이블 데이터를 지우는 로직 추가
+    await questionRepository.query('delete from Question');
+    await questionRepository.query('delete from Member');
+  });
 
+  afterAll(async ()=> {
+    await app.close();
+  })
 });
