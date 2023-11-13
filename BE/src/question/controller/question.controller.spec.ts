@@ -135,7 +135,7 @@ describe('Question Controller 통합 테스트', () => {
         .get('/api/question/category')
         .expect(200)
         .then((response) => {
-          expect(response.body.categories).toBe(['BE', 'CS', 'FE', '나만의 질문']);
+          expect(response.body.categories).toEqual(['BE', 'CS', 'FE', '나만의 질문']);
         });
   });
 

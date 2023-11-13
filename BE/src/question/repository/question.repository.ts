@@ -48,7 +48,6 @@ export class QuestionRepository {
   }
 
   async query(query:string) {
-    console.log(query);
     await this.questionRepository.query(query);
   }
 

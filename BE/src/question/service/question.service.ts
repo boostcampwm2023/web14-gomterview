@@ -42,9 +42,11 @@ export class QuestionService {
   }
 
   async findCategories() {
-    return (await this.questionRepository.findCategories()).map(
-      (categoryOnDB) => OUTPUT_FORM[categoryOnDB],
+    const categories = (await this.questionRepository.findCategories()).map(
+        (categoryOnDB) => OUTPUT_FORM[categoryOnDB],
     );
+    categories.sort();
+    return categories;
   }
 
   async findByCategory(category: string, memberId?: number) {
