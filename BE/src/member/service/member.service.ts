@@ -14,8 +14,11 @@ export class MemberService {
     if (!req.cookies['accessToken']) return '면접자';
 
     // TODO: 추후에 랜덤 Prefix 생성할 필요가 있음
-    const tokenValue = getTokenValue(req);
+    return (await this.getMemberByToken(getTokenValue(req))).nickname;
+  }
+
+  async getMemberByToken(tokenValue: string) {
     const memberId = (await this.tokenService.getPayload(tokenValue)).id;
-    return (await this.memberRepository.findById(memberId)).nickname;
+    return await this.memberRepository.findById(memberId);
   }
 }
