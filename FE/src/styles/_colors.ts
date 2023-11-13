@@ -8,6 +8,7 @@ const colorChips = {
   grayscaleBlack: '#000000',
 
   shadow100: 'rgba(0, 0, 0, 0.1)',
+  shadow600: 'rgba(0, 0, 0, 0.6)',
 
   blue50: '#CBDBFA',
   blue100: '#BDD1F9',
@@ -90,6 +91,7 @@ export const colors = {
   },
   shadow: {
     boxShadow: colorChips.shadow100, // rgba(0, 0, 0, 0.1)
+    modalShadow: colorChips.shadow600, // rgba(0, 0, 0, 0.6)
     buttonShadow: colorChips.blue700, // #3056A2
   },
 };
