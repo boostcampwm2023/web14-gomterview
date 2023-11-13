@@ -6,7 +6,10 @@ import { CustomQuestionRequest } from '../dto/customQuestionRequest';
 import { mockReqWithMemberFixture } from '../../member/fixture/member.fixture';
 import { ContentEmptyException } from '../exception/question.exception';
 import { CategoriesResponse } from '../dto/categoriesResponse';
-import { UnauthorizedException } from '@nestjs/common';
+import { INestApplication, UnauthorizedException } from '@nestjs/common';
+import { AppModule } from '../../app.module';
+import { AuthModule } from '../../auth/auth.module';
+import {QuestionRepository} from "../repository/question.repository";
 
 describe('QuestionController 단위테스트', () => {
   let controller: QuestionController;
@@ -50,7 +53,7 @@ describe('QuestionController 단위테스트', () => {
 
   it('커스텀 질문 생성 실패 => body === undefined | "" | null', async () => {
     const arr = [undefined, '', null];
-    arr.forEach(async (value) => {
+    for (const value of arr) {
       const body = { content: value } as CustomQuestionRequest;
 
       mockQuestionService.createCustomQuestion.mockRejectedValue(
@@ -60,7 +63,7 @@ describe('QuestionController 단위테스트', () => {
       await expect(
         controller.createCustomQuestion(mockReqWithMemberFixture, body),
       ).rejects.toThrow(ContentEmptyException);
-    });
+    }
   });
 
   /*
@@ -94,4 +97,27 @@ describe('QuestionController 단위테스트', () => {
       controller.deleteQuestion(1, mockReqWithMemberFixture),
     ).rejects.toThrow(UnauthorizedException);
   });
+});
+
+describe('Question Controller 통합 테스트', () => {
+  let app: INestApplication;
+  let questionService: QuestionService;
+  let questionRepository: QuestionRepository;
+
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule, AuthModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    await app.init();
+
+    questionService = moduleFixture.get<QuestionService>(QuestionService);
+  });
+
+  it('전체 카테고리를 조회한다.', async () => {
+    await questionService.findCategories();
+  });
+
+
 });
