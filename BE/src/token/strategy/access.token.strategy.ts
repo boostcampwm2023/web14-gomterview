@@ -12,6 +12,7 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private memberRepository: MemberRepository) {
     super({
       jwtFromRequest: (req: Request) => {
+        console.log(req.cookies);
         return req.cookies['accessToken'].replace('Bearer ', '');
       },
       secretOrKey: process.env.JWT_SECRET,

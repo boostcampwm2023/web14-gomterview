@@ -13,14 +13,25 @@ import {
   mockReqWithMemberFixture,
   oauthRequestFixture,
 } from '../fixture/member.fixture';
+import { MemberService } from '../service/member.service';
+import { TokenService } from '../../token/service/token.service';
 
 describe('MemberController', () => {
   let memberController: MemberController;
 
+  const mockMemberService = {};
+  const mockTokenService = {};
+
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
+      providers: [MemberService, TokenService],
       controllers: [MemberController],
-    }).compile();
+    })
+      .overrideProvider(MemberService)
+      .useValue(mockMemberService)
+      .overrideProvider(TokenService)
+      .useValue(mockTokenService)
+      .compile();
     memberController = moduleRef.get<MemberController>(MemberController);
   });
 
@@ -70,24 +81,25 @@ describe('MemberController (E2E Test)', () => {
       'Bearer ',
       '',
     );
-    const response = await request(app.getHttpServer())
+    const agent = await request.agent(app.getHttpServer());
+    agent
       .get('/api/member')
-      .set('Authorization', `Bearer ${validToken}`)
-      .expect(200);
-
-    console.log(response.body);
-
-    expect(response.body.email).toBe(oauthRequestFixture.email);
-    expect(response.body.nickname).toBe(oauthRequestFixture.name);
-    expect(response.body.profileImg).toBe(oauthRequestFixture.img);
+      .set('Cookie', [`accessToken=Bearer ${validToken}`])
+      .expect(200)
+      .then((response) => {
+        expect(response.body.email).toBe(oauthRequestFixture.email);
+        expect(response.body.nickname).toBe(oauthRequestFixture.name);
+        expect(response.body.profileImg).toBe(oauthRequestFixture.img);
+      });
   });
 
   it('GET /api/member (유효하지 않은 토큰 사용으로 인한 회원 정보 반환 실패)', async () => {
     const invalidToken = 'INVALID_TOKEN';
 
-    await request(app.getHttpServer())
+    const agent = await request(app.getHttpServer());
+    agent
       .get('/api/member')
-      .set('Authorization', `Bearer ${invalidToken}`)
+      .set('Cookie', [`accessToken=Bearer ${invalidToken}`])
       .expect(401);
   });
 
