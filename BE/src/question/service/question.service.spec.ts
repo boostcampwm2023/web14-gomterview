@@ -6,7 +6,7 @@ import { CustomQuestionRequest } from '../dto/customQuestionRequest';
 import { ContentEmptyException } from '../exception/question.exception';
 import { UnauthorizedException } from '@nestjs/common';
 import { memberFixture } from '../../member/fixture/member.fixture';
-import {customQuestionRequestFixture, questionFixture} from '../fixture/question.fixture';
+import {customQuestionRequestFixture, multiQuestionFixture, questionFixture} from '../fixture/question.fixture';
 import {AppModule} from "../../app.module";
 
 describe('QuestionService 단위 테스트', () => {
@@ -89,6 +89,7 @@ describe('QuestionService 단위 테스트', () => {
 
 describe('Question Service 통합 테스트', () => {
   let service: QuestionService;
+  let repository: QuestionRepository;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -96,6 +97,7 @@ describe('Question Service 통합 테스트', () => {
     }).compile();
 
     service = module.get<QuestionService>(QuestionService);
+    repository = module.get<QuestionRepository>(QuestionRepository);
   });
 
   it('should be defined', () => {
@@ -106,4 +108,12 @@ describe('Question Service 통합 테스트', () => {
     await expect(service.createCustomQuestion(customQuestionRequestFixture, memberFixture)).resolves
         .toBeUndefined();
   });
+
+  it('저장되어 있는 모든 카테고리를 조회한다.', async () => {
+    multiQuestionFixture
+        .forEach(async (each) => await repository.save(each));
+
+    const categories = await service.findCategories();
+    expect(categories).toContainEqual(['CS', 'BE', 'FE', '나만의 질문']);
+  })
 })
