@@ -27,6 +27,7 @@ const ModalLayout: React.FC<ModalLayoutProps> = ({
         width: 100%;
         height: 100%;
         background-color: ${theme.colors.shadow.modalShadow};
+        ${theme.typography.body1}
       `}
       onClick={() => {
         closeModal();

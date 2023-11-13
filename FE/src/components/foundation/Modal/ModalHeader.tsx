@@ -22,8 +22,9 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
         gap: 0.5rem;
         color: ${theme.colors.text.white};
         background-color: ${theme.colors.point.secondary.default};
-        border-radius: 1rem 1rem 0rem 0rem;
-        margin: -0.0625rem;
+        border-radius: 1rem 1rem 0 0;
+        margin: -0.0625rem 0;
+        align-items: baseline;
       `}
     >
       <div
