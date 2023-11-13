@@ -6,7 +6,8 @@ import { CustomQuestionRequest } from '../dto/customQuestionRequest';
 import { ContentEmptyException } from '../exception/question.exception';
 import { UnauthorizedException } from '@nestjs/common';
 import { memberFixture } from '../../member/fixture/member.fixture';
-import { questionFixture } from '../fixture/question.fixture';
+import {customQuestionRequestFixture, questionFixture} from '../fixture/question.fixture';
+import {AppModule} from "../../app.module";
 
 describe('QuestionService 단위 테스트', () => {
   let service: QuestionService;
@@ -37,12 +38,10 @@ describe('QuestionService 단위 테스트', () => {
   });
 
   it('나만의 질문을 저장한다.', async () => {
-    const customQuestionRequest = {
-      content: 'test content',
-    } as CustomQuestionRequest;
+
     mockQuestionRepository.save.mockResolvedValue(undefined);
     const result = await service.createCustomQuestion(
-      customQuestionRequest,
+        customQuestionRequestFixture,
       memberFixture,
     );
     expect(result).toEqual(undefined);
@@ -87,3 +86,24 @@ describe('QuestionService 단위 테스트', () => {
     expect(result).toEqual(undefined);
   });
 });
+
+describe('Question Service 통합 테스트', () => {
+  let service: QuestionService;
+
+  beforeAll(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    service = module.get<QuestionService>(QuestionService);
+  });
+
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
+  it('나만의 커스텀 질문을 저장한다.', async () => {
+    await expect(service.createCustomQuestion(customQuestionRequestFixture, memberFixture)).resolves
+        .toBeUndefined();
+  });
+})
