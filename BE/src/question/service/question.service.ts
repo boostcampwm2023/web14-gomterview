@@ -4,7 +4,7 @@ import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 import { Member } from 'src/member/entity/member';
 import { Question } from '../entity/question';
 import { isEmpty } from 'class-validator';
-import { isCategoryCustom } from '../util/question.util';
+import {isCategoryCustom, OUTPUT_FORM} from '../util/question.util';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { QuestionListResponse } from '../dto/questionListResponse';
 import { CustomQuestionRequest } from '../dto/customQuestionRequest';
@@ -42,7 +42,7 @@ export class QuestionService {
   }
 
   async findCategories() {
-    return await this.questionRepository.findCategories();
+    return (await this.questionRepository.findCategories()).map(categoryOnDB => OUTPUT_FORM[categoryOnDB]);
   }
 
   async findByCategory(category: string, memberId?: number) {

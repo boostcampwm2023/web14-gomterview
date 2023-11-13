@@ -58,10 +58,10 @@ describe('QuestionService 단위 테스트', () => {
   });
 
   it('카테고리 조회를 한다.', async () => {
-    const categories = ['CS', 'BE', 'FE', '나만의 질문'];
+    const categories = ['CS', 'BE', 'FE', 'CUSTOM'];
     mockQuestionRepository.findCategories.mockReturnValue(categories);
-    const result = await service.findCategories();
-    expect(result).toEqual(categories);
+    const result = (await service.findCategories()).sort();
+    expect(result).toEqual(['BE', 'CS', 'FE', '나만의 질문']);
   });
 
   /*
@@ -104,16 +104,44 @@ describe('Question Service 통합 테스트', () => {
     expect(service).toBeDefined();
   });
 
-  it('나만의 커스텀 질문을 저장한다.', async () => {
-    await expect(service.createCustomQuestion(customQuestionRequestFixture, memberFixture)).resolves
-        .toBeUndefined();
+  it('나만의 커스텀 질문을 저장한다.', (done) => {
+    service.createCustomQuestion(customQuestionRequestFixture, memberFixture)
+        .then(() => {
+          // 비동기 작업이 완료되면 done()을 호출하여 테스트 종료
+          done();
+        })
+        .catch((error) => {
+          done.fail(error); // 에러가 발생한 경우 done.fail()을 호출하여 테스트를 실패로 표시
+        });
   });
 
-  it('저장되어 있는 모든 카테고리를 조회한다.', async () => {
-    multiQuestionFixture
-        .forEach(async (each) => await repository.save(each));
+  it('저장되어 있는 모든 카테고리를 조회한다.', (done) => {
+    const savePromises = multiQuestionFixture.map((question) => repository.save(question));
 
-    const categories = await service.findCategories();
-    expect(categories).toContainEqual(['CS', 'BE', 'FE', '나만의 질문']);
+    Promise.all(savePromises)
+        .then(() => service.findCategories())
+        .then((categories) => {
+          const expectedCategories = ['CS', 'BE', 'FE', '나만의 질문'].sort();
+          categories.sort();
+          expect(categories).toEqual(expectedCategories);
+
+          // 비동기 작업이 완료되면 done()을 호출하여 테스트 종료
+          done();
+        })
+        .catch((error) => {
+          done.fail(error); // 에러가 발생한 경우 done.fail()을 호출하여 테스트를 실패로 표시
+        });
+  });
+
+  it('id를 통해 질문 삭제',  (done) => {
+    const question = questionFixture;
+    repository.save(question)
+        .then(() => service.deleteById(question.id, memberFixture))
+        .then(() => repository.findById(question.id))
+        .then(question => {
+          expect(question).toBeNull();
+          done();
+        })
   })
-})
+});
+
