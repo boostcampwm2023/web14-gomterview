@@ -19,6 +19,7 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
         display: flex;
         position: relative;
         padding: 1rem;
+        gap: 0.5rem;
         color: ${theme.colors.text.white};
         background-color: ${theme.colors.point.secondary.default};
         border-radius: 1rem 1rem 0rem 0rem;
@@ -34,8 +35,8 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
       {closeButtonVisible && (
         <CloseIcon
           width="0.75rem"
+          height="auto"
           css={css`
-            margin-left: 0.5rem;
             cursor: pointer;
           `}
           onClick={() => {
