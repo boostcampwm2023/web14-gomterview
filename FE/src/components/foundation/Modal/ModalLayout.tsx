@@ -3,7 +3,7 @@ import Box from '../Box/Box';
 import { css } from '@emotion/react';
 import { theme } from '@/styles/theme';
 
-type ModalLayoutProps = {
+export type ModalLayoutProps = {
   children?: React.ReactNode;
   isOpen: boolean;
   closeModal: () => void;

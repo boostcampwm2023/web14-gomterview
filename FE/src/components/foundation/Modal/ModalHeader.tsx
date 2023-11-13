@@ -2,14 +2,16 @@ import { theme } from '@/styles/theme';
 import { css } from '@emotion/react';
 import CloseIcon from '@assets/svg/close.svg';
 
-type ModalHeaderProps = {
+export type ModalHeaderProps = {
   children?: React.ReactNode;
   closeButtonVisible?: boolean;
+  closeModal?: () => void;
 };
 
 const ModalHeader: React.FC<ModalHeaderProps> = ({
   children,
   closeButtonVisible = true,
+  closeModal,
 }) => {
   return (
     <div
@@ -36,6 +38,9 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
             margin-left: 0.5rem;
             cursor: pointer;
           `}
+          onClick={() => {
+            closeModal && closeModal();
+          }}
         />
       )}
     </div>

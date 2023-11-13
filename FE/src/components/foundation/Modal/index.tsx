@@ -1,14 +1,20 @@
 import ModalContent from './ModalContent';
 import ModalFooter from './ModalFooter';
 import ModalHeader from './ModalHeader';
-import ModalLayout from './ModalLayout';
+import ModalLayout, { ModalLayoutProps } from './ModalLayout';
+import enhanceChildElement from '@/utils/enhanceChildElement';
 
-type ModalComponent = typeof ModalLayout & {
-  header: typeof ModalHeader;
-  content: typeof ModalContent;
-  footer: typeof ModalFooter;
+const Modal = ({ children, isOpen, closeModal }: ModalLayoutProps) => {
+  return (
+    <ModalLayout isOpen={isOpen} closeModal={closeModal}>
+      {enhanceChildElement({
+        children: children,
+        component: ModalHeader,
+        newProps: { closeModal },
+      })}
+    </ModalLayout>
+  );
 };
-const Modal: ModalComponent = ModalLayout as ModalComponent;
 
 Modal.header = ModalHeader;
 Modal.content = ModalContent;
