@@ -23,6 +23,7 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
         color: ${theme.colors.text.white};
         background-color: ${theme.colors.point.secondary.default};
         border-radius: 1rem 1rem 0rem 0rem;
+        margin: -0.0625rem;
       `}
     >
       <div
