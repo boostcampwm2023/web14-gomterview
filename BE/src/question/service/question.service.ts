@@ -9,6 +9,7 @@ import { MemberRepository } from '../../member/repository/member.repository';
 import { QuestionListResponse } from '../dto/questionListResponse';
 import { CustomQuestionRequest } from '../dto/customQuestionRequest';
 import { CategoriesResponse } from '../dto/categoriesResponse';
+import {ContentEmptyException} from "../exception/question.exception";
 
 @Injectable()
 export class QuestionService {
@@ -29,6 +30,10 @@ export class QuestionService {
     customQuestionRequest: CustomQuestionRequest,
     member: Member,
   ) {
+    if(isEmpty(customQuestionRequest.content)) {
+      throw new ContentEmptyException();
+    }
+
     const questionRequest = {
       category: 'CUSTOM',
       content: customQuestionRequest.content,

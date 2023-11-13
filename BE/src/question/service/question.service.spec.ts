@@ -4,6 +4,7 @@ import {QuestionRepository} from "../repository/question.repository";
 import {MemberRepository} from "../../member/repository/member.repository";
 import {CustomQuestionRequest} from "../dto/customQuestionRequest";
 import {Member} from "../../member/entity/member";
+import {ContentEmptyException} from "../exception/question.exception";
 
 describe('QuestionService', () => {
   let service: QuestionService;
@@ -40,6 +41,6 @@ describe('QuestionService', () => {
     const memberFixture:Member = new Member(100, 'test@test.com', 'test', 'http://localhost:8080', new Date());
     mockQuestionRepository.save.mockResolvedValue(undefined);
     await expect(service.createCustomQuestion(customQuestionRequest, memberFixture))
-        .rejects.toThrow(Error);
+        .rejects.toThrow(ContentEmptyException);
   })
 });
