@@ -1,5 +1,6 @@
 import { Member } from '../entity/member';
 import { OAuthRequest } from '../../auth/interface/auth.interface';
+import {Request} from "express";
 
 export const memberFixture = new Member(
   1,
@@ -15,4 +16,4 @@ export const oauthRequestFixture = {
   img: 'https://test.com',
 } as OAuthRequest;
 
-export const mockReqWithMemberFixture = { user: memberFixture };
+export const mockReqWithMemberFixture = { user: memberFixture } as unknown as Request;

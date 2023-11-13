@@ -13,7 +13,8 @@ describe('QuestionController', () => {
 
   const mockQuestionService = {
     createCustomQuestion: jest.fn(),
-    findCategories: jest.fn()
+    findCategories: jest.fn(),
+    deleteById: jest.fn()
   };
 
   const mockTokenService = {};
@@ -41,7 +42,7 @@ describe('QuestionController', () => {
 
     const body = { content: 'test content' } as CustomQuestionRequest;
     const result = await controller.createCustomQuestion(
-      mockReqWithMemberFixture as unknown as Request,
+      mockReqWithMemberFixture,
       body,
     );
     expect(result).toEqual(undefined);
@@ -73,5 +74,11 @@ describe('QuestionController', () => {
     mockQuestionService.findCategories.mockReturnValue(['CS', 'BE', 'FE', '나만의 질문']);
     const result = await controller.findAllCategories();
     expect(result).toEqual(new CategoriesResponse(['CS', 'BE', 'FE', '나만의 질문']));
+  })
+
+  it('나만의 질문을 삭제한다', async () => {
+    mockQuestionService.deleteById.mockResolvedValue(undefined);
+    const result = await controller.deleteQuestion(1, mockReqWithMemberFixture);
+    expect(result).toEqual(undefined);
   })
 });
