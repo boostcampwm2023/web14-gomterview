@@ -7,6 +7,8 @@ const colorChips = {
   grayscale900: '#505967',
   grayscaleBlack: '#000000',
 
+  shadow100: 'rgba(0, 0, 0, 0.1)',
+
   blue50: '#CBDBFA',
   blue100: '#BDD1F9',
   blue200: '#9FBCF6',
@@ -85,5 +87,9 @@ export const colors = {
   status: {
     active: colorChips.green500, // #76D773
     record: colorChips.red500, // #E05241
+  },
+  shadow: {
+    boxShadow: colorChips.shadow100, // rgba(0, 0, 0, 0.1)
+    buttonShadow: colorChips.blue700, // #3056A2
   },
 };
