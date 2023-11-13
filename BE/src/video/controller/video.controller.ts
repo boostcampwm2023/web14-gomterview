@@ -15,9 +15,6 @@ export class VideoController {
     @Req() req: Request,
     @Body() createVidoeRequest: CreateVideoRequest,
   ) {
-    return this.videoService.createVideo(
-      req.user as Member,
-      createVidoeRequest,
-    );
+    this.videoService.createVideo(req.user as Member, createVidoeRequest);
   }
 }

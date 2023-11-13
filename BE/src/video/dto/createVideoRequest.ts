@@ -7,5 +7,9 @@ export class CreateVideoRequest {
 
   @IsString()
   @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  @IsNotEmpty()
   url: string;
 }
