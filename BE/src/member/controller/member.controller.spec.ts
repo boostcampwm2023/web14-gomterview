@@ -8,7 +8,11 @@ import { AppModule } from 'src/app.module';
 import * as request from 'supertest';
 import { AuthModule } from 'src/auth/auth.module';
 import { AuthService } from 'src/auth/service/auth.service';
-import {memberFixture, mockReqWithMemberFixture, oauthRequestFixture} from '../fixture/member.fixture';
+import {
+  memberFixture,
+  mockReqWithMemberFixture,
+  oauthRequestFixture,
+} from '../fixture/member.fixture';
 
 describe('MemberController', () => {
   let memberController: MemberController;
@@ -25,7 +29,9 @@ describe('MemberController', () => {
   });
 
   it('should return member information as MemberResponse type', async () => {
-    const result = memberController.getMyInfo(mockReqWithMemberFixture as unknown as Request);
+    const result = memberController.getMyInfo(
+      mockReqWithMemberFixture as unknown as Request,
+    );
 
     expect(result).toBeInstanceOf(MemberResponse);
     expect(result).toEqual(MemberResponse.from(memberFixture));
