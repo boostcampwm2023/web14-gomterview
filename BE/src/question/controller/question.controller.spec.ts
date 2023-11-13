@@ -7,6 +7,7 @@ import { mockReqWithMemberFixture } from '../../member/fixture/member.fixture';
 import { Request } from 'express';
 import { ContentEmptyException } from '../exception/question.exception';
 import {CategoriesResponse} from "../dto/categoriesResponse";
+import {UnauthorizedException} from "@nestjs/common";
 
 describe('QuestionController', () => {
   let controller: QuestionController;
@@ -71,7 +72,7 @@ describe('QuestionController', () => {
    */
 
   it('전체 카테고리를 조회한다.', async () => {
-    mockQuestionService.findCategories.mockReturnValue(['CS', 'BE', 'FE', '나만의 질문']);
+    mockQuestionService.findCategories.mockResolvedValue(['CS', 'BE', 'FE', '나만의 질문']);
     const result = await controller.findAllCategories();
     expect(result).toEqual(new CategoriesResponse(['CS', 'BE', 'FE', '나만의 질문']));
   })
@@ -80,5 +81,11 @@ describe('QuestionController', () => {
     mockQuestionService.deleteById.mockResolvedValue(undefined);
     const result = await controller.deleteQuestion(1, mockReqWithMemberFixture);
     expect(result).toEqual(undefined);
+  })
+
+  it('나만의 질문을 삭제 실패 => Unauthorized', async () => {
+    mockQuestionService.deleteById.mockRejectedValue(new UnauthorizedException());
+    await expect(controller.deleteQuestion(1, mockReqWithMemberFixture))
+        .rejects.toThrow(UnauthorizedException);
   })
 });
