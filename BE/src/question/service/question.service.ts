@@ -50,7 +50,7 @@ export class QuestionService {
 
   async findByCategory(category: string, memberId?: number) {
     if (isEmpty(memberId) && isCategoryCustom(category)) {
-      throw new Error('400. 비회원은 나만의 질문을 DB에서 조회할 수 없습니다.');
+      throw new UnauthorizedException();
     }
 
     const member = await this.memberRepository.findById(memberId);
