@@ -17,7 +17,8 @@
       "@page/*": ["./src/page/*"],
       "@constants/*": ["./src/constants/*"],
       "@styles/*": ["./src/styles/*"],
-      "@assets/*": ["./src/assets/*"]
+      "@assets/*": ["./src/assets/*"],
+      "@atoms/*": ["./src/atoms/*"]
     }
   },
   "include": ["src"]
