@@ -56,7 +56,7 @@ const videoHandlers = [
           id: 1,
           url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
           hash: 'asdfasdfasdfsfasdfasf',
-          name: 'CSS 선택자의 종류에 대해 설명해주세요.',
+          videoName: 'CSS 선택자의 종류에 대해 설명해주세요.',
           createdAt: '1699941626145',
         },
       ],
