@@ -4,21 +4,19 @@ type PageStatus = 'pending' | 'success' | 'error';
 type RecordMethod = 'local' | 'idrive' | 'none' | undefined;
 
 type SelectedData = {
-  [key: string]: {
-    id: number;
-    content: string;
-    answer: string;
-  };
+  id: number;
+  content: string;
+  answer: string;
 };
 
 export const questionSetting = atom<{
   status: PageStatus;
-  selectedData: SelectedData;
+  selectedData: SelectedData[];
 }>({
   key: 'questionSetting',
   default: {
     status: 'pending',
-    selectedData: {},
+    selectedData: [],
   },
 });
 
