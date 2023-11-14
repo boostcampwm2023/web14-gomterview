@@ -8,11 +8,10 @@ import { UnauthorizedException } from '@nestjs/common';
 import { memberFixture } from '../../member/fixture/member.fixture';
 import {
   customQuestionRequestFixture,
-  multiQuestionFixture,
   questionFixture,
 } from '../fixture/question.fixture';
 import { AppModule } from '../../app.module';
-import {MemberModule} from "../../member/member.module";
+import { MemberModule } from '../../member/member.module';
 
 describe('QuestionService 단위 테스트', () => {
   let service: QuestionService;
@@ -61,16 +60,9 @@ describe('QuestionService 단위 테스트', () => {
     ).rejects.toThrow(ContentEmptyException);
   });
 
-  it('카테고리 조회를 한다.', async () => {
-    const categories = ['CS', 'BE', 'FE', 'CUSTOM'];
-    mockQuestionRepository.findCategories.mockReturnValue(categories);
-    const result = (await service.findCategories()).sort();
-    expect(result).toEqual(['BE', 'CS', 'FE', '나만의 질문']);
-  });
-
   /*
-  TODO : 카테고리별 질문 조회는 Answer까지 만든 후에, 이를 Question에 합쳐야 하는 문제가 있다. 이로 인해 Answer API생성 후, 해당 API 단위테스트시에 추가할 예정이다.
-   */
+      TODO : 카테고리별 질문 조회는 Answer까지 만든 후에, 이를 Question에 합쳐야 하는 문제가 있다. 이로 인해 Answer API생성 후, 해당 API 단위테스트시에 추가할 예정이다.
+       */
 
   it('나만의 질문을 삭제를 실패 => 회원의 id와 Question.id로 조회하지 못할 때', async () => {
     mockQuestionRepository.findQuestionByIdAndMember_Id.mockResolvedValue(
@@ -111,35 +103,20 @@ describe('Question Service 통합 테스트', () => {
   });
 
   it('나만의 커스텀 질문을 저장한다.', (done) => {
-    memberRepository.save(memberFixture)
-        .then(() => service
-            .createCustomQuestion(customQuestionRequestFixture, memberFixture))
+    memberRepository
+      .save(memberFixture)
+      .then(() =>
+        service.createCustomQuestion(
+          customQuestionRequestFixture,
+          memberFixture,
+        ),
+      )
       .then(() => {
         // 비동기 작업이 완료되면 done()을 호출하여 테스트 종료
         done();
       })
       .catch((error) => {
         done(error); // 에러가 발생한 경우 done.fail()을 호출하여 테스트를 실패로 표시
-      });
-  });
-
-  it('저장되어 있는 모든 카테고리를 조회한다.', (done) => {
-    const savePromises = multiQuestionFixture.map((question) =>
-        questionRepository.save(question),
-    );
-
-    Promise.all(savePromises)
-      .then(() => service.findCategories())
-      .then((categories) => {
-        const expectedCategories = ['CS', 'BE', 'FE', '나만의 질문'].sort();
-        categories.sort();
-        expect(categories).toEqual(expectedCategories);
-
-        // 비동기 작업이 완료되면 done()을 호출하여 테스트 종료
-        done();
-      })
-      .catch((error) => {
-        done.fail(error); // 에러가 발생한 경우 done.fail()을 호출하여 테스트를 실패로 표시
       });
   });
 

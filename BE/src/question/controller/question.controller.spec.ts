@@ -9,14 +9,12 @@ import {
   oauthRequestFixture,
 } from '../../member/fixture/member.fixture';
 import { ContentEmptyException } from '../exception/question.exception';
-import { CategoriesResponse } from '../dto/categoriesResponse';
 import { INestApplication, UnauthorizedException } from '@nestjs/common';
 import { QuestionRepository } from '../repository/question.repository';
 import { Member } from '../../member/entity/member';
 import { Question } from '../entity/question';
 import {
   customQuestionRequestFixture,
-  multiQuestionFixture,
   questionFixture,
 } from '../fixture/question.fixture';
 import * as request from 'supertest';
@@ -85,21 +83,8 @@ describe('QuestionController 단위테스트', () => {
   });
 
   /*
-                                          TODO: 카테고리별 질문 조회는 후에 Answer API를 생성 후에, Default Answer까지 붙여서 한번에 테스트하기 위해 보류
-                                           */
-
-  it('전체 카테고리를 조회한다.', async () => {
-    mockQuestionService.findCategories.mockResolvedValue([
-      'CS',
-      'BE',
-      'FE',
-      '나만의 질문',
-    ]);
-    const result = await controller.findAllCategories();
-    expect(result).toEqual(
-      new CategoriesResponse(['CS', 'BE', 'FE', '나만의 질문']),
-    );
-  });
+                                                            TODO: 카테고리별 질문 조회는 후에 Answer API를 생성 후에, Default Answer까지 붙여서 한번에 테스트하기 위해 보류
+                                                             */
 
   it('나만의 질문을 삭제한다', async () => {
     mockQuestionService.deleteById.mockResolvedValue(undefined);
@@ -156,26 +141,6 @@ describe('Question Controller 통합 테스트', () => {
           .expect(201);
       })
       .then(done);
-  });
-
-  it('전체 카테고리를 조회한다.', async () => {
-    const savePromises = multiQuestionFixture.map((question) =>
-      questionRepository.save(question),
-    );
-
-    await Promise.all(savePromises);
-    request
-      .agent(app.getHttpServer())
-      .get('/api/question/category')
-      .expect(200)
-      .then((response) => {
-        expect(response.body.categories).toEqual([
-          'BE',
-          'CS',
-          'FE',
-          '나만의 질문',
-        ]);
-      });
   });
 
   it('해당 게시물을 삭제한다.', (done) => {

@@ -47,7 +47,7 @@ export class QuestionRepository {
     await this.questionRepository.remove(question);
   }
 
-  async query(query:string) {
+  async query(query: string) {
     await this.questionRepository.query(query);
   }
 

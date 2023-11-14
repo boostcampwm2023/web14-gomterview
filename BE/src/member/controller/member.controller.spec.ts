@@ -84,28 +84,32 @@ describe('MemberController (E2E Test)', () => {
     authService = moduleFixture.get<AuthService>(AuthService);
   });
 
-  it('GET /api/member (회원 정보 반환 성공)', async () => {
-    const validToken = await authService.login(oauthRequestFixture);
-    const agent = await request(app.getHttpServer());
-    agent
-      .get('/api/member')
-      .set('Cookie', [`accessToken=${validToken}`])
-      .expect(200)
-      .then((response) => {
-        expect(response.body.email).toBe(oauthRequestFixture.email);
-        expect(response.body.nickname).toBe(oauthRequestFixture.name);
-        expect(response.body.profileImg).toBe(oauthRequestFixture.img);
-      });
+  it('GET /api/member (회원 정보 반환 성공)', (done) => {
+    authService
+      .login(oauthRequestFixture)
+      .then((validToken) => {
+        const agent = request.agent(app.getHttpServer());
+        agent
+          .get('/api/member')
+          .set('Cookie', [`accessToken=${validToken}`])
+          .expect(200)
+          .then((response) => {
+            expect(response.body.email).toBe(oauthRequestFixture.email);
+            expect(response.body.nickname).toBe(oauthRequestFixture.name);
+            expect(response.body.profileImg).toBe(oauthRequestFixture.img);
+            return;
+          });
+      })
+      .then(() => done());
   });
 
-  it('GET /api/member (유효하지 않은 토큰 사용으로 인한 회원 정보 반환 실패)', async () => {
-    const invalidToken = 'INVALID_TOKEN';
-
-    const agent = await request(app.getHttpServer());
+  it('GET /api/member (유효하지 않은 토큰 사용으로 인한 회원 정보 반환 실패)', (done) => {
+    const agent = request.agent(app.getHttpServer());
     agent
       .get('/api/member')
-      .set('Cookie', [`accessToken=Bearer ${invalidToken}`])
-      .expect(401);
+      .set('Cookie', [`accessToken=Bearer INVALID_TOKEN`])
+      .expect(401)
+      .then(() => done());
   });
 
   afterAll(async () => {
