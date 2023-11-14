@@ -11,10 +11,14 @@ import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
 import { Request } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
+import { QuestionRepository } from 'src/question/repository/question.repository';
 
 @Injectable()
 export class VideoService {
-  constructor(private videoRepository: VideoRepository) {}
+  constructor(
+    private videoRepository: VideoRepository,
+    private questionRepository: QuestionRepository,
+  ) {}
   async createVideo(member: Member, createVidoeRequest: CreateVideoRequest) {
     const newVideo = Video.from(member, createVidoeRequest);
     await this.videoRepository.save(newVideo);
@@ -25,11 +29,13 @@ export class VideoService {
     createPreSignedUrlRequest: CreatePreSignedUrlRequest,
   ) {
     const member = req.user as Member;
+    const question = await this.questionRepository.findById(
+      createPreSignedUrlRequest.questionId,
+    );
+
     const s3 = getIdriveS3Client();
     const bucketName = 'videos';
-    const key = `${member.nickname}_${
-      createPreSignedUrlRequest.questionId
-    }_${uuidv4()}`;
+    const key = `${member.nickname}_${question.content}_${uuidv4()}.mp4`;
     let preSignedUrl: string;
 
     await s3
