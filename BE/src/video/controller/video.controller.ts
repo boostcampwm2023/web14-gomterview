@@ -54,7 +54,7 @@ export class VideoController {
     @Body() createPreSignedUrlRequest,
   ) {
     return await this.videoService.getPreSignedUrl(
-      req,
+      req.user as Member,
       createPreSignedUrlRequest,
     );
   }
