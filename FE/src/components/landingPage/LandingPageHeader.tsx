@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import Logo from '@common/Logo/Logo';
-import GoogleLoginButton from '@components/landingPage/GoogleLoginButton';
 
 const LandingPageHeader: React.FC = () => {
   return (
@@ -16,7 +15,6 @@ const LandingPageHeader: React.FC = () => {
       `}
     >
       <Logo />
-      <GoogleLoginButton />
     </div>
   );
 };
