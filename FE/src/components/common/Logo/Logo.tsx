@@ -2,12 +2,12 @@ import logo from '@assets/images/logo.png';
 import { css } from '@emotion/react';
 import Typography from '@foundation/Typography/Typography';
 
-const Logo: React.FC = ({}) => {
+const Logo: React.FC = () => {
   return (
     <div
       css={css`
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
         column-gap: 1rem;
       `}
