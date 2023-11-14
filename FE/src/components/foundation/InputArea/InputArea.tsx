@@ -3,7 +3,8 @@ import { css } from '@emotion/react';
 import { HTMLElementTypes } from '../../../types/utils';
 import { theme } from '@styles/theme';
 
-type InputAreaProps = HTMLElementTypes<HTMLTextAreaElement>;
+type InputAreaProps = HTMLElementTypes<HTMLTextAreaElement> &
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 const InputArea: React.FC<InputAreaProps> = ({ ...args }) => {
   return (
