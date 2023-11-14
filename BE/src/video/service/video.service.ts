@@ -12,6 +12,7 @@ import { Request } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { QuestionRepository } from 'src/question/repository/question.repository';
+import { IDriveException } from '../exception/video.exception';
 
 @Injectable()
 export class VideoService {
@@ -36,20 +37,15 @@ export class VideoService {
     const s3 = getIdriveS3Client();
     const bucketName = 'videos';
     const key = `${member.nickname}_${question.content}_${uuidv4()}.mp4`;
-    let preSignedUrl: string;
 
-    await s3
-      .getSignedUrlPromise(
+    try {
+      const preSignedUrl = await s3.getSignedUrlPromise(
         'putObject',
         createObjectParamsForPreSign(bucketName, key),
-      )
-      .then((data) => {
-        preSignedUrl = data;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
-    return new PreSignedUrlResponse(preSignedUrl, key);
+      );
+      return new PreSignedUrlResponse(preSignedUrl, key);
+    } catch (error) {
+      throw new IDriveException();
+    }
   }
 }
