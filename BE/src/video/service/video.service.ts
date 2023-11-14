@@ -30,22 +30,26 @@ export class VideoService {
     createPreSignedUrlRequest: CreatePreSignedUrlRequest,
   ) {
     const member = req.user as Member;
-    const question = await this.questionRepository.findById(
+
+    const content = await this.getQuestionContent(
       createPreSignedUrlRequest.questionId,
     );
+    const key = `${member.nickname}_${content}_${uuidv4()}.mp4`;
 
     const s3 = getIdriveS3Client();
-    const bucketName = 'videos';
-    const key = `${member.nickname}_${question.content}_${uuidv4()}.mp4`;
-
     try {
       const preSignedUrl = await s3.getSignedUrlPromise(
         'putObject',
-        createObjectParamsForPreSign(bucketName, key),
+        createObjectParamsForPreSign('videos', key),
       );
       return new PreSignedUrlResponse(preSignedUrl, key);
     } catch (error) {
       throw new IDriveException();
     }
+  }
+
+  private async getQuestionContent(questionId: number) {
+    const question = await this.questionRepository.findById(questionId);
+    return question ? question.content : '삭제된 질문';
   }
 }
