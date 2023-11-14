@@ -26,11 +26,9 @@ export class VideoService {
   }
 
   async getPreSignedUrl(
-    req: Request,
+    member: Member,
     createPreSignedUrlRequest: CreatePreSignedUrlRequest,
   ) {
-    const member = req.user as Member;
-
     const content = await this.getQuestionContent(
       createPreSignedUrlRequest.questionId,
     );
