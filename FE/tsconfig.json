@@ -18,7 +18,8 @@
       "@constants/*": ["./src/constants/*"],
       "@styles/*": ["./src/styles/*"],
       "@assets/*": ["./src/assets/*"],
-      "@atoms/*": ["./src/atoms/*"]
+      "@atoms/*": ["./src/atoms/*"],
+      "@hooks/*": ["./src/hooks/*"]
     }
   },
   "include": ["src"]
