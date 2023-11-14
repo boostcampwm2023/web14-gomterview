@@ -5,7 +5,7 @@ import React from 'react';
 
 type BoxProps = HTMLElementTypes<HTMLDivElement>;
 
-const Box: React.FC<BoxProps> = ({ children }, ...args) => {
+const Box: React.FC<BoxProps> = ({ children, ...args }) => {
   return (
     <div
       css={css`
