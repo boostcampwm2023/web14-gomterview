@@ -165,5 +165,8 @@ const _global = css`
       font-size: 14px;
     }
   }
+  html {
+    font-family: 'Pretendard';
+  }
 `;
 export default _global;
