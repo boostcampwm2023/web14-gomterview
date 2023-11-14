@@ -3,6 +3,8 @@ import { Member } from 'src/member/entity/member';
 import { CreateVideoRequest } from '../dto/CreateVideoRequest';
 import { Video } from '../entity/video';
 import { VideoRepository } from '../repository/video.repository';
+import { getIdriveS3Client } from 'src/util/idrive.util';
+import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
 
 @Injectable()
 export class VideoService {
@@ -12,7 +14,7 @@ export class VideoService {
     await this.videoRepository.save(newVideo);
   }
 
-  async getPreSignedUrl(createPreSignedUrlRequest: any) {
-    throw new Error('Method not implemented.');
+  async getPreSignedUrl(createPreSignedUrlRequest: CreatePreSignedUrlRequest) {
+    const s3 = getIdriveS3Client();
   }
 }
