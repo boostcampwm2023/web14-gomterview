@@ -1,5 +1,6 @@
 import Avatar from '@/components/foundation/Avatar/Avatar';
 import Box from '@/components/foundation/Box/Box';
+import Typography from '@/components/foundation/Typography/Typography';
 import { theme } from '@/styles/theme';
 import { css } from '@emotion/react';
 
@@ -28,21 +29,16 @@ const AnswerScript: React.FC<AnswerScriptProps> = ({
         `}
       >
         <Avatar width="1.5rem" height="1.5rem" src={userImg} />
-        <span
-          css={css`
-            display: inline-block;
-          `}
-        >
-          {name}
-        </span>
+        <Typography>{name}</Typography>
       </div>
-      <p
+      <Typography
+        component={'p'}
         css={css`
           padding: 0.7rem;
         `}
       >
         {content}
-      </p>
+      </Typography>
     </Box>
   );
 };
