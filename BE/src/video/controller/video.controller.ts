@@ -12,6 +12,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { createApiResponseOption } from 'src/util/swagger.util';
+import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
+import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
 
 @Controller('/api/video')
 @ApiTags('video')
@@ -36,6 +38,17 @@ export class VideoController {
   @Post('/pre-signed')
   @UseGuards(AuthGuard('jwt'))
   @ApiCookieAuth()
+  @ApiBody({ type: CreatePreSignedUrlRequest })
+  @ApiOperation({
+    summary: 'Pre-Signed URL을 발급',
+  })
+  @ApiResponse(
+    createApiResponseOption(
+      201,
+      'Pre-Signed URL 발급 완료',
+      PreSignedUrlResponse,
+    ),
+  )
   async getPreSignedUrl(
     @Req() req: Request,
     @Body() createPreSignedUrlRequest,
