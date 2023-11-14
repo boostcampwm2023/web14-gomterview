@@ -12,7 +12,6 @@ import { ContentEmptyException } from '../exception/question.exception';
 import { CategoriesResponse } from '../dto/categoriesResponse';
 import { INestApplication, UnauthorizedException } from '@nestjs/common';
 import { QuestionRepository } from '../repository/question.repository';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { Member } from '../../member/entity/member';
 import { Question } from '../entity/question';
 import {
@@ -28,6 +27,7 @@ import { AuthModule } from '../../auth/auth.module';
 import { AuthService } from '../../auth/service/auth.service';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { Token } from '../../token/entity/token';
+import { createIntegrationTestModule } from '../../util/test.util';
 
 describe('QuestionController 단위테스트', () => {
   let controller: QuestionController;
@@ -85,8 +85,8 @@ describe('QuestionController 단위테스트', () => {
   });
 
   /*
-                                  TODO: 카테고리별 질문 조회는 후에 Answer API를 생성 후에, Default Answer까지 붙여서 한번에 테스트하기 위해 보류
-                                   */
+                                          TODO: 카테고리별 질문 조회는 후에 Answer API를 생성 후에, Default Answer까지 붙여서 한번에 테스트하기 위해 보류
+                                           */
 
   it('전체 카테고리를 조회한다.', async () => {
     mockQuestionService.findCategories.mockResolvedValue([
@@ -124,20 +124,13 @@ describe('Question Controller 통합 테스트', () => {
   let memberRepository: MemberRepository;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        MemberModule,
-        TokenModule,
-        QuestionModule,
-        AuthModule,
-        TypeOrmModule.forRoot({
-          type: 'sqlite', // 또는 다른 테스트용 데이터베이스 설정
-          database: ':memory:', // 메모리 데이터베이스 사용
-          entities: [Member, Question, Token],
-          synchronize: true,
-        }),
-      ],
-    }).compile();
+    const modules = [MemberModule, TokenModule, QuestionModule, AuthModule];
+
+    const entities = [Member, Question, Token];
+    const moduleFixture: TestingModule = await createIntegrationTestModule(
+      modules,
+      entities,
+    );
 
     app = moduleFixture.createNestApplication();
     await app.init();
@@ -199,7 +192,10 @@ describe('Question Controller 통합 테스트', () => {
           .set('Cookie', [`accessToken=${token}`])
           .expect(204);
       })
-      .then(done);
+      .then((response) => {
+        expect(response).toBeUndefined();
+        done();
+      });
   });
 
   afterEach(async () => {

@@ -3,7 +3,7 @@ import { MemberController } from './member.controller';
 import { MemberResponse } from '../dto/memberResponse';
 import { Request } from 'express';
 import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
-import {INestApplication} from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AuthModule } from 'src/auth/auth.module';
 import { AuthService } from 'src/auth/service/auth.service';
@@ -14,11 +14,11 @@ import {
 } from '../fixture/member.fixture';
 import { MemberService } from '../service/member.service';
 import { TokenService } from '../../token/service/token.service';
-import {TokenModule} from "../../token/token.module";
-import {MemberModule} from "../member.module";
-import {TypeOrmModule} from "@nestjs/typeorm";
-import {Member} from "../entity/member";
-import {Token} from "../../token/entity/token";
+import { TokenModule } from '../../token/token.module';
+import { MemberModule } from '../member.module';
+import { Member } from '../entity/member';
+import { Token } from '../../token/entity/token';
+import { createIntegrationTestModule } from '../../util/test.util';
 
 describe('MemberController', () => {
   let memberController: MemberController;
@@ -70,14 +70,13 @@ describe('MemberController (E2E Test)', () => {
   let authService: AuthService;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AuthModule, TokenModule, MemberModule,  TypeOrmModule.forRoot({
-        type: 'sqlite', // 또는 다른 테스트용 데이터베이스 설정
-        database: ':memory:', // 메모리 데이터베이스 사용
-        entities: [Member, Token],
-        synchronize: true,
-      })],
-    }).compile();
+    const modules = [AuthModule, TokenModule, MemberModule];
+    const entities = [Member, Token];
+
+    const moduleFixture: TestingModule = await createIntegrationTestModule(
+      modules,
+      entities,
+    );
 
     app = moduleFixture.createNestApplication();
     await app.init();
@@ -86,7 +85,7 @@ describe('MemberController (E2E Test)', () => {
   });
 
   it('GET /api/member (회원 정보 반환 성공)', async () => {
-    const validToken = (await authService.login(oauthRequestFixture));
+    const validToken = await authService.login(oauthRequestFixture);
     const agent = await request(app.getHttpServer());
     agent
       .get('/api/member')
