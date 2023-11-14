@@ -1,8 +1,8 @@
+import { Video } from '../entity/video';
+
 export class SingleVideoResponse {
   readonly id: number;
-
   readonly thumbnail: string;
-
   readonly videoName: string;
   readonly videoLength: string;
   readonly isPublic: boolean;
@@ -22,5 +22,16 @@ export class SingleVideoResponse {
     this.videoLength = videoLength;
     this.isPublic = isPublic;
     this.createdAt = createdAt;
+  }
+
+  static from(video: Video) {
+    return new SingleVideoResponse(
+      video.id,
+      'https://test-thumbnail.com',
+      video.name,
+      '02:42',
+      video.isPublic,
+      video.createdAt.getTime(),
+    );
   }
 }

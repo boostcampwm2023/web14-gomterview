@@ -62,6 +62,6 @@ export class VideoController {
   @Get('/all')
   @UseGuards(AuthGuard('jwt'))
   async getAllVideo(@Req() req: Request) {
-    return await this.videoService.getAllVideo(req.user as Member);
+    return await this.videoService.getAllVideosByMemberId(req.user as Member);
   }
 }

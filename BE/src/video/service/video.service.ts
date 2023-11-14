@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { QuestionRepository } from 'src/question/repository/question.repository';
 import { IDriveException } from '../exception/video.exception';
+import { VideoListResponse } from '../dto/videoListResponse';
 
 @Injectable()
 export class VideoService {
@@ -45,8 +46,11 @@ export class VideoService {
     }
   }
 
-  async getAllVideo(member: Member) {
-    throw new Error('Method not implemented.');
+  async getAllVideosByMemberId(member: Member) {
+    const videoList = await this.videoRepository.findAllVideosByMemberId(
+      member.id,
+    );
+    return VideoListResponse.from(videoList);
   }
 
   private async getQuestionContent(questionId: number) {
