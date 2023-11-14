@@ -6,4 +6,10 @@ class QuestionNotFoundException extends HttpException {
   }
 }
 
-export { QuestionNotFoundException };
+class ContentEmptyException extends HttpException {
+  constructor() {
+    super('나만의 질문의 내용을 입력해야 합니다.', 400);
+  }
+}
+
+export { QuestionNotFoundException, ContentEmptyException };

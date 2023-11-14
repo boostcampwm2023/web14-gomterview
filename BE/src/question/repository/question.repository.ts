@@ -27,6 +27,15 @@ export class QuestionRepository {
     return await this.questionRepository.findOneBy({ id: id });
   }
 
+  async findCategories(): Promise<string[]> {
+    const distinctCategories = (await this.questionRepository
+      .createQueryBuilder()
+      .select('DISTINCT category', 'category')
+      .getRawMany()) as Question[];
+
+    return distinctCategories.map((result) => result.category);
+  }
+
   async findQuestionByIdAndMember_Id(questionId: number, memberId: number) {
     return this.questionRepository.findOneBy({
       members: { id: memberId },
@@ -38,13 +47,17 @@ export class QuestionRepository {
     await this.questionRepository.remove(question);
   }
 
+  async query(query: string) {
+    await this.questionRepository.query(query);
+  }
+
   private async constructQueryBuilder(category: string, memberId: number) {
     const queryBuilder = this.questionRepository.createQueryBuilder('Question');
 
     if (category === 'CUSTOM') {
       return queryBuilder
         .leftJoin('Question.id', 'QuestionMember')
-          .leftJoin('QuestionMember.memberId', 'Member')
+        .leftJoin('QuestionMember.memberId', 'Member')
         .where('Question.category = :category', { category })
         .andWhere('member.id = :memberId', { memberId });
     }

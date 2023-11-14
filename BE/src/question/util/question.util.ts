@@ -1,3 +1,17 @@
+export const DATA_FORM = {
+  CS: 'CS',
+  BE: 'BE',
+  FE: 'FE',
+  '나만의 질문': 'CUSTOM',
+};
+
+export const OUTPUT_FORM = {
+  CS: 'CS',
+  BE: 'BE',
+  FE: 'FE',
+  CUSTOM: '나만의 질문',
+};
+
 export const isCategoryCustom = (category: string) => category === 'CUSTOM';
 
 export const questionListExample = [
