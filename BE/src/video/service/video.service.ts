@@ -8,7 +8,6 @@ import {
   getIdriveS3Client,
 } from 'src/util/idrive.util';
 import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
-import { Request } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { QuestionRepository } from 'src/question/repository/question.repository';
