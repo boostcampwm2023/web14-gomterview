@@ -4,6 +4,8 @@ type Id = number;
 type Hash = string;
 
 export const API = {
+  LOGIN: '/auth/login',
+  LOGOUT: '/auth/logout',
   MEMBER: '/member',
   VIDEO: '/video',
   VIDEO_PRE_SIGNED: '/video/pre-signed',
