@@ -13,6 +13,7 @@ import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { QuestionRepository } from 'src/question/repository/question.repository';
 import { IDriveException } from '../exception/video.exception';
 import { VideoListResponse } from '../dto/videoListResponse';
+import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
 
 @Injectable()
 export class VideoService {
@@ -21,6 +22,8 @@ export class VideoService {
     private questionRepository: QuestionRepository,
   ) {}
   async createVideo(member: Member, createVidoeRequest: CreateVideoRequest) {
+    if (!member) throw new ManipulatedTokenNotFiltered();
+
     const newVideo = Video.from(member, createVidoeRequest);
     await this.videoRepository.save(newVideo);
   }
@@ -47,9 +50,13 @@ export class VideoService {
   }
 
   async getAllVideosByMemberId(member: Member) {
+    if (!member) throw new ManipulatedTokenNotFiltered();
+
     const videoList = await this.videoRepository.findAllVideosByMemberId(
       member.id,
     );
+
+    // TODO: 비디오의 썸네일과 길이에 대한 처리도 필요
     return VideoListResponse.from(videoList);
   }
 
