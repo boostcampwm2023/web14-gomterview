@@ -8,7 +8,11 @@ const useInput = <T extends HTMLInputElement | HTMLTextAreaElement>(
     setValue(e.target.value);
   };
 
-  return { value, onChange, setValue };
+  const isEmpty = () => {
+    return value === '';
+  };
+
+  return { value, onChange, setValue, isEmpty };
 };
 
 export default useInput;
