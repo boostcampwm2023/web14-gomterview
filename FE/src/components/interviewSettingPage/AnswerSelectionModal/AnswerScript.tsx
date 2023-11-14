@@ -32,7 +32,7 @@ const AnswerScript: React.FC<AnswerScriptProps> = ({
         <Typography>{name}</Typography>
       </div>
       <Typography
-        component={'p'}
+        component="p"
         css={css`
           padding: 0.7rem;
         `}
