@@ -3,8 +3,8 @@ import Button from '@/components/foundation/Button/Button';
 import InputArea from '@/components/foundation/InputArea/InputArea';
 import Typography from '@/components/foundation/Typography/Typography';
 import useQuestionAnswerMutation from '@/hooks/mutations/useQuestionAnswerMutation';
+import useInput from '@/hooks/useInput';
 import { css } from '@emotion/react';
-import { useState } from 'react';
 
 type AnswerFormProps = {
   questionId: number;
@@ -12,14 +12,9 @@ type AnswerFormProps = {
 };
 
 const AnswerForm: React.FC<AnswerFormProps> = ({ questionId, question }) => {
-  const [customAnswer, setCustomAnswer] = useState('');
+  const { value: customAnswer, onChange: handleCustomAnswerChange } =
+    useInput<HTMLTextAreaElement>('');
   const { mutate } = useQuestionAnswerMutation(questionId, customAnswer);
-
-  const handleCustomAnswerChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    setCustomAnswer(e.target.value);
-  };
 
   const handleCustomAnswerSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
