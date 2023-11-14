@@ -5,7 +5,7 @@ import LandingImage from '@components/landingPage/LandingImage';
 import GoogleLoginButton from '@components/landingPage/GoogleLoginButton';
 import { css } from '@emotion/react';
 
-const RenderingPage: React.FC = () => {
+const LandingPage: React.FC = () => {
   return (
     <LandingPageLayout>
       <WelcomeBlurb />
@@ -24,4 +24,4 @@ const RenderingPage: React.FC = () => {
   );
 };
 
-export default RenderingPage;
+export default LandingPage;
