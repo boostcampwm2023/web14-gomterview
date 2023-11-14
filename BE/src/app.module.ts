@@ -7,7 +7,6 @@ import { MemberModule } from './member/member.module';
 import { AuthModule } from './auth/auth.module';
 import { TokenModule } from './token/token.module';
 import { QuestionModule } from './question/question.module';
-import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -16,7 +15,6 @@ import { CategoryModule } from './category/category.module';
     AuthModule,
     TokenModule,
     QuestionModule,
-    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
