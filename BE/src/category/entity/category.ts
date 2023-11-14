@@ -9,8 +9,8 @@ export class Category extends DefaultEntity {
   @Column()
   name: string;
 
-  @ManyToOne(() => Member, { nullable: true })
-  @JoinColumn({ name: 'memberId' })
+  @ManyToOne(() => Member, { nullable: true, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'member' })
   member: Member;
 
   @ManyToMany(() => Question)
