@@ -3,17 +3,31 @@ import { QuestionController } from './question.controller';
 import { QuestionService } from '../service/question.service';
 import { TokenService } from '../../token/service/token.service';
 import { CustomQuestionRequest } from '../dto/customQuestionRequest';
-import {mockReqWithMemberFixture, oauthRequestFixture} from '../../member/fixture/member.fixture';
+import {
+  memberFixture,
+  mockReqWithMemberFixture,
+  oauthRequestFixture,
+} from '../../member/fixture/member.fixture';
 import { ContentEmptyException } from '../exception/question.exception';
 import { CategoriesResponse } from '../dto/categoriesResponse';
 import { INestApplication, UnauthorizedException } from '@nestjs/common';
-import { AppModule } from '../../app.module';
-import {QuestionRepository} from "../repository/question.repository";
-import {TypeOrmModule} from "@nestjs/typeorm";
-import {Member} from "../../member/entity/member";
-import {Question} from "../entity/question";
-import {multiQuestionFixture} from "../fixture/question.fixture";
-import * as request from "supertest";
+import { QuestionRepository } from '../repository/question.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Member } from '../../member/entity/member';
+import { Question } from '../entity/question';
+import {
+  customQuestionRequestFixture,
+  multiQuestionFixture,
+  questionFixture,
+} from '../fixture/question.fixture';
+import * as request from 'supertest';
+import { MemberModule } from '../../member/member.module';
+import { TokenModule } from '../../token/token.module';
+import { QuestionModule } from '../question.module';
+import { AuthModule } from '../../auth/auth.module';
+import { AuthService } from '../../auth/service/auth.service';
+import { MemberRepository } from '../../member/repository/member.repository';
+import { Token } from '../../token/entity/token';
 
 describe('QuestionController 단위테스트', () => {
   let controller: QuestionController;
@@ -71,8 +85,8 @@ describe('QuestionController 단위테스트', () => {
   });
 
   /*
-  TODO: 카테고리별 질문 조회는 후에 Answer API를 생성 후에, Default Answer까지 붙여서 한번에 테스트하기 위해 보류
-   */
+                                  TODO: 카테고리별 질문 조회는 후에 Answer API를 생성 후에, Default Answer까지 붙여서 한번에 테스트하기 위해 보류
+                                   */
 
   it('전체 카테고리를 조회한다.', async () => {
     mockQuestionService.findCategories.mockResolvedValue([
@@ -105,47 +119,97 @@ describe('QuestionController 단위테스트', () => {
 
 describe('Question Controller 통합 테스트', () => {
   let app: INestApplication;
-  let questionService: QuestionService;
   let questionRepository: QuestionRepository;
+  let authService: AuthService;
+  let memberRepository: MemberRepository;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule, TypeOrmModule.forRoot({
-        type: 'sqlite', // 또는 다른 테스트용 데이터베이스 설정
-        database: ':memory:', // 메모리 데이터베이스 사용
-        entities: [Member, Question],
-        synchronize: true,
-      })],
+      imports: [
+        MemberModule,
+        TokenModule,
+        QuestionModule,
+        AuthModule,
+        TypeOrmModule.forRoot({
+          type: 'sqlite', // 또는 다른 테스트용 데이터베이스 설정
+          database: ':memory:', // 메모리 데이터베이스 사용
+          entities: [Member, Question, Token],
+          synchronize: true,
+        }),
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
 
-    questionService = moduleFixture.get<QuestionService>(QuestionService);
-    questionRepository = moduleFixture.get<QuestionRepository>(QuestionRepository);
+    questionRepository =
+      moduleFixture.get<QuestionRepository>(QuestionRepository);
+    authService = moduleFixture.get<AuthService>(AuthService);
+    memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
+  });
+
+  it('해당 게시물을 저장한다.', (done) => {
+    memberRepository
+      .save(memberFixture)
+      .then(() => {
+        return authService.login(oauthRequestFixture);
+      })
+      .then((token) => {
+        request
+          .agent(app.getHttpServer())
+          .post('/api/question')
+          .set('Cookie', [`accessToken=${token}`])
+          .send(customQuestionRequestFixture)
+          .expect(201);
+      })
+      .then(done);
   });
 
   it('전체 카테고리를 조회한다.', async () => {
     const savePromises = multiQuestionFixture.map((question) =>
-        questionRepository.save(question)
+      questionRepository.save(question),
     );
 
-    await Promise.all(savePromises)
-    request.agent(app.getHttpServer())
-        .get('/api/question/category')
-        .expect(200)
-        .then((response) => {
-          expect(response.body.categories).toEqual(['BE', 'CS', 'FE', '나만의 질문']);
-        });
+    await Promise.all(savePromises);
+    request
+      .agent(app.getHttpServer())
+      .get('/api/question/category')
+      .expect(200)
+      .then((response) => {
+        expect(response.body.categories).toEqual([
+          'BE',
+          'CS',
+          'FE',
+          '나만의 질문',
+        ]);
+      });
+  });
+
+  it('해당 게시물을 삭제한다.', (done) => {
+    memberRepository
+      .save(memberFixture)
+      .then(() => questionRepository.save(questionFixture))
+      .then(() => {
+        return authService.login(oauthRequestFixture);
+      })
+      .then((token) => {
+        request
+          .agent(app.getHttpServer())
+          .delete(`/api/question?id=${questionFixture.id}`)
+          .set('Cookie', [`accessToken=${token}`])
+          .expect(204);
+      })
+      .then(done);
   });
 
   afterEach(async () => {
     // 테스트용 데이터베이스의 테이블 데이터를 지우는 로직 추가
+    await questionRepository.query('delete from token');
     await questionRepository.query('delete from Question');
     await questionRepository.query('delete from Member');
   });
 
-  afterAll(async ()=> {
+  afterAll(async () => {
     await app.close();
-  })
+  });
 });

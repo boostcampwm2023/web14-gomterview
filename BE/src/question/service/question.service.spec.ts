@@ -12,6 +12,7 @@ import {
   questionFixture,
 } from '../fixture/question.fixture';
 import { AppModule } from '../../app.module';
+import {MemberModule} from "../../member/member.module";
 
 describe('QuestionService 단위 테스트', () => {
   let service: QuestionService;
@@ -92,15 +93,17 @@ describe('QuestionService 단위 테스트', () => {
 
 describe('Question Service 통합 테스트', () => {
   let service: QuestionService;
-  let repository: QuestionRepository;
+  let questionRepository: QuestionRepository;
+  let memberRepository: MemberRepository;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModule, MemberModule],
     }).compile();
 
     service = module.get<QuestionService>(QuestionService);
-    repository = module.get<QuestionRepository>(QuestionRepository);
+    questionRepository = module.get<QuestionRepository>(QuestionRepository);
+    memberRepository = module.get<MemberRepository>(MemberRepository);
   });
 
   it('should be defined', () => {
@@ -108,20 +111,21 @@ describe('Question Service 통합 테스트', () => {
   });
 
   it('나만의 커스텀 질문을 저장한다.', (done) => {
-    service
-      .createCustomQuestion(customQuestionRequestFixture, memberFixture)
+    memberRepository.save(memberFixture)
+        .then(() => service
+            .createCustomQuestion(customQuestionRequestFixture, memberFixture))
       .then(() => {
         // 비동기 작업이 완료되면 done()을 호출하여 테스트 종료
         done();
       })
       .catch((error) => {
-        done.fail(error); // 에러가 발생한 경우 done.fail()을 호출하여 테스트를 실패로 표시
+        done(error); // 에러가 발생한 경우 done.fail()을 호출하여 테스트를 실패로 표시
       });
   });
 
   it('저장되어 있는 모든 카테고리를 조회한다.', (done) => {
     const savePromises = multiQuestionFixture.map((question) =>
-      repository.save(question),
+        questionRepository.save(question),
     );
 
     Promise.all(savePromises)
@@ -141,10 +145,10 @@ describe('Question Service 통합 테스트', () => {
 
   it('id를 통해 질문 삭제', (done) => {
     const question = questionFixture;
-    repository
+    questionRepository
       .save(question)
       .then(() => service.deleteById(question.id, memberFixture))
-      .then(() => repository.findById(question.id))
+      .then(() => questionRepository.findById(question.id))
       .then((question) => {
         expect(question).toBeNull();
         done();
