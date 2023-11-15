@@ -14,6 +14,7 @@ import { IDriveException } from '../exception/video.exception';
 import { VideoListResponse } from '../dto/videoListResponse';
 import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
 import { CreateVideoRequest } from '../dto/createVideoRequest';
+import { isEmpty } from 'class-validator';
 
 @Injectable()
 export class VideoService {
@@ -22,7 +23,7 @@ export class VideoService {
     private questionRepository: QuestionRepository,
   ) {}
   async createVideo(member: Member, createVidoeRequest: CreateVideoRequest) {
-    if (!member) throw new ManipulatedTokenNotFiltered();
+    if (isEmpty(member)) throw new ManipulatedTokenNotFiltered();
 
     const newVideo = Video.from(member, createVidoeRequest);
     await this.videoRepository.save(newVideo);
@@ -50,7 +51,7 @@ export class VideoService {
   }
 
   async getAllVideosByMemberId(member: Member) {
-    if (!member) throw new ManipulatedTokenNotFiltered();
+    if (isEmpty(member)) throw new ManipulatedTokenNotFiltered();
 
     const videoList = await this.videoRepository.findAllVideosByMemberId(
       member.id,
