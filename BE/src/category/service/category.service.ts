@@ -15,6 +15,7 @@ export class CategoryService {
     createCategoryRequest: CreateCategoryRequest,
     member: Member,
   ) {
+    console.log(createCategoryRequest);
     if (isEmpty(createCategoryRequest.name)) {
       throw new CategoryNameEmptyException();
     }
@@ -23,7 +24,7 @@ export class CategoryService {
       throw new ManipulatedTokenNotFiltered();
     }
 
-    await this.categoryRepository.save(
+    return await this.categoryRepository.save(
       Category.from(createCategoryRequest, member),
     );
   }

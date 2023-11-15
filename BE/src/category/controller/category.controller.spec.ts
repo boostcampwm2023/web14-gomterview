@@ -49,6 +49,9 @@ describe('CategoryController', () => {
     //given
 
     //when
+    mockCategoryService.createCategory.mockRejectedValue(
+      new CategoryNameEmptyException(),
+    );
 
     //then
     await expect(
@@ -63,6 +66,9 @@ describe('CategoryController', () => {
     //given
 
     //when
+    mockCategoryService.createCategory.mockRejectedValue(
+      new ManipulatedTokenNotFiltered(),
+    );
 
     //then
     await expect(
