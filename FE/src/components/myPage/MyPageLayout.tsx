@@ -10,6 +10,7 @@ const MyPageLayout: React.FC<MyPageLayoutProps> = ({ children }) => {
     <Layout
       direction="column"
       css={css`
+        height: auto;
         padding: 1rem 0;
         row-gap: 1.5rem;
       `}

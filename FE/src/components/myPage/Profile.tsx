@@ -12,7 +12,7 @@ const Profile: React.FC = () => {
         justify-content: center;
         align-items: center;
         row-gap: 0.75rem;
-        padding: 1rem;
+        padding: 1.5rem;
       `}
     >
       <Avatar src={'https://avatars.githubusercontent.com/u/66554167?v=4'} />
