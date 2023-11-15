@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { Member } from 'src/member/entity/member';
-import { CreateVideoRequest } from '../dto/CreateVideoRequest';
 import { Video } from '../entity/video';
 import { VideoRepository } from '../repository/video.repository';
 import {
@@ -14,6 +13,7 @@ import { QuestionRepository } from 'src/question/repository/question.repository'
 import { IDriveException } from '../exception/video.exception';
 import { VideoListResponse } from '../dto/videoListResponse';
 import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
+import { CreateVideoRequest } from '../dto/createVideoRequest';
 
 @Injectable()
 export class VideoService {

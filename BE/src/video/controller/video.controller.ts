@@ -3,7 +3,7 @@ import { VideoService } from '../service/video.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { Member } from 'src/member/entity/member';
-import { CreateVideoRequest } from '../dto/CreateVideoRequest';
+import { CreateVideoRequest } from '../dto/createVideoRequest';
 import {
   ApiBody,
   ApiCookieAuth,

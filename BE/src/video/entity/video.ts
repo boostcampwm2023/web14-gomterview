@@ -3,7 +3,7 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { DefaultEntity } from 'src/app.entity';
 import { Member } from 'src/member/entity/member';
 import { Question } from 'src/question/entity/question';
-import { CreateVideoRequest } from '../dto/CreateVideoRequest';
+import { CreateVideoRequest } from '../dto/createVideoRequest';
 
 @Entity({ name: 'Video' })
 export class Video extends DefaultEntity {
