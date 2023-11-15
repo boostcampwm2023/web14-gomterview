@@ -1,9 +1,9 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { VideoService } from '../service/video.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { Member } from 'src/member/entity/member';
-import { CreateVideoRequest } from '../dto/CreateVideoRequest';
+import { CreateVideoRequest } from '../dto/createVideoRequest';
 import {
   ApiBody,
   ApiCookieAuth,
@@ -14,6 +14,7 @@ import {
 import { createApiResponseOption } from 'src/util/swagger.util';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
+import { VideoListResponse } from '../dto/videoListResponse';
 
 @Controller('/api/video')
 @ApiTags('video')
@@ -51,11 +52,24 @@ export class VideoController {
   )
   async getPreSignedUrl(
     @Req() req: Request,
-    @Body() createPreSignedUrlRequest,
+    @Body() createPreSignedUrlRequest: CreatePreSignedUrlRequest,
   ) {
     return await this.videoService.getPreSignedUrl(
       req.user as Member,
       createPreSignedUrlRequest,
     );
+  }
+
+  @Get('/all')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiCookieAuth()
+  @ApiOperation({
+    summary: '자신의 모든 비디오 정보를 반환',
+  })
+  @ApiResponse(
+    createApiResponseOption(200, '모든 비디오 조회 완료', VideoListResponse),
+  )
+  async getAllVideo(@Req() req: Request) {
+    return await this.videoService.getAllVideosByMemberId(req.user as Member);
   }
 }

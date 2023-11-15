@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { Member } from 'src/member/entity/member';
-import { CreateVideoRequest } from '../dto/CreateVideoRequest';
 import { Video } from '../entity/video';
 import { VideoRepository } from '../repository/video.repository';
 import {
@@ -12,6 +11,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { QuestionRepository } from 'src/question/repository/question.repository';
 import { IDriveException } from '../exception/video.exception';
+import { VideoListResponse } from '../dto/videoListResponse';
+import { CreateVideoRequest } from '../dto/createVideoRequest';
+import { validateManipulatedToken } from 'src/util/token.util';
 
 @Injectable()
 export class VideoService {
@@ -20,6 +22,8 @@ export class VideoService {
     private questionRepository: QuestionRepository,
   ) {}
   async createVideo(member: Member, createVidoeRequest: CreateVideoRequest) {
+    validateManipulatedToken(member);
+
     const newVideo = Video.from(member, createVidoeRequest);
     await this.videoRepository.save(newVideo);
   }
@@ -43,6 +47,16 @@ export class VideoService {
     } catch (error) {
       throw new IDriveException();
     }
+  }
+
+  async getAllVideosByMemberId(member: Member) {
+    validateManipulatedToken(member);
+    const videoList = await this.videoRepository.findAllVideosByMemberId(
+      member.id,
+    );
+
+    // TODO: 비디오의 썸네일과 길이에 대한 처리도 필요
+    return VideoListResponse.from(videoList);
   }
 
   private async getQuestionContent(questionId: number) {
