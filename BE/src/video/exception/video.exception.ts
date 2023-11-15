@@ -11,3 +11,9 @@ export class VideoAccessForbiddenException extends HttpException {
     super('해당 비디오에 접근 권한이 없습니다.', 403);
   }
 }
+
+export class VideoNotFoundException extends HttpException {
+  constructor() {
+    super('존재하지 않는 비디오입니다.', 404);
+  }
+}

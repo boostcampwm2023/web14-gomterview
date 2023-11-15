@@ -13,11 +13,12 @@ import { QuestionRepository } from 'src/question/repository/question.repository'
 import {
   IDriveException,
   VideoAccessForbiddenException,
+  VideoNotFoundException,
 } from '../exception/video.exception';
 import { VideoListResponse } from '../dto/videoListResponse';
 import { CreateVideoRequest } from '../dto/createVideoRequest';
 import { validateManipulatedToken } from 'src/util/token.util';
-import { notEquals } from 'class-validator';
+import { isEmpty, notEquals } from 'class-validator';
 import { VideoDetailResponse } from '../dto/videoDetailResponse';
 import * as crypto from 'crypto';
 import 'dotenv/config';
@@ -65,6 +66,7 @@ export class VideoService {
     const memberId = member.id;
     const video = await this.videoRepository.findById(videoId);
 
+    if (isEmpty(video)) throw new VideoNotFoundException();
     if (notEquals(memberId, video.memberId))
       throw new VideoAccessForbiddenException();
 
