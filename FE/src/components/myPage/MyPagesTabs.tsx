@@ -31,7 +31,9 @@ const MyPagesTabs: React.FC = () => {
           <Tabs.Tab value="1">
             <SelectionBox
               id="add-question"
+              name="my-page"
               lineDirection="bottom"
+              defaultChecked
               css={css`
                 padding: 1rem 0;
               `}
@@ -42,6 +44,7 @@ const MyPagesTabs: React.FC = () => {
           <Tabs.Tab value="2">
             <SelectionBox
               id="replay"
+              name="my-page"
               lineDirection="bottom"
               css={css`
                 padding: 1rem 0;

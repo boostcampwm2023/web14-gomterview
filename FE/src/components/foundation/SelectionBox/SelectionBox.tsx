@@ -9,7 +9,7 @@ type SelectionButtonProps = {
   name?: string;
   lineDirection?: 'left' | 'right' | 'top' | 'bottom';
   value?: string;
-  selectedValue?: string;
+  defaultChecked?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 } & HTMLElementTypes<HTMLLabelElement>;
 
@@ -20,7 +20,7 @@ const SelectionBox: React.FC<SelectionButtonProps> = ({
   lineDirection = 'left',
   onChange,
   value,
-  selectedValue,
+  defaultChecked,
   ...args
 }) => {
   return (
@@ -40,7 +40,7 @@ const SelectionBox: React.FC<SelectionButtonProps> = ({
         type={name ? 'radio' : 'checkbox'}
         onChange={onChange}
         value={value}
-        defaultChecked={selectedValue === value}
+        defaultChecked={defaultChecked}
         css={css`
           display: none;
         `}

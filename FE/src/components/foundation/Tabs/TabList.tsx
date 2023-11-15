@@ -1,8 +1,8 @@
 import { SyntheticEvent, useContext } from 'react';
 import { TabContext } from '@foundation/Tabs/index';
-import enhanceChildElement from '@/utils/enhanceChildElement';
-import Tab from '@foundation/Tabs/Tab';
 import { css } from '@emotion/react';
+import Tab from '@foundation/Tabs/Tab';
+import enhanceChildElement from '@/utils/enhanceChildElement';
 
 type TabListProps = {
   children: React.ReactNode;
@@ -14,7 +14,6 @@ type TabListProps = {
 
 const TabList: React.FC<TabListProps> = ({
   children,
-  name,
   direction = 'row',
   gap = '0.5rem',
 }) => {
@@ -31,7 +30,7 @@ const TabList: React.FC<TabListProps> = ({
       {enhanceChildElement({
         children,
         component: Tab,
-        newProps: { onClick: handleTabChange, name },
+        newProps: { onClick: handleTabChange },
       })}
     </div>
   );

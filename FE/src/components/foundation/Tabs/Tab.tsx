@@ -1,6 +1,4 @@
-import React, { useContext } from 'react';
-import addChildElementProps from '@/utils/addChildElementProps';
-import { TabContext } from '@foundation/Tabs/index';
+import React from 'react';
 
 type TabProps = {
   children?: React.ReactNode;
@@ -9,22 +7,8 @@ type TabProps = {
   onClick?: (value: string) => void;
 };
 
-const Tab: React.FC<TabProps> = ({ children, name, value, onClick }) => {
-  const { selectedValue } = useContext(TabContext);
-
-  return (
-    <div onClick={() => onClick && onClick(value)}>
-      {addChildElementProps({
-        children,
-        newProps: {
-          name,
-          value,
-          selectedValue,
-          onChange: () => onClick && onClick(value),
-        },
-      })}
-    </div>
-  );
+const Tab: React.FC<TabProps> = ({ children, value, onClick }) => {
+  return <div onClick={() => onClick && onClick(value)}>{children}</div>;
 };
 
 export default Tab;
