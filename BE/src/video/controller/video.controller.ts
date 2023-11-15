@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { VideoService } from '../service/video.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
@@ -58,6 +66,12 @@ export class VideoController {
       req.user as Member,
       createPreSignedUrlRequest,
     );
+  }
+
+  @Get(':videoId')
+  @UseGuards(AuthGuard('jwt'))
+  async getVideoDetail(@Param('videoId') videoId: number, @Req() req: Request) {
+    return await this.videoService.getVideoDetail(videoId, req.user as Member);
   }
 
   @Get('/all')

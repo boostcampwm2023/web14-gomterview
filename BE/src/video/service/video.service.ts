@@ -49,6 +49,10 @@ export class VideoService {
     }
   }
 
+  async getVideoDetail(videoId: number, member: Member) {
+    throw new Error('Method not implemented.');
+  }
+
   async getAllVideosByMemberId(member: Member) {
     validateManipulatedToken(member);
     const videoList = await this.videoRepository.findAllVideosByMemberId(
