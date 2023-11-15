@@ -54,8 +54,9 @@ export class CategoryController {
   )
   @UseGuards(AuthGuard('jwt-soft'))
   async findCategories(@Req() req: Request) {
+    const member = req.user;
     const categories = await this.categoryService.findUsingCategories(
-      req.user as Member,
+      member ? (member as Member) : undefined,
     );
 
     return CategoryListResponse.of(categories);

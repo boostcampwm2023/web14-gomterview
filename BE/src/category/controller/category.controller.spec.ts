@@ -129,7 +129,9 @@ describe('CategoryController', () => {
     );
 
     //then
-    await expect(controller.findCategories(undefined)).resolves.toEqual(
+    await expect(
+      controller.findCategories({ user: undefined } as unknown as Request),
+    ).resolves.toEqual(
       CategoryListResponse.of(defaultCategoryListResponseFixture),
     );
   });
