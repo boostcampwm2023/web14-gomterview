@@ -11,7 +11,10 @@ type TabProps = {
 const Tab: React.FC<TabProps> = ({ children, name, value, onClick }) => {
   return (
     <div onClick={() => onClick && onClick(value)}>
-      {addChildElementProps({ children, newProps: { name, value } })}
+      {addChildElementProps({
+        children,
+        newProps: { name, value, onChange: () => onClick && onClick(value) },
+      })}
     </div>
   );
 };
