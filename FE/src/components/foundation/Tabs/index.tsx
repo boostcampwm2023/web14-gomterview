@@ -10,16 +10,14 @@ type TabProviderProps = {
 } & HTMLElementTypes<HTMLDivElement>;
 
 const initialContext = {
-  selectedValue: '1',
+  selectedValue: '',
   handleTabChange: (value: string) => {},
 };
 
 export const TabContext = createContext(initialContext);
 
 const Tabs = ({ children, initialValue, ...args }: TabProviderProps) => {
-  const [selectedValue, setSelectedValue] = useState(
-    initialValue || initialContext.selectedValue
-  );
+  const [selectedValue, setSelectedValue] = useState(initialValue);
 
   const handleTabChange = (newValue: string) => {
     setSelectedValue(newValue);
