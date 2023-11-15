@@ -2,6 +2,7 @@ import Box from '@foundation/Box/Box';
 import { css } from '@emotion/react';
 import VideoItem from '@components/myPage/VideoItem';
 import Thumbnail from '@components/myPage/Thumbnail';
+import CardCover from '@foundation/CardCover/CardCover';
 
 const VideoListBox: React.FC = () => {
   return (
@@ -18,28 +19,34 @@ const VideoListBox: React.FC = () => {
         videoName="배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요"
         date="2001.07.17"
       >
-        <Thumbnail
-          image="https://avatars.githubusercontent.com/u/66554167?v=4"
-          videoName="배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요"
-          videoLength="03:20"
-        />
+        <CardCover borderRadius="1rem">
+          <Thumbnail
+            image="https://avatars.githubusercontent.com/u/66554167?v=4"
+            videoName="배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요"
+            videoLength="03:20"
+          />
+        </CardCover>
       </VideoItem>
       <VideoItem videoName="배고파" date="2001.07.17">
-        <Thumbnail
-          image="https://avatars.githubusercontent.com/u/66554167?v=4"
-          videoName="배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요"
-          videoLength="03:20"
-        />
+        <CardCover borderRadius="1rem">
+          <Thumbnail
+            image="https://avatars.githubusercontent.com/u/66554167?v=4"
+            videoName="배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요"
+            videoLength="03:20"
+          />
+        </CardCover>
       </VideoItem>
       <VideoItem
         videoName="배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요"
         date="2001.07.17"
       >
-        <Thumbnail
-          image="https://avatars.githubusercontent.com/u/66554167?v=4"
-          videoName="배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요"
-          videoLength="03:20"
-        />
+        <CardCover borderRadius="1rem">
+          <Thumbnail
+            image="https://avatars.githubusercontent.com/u/66554167?v=4"
+            videoName="배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요배고파요"
+            videoLength="03:20"
+          />
+        </CardCover>
       </VideoItem>
     </Box>
   );

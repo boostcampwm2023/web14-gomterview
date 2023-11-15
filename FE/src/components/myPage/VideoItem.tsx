@@ -25,9 +25,22 @@ const VideoItem: React.FC<VideoItemProps> = ({ children, videoName, date }) => {
           justify-content: space-between;
           padding: 1rem;
           height: 100%;
+          cursor: pointer;
         `}
       >
-        <Typography variant="body2">{videoName}</Typography>
+        <Typography
+          variant="body2"
+          css={css`
+            line-height: 1.25rem;
+
+            &:hover {
+              text-decoration: underline;
+              text-decoration-color: ${theme.colors.text.subStrong};
+            }
+          `}
+        >
+          {videoName}
+        </Typography>
         <div
           css={css`
             align-self: flex-end;
