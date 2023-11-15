@@ -149,10 +149,13 @@ describe('CategoryService', () => {
     //given
 
     //when
+    mockCategoryRepository.findByCategoryId.mockResolvedValue(
+      Category.from(beCategoryFixture, memberFixture),
+    );
 
     //then
     await expect(
-      service.deleteCategoryById(memberFixture, beCategoryFixture.id),
+      service.deleteCategoryById(undefined, beCategoryFixture.id),
     ).rejects.toThrow(new ManipulatedTokenNotFiltered());
   });
 
@@ -173,7 +176,10 @@ describe('CategoryService', () => {
 
     //when
     mockCategoryRepository.findByCategoryId.mockResolvedValue(
-      beCategoryFixture,
+      Category.from(
+        beCategoryFixture,
+        new Member(20, 'ja@ja.com', 'ja', 'https://www.google.com', new Date()),
+      ),
     );
 
     //then

@@ -34,6 +34,10 @@ export class Category extends DefaultEntity {
     return new Category(null, inputObj.name, member, new Date());
   }
 
+  isOwnedBy(member: Member) {
+    return this.member.equals(member);
+  }
+
   getName() {
     return this.name;
   }

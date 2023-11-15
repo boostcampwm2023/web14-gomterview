@@ -26,4 +26,14 @@ export class Member extends DefaultEntity {
     this.nickname = nickname;
     this.profileImg = profileImg;
   }
+
+  equals(member: Member) {
+    for (const key of Object.keys(this)) {
+      if (member[key] !== this[key]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 }
