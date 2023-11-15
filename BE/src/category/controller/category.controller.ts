@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import {
   ApiBody,
   ApiCookieAuth,
@@ -12,6 +12,7 @@ import { CreateCategoryRequest } from '../dto/createCategoryRequest';
 import { Member } from '../../member/entity/member';
 import { AuthGuard } from '@nestjs/passport';
 import { createApiResponseOption } from '../../util/swagger.util';
+import { CategoryListResponse } from '../dto/categoryListResponse';
 
 @Controller('/api/category')
 @ApiTags('category')
@@ -35,4 +36,17 @@ export class CategoryController {
       req.user as Member,
     );
   }
+
+  @Get()
+  @ApiOperation({
+    summary: '카테고리를 추가한다.',
+  })
+  @ApiResponse(
+    createApiResponseOption(
+      200,
+      '사용중인 카테고리 조회 추가',
+      CategoryListResponse,
+    ),
+  )
+  async findCategories(@Req() req: Request) {}
 }
