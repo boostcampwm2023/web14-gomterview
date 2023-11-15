@@ -9,6 +9,7 @@ import {
 import { DefaultEntity } from '../../app.entity';
 import { Member } from '../../member/entity/member';
 import { Question } from '../../question/entity/question';
+import { CreateCategoryRequest } from '../dto/createCategoryRequest';
 
 @Entity({ name: 'Category' })
 export class Category extends DefaultEntity {
@@ -23,13 +24,14 @@ export class Category extends DefaultEntity {
   @JoinTable({ name: 'CategoryQuestion' })
   questions: Question[];
 
-  constructor(name: string) {
+  constructor(name: string, member: Member) {
     super(undefined, new Date());
+    this.member = member;
     this.name = name;
   }
 
-  static copyCategory(category: Category) {
-    return new Category(category.name);
+  static from(inputObj: CreateCategoryRequest | Category, member: Member) {
+    return new Category(inputObj.name, member);
   }
 
   getName() {

@@ -4,7 +4,8 @@ import { MemberRepository } from '../../member/repository/member.repository';
 import { CategoryRepository } from '../repository/category.repository';
 import { memberFixture } from '../../member/fixture/member.fixture';
 import { CreateCategoryRequest } from '../dto/createCategoryRequest';
-import { UnauthorizedException } from '@nestjs/common';
+import { CategoryNameEmptyException } from '../exception/category.exception';
+import { ManipulatedTokenNotFiltered } from '../../token/exception/token.exception';
 
 describe('CategoryService', () => {
   let service: CategoryService;
@@ -61,13 +62,13 @@ describe('CategoryService', () => {
   });
 
   it('카테고리 저장시 회원 객체가 없으면 UnauthorizedException을 반환한다.', () => {
-    const request = new CreateCategoryRequest(undefined);
+    const request = new CreateCategoryRequest('test name');
 
     //when
 
     //then
     expect(service.createCategory(request, undefined)).rejects.toThrow(
-      new UnauthorizedException(),
+      new ManipulatedTokenNotFiltered(),
     );
   });
 });
