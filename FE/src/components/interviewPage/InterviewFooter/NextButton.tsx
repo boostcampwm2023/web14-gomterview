@@ -1,3 +1,4 @@
+import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
 
 import Icon from '@foundation/Icon/Icon';
@@ -24,7 +25,7 @@ const NextButton: React.FC<NextButtonType> = ({ handleNext }) => {
         width="2rem"
         height="2rem"
       />
-      <Typography variant={'body1'} color="white">
+      <Typography variant={'body1'} color={theme.colors.text.white}>
         다음질문
       </Typography>
     </div>

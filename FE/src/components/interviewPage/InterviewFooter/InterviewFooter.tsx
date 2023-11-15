@@ -39,7 +39,7 @@ const InterviewFooter: React.FC<InterviewFooterProps> = ({
         align-items: center;
         width: 100%;
         height: 6.25rem;
-        background-color: black;
+        background-color: ${theme.colors.surface.black100};
         gap: 2.5rem;
       `}
     >

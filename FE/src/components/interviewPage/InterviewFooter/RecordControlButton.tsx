@@ -1,3 +1,4 @@
+import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
 import Icon from '@foundation/Icon/Icon';
 import Typography from '@foundation/Typography/Typography';
@@ -29,7 +30,7 @@ const RecordControlButton: React.FC<RecordControlButtonType> = ({
       ) : (
         <Icon id="record-start" width="2rem" height="2rem" />
       )}
-      <Typography variant={'body1'} color="white">
+      <Typography variant={'body1'} color={theme.colors.text.white}>
         {isRecording ? '녹화종료' : '녹화시작'}
       </Typography>
     </div>

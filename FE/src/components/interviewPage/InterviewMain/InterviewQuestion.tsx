@@ -1,6 +1,6 @@
 import Typography from '@foundation/Typography/Typography';
 import { css } from '@emotion/react';
-
+import { theme } from '@styles/theme';
 type InterviewQuestionType = {
   question: string;
 };
@@ -19,20 +19,25 @@ const InterviewQuestion: React.FC<InterviewQuestionType> = ({ question }) => {
         z-index: 1;
         width: 62.5rem;
         height: 5rem;
-        background-color: black;
+        background-color: ${theme.colors.surface.black100};
         opacity: 60%;
         border-radius: 0rem 0rem 2rem 2rem;
 
-        @media (max-width: 1000px) {
+        @media (max-width: ${theme.breakpoints.laptop}) {
           width: 80%;
         }
 
-        @media (max-width: 500px) {
+        @media (max-width: ${theme.breakpoints.mobileL}) {
           width: 90%;
         }
       `}
     >
-      <Typography noWrap paragraph variant={'title4'} color="white">
+      <Typography
+        noWrap
+        paragraph
+        variant={'title4'}
+        color={theme.colors.text.white}
+      >
         {question}
       </Typography>
     </div>

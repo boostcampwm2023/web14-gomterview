@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import RecordStatus from './RecordStatus';
 import RecordTimer from './RecordTimer';
 import IntervieweeName from './IntervieweeName';
+import { theme } from '@styles/theme';
 
 type InterviewHeaderProps = {
   isRecording: boolean;
@@ -21,7 +22,7 @@ const InterviewHeader: React.FC<InterviewHeaderProps> = ({
         align-items: center;
         width: 100%;
         height: 3.125rem;
-        background-color: black;
+        background-color: ${theme.colors.surface.black100};
         z-index: 10;
       `}
     >

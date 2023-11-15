@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-
+import { theme } from '@styles/theme';
 type InterviewAnswerType = {
   answer: string;
 };
@@ -18,17 +18,17 @@ const InterviewAnswer: React.FC<InterviewAnswerType> = ({ answer }) => {
         z-index: 1;
         width: 62.5rem;
         height: 11.5rem;
-        background-color: black;
-        color: white;
+        background-color: ${theme.colors.surface.black100};
+        color: ${theme.colors.text.white};
         opacity: 60%;
         border-radius: 2rem 2rem 0rem 0rem;
         padding: 1.25rem;
 
-        @media (max-width: 1000px) {
+        @media (max-width: ${theme.breakpoints.laptop}) {
           width: 80%;
         }
 
-        @media (max-width: 500px) {
+        @media (max-width: ${theme.breakpoints.mobileL}) {
           width: 90%;
           height: 14rem;
         }

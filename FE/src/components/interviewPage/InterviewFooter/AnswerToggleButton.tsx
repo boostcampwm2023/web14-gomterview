@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-
+import { theme } from '@styles/theme';
 import Icon from '@foundation/Icon/Icon';
 import Typography from '@foundation/Typography/Typography';
 
@@ -22,7 +22,7 @@ const AnswerToggleButton: React.FC<AnswerToggleButtonType> = ({
       onClick={handleAnswerToggle}
     >
       <Icon id="script" width="2rem" height="2rem" />
-      <Typography variant={'body1'} color="white">
+      <Typography variant={'body1'} color={theme.colors.text.white}>
         스크립트
       </Typography>
     </div>

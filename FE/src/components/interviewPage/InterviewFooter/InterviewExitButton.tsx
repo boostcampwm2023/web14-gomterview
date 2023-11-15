@@ -1,3 +1,4 @@
+import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
 
 import Icon from '@foundation/Icon/Icon';
@@ -22,7 +23,7 @@ const InterviewExitButton: React.FC<InterviewExitButtonType> = ({
       onClick={handleInterviewExit}
     >
       <Icon id="close-circle" width="2rem" height="2rem" />
-      <Typography variant={'body1'} color="white">
+      <Typography variant={'body1'} color={theme.colors.text.white}>
         나가기
       </Typography>
     </div>

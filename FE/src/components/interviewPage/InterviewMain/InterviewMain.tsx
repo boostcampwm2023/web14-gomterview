@@ -3,6 +3,7 @@ import { RefObject } from 'react';
 import InterviewQuestion from './InterviewQuestion';
 import InterviewAnswer from './InterviewAnswer';
 import Mirror from './Mirror';
+import { theme } from '@styles/theme';
 
 type InterviewMainProps = {
   mirrorVideoRef: RefObject<HTMLVideoElement>;
@@ -25,7 +26,7 @@ const InterviewMain: React.FC<InterviewMainProps> = ({
         justify-content: center;
         height: 100%;
         align-items: center;
-        background-color: black;
+        background-color: ${theme.colors.surface.black100};
         overflow: hidden;
       `}
     >

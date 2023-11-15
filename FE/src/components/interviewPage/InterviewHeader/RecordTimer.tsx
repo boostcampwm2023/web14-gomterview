@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Typography from '@foundation/Typography/Typography';
 import { css } from '@emotion/react';
 import Icon from '@foundation/Icon/Icon';
+import { theme } from '@styles/theme';
 
 interface RecordTimerProps {
   isRecording: boolean;
@@ -37,7 +38,12 @@ const RecordTimer: React.FC<RecordTimerProps> = ({ isRecording }) => {
       `}
     >
       <Icon id="timer" width="1.5rem" height="1.5rem" />
-      <Typography noWrap paragraph variant={'body1'} color="white">
+      <Typography
+        noWrap
+        paragraph
+        variant={'body1'}
+        color={theme.colors.text.white}
+      >
         {formatTime(curTime)}
       </Typography>
     </div>

@@ -1,3 +1,4 @@
+import { theme } from '@styles/theme';
 import { LeadingDot } from '@foundation/LeadingDot/LeadingDot';
 import Typography from '@foundation/Typography/Typography';
 type RecordStatusType = {
@@ -6,8 +7,19 @@ type RecordStatusType = {
 
 const RecordStatus: React.FC<RecordStatusType> = ({ isRecording }) => {
   return (
-    <LeadingDot color={isRecording ? 'red' : 'green'}>
-      <Typography noWrap paragraph variant={'body1'} color="white">
+    <LeadingDot
+      color={
+        isRecording
+          ? `${theme.colors.status.record}`
+          : `${theme.colors.status.active}`
+      }
+    >
+      <Typography
+        noWrap
+        paragraph
+        variant={'body1'}
+        color={theme.colors.text.white}
+      >
         {isRecording ? '녹화중' : '녹화준비'}
       </Typography>
     </LeadingDot>
