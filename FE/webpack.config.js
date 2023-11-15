@@ -2,6 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   mode: process.env.production === 'true' ? 'production' : 'development',
@@ -44,6 +45,7 @@ module.exports = {
     new CopyPlugin({
       patterns: [{ from: 'public/mockServiceWorker.js', to: '' }],
     }),
+    new Dotenv(),
   ],
   module: {
     rules: [
