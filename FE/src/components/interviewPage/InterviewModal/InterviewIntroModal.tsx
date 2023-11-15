@@ -26,7 +26,7 @@ const InterviewIntroModal: React.FC<InterviewIntroModalProps> = ({
             variant="body1"
             color={theme.colors.text.default}
           >
-            모의 면접을 시작합니다.
+            모의 면접을 시작합니다😊
           </Typography>
           <Typography variant="body1" color={theme.colors.text.default}>
             하단의 녹화시작 버튼을 통해서 면접을 시작합니다.
