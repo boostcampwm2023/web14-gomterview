@@ -6,6 +6,13 @@ import { memberFixture } from '../../member/fixture/member.fixture';
 import { CreateCategoryRequest } from '../dto/createCategoryRequest';
 import { CategoryNameEmptyException } from '../exception/category.exception';
 import { ManipulatedTokenNotFiltered } from '../../token/exception/token.exception';
+import { createIntegrationTestModule } from '../../util/test.util';
+import { CategoryModule } from '../category.module';
+import { MemberModule } from '../../member/member.module';
+import { Member } from '../../member/entity/member';
+import { Category } from '../entity/category';
+import { INestApplication } from '@nestjs/common';
+import { Question } from '../../question/entity/question';
 
 describe('CategoryService', () => {
   let service: CategoryService;
@@ -70,5 +77,53 @@ describe('CategoryService', () => {
     expect(service.createCategory(request, undefined)).rejects.toThrow(
       new ManipulatedTokenNotFiltered(),
     );
+  });
+});
+
+describe('CategoryService 통합테스트', () => {
+  let app: INestApplication;
+  let categoryService: CategoryService;
+  let categoryRepository: CategoryRepository;
+  let memberRepository: MemberRepository;
+
+  beforeAll(async () => {
+    const modules = [CategoryModule, MemberModule];
+    const entities = [Member, Category, Question];
+    const moduleFixture = await createIntegrationTestModule(modules, entities);
+
+    app = moduleFixture.createNestApplication();
+    await app.init();
+
+    categoryService = moduleFixture.get<CategoryService>(CategoryService);
+    categoryRepository =
+      moduleFixture.get<CategoryRepository>(CategoryRepository);
+    memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
+  });
+
+  it('회원 정보 저장을 성공한다.', async () => {
+    //given
+    await memberRepository.save(memberFixture);
+
+    //when
+    const result = await categoryService.createCategory(
+      new CreateCategoryRequest('tester'),
+      memberFixture,
+    );
+    const category = (
+      await categoryRepository.findAllByMemberId(memberFixture.id)
+    ).pop();
+
+    //then
+    expect(result).toBeUndefined();
+    expect(category.name).toEqual('tester');
+  });
+
+  afterEach(async () => {
+    await categoryRepository.query('delete from Category');
+    await categoryRepository.query('delete from Member');
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 });

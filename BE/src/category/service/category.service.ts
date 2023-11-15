@@ -15,7 +15,6 @@ export class CategoryService {
     createCategoryRequest: CreateCategoryRequest,
     member: Member,
   ) {
-    console.log(createCategoryRequest);
     if (isEmpty(createCategoryRequest.name)) {
       throw new CategoryNameEmptyException();
     }

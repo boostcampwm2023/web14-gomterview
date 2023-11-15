@@ -21,4 +21,8 @@ export class CategoryRepository {
   async remove(category: Category) {
     await this.repository.remove(category);
   }
+
+  async query(query: string) {
+    return await this.repository.query(query);
+  }
 }

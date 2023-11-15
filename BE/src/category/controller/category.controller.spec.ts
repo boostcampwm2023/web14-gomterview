@@ -1,11 +1,27 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CategoryController } from './category.controller';
 import { CategoryService } from '../service/category.service';
-import { mockReqWithMemberFixture } from '../../member/fixture/member.fixture';
+import {
+  memberFixture,
+  mockReqWithMemberFixture,
+  oauthRequestFixture,
+} from '../../member/fixture/member.fixture';
 import { CreateCategoryRequest } from '../dto/createCategoryRequest';
 import { CategoryNameEmptyException } from '../exception/category.exception';
 import { ManipulatedTokenNotFiltered } from '../../token/exception/token.exception';
 import { Request } from 'express';
+import * as request from 'supertest';
+import { CategoryModule } from '../category.module';
+import { MemberModule } from '../../member/member.module';
+import { Member } from '../../member/entity/member';
+import { Category } from '../entity/category';
+import { Question } from '../../question/entity/question';
+import { createIntegrationTestModule } from '../../util/test.util';
+import { MemberRepository } from '../../member/repository/member.repository';
+import { AuthModule } from '../../auth/auth.module';
+import { TokenModule } from '../../token/token.module';
+import { AuthService } from '../../auth/service/auth.service';
+import { Token } from '../../token/entity/token';
 
 describe('CategoryController', () => {
   let controller: CategoryController;
@@ -81,9 +97,39 @@ describe('CategoryController', () => {
 });
 
 describe('CategoryController 통합테스트', () => {
-  it('카테고리 저장을 성공시 200상태코드가 반환된다.', () => {});
+  let app;
+  let authService: AuthService;
+  let memberRepository: MemberRepository;
 
-  it('카테고리 저장시, name이 없으면 CategoryNameEmptyException을 반환한다.', () => {});
+  beforeAll(async () => {
+    const modules = [CategoryModule, MemberModule, TokenModule, AuthModule];
+    const entities = [Member, Category, Question, Token];
+    const moduleFixture = await createIntegrationTestModule(modules, entities);
 
-  it('카테고리 저장시 회원 객체가 없으면 UnauthorizedException을 반환한다.', () => {});
+    app = moduleFixture.createNestApplication();
+    await app.init();
+
+    authService = moduleFixture.get<AuthService>(AuthService);
+    memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
+  });
+
+  it('카테고리 저장을 성공시 201상태코드가 반환된다.', (done) => {
+    memberRepository
+      .save(memberFixture)
+      .then(() => {
+        return authService.login(oauthRequestFixture);
+      })
+      .then((token) => {
+        request
+          .agent(app.getHttpServer())
+          .post(`/api/category`)
+          .set('Cookie', [`accessToken=${token}`])
+          .send(new CreateCategoryRequest('tester'))
+          .expect(201);
+      })
+      .then((response) => {
+        expect(response).toBeUndefined();
+        done();
+      });
+  });
 });
