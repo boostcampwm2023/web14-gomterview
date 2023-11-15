@@ -1,9 +1,13 @@
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+
 import InterviewPageLayout from '@components/interviewPage/InterviewPageLayout';
 import InterviewHeader from '@/components/interviewPage/InterviewHeader/InterviewHeader';
 import InterviewMain from '@/components/interviewPage/InterviewMain/InterviewMain';
 import InterviewFooter from '@/components/interviewPage/InterviewFooter/InterviewFooter';
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import InterviewIntroModal from '@components/interviewPage/InterviewModal/InterviewIntroModal';
+import InterviewTimeOverModal from '@components/interviewPage/InterviewModal/InterviewTimeOverModal';
+import InterviewFinishModal from '@components/interviewPage/InterviewModal/InterviewFinishModal';
+
 const InterviewPage: React.FC = () => {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [isRecording, setIsRecording] = useState(false);
@@ -129,6 +133,14 @@ const InterviewPage: React.FC = () => {
       <InterviewIntroModal
         isOpen={interviewIntroModalIsOpen}
         closeModal={() => setInterviewIntroModalIsOpen((prev) => !prev)}
+      />
+      <InterviewTimeOverModal
+        isOpen={false}
+        closeModal={() => console.log('모달을 종료합니다.')}
+      />
+      <InterviewFinishModal
+        isOpen={false}
+        closeModal={() => console.log('모달을 종료합니다.')}
       />
     </InterviewPageLayout>
   );
