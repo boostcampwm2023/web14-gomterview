@@ -27,6 +27,8 @@ const InterviewFooter: React.FC<InterviewFooterProps> = ({
 
   const handleNext = () => {
     alert('다음면접을 진행합니다');
+    if (!isRecording && recordedBlobs.length > 0) handleDownload();
+    else alert('저장할 수 없습니다');
   };
 
   return (
