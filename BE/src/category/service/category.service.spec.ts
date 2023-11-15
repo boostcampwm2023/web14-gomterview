@@ -2,6 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CategoryService } from './category.service';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { CategoryRepository } from '../repository/category.repository';
+import { memberFixture } from '../../member/fixture/member.fixture';
+import { CreateCategoryRequest } from '../dto/createCategoryRequest';
+import { UnauthorizedException } from '@nestjs/common';
 
 describe('CategoryService', () => {
   let service: CategoryService;
@@ -31,9 +34,40 @@ describe('CategoryService', () => {
     expect(service).toBeDefined();
   });
 
-  it('카테고리 저장을 성공시 undefined로 반환된다.', () => {});
+  it('카테고리 저장을 성공시 undefined로 반환된다.', async () => {
+    //given
+    const member = memberFixture;
+    const request = new CreateCategoryRequest('testCategory');
 
-  it('카테고리 저장시, name이 없으면 CategoryNameEmptyException을 반환한다.', () => {});
+    //when
+    mockCategoryRepository.save.mockResolvedValue(undefined);
 
-  it('카테고리 저장시 회원 객체가 없으면 UnauthorizedException을 반환한다.', () => {});
+    //then
+    await expect(
+      service.createCategory(request, member),
+    ).resolves.toBeUndefined();
+  });
+
+  it('카테고리 저장시, name이 없으면 CategoryNameEmptyException을 반환한다.', async () => {
+    const member = memberFixture;
+    const request = new CreateCategoryRequest(undefined);
+
+    //when
+
+    //then
+    expect(service.createCategory(request, member)).rejects.toThrow(
+      new CategoryNameEmptyException(),
+    );
+  });
+
+  it('카테고리 저장시 회원 객체가 없으면 UnauthorizedException을 반환한다.', () => {
+    const request = new CreateCategoryRequest(undefined);
+
+    //when
+
+    //then
+    expect(service.createCategory(request, undefined)).rejects.toThrow(
+      new UnauthorizedException(),
+    );
+  });
 });
