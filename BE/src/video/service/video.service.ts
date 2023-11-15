@@ -11,6 +11,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { QuestionRepository } from 'src/question/repository/question.repository';
 import {
+  DecryptionException,
+  EncryptionException,
   IDriveException,
   VideoAccessForbiddenException,
   VideoNotFoundException,
@@ -90,16 +92,24 @@ export class VideoService {
   }
 
   private getEncryptedurl(url: string) {
-    const cipher = crypto.createCipheriv(algorithm, Buffer.from(key), iv);
-    let encrypted = cipher.update(url, 'utf-8', 'hex');
-    encrypted += cipher.final('hex');
-    return encrypted;
+    try {
+      const cipher = crypto.createCipheriv(algorithm, Buffer.from(key), iv);
+      let encrypted = cipher.update(url, 'utf-8', 'hex');
+      encrypted += cipher.final('hex');
+      return encrypted;
+    } catch (error) {
+      throw new EncryptionException();
+    }
   }
 
   private getDecryptedUrl(encryptedUrl: string) {
-    const decipher = crypto.createDecipheriv(algorithm, Buffer.from(key), iv);
-    let decrypted = decipher.update(encryptedUrl, 'hex', 'utf-8');
-    decrypted += decipher.final('utf-8');
-    return decrypted;
+    try {
+      const decipher = crypto.createDecipheriv(algorithm, Buffer.from(key), iv);
+      let decrypted = decipher.update(encryptedUrl, 'hex', 'utf-8');
+      decrypted += decipher.final('utf-8');
+      return decrypted;
+    } catch (error) {
+      throw new DecryptionException();
+    }
   }
 }
