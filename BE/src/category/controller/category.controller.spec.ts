@@ -22,12 +22,18 @@ import { AuthModule } from '../../auth/auth.module';
 import { TokenModule } from '../../token/token.module';
 import { AuthService } from '../../auth/service/auth.service';
 import { Token } from '../../token/entity/token';
+import {
+  categoryListResponseFixture,
+  defaultCategoryListResponseFixture,
+} from '../fixture/category.fixture';
+import { CategoryListResponse } from '../dto/categoryListResponse';
 
 describe('CategoryController', () => {
   let controller: CategoryController;
 
   const mockCategoryService = {
     createCategory: jest.fn(),
+    findUsingCategories: jest.fn(),
   };
 
   beforeAll(async () => {
@@ -93,6 +99,34 @@ describe('CategoryController', () => {
         new CreateCategoryRequest('tester'),
       ),
     ).rejects.toThrow(new ManipulatedTokenNotFiltered());
+  });
+
+  it('Member객체가 있고, 회원의 카테고리를 조회할 때, CategoryListResponse 객체 형태로 조회된다. ', async () => {
+    //given
+
+    //when
+    mockCategoryService.findUsingCategories.mockResolvedValue(
+      categoryListResponseFixture,
+    );
+
+    //then
+    await expect(
+      controller.findCategories(mockReqWithMemberFixture),
+    ).resolves.toEqual(CategoryListResponse.of(categoryListResponseFixture));
+  });
+
+  it('Member객체 없이, 회원의 카테고리를 조회할 때, CategoryListResponse 객체 형태로 조회된다. ', async () => {
+    //given
+
+    //when
+    mockCategoryService.findUsingCategories.mockResolvedValue(
+      defaultCategoryListResponseFixture,
+    );
+
+    //then
+    await expect(controller.findCategories(undefined)).resolves.toEqual(
+      CategoryListResponse.of(defaultCategoryListResponseFixture),
+    );
   });
 });
 
