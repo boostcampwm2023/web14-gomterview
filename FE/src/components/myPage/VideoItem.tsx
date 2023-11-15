@@ -30,8 +30,8 @@ const VideoItem: React.FC<VideoItemProps> = ({
           &::after {
             content: '${videoLength}';
             position: absolute;
-            right: 0;
-            bottom: 0;
+            right: 0.75rem;
+            bottom: 0.75rem;
             //TODO 이 부분 색상은 성인님 작업 부분과 겹칠 것 같아 일단 하드코딩했습니다.
             background: rgba(0, 0, 0, 0.7);
             font-size: 0.875rem;

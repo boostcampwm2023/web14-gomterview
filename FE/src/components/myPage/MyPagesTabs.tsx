@@ -4,6 +4,7 @@ import SelectionBox from '@foundation/SelectionBox/SelectionBox';
 import { css } from '@emotion/react';
 import Box from '@foundation/Box/Box';
 import Typography from '@foundation/Typography/Typography';
+import VideoListBox from '@components/myPage/VideoListBox';
 
 const MyPagesTabs: React.FC = () => {
   const [value, setValue] = useState('1');
@@ -55,14 +56,18 @@ const MyPagesTabs: React.FC = () => {
           </Tabs.Tab>
         </Tabs.TabList>
       </Box>
-      <Box
-        css={css`
-          padding: 3rem;
-        `}
-      >
-        <Tabs.TabPanel value="1">질문 추가 모달</Tabs.TabPanel>
-        <Tabs.TabPanel value="2">영상 리스트</Tabs.TabPanel>
-      </Box>
+      <Tabs.TabPanel value="1">
+        <Box
+          css={css`
+            padding: 3rem;
+          `}
+        >
+          질문 추가 모달
+        </Box>
+      </Tabs.TabPanel>
+      <Tabs.TabPanel value="2">
+        <VideoListBox />
+      </Tabs.TabPanel>
     </Tabs>
   );
 };
