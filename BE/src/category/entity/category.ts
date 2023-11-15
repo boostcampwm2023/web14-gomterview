@@ -1,7 +1,13 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+} from 'typeorm';
 import { DefaultEntity } from '../../app.entity';
 import { Member } from '../../member/entity/member';
-import { JoinColumn } from 'typeorm/browser';
 import { Question } from '../../question/entity/question';
 
 @Entity({ name: 'Category' })
