@@ -10,8 +10,8 @@ import {
 } from '@nestjs/swagger';
 import { Member } from '../entity/member';
 import { createApiResponseOption } from 'src/util/swagger.util';
-import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
 import { MemberService } from '../service/member.service';
+import { validateManipulatedToken } from 'src/util/token.util';
 
 @Controller('/api/member')
 @ApiTags('member')
@@ -32,7 +32,7 @@ export class MemberController {
     ),
   )
   getMyInfo(@Req() req: Request) {
-    if (!req.user) throw new ManipulatedTokenNotFiltered();
+    validateManipulatedToken(req.user as Member);
     return MemberResponse.from(req.user as Member);
   }
 
