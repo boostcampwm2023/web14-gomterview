@@ -1,3 +1,5 @@
+import { Video } from '../entity/video';
+
 export class VideoDetailResponse {
   readonly id: number;
   readonly url: string;
@@ -17,5 +19,15 @@ export class VideoDetailResponse {
     this.videoName = videoName;
     this.hash = hash;
     this.createdAt = createdAt;
+  }
+
+  static from(video: Video, hash: string | null) {
+    return new VideoDetailResponse(
+      video.id,
+      video.url,
+      video.name,
+      hash,
+      video.createdAt.getTime(),
+    );
   }
 }

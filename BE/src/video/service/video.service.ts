@@ -18,6 +18,7 @@ import { VideoListResponse } from '../dto/videoListResponse';
 import { CreateVideoRequest } from '../dto/createVideoRequest';
 import { validateManipulatedToken } from 'src/util/token.util';
 import { notEquals } from 'class-validator';
+import { VideoDetailResponse } from '../dto/videoDetailResponse';
 
 @Injectable()
 export class VideoService {
@@ -60,6 +61,9 @@ export class VideoService {
 
     if (notEquals(memberId, video.memberId))
       throw new VideoAccessForbiddenException();
+
+    const hash = video.isPublic ? 'URL 해시값' : null;
+    return VideoDetailResponse.from(video, hash);
   }
 
   async getAllVideosByMemberId(member: Member) {
