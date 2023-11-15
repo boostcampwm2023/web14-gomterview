@@ -9,7 +9,7 @@ const MyPagesTabs: React.FC = () => {
   const [value, setValue] = useState('1');
   return (
     <Tabs
-      value={value}
+      initialValue={value}
       css={css`
         display: flex;
         flex-direction: column;

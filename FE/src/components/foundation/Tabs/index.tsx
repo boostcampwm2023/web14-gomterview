@@ -6,7 +6,7 @@ import { HTMLElementTypes } from '@/types/utils';
 
 type TabProviderProps = {
   children: React.ReactNode;
-  value: string;
+  initialValue: string;
 } & HTMLElementTypes<HTMLDivElement>;
 
 const initialContext = {
@@ -16,9 +16,9 @@ const initialContext = {
 
 export const TabContext = createContext(initialContext);
 
-const Tabs = ({ children, value, ...args }: TabProviderProps) => {
+const Tabs = ({ children, initialValue, ...args }: TabProviderProps) => {
   const [selectedValue, setSelectedValue] = useState(
-    value || initialContext.selectedValue
+    initialValue || initialContext.selectedValue
   );
 
   const handleTabChange = (newValue: string) => {
