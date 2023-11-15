@@ -17,7 +17,7 @@ const AnswerToggleButton: React.FC<AnswerToggleButtonType> = ({
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 0.25rem;
+        gap: 0.75rem;
       `}
       onClick={handleAnswerToggle}
     >
