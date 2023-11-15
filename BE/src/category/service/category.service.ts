@@ -25,4 +25,6 @@ export class CategoryService {
       Category.from(createCategoryRequest, member),
     );
   }
+
+  async findUsingCategories(member?: Member) {}
 }

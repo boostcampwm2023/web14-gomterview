@@ -13,6 +13,13 @@ import { Member } from '../../member/entity/member';
 import { Category } from '../entity/category';
 import { INestApplication } from '@nestjs/common';
 import { Question } from '../../question/entity/question';
+import { CategoryResponse } from '../dto/categoryResponse';
+import {
+  beCategoryFixture,
+  csCategoryFixture,
+  customCategoryFixture,
+  feCategoryFixture,
+} from '../fixture/category.fixture';
 
 describe('CategoryService', () => {
   let service: CategoryService;
@@ -76,6 +83,46 @@ describe('CategoryService', () => {
     //then
     expect(service.createCategory(request, undefined)).rejects.toThrow(
       new ManipulatedTokenNotFiltered(),
+    );
+  });
+
+  it('나의 카테고리를 조회할 때, {id:number, name:string}구조의 배열이 온다.', async () => {
+    //given
+    const categoryFixtures = [
+      Category.from(beCategoryFixture, memberFixture),
+      Category.from(csCategoryFixture, memberFixture),
+      Category.from(feCategoryFixture, memberFixture),
+      Category.from(customCategoryFixture, memberFixture),
+    ];
+
+    //when
+    mockCategoryRepository.findAllByMemberId.mockResolvedValue(
+      categoryFixtures,
+    );
+
+    //then
+    await expect(service.findUsingCategories(memberFixture)).resolves.toEqual(
+      categoryFixtures.map(CategoryResponse.from),
+    );
+  });
+
+  it('member가 undefined일 때, [CS, BE, FE, "나만의 질문"]이 {id:number, name:string}구조의 배열로 온다.', async () => {
+    //given
+    const categoryFixtures = [
+      beCategoryFixture,
+      csCategoryFixture,
+      feCategoryFixture,
+      customCategoryFixture,
+    ];
+
+    //when
+    mockCategoryRepository.findAllByMemberId.mockResolvedValue(
+      categoryFixtures,
+    );
+
+    //then
+    await expect(service.findUsingCategories(undefined)).resolves.toEqual(
+      categoryFixtures.map(CategoryResponse.from),
     );
   });
 });
