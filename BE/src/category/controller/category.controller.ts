@@ -54,19 +54,11 @@ export class CategoryController {
     ),
   )
   async findCategories(@Req() req: Request) {
-    const token = this.filterToken(req);
+    const token = getTokenValue(req);
     const member = await this.tokenService.findMemberByToken(token);
 
     const categories = await this.categoryService.findUsingCategories(member);
 
     return CategoryListResponse.of(categories);
-  }
-
-  private filterToken(req: Request) {
-    try {
-      return getTokenValue(req);
-    } catch (e) {
-      return undefined;
-    }
   }
 }
