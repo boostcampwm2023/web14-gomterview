@@ -17,7 +17,6 @@ import {
 } from '@nestjs/swagger';
 import { QuestionService } from '../service/question.service';
 import { Request } from 'express';
-import { getTokenValue } from 'src/util/token.util';
 import { TokenService } from 'src/token/service/token.service';
 import { QuestionListResponse } from '../dto/questionListResponse';
 import { createApiResponseOption } from '../../util/swagger.util';
@@ -58,13 +57,15 @@ export class QuestionController {
     ),
   )
   @ApiOperation({ summary: '카테고리별 질문 조회' })
+  @UseGuards(AuthGuard('jwt-soft'))
   async findAllByCategory(
     @Query('category') category: string,
     @Req() request: Request,
   ): Promise<any> {
+    const member = request.user;
     return await this.questionService.findByCategory(
       category,
-      await this.findMember(request),
+      member ? (request.user as Member).id : undefined,
     );
   }
 
@@ -87,14 +88,5 @@ export class QuestionController {
     @Req() req: Request,
   ) {
     await this.questionService.deleteById(questionId, req.user as Member);
-  }
-
-  private async findMember(request: Request) {
-    try {
-      const token = getTokenValue(request);
-      return Number((await this.tokenService.getPayload(token)).id);
-    } catch (e) {
-      return undefined;
-    }
   }
 }

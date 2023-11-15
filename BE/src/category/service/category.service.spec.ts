@@ -13,6 +13,13 @@ import { Member } from '../../member/entity/member';
 import { Category } from '../entity/category';
 import { INestApplication } from '@nestjs/common';
 import { Question } from '../../question/entity/question';
+import { CategoryResponse } from '../dto/categoryResponse';
+import {
+  beCategoryFixture,
+  csCategoryFixture,
+  customCategoryFixture,
+  feCategoryFixture,
+} from '../fixture/category.fixture';
 
 describe('CategoryService', () => {
   let service: CategoryService;
@@ -78,6 +85,46 @@ describe('CategoryService', () => {
       new ManipulatedTokenNotFiltered(),
     );
   });
+
+  it('나의 카테고리를 조회할 때, {id:number, name:string}구조의 배열이 온다.', async () => {
+    //given
+    const categoryFixtures = [
+      Category.from(beCategoryFixture, memberFixture),
+      Category.from(csCategoryFixture, memberFixture),
+      Category.from(feCategoryFixture, memberFixture),
+      Category.from(customCategoryFixture, memberFixture),
+    ];
+
+    //when
+    mockCategoryRepository.findAllByMemberId.mockResolvedValue(
+      categoryFixtures,
+    );
+
+    //then
+    await expect(service.findUsingCategories(memberFixture)).resolves.toEqual(
+      categoryFixtures.map(CategoryResponse.from),
+    );
+  });
+
+  it('member가 undefined일 때, [CS, BE, FE, "나만의 질문"]이 {id:number, name:string}구조의 배열로 온다.', async () => {
+    //given
+    const categoryFixtures = [
+      beCategoryFixture,
+      csCategoryFixture,
+      feCategoryFixture,
+      customCategoryFixture,
+    ];
+
+    //when
+    mockCategoryRepository.findAllByMemberId.mockResolvedValue(
+      categoryFixtures,
+    );
+
+    //then
+    await expect(service.findUsingCategories(undefined)).resolves.toEqual(
+      categoryFixtures.map(CategoryResponse.from),
+    );
+  });
 });
 
 describe('CategoryService 통합테스트', () => {
@@ -100,6 +147,20 @@ describe('CategoryService 통합테스트', () => {
     memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
   });
 
+  const saveDefaultCategory = async () => {
+    await categoryRepository.save(csCategoryFixture);
+    await categoryRepository.save(beCategoryFixture);
+    await categoryRepository.save(feCategoryFixture);
+    await categoryRepository.save(customCategoryFixture);
+  };
+
+  const saveMembersCategory = async (member: Member) => {
+    await categoryRepository.save(Category.from(csCategoryFixture, member));
+    await categoryRepository.save(Category.from(beCategoryFixture, member));
+    await categoryRepository.save(Category.from(feCategoryFixture, member));
+    await categoryRepository.save(Category.from(customCategoryFixture, member));
+  };
+
   it('회원 정보 저장을 성공한다.', async () => {
     //given
     await memberRepository.save(memberFixture);
@@ -109,13 +170,49 @@ describe('CategoryService 통합테스트', () => {
       new CreateCategoryRequest('tester'),
       memberFixture,
     );
-    const category = (
-      await categoryRepository.findAllByMemberId(memberFixture.id)
-    ).pop();
+    const category = await categoryRepository.findAllByMemberId(
+      memberFixture.id,
+    );
 
     //then
     expect(result).toBeUndefined();
-    expect(category.name).toEqual('tester');
+    expect(category.pop().name).toEqual('tester');
+  });
+
+  it('회원의 카테고리를 조회한다.', async () => {
+    //given
+    await memberRepository.save(memberFixture);
+
+    //when
+    await saveMembersCategory(memberFixture);
+    await saveDefaultCategory();
+    const result = await categoryService.findUsingCategories(memberFixture);
+
+    //then
+    expect(result.map((response) => response.name)).toEqual([
+      'CS',
+      'BE',
+      'FE',
+      '나만의 질문',
+    ]);
+  });
+
+  it('비회원의 카테고리를 조회한다.', async () => {
+    //given
+    await memberRepository.save(memberFixture);
+
+    //when
+    await saveMembersCategory(memberFixture);
+    await saveDefaultCategory();
+    const result = await categoryService.findUsingCategories(null);
+
+    //then
+    expect(result.map((response) => response.name)).toEqual([
+      'CS',
+      'BE',
+      'FE',
+      '나만의 질문',
+    ]);
   });
 
   afterEach(async () => {

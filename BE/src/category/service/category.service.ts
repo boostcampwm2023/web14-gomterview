@@ -6,6 +6,7 @@ import { isEmpty } from 'class-validator';
 import { CategoryNameEmptyException } from '../exception/category.exception';
 import { Category } from '../entity/category';
 import { validateManipulatedToken } from 'src/util/token.util';
+import { CategoryResponse } from '../dto/categoryResponse';
 
 @Injectable()
 export class CategoryService {
@@ -24,5 +25,13 @@ export class CategoryService {
     return await this.categoryRepository.save(
       Category.from(createCategoryRequest, member),
     );
+  }
+
+  async findUsingCategories(member?: Member) {
+    const categories = await this.categoryRepository.findAllByMemberId(
+      isEmpty(member) ? null : member.id,
+    );
+
+    return categories.map(CategoryResponse.from);
   }
 }

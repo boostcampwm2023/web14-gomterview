@@ -22,21 +22,37 @@ import { AuthModule } from '../../auth/auth.module';
 import { TokenModule } from '../../token/token.module';
 import { AuthService } from '../../auth/service/auth.service';
 import { Token } from '../../token/entity/token';
+import {
+  categoryListFixture,
+  categoryListResponseFixture,
+  defaultCategoryListFixture,
+  defaultCategoryListResponseFixture,
+} from '../fixture/category.fixture';
+import { CategoryListResponse } from '../dto/categoryListResponse';
+import { TokenService } from '../../token/service/token.service';
+import { CategoryRepository } from '../repository/category.repository';
 
 describe('CategoryController', () => {
   let controller: CategoryController;
 
   const mockCategoryService = {
     createCategory: jest.fn(),
+    findUsingCategories: jest.fn(),
+  };
+
+  const mockTokenService = {
+    findMemberByToken: jest.fn(),
   };
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CategoryController],
-      providers: [CategoryService],
+      providers: [CategoryService, TokenService],
     })
       .overrideProvider(CategoryService)
       .useValue(mockCategoryService)
+      .overrideProvider(TokenService)
+      .useValue(mockTokenService)
       .compile();
 
     controller = module.get<CategoryController>(CategoryController);
@@ -94,12 +110,45 @@ describe('CategoryController', () => {
       ),
     ).rejects.toThrow(new ManipulatedTokenNotFiltered());
   });
+
+  it('Member객체가 있고, 회원의 카테고리를 조회할 때, CategoryListResponse 객체 형태로 조회된다. ', async () => {
+    //given
+
+    //when
+    mockCategoryService.findUsingCategories.mockResolvedValue(
+      categoryListResponseFixture,
+    );
+    mockTokenService.findMemberByToken.mockResolvedValue(memberFixture);
+
+    //then
+    await expect(
+      controller.findCategories(mockReqWithMemberFixture),
+    ).resolves.toEqual(CategoryListResponse.of(categoryListResponseFixture));
+  });
+
+  it('Member객체 없이, 회원의 카테고리를 조회할 때, CategoryListResponse 객체 형태로 조회된다. ', async () => {
+    //given
+
+    //when
+    mockCategoryService.findUsingCategories.mockResolvedValue(
+      defaultCategoryListResponseFixture,
+    );
+    mockTokenService.findMemberByToken.mockResolvedValue(undefined);
+
+    //then
+    await expect(
+      controller.findCategories({ user: undefined } as unknown as Request),
+    ).resolves.toEqual(
+      CategoryListResponse.of(defaultCategoryListResponseFixture),
+    );
+  });
 });
 
 describe('CategoryController 통합테스트', () => {
   let app;
   let authService: AuthService;
   let memberRepository: MemberRepository;
+  let categoryRepository: CategoryRepository;
 
   beforeAll(async () => {
     const modules = [CategoryModule, MemberModule, TokenModule, AuthModule];
@@ -111,6 +160,8 @@ describe('CategoryController 통합테스트', () => {
 
     authService = moduleFixture.get<AuthService>(AuthService);
     memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
+    categoryRepository =
+      moduleFixture.get<CategoryRepository>(CategoryRepository);
   });
 
   it('카테고리 저장을 성공시 201상태코드가 반환된다.', (done) => {
@@ -120,16 +171,75 @@ describe('CategoryController 통합테스트', () => {
         return authService.login(oauthRequestFixture);
       })
       .then((token) => {
-        request
-          .agent(app.getHttpServer())
+        const agent = request.agent(app.getHttpServer());
+        agent
           .post(`/api/category`)
           .set('Cookie', [`accessToken=${token}`])
           .send(new CreateCategoryRequest('tester'))
-          .expect(201);
+          .expect(201)
+          .then((response) => {
+            expect(response).toBeUndefined();
+            return;
+          });
       })
-      .then((response) => {
-        expect(response).toBeUndefined();
-        done();
-      });
+      .then(done);
+  });
+
+  it('회원이 카테고리 조회시 200코드와 CategoryListResponse가 반환된다.', (done) => {
+    memberRepository
+      .save(memberFixture)
+      .then(async () => {
+        await Promise.all(
+          categoryListFixture.map(async (category) => {
+            await categoryRepository.save(category);
+          }),
+        );
+      })
+      .then(async () => {
+        return authService.login(oauthRequestFixture);
+      })
+      .then((token) => {
+        const agent = request.agent(app.getHttpServer());
+        agent
+          .get(`/api/category`)
+          .set('Cookie', [`accessToken=${token}`])
+          .expect(200)
+          .then((response) => {
+            expect(response.body.categoryList).toEqual(
+              categoryListResponseFixture,
+            );
+          });
+      })
+      .then(done);
+  });
+
+  it('비회원이 카테고리 조회시 200코드와 CategoryListResponse가 반환된다.', (done) => {
+    memberRepository
+      .save(memberFixture)
+      .then(async () => {
+        await Promise.all(
+          defaultCategoryListFixture.map(async (category) => {
+            await categoryRepository.save(category);
+          }),
+        );
+      })
+      .then(() => {
+        const agent = request.agent(app.getHttpServer());
+        agent
+          .get(`/api/category`)
+          .expect(200)
+          .then((response) => {
+            expect(response.body.categoryList).toEqual(
+              categoryListResponseFixture,
+            );
+          });
+      })
+      .then(done);
+  });
+
+  afterEach(async () => {
+    await categoryRepository.query('delete from Category');
+    await categoryRepository.query('delete from Member');
+    await categoryRepository.query('delete from token');
   });
 });
