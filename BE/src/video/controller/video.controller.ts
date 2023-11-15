@@ -68,12 +68,6 @@ export class VideoController {
     );
   }
 
-  @Get(':videoId')
-  @UseGuards(AuthGuard('jwt'))
-  async getVideoDetail(@Param('videoId') videoId: number, @Req() req: Request) {
-    return await this.videoService.getVideoDetail(videoId, req.user as Member);
-  }
-
   @Get('/all')
   @UseGuards(AuthGuard('jwt'))
   @ApiCookieAuth()
@@ -85,5 +79,11 @@ export class VideoController {
   )
   async getAllVideo(@Req() req: Request) {
     return await this.videoService.getAllVideosByMemberId(req.user as Member);
+  }
+
+  @Get(':videoId')
+  @UseGuards(AuthGuard('jwt'))
+  async getVideoDetail(@Param('videoId') videoId: number, @Req() req: Request) {
+    return await this.videoService.getVideoDetail(videoId, req.user as Member);
   }
 }
