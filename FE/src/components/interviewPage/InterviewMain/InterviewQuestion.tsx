@@ -1,3 +1,4 @@
+import Typography from '@foundation/Typography/Typography';
 import { css } from '@emotion/react';
 
 type InterviewQuestionType = {
@@ -19,7 +20,6 @@ const InterviewQuestion: React.FC<InterviewQuestionType> = ({ question }) => {
         width: 62.5rem;
         height: 5rem;
         background-color: black;
-        color: white;
         opacity: 60%;
         border-radius: 0rem 0rem 2rem 2rem;
 
@@ -32,7 +32,9 @@ const InterviewQuestion: React.FC<InterviewQuestionType> = ({ question }) => {
         }
       `}
     >
-      {question}
+      <Typography noWrap paragraph variant={'title4'} color="white">
+        {question}
+      </Typography>
     </div>
   );
 };

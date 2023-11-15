@@ -21,7 +21,7 @@ const IntervieweeName: React.FC<IntervieweeNameType> = ({
         }
       `}
     >
-      <Typography noWrap paragraph variant={'body1'} color="white">
+      <Typography noWrap paragraph variant={'title4'} color="white">
         {intervieweeName}
       </Typography>
     </div>
