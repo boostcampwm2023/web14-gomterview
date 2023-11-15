@@ -22,7 +22,9 @@ const VideoItem: React.FC<VideoItemProps> = ({ children, videoName, date }) => {
         css={css`
           display: flex;
           flex-direction: column;
+          justify-content: space-between;
           padding: 1rem;
+          height: 100%;
         `}
       >
         <Typography variant="body2">{videoName}</Typography>
