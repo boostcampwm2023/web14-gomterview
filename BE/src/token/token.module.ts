@@ -10,7 +10,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import 'dotenv/config';
 import { AccessTokenStrategy } from './strategy/access.token.strategy';
-import { AccessTokenSoftStrategy } from './strategy/access.token.soft.strategy';
 
 @Module({
   imports: [
@@ -29,7 +28,6 @@ import { AccessTokenSoftStrategy } from './strategy/access.token.soft.strategy';
     TokenRepository,
     MemberRepository,
     AccessTokenStrategy,
-    AccessTokenSoftStrategy,
   ],
   exports: [TokenService],
 })

@@ -23,11 +23,13 @@ import { TokenModule } from '../../token/token.module';
 import { AuthService } from '../../auth/service/auth.service';
 import { Token } from '../../token/entity/token';
 import {
+  categoryListFixture,
   categoryListResponseFixture,
   defaultCategoryListResponseFixture,
 } from '../fixture/category.fixture';
 import { CategoryListResponse } from '../dto/categoryListResponse';
 import { TokenService } from '../../token/service/token.service';
+import { CategoryRepository } from '../repository/category.repository';
 
 describe('CategoryController', () => {
   let controller: CategoryController;
@@ -141,6 +143,7 @@ describe('CategoryController 통합테스트', () => {
   let app;
   let authService: AuthService;
   let memberRepository: MemberRepository;
+  let categoryRepository: CategoryRepository;
 
   beforeAll(async () => {
     const modules = [CategoryModule, MemberModule, TokenModule, AuthModule];
@@ -152,6 +155,8 @@ describe('CategoryController 통합테스트', () => {
 
     authService = moduleFixture.get<AuthService>(AuthService);
     memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
+    categoryRepository =
+      moduleFixture.get<CategoryRepository>(CategoryRepository);
   });
 
   it('카테고리 저장을 성공시 201상태코드가 반환된다.', (done) => {
@@ -161,16 +166,45 @@ describe('CategoryController 통합테스트', () => {
         return authService.login(oauthRequestFixture);
       })
       .then((token) => {
-        request
-          .agent(app.getHttpServer())
+        const agent = request.agent(app.getHttpServer());
+        agent
           .post(`/api/category`)
           .set('Cookie', [`accessToken=${token}`])
           .send(new CreateCategoryRequest('tester'))
-          .expect(201);
+          .expect(201)
+          .then((response) => {
+            expect(response).toBeUndefined();
+            return;
+          });
       })
-      .then((response) => {
-        expect(response).toBeUndefined();
-        done();
-      });
+      .then(done);
+  });
+
+  it('회원이 카테고리 조회시 200코드와 CategoryListResponse가 반환된다.', (done) => {
+    memberRepository
+      .save(memberFixture)
+      .then(async () => {
+        await Promise.all(
+          categoryListFixture.map(async (category) => {
+            await categoryRepository.save(category);
+          }),
+        );
+      })
+      .then(async () => {
+        return authService.login(oauthRequestFixture);
+      })
+      .then((token) => {
+        const agent = request.agent(app.getHttpServer());
+        agent
+          .get(`/api/category`)
+          .set('Cookie', [`accessToken=${token}`])
+          .expect(200)
+          .then((response) => {
+            expect(response.body.categoryList).toEqual(
+              categoryListResponseFixture,
+            );
+          });
+      })
+      .then(done);
   });
 });

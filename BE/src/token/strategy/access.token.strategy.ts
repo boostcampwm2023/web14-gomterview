@@ -8,7 +8,10 @@ import { InvalidTokenException } from '../exception/token.exception';
 import { Request } from 'express';
 
 @Injectable()
-export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class AccessTokenStrategy extends PassportStrategy(
+  Strategy,
+  'jwt-soft',
+) {
   constructor(private memberRepository: MemberRepository) {
     super({
       jwtFromRequest: (req: Request) => {

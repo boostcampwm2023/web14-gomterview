@@ -14,6 +14,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { createApiResponseOption } from '../../util/swagger.util';
 import { CategoryListResponse } from '../dto/categoryListResponse';
 import { TokenService } from '../../token/service/token.service';
+import { getTokenValue } from '../../util/token.util';
 
 @Controller('/api/category')
 @ApiTags('category')
@@ -52,13 +53,20 @@ export class CategoryController {
       CategoryListResponse,
     ),
   )
-  @UseGuards(AuthGuard('jwt-soft'))
   async findCategories(@Req() req: Request) {
-    const member = req.user;
-    const categories = await this.categoryService.findUsingCategories(
-      member ? (member as Member) : undefined,
-    );
+    const token = this.filterToken(req);
+    const member = await this.tokenService.findMemberByToken(token);
+
+    const categories = await this.categoryService.findUsingCategories(member);
 
     return CategoryListResponse.of(categories);
+  }
+
+  private filterToken(req: Request) {
+    try {
+      return getTokenValue(req);
+    } catch (e) {
+      return undefined;
+    }
   }
 }
