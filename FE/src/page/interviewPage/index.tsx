@@ -1,7 +1,7 @@
 import InterviewPageLayout from '@components/interviewPage/InterviewPageLayout';
-import InterviewHeader from '@components/interviewPage/interviewHeader';
-import InterviewCamera from '@components/interviewPage/InterviewCamera';
-import InterviewFooter from '@components/interviewPage/InterviewFooter';
+import InterviewHeader from '@/components/interviewPage/InterviewHeader/InterviewHeader';
+import InterviewMain from '@/components/interviewPage/InterviewMain/InterviewMain';
+import InterviewFooter from '@/components/interviewPage/InterviewFooter/InterviewFooter';
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 
 const InterviewPage: React.FC = () => {
@@ -110,7 +110,7 @@ const InterviewPage: React.FC = () => {
         isRecording={isRecording}
         intervieweeName="가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하"
       />
-      <InterviewCamera
+      <InterviewMain
         mirrorVideoRef={mirrorVideoRef}
         isScriptInView={isScriptInView}
         question="이것은 예시 질문입니다."
