@@ -29,7 +29,7 @@ export class CategoryService {
 
   async findUsingCategories(member: Member) {
     const categories = await this.categoryRepository.findAllByMemberId(
-      member ? member.id : null,
+      isEmpty(member) ? null : member.id,
     );
 
     return categories.map(CategoryResponse.from);

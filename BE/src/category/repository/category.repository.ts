@@ -14,8 +14,20 @@ export class CategoryRepository {
   }
 
   async findAllByMemberId(memberId: number) {
-    const option = memberId === null ? null : { id: memberId };
-    return await this.repository.findBy({ member: option });
+    const queryBuilder = this.repository.createQueryBuilder('Category');
+
+    if (memberId === null) {
+      // Case 1: memberId가 null일 때, 연관관계가 Null인 Category를 조회
+      return await queryBuilder
+        .leftJoinAndSelect('Category.member', 'member')
+        .where('Category.member IS NULL')
+        .getMany();
+    }
+    // Case 2: memberId가 존재할 때, 해당 값을 id로 가지는 member와 매핑된 Category를 조회
+    return await queryBuilder
+      .leftJoinAndSelect('Category.member', 'member')
+      .where('Member.id = :memberId', { memberId })
+      .getMany();
   }
 
   async remove(category: Category) {

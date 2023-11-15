@@ -147,6 +147,20 @@ describe('CategoryService 통합테스트', () => {
     memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
   });
 
+  const saveDefaultCategory = async () => {
+    await categoryRepository.save(csCategoryFixture);
+    await categoryRepository.save(beCategoryFixture);
+    await categoryRepository.save(feCategoryFixture);
+    await categoryRepository.save(customCategoryFixture);
+  };
+
+  const saveMembersCategory = async (member: Member) => {
+    await categoryRepository.save(Category.from(csCategoryFixture, member));
+    await categoryRepository.save(Category.from(beCategoryFixture, member));
+    await categoryRepository.save(Category.from(feCategoryFixture, member));
+    await categoryRepository.save(Category.from(customCategoryFixture, member));
+  };
+
   it('회원 정보 저장을 성공한다.', async () => {
     //given
     await memberRepository.save(memberFixture);
@@ -156,13 +170,49 @@ describe('CategoryService 통합테스트', () => {
       new CreateCategoryRequest('tester'),
       memberFixture,
     );
-    const category = (
-      await categoryRepository.findAllByMemberId(memberFixture.id)
-    ).pop();
+    const category = await categoryRepository.findAllByMemberId(
+      memberFixture.id,
+    );
 
     //then
     expect(result).toBeUndefined();
-    expect(category.name).toEqual('tester');
+    expect(category.pop().name).toEqual('tester');
+  });
+
+  it('회원의 카테고리를 조회한다.', async () => {
+    //given
+    await memberRepository.save(memberFixture);
+
+    //when
+    await saveMembersCategory(memberFixture);
+    await saveDefaultCategory();
+    const result = await categoryService.findUsingCategories(memberFixture);
+
+    //then
+    expect(result.map((response) => response.name)).toEqual([
+      'CS',
+      'BE',
+      'FE',
+      '나만의 질문',
+    ]);
+  });
+
+  it('비회원의 카테고리를 조회한다.', async () => {
+    //given
+    await memberRepository.save(memberFixture);
+
+    //when
+    await saveMembersCategory(memberFixture);
+    await saveDefaultCategory();
+    const result = await categoryService.findUsingCategories(null);
+
+    //then
+    expect(result.map((response) => response.name)).toEqual([
+      'CS',
+      'BE',
+      'FE',
+      '나만의 질문',
+    ]);
   });
 
   afterEach(async () => {

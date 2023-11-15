@@ -17,7 +17,7 @@ export class Category extends DefaultEntity {
   name: string;
 
   @ManyToOne(() => Member, { nullable: true, onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'member' })
+  @JoinColumn({ name: 'memberId' })
   member: Member;
 
   @ManyToMany(() => Question)
@@ -31,7 +31,7 @@ export class Category extends DefaultEntity {
   }
 
   static from(inputObj: CreateCategoryRequest | Category, member: Member) {
-    return new Category(undefined, inputObj.name, member, new Date());
+    return new Category(null, inputObj.name, member, new Date());
   }
 
   getName() {
