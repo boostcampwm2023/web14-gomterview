@@ -34,4 +34,6 @@ export class CategoryService {
 
     return categories.map(CategoryResponse.from);
   }
+
+  async deleteCategoryById(member: Member, categoryId: number) {}
 }

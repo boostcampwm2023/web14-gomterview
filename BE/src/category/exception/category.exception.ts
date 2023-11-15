@@ -6,4 +6,10 @@ class CategoryNameEmptyException extends HttpException {
   }
 }
 
-export { CategoryNameEmptyException };
+class CategoryNotFoundException extends HttpException {
+  constructor() {
+    super('카테고리자 존재하지 않습니다.', 404);
+  }
+}
+
+export { CategoryNameEmptyException, CategoryNotFoundException };
