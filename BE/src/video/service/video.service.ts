@@ -19,6 +19,12 @@ import { CreateVideoRequest } from '../dto/createVideoRequest';
 import { validateManipulatedToken } from 'src/util/token.util';
 import { notEquals } from 'class-validator';
 import { VideoDetailResponse } from '../dto/videoDetailResponse';
+import * as crypto from 'crypto';
+import 'dotenv/config';
+
+const algorithm = 'aes-256-cbc';
+const key = process.env.URL_ENCRYPT_KEY;
+const iv = crypto.randomBytes(16);
 
 @Injectable()
 export class VideoService {
@@ -62,7 +68,7 @@ export class VideoService {
     if (notEquals(memberId, video.memberId))
       throw new VideoAccessForbiddenException();
 
-    const hash = video.isPublic ? 'URL 해시값' : null;
+    const hash = video.isPublic ? this.getEncryptedurl(video.url) : null;
     return VideoDetailResponse.from(video, hash);
   }
 
@@ -79,5 +85,19 @@ export class VideoService {
   private async getQuestionContent(questionId: number) {
     const question = await this.questionRepository.findById(questionId);
     return question ? question.content : '삭제된 질문';
+  }
+
+  private getEncryptedurl(url: string) {
+    const cipher = crypto.createCipheriv(algorithm, Buffer.from(key), iv);
+    let encrypted = cipher.update(url, 'utf-8', 'hex');
+    encrypted += cipher.final('hex');
+    return encrypted;
+  }
+
+  private getDecryptedUrl(encryptedUrl: string) {
+    const decipher = crypto.createDecipheriv(algorithm, Buffer.from(key), iv);
+    let decrypted = decipher.update(encryptedUrl, 'hex', 'utf-8');
+    decrypted += decipher.final('utf-8');
+    return decrypted;
   }
 }
