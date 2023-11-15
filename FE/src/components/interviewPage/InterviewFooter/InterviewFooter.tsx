@@ -3,6 +3,9 @@ import InterviewExitButton from './InterviewExitButton';
 import AnswerToggleButton from './AnswerToggleButton';
 import RecordControlButton from './RecordControlButton';
 import NextButton from './NextButton';
+import InterviewExitModal from '@components/interviewPage/InterviewModal/InterviewExitModal';
+import { useState } from 'react';
+import { theme } from '@styles/theme';
 
 type InterviewFooterProps = {
   isRecording: boolean;
@@ -21,9 +24,8 @@ const InterviewFooter: React.FC<InterviewFooterProps> = ({
   handleScript,
   handleDownload,
 }) => {
-  const handleInterviewExit = () => {
-    alert('면접을 종료합니다');
-  };
+  const [interviewExitModalIsOpen, setInterviewExitModalIsOpen] =
+    useState<boolean>(false);
 
   const handleNext = () => {
     alert('다음면접을 진행합니다');
@@ -43,7 +45,9 @@ const InterviewFooter: React.FC<InterviewFooterProps> = ({
         gap: 2.5rem;
       `}
     >
-      <InterviewExitButton handleInterviewExit={handleInterviewExit} />
+      <InterviewExitButton
+        handleInterviewExit={() => setInterviewExitModalIsOpen(true)}
+      />
       <AnswerToggleButton handleAnswerToggle={handleScript} />
       <RecordControlButton
         isRecording={isRecording}
@@ -51,6 +55,10 @@ const InterviewFooter: React.FC<InterviewFooterProps> = ({
         handleStopRecording={handleStopRecording}
       />
       <NextButton handleNext={handleNext} />
+      <InterviewExitModal
+        isOpen={interviewExitModalIsOpen}
+        closeModal={() => setInterviewExitModalIsOpen((prev) => !prev)}
+      />
     </div>
   );
 };
