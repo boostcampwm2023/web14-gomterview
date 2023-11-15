@@ -24,14 +24,14 @@ export class Category extends DefaultEntity {
   @JoinTable({ name: 'CategoryQuestion' })
   questions: Question[];
 
-  constructor(name: string, member: Member) {
-    super(undefined, new Date());
+  constructor(id: number, name: string, member: Member, createdAt: Date) {
+    super(id, createdAt);
     this.member = member;
     this.name = name;
   }
 
   static from(inputObj: CreateCategoryRequest | Category, member: Member) {
-    return new Category(inputObj.name, member);
+    return new Category(undefined, inputObj.name, member, new Date());
   }
 
   getName() {

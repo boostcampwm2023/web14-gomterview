@@ -12,7 +12,7 @@ describe('CategoryService', () => {
 
   const mockCategoryRepository = {
     save: jest.fn(),
-    findCategories: jest.fn(),
+    findAllByMemberId: jest.fn(),
     remove: jest.fn(),
   };
 
@@ -56,7 +56,7 @@ describe('CategoryService', () => {
     //when
 
     //then
-    expect(service.createCategory(request, member)).rejects.toThrow(
+    await expect(service.createCategory(request, member)).rejects.toThrow(
       new CategoryNameEmptyException(),
     );
   });
