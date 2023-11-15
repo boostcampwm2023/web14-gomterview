@@ -1,6 +1,6 @@
 import { theme } from '@/styles/theme';
 import { css } from '@emotion/react';
-import CloseIcon from '@assets/svg/close.svg';
+import Icon from '@foundation/Icon/Icon';
 
 export type ModalHeaderProps = {
   children?: React.ReactNode;
@@ -35,7 +35,8 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
         {children}
       </div>
       {closeButtonVisible && (
-        <CloseIcon
+        <Icon
+          id="close"
           width="0.75rem"
           height="auto"
           css={css`

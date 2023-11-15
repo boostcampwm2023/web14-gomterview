@@ -75,10 +75,6 @@ module.exports = {
           outputPath: 'assets/images',
         },
       },
-      {
-        test: /\.svg$/,
-        use: ['@svgr/webpack'],
-      },
     ],
   },
 };

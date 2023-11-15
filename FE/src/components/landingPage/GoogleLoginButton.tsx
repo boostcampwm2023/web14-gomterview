@@ -1,7 +1,7 @@
-import GoogleLogo from '@assets/svg/google-logo.svg';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
 import Typography from '@foundation/Typography/Typography';
+import Icon from '@foundation/Icon/Icon';
 
 const GoogleLoginButton: React.FC = () => {
   return (
@@ -22,7 +22,7 @@ const GoogleLoginButton: React.FC = () => {
         }
       `}
     >
-      <GoogleLogo />
+      <Icon id="google-logo" width="1.25rem" height="1.25rem" />
       <Typography variant="body1" color={theme.colors.text.default}>
         Google로 시작하기
       </Typography>
