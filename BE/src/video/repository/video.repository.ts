@@ -21,4 +21,8 @@ export class VideoRepository {
       .orderBy('video.createdAt', 'DESC')
       .getMany();
   }
+
+  async findById(id: number) {
+    return await this.videoRepository.findOneBy({ id: id });
+  }
 }
