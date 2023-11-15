@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { selectionBox, selectionBoxDirection } from './SelectionBox.styles';
 import { HTMLElementTypes } from '@/types/utils';
+import { theme } from '@styles/theme';
 
 type SelectionButtonProps = {
   children: React.ReactNode;
@@ -27,6 +28,7 @@ const SelectionBox: React.FC<SelectionButtonProps> = ({
         display: inline-block;
         position: relative;
         padding: 0 2rem;
+        color: ${theme.colors.text.subStrong};
       `}
       {...args}
     >
@@ -46,6 +48,7 @@ const SelectionBox: React.FC<SelectionButtonProps> = ({
           ${'#' + id}:checked + & {
             ${selectionBox}
             ${selectionBoxDirection[lineDirection]}
+            color: ${theme.colors.text.default};
           }
         `}
       >
