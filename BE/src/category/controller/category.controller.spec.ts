@@ -27,6 +27,7 @@ import {
   defaultCategoryListResponseFixture,
 } from '../fixture/category.fixture';
 import { CategoryListResponse } from '../dto/categoryListResponse';
+import { TokenService } from '../../token/service/token.service';
 
 describe('CategoryController', () => {
   let controller: CategoryController;
@@ -36,13 +37,17 @@ describe('CategoryController', () => {
     findUsingCategories: jest.fn(),
   };
 
+  const mockTokenService = {};
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CategoryController],
-      providers: [CategoryService],
+      providers: [CategoryService, TokenService],
     })
       .overrideProvider(CategoryService)
       .useValue(mockCategoryService)
+      .overrideProvider(TokenService)
+      .useValue(mockTokenService)
       .compile();
 
     controller = module.get<CategoryController>(CategoryController);

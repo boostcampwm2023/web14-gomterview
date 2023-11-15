@@ -27,7 +27,7 @@ export class CategoryService {
     );
   }
 
-  async findUsingCategories(member: Member) {
+  async findUsingCategories(member?: Member) {
     const categories = await this.categoryRepository.findAllByMemberId(
       isEmpty(member) ? null : member.id,
     );

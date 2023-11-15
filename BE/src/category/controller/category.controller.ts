@@ -13,11 +13,15 @@ import { Member } from '../../member/entity/member';
 import { AuthGuard } from '@nestjs/passport';
 import { createApiResponseOption } from '../../util/swagger.util';
 import { CategoryListResponse } from '../dto/categoryListResponse';
+import { TokenService } from '../../token/service/token.service';
 
 @Controller('/api/category')
 @ApiTags('category')
 export class CategoryController {
-  constructor(private categoryService: CategoryService) {}
+  constructor(
+    private categoryService: CategoryService,
+    private tokenService: TokenService,
+  ) {}
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
@@ -48,5 +52,12 @@ export class CategoryController {
       CategoryListResponse,
     ),
   )
-  async findCategories(@Req() req: Request) {}
+  @UseGuards(AuthGuard('jwt-soft'))
+  async findCategories(@Req() req: Request) {
+    const categories = await this.categoryService.findUsingCategories(
+      req.user as Member,
+    );
+
+    return CategoryListResponse.of(categories);
+  }
 }
