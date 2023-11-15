@@ -3,13 +3,15 @@ import InterviewHeader from '@/components/interviewPage/InterviewHeader/Intervie
 import InterviewMain from '@/components/interviewPage/InterviewMain/InterviewMain';
 import InterviewFooter from '@/components/interviewPage/InterviewFooter/InterviewFooter';
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
-
+import InterviewIntroModal from '@components/interviewPage/InterviewModal/InterviewIntroModal';
 const InterviewPage: React.FC = () => {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [isScriptInView, setIsScriptInView] = useState(false);
   const [recordedBlobs, setRecordedBlobs] = useState<Blob[]>([]);
   const [selectedMimeType, setSelectedMimeType] = useState('');
+  const [interviewIntroModalIsOpen, setInterviewIntroModalIsOpen] =
+    useState<boolean>(true);
 
   const mirrorVideoRef = useRef<HTMLVideoElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -123,6 +125,10 @@ const InterviewPage: React.FC = () => {
         handleStopRecording={handleStopRecording}
         handleScript={() => setIsScriptInView((prev) => !prev)}
         handleDownload={handleDownload}
+      />
+      <InterviewIntroModal
+        isOpen={interviewIntroModalIsOpen}
+        closeModal={() => setInterviewIntroModalIsOpen((prev) => !prev)}
       />
     </InterviewPageLayout>
   );
