@@ -3,7 +3,7 @@ import React, { Children, cloneElement, isValidElement } from 'react';
 type enhanceChildElementProps<T> = {
   children: React.ReactNode;
   component: React.ComponentType<T>;
-  newProps: T;
+  newProps: Partial<T>;
 };
 
 const enhanceChildElement = <T>({
