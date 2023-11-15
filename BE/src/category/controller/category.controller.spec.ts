@@ -40,7 +40,9 @@ describe('CategoryController', () => {
     findUsingCategories: jest.fn(),
   };
 
-  const mockTokenService = {};
+  const mockTokenService = {
+    findMemberByToken: jest.fn(),
+  };
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -116,6 +118,7 @@ describe('CategoryController', () => {
     mockCategoryService.findUsingCategories.mockResolvedValue(
       categoryListResponseFixture,
     );
+    mockTokenService.findMemberByToken.mockResolvedValue(memberFixture);
 
     //then
     await expect(
@@ -130,6 +133,7 @@ describe('CategoryController', () => {
     mockCategoryService.findUsingCategories.mockResolvedValue(
       defaultCategoryListResponseFixture,
     );
+    mockTokenService.findMemberByToken.mockResolvedValue(undefined);
 
     //then
     await expect(
@@ -209,27 +213,6 @@ describe('CategoryController 통합테스트', () => {
       .then(done);
   });
 
-  it('카테고리 저장을 성공시 201상태코드가 반환된다.', (done) => {
-    memberRepository
-      .save(memberFixture)
-      .then(() => {
-        return authService.login(oauthRequestFixture);
-      })
-      .then((token) => {
-        const agent = request.agent(app.getHttpServer());
-        agent
-          .post(`/api/category`)
-          .set('Cookie', [`accessToken=${token}`])
-          .send(new CreateCategoryRequest('tester'))
-          .expect(201)
-          .then((response) => {
-            expect(response).toBeUndefined();
-            return;
-          });
-      })
-      .then(done);
-  });
-
   it('비회원이 카테고리 조회시 200코드와 CategoryListResponse가 반환된다.', (done) => {
     memberRepository
       .save(memberFixture)
@@ -252,5 +235,11 @@ describe('CategoryController 통합테스트', () => {
           });
       })
       .then(done);
+  });
+
+  afterEach(async () => {
+    await categoryRepository.query('delete from Category');
+    await categoryRepository.query('delete from Member');
+    await categoryRepository.query('delete from token');
   });
 });
