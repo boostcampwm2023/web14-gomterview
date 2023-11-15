@@ -10,10 +10,14 @@ import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
 import { v4 as uuidv4 } from 'uuid';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { QuestionRepository } from 'src/question/repository/question.repository';
-import { IDriveException } from '../exception/video.exception';
+import {
+  IDriveException,
+  VideoAccessForbiddenException,
+} from '../exception/video.exception';
 import { VideoListResponse } from '../dto/videoListResponse';
 import { CreateVideoRequest } from '../dto/createVideoRequest';
 import { validateManipulatedToken } from 'src/util/token.util';
+import { notEquals } from 'class-validator';
 
 @Injectable()
 export class VideoService {
@@ -50,7 +54,12 @@ export class VideoService {
   }
 
   async getVideoDetail(videoId: number, member: Member) {
-    throw new Error('Method not implemented.');
+    validateManipulatedToken(member);
+    const memberId = member.id;
+    const video = await this.videoRepository.findById(videoId);
+
+    if (notEquals(memberId, video.memberId))
+      throw new VideoAccessForbiddenException();
   }
 
   async getAllVideosByMemberId(member: Member) {
