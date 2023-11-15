@@ -23,6 +23,7 @@ import { createApiResponseOption } from 'src/util/swagger.util';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
 import { VideoListResponse } from '../dto/videoListResponse';
+import { VideoDetailResponse } from '../dto/videoDetailResponse';
 
 @Controller('/api/video')
 @ApiTags('video')
@@ -82,6 +83,18 @@ export class VideoController {
   }
 
   @Get(':videoId')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiCookieAuth()
+  @ApiOperation({
+    summary: '비디오 상세 정보를 반환',
+  })
+  @ApiResponse(
+    createApiResponseOption(
+      200,
+      '비디오 상세 정보 조회 완료',
+      VideoDetailResponse,
+    ),
+  )
   @UseGuards(AuthGuard('jwt'))
   async getVideoDetail(@Param('videoId') videoId: number, @Req() req: Request) {
     return await this.videoService.getVideoDetail(videoId, req.user as Member);
