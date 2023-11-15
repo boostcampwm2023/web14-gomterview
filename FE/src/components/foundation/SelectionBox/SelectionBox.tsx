@@ -9,7 +9,7 @@ type SelectionButtonProps = {
   lineDirection?: 'left' | 'right' | 'top' | 'bottom';
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-} & HTMLElementTypes<HTMLDivElement>;
+} & HTMLElementTypes<HTMLLabelElement>;
 
 const SelectionBox: React.FC<SelectionButtonProps> = ({
   children,
@@ -21,7 +21,8 @@ const SelectionBox: React.FC<SelectionButtonProps> = ({
   ...args
 }) => {
   return (
-    <div
+    <label
+      htmlFor={id}
       css={css`
         display: inline-block;
         position: relative;
@@ -50,7 +51,7 @@ const SelectionBox: React.FC<SelectionButtonProps> = ({
       >
         {children}
       </label>
-    </div>
+    </label>
   );
 };
 
