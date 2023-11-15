@@ -7,7 +7,7 @@ import Typography from '@foundation/Typography/Typography';
 import VideoListBox from '@components/myPage/VideoListBox';
 
 const MyPagesTabs: React.FC = () => {
-  const [value, setValue] = useState('1');
+  const [value, setValue] = useState('2');
   return (
     <Tabs
       initialValue={value}
@@ -34,7 +34,6 @@ const MyPagesTabs: React.FC = () => {
               id="add-question"
               name="my-page"
               lineDirection="bottom"
-              defaultChecked
               css={css`
                 padding: 1rem 0;
               `}
@@ -47,6 +46,7 @@ const MyPagesTabs: React.FC = () => {
               id="replay"
               name="my-page"
               lineDirection="bottom"
+              defaultChecked
               css={css`
                 padding: 1rem 0;
               `}
