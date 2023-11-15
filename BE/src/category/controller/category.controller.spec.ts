@@ -25,6 +25,7 @@ import { Token } from '../../token/entity/token';
 import {
   categoryListFixture,
   categoryListResponseFixture,
+  defaultCategoryListFixture,
   defaultCategoryListResponseFixture,
 } from '../fixture/category.fixture';
 import { CategoryListResponse } from '../dto/categoryListResponse';
@@ -198,6 +199,51 @@ describe('CategoryController 통합테스트', () => {
         agent
           .get(`/api/category`)
           .set('Cookie', [`accessToken=${token}`])
+          .expect(200)
+          .then((response) => {
+            expect(response.body.categoryList).toEqual(
+              categoryListResponseFixture,
+            );
+          });
+      })
+      .then(done);
+  });
+
+  it('카테고리 저장을 성공시 201상태코드가 반환된다.', (done) => {
+    memberRepository
+      .save(memberFixture)
+      .then(() => {
+        return authService.login(oauthRequestFixture);
+      })
+      .then((token) => {
+        const agent = request.agent(app.getHttpServer());
+        agent
+          .post(`/api/category`)
+          .set('Cookie', [`accessToken=${token}`])
+          .send(new CreateCategoryRequest('tester'))
+          .expect(201)
+          .then((response) => {
+            expect(response).toBeUndefined();
+            return;
+          });
+      })
+      .then(done);
+  });
+
+  it('비회원이 카테고리 조회시 200코드와 CategoryListResponse가 반환된다.', (done) => {
+    memberRepository
+      .save(memberFixture)
+      .then(async () => {
+        await Promise.all(
+          defaultCategoryListFixture.map(async (category) => {
+            await categoryRepository.save(category);
+          }),
+        );
+      })
+      .then(() => {
+        const agent = request.agent(app.getHttpServer());
+        agent
+          .get(`/api/category`)
           .expect(200)
           .then((response) => {
             expect(response.body.categoryList).toEqual(

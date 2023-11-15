@@ -34,10 +34,16 @@ export const categoryListFixture = [
   new Category(4, '나만의 질문', memberFixture, new Date()),
 ];
 
+export const defaultCategoryListFixture = [
+  new Category(1, 'BE', null, new Date()),
+  new Category(2, 'CS', null, new Date()),
+  new Category(3, 'FE', null, new Date()),
+  new Category(4, '나만의 질문', null, new Date()),
+];
+
 export const categoryListResponseFixture = categoryListFixture.map(
   CategoryResponse.from,
 );
 
-export const defaultCategoryListResponseFixture = categoryListFixture.map(
-  CategoryResponse.from,
-);
+export const defaultCategoryListResponseFixture =
+  defaultCategoryListFixture.map(CategoryResponse.from);
