@@ -1,8 +1,15 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+} from 'typeorm';
 import { DefaultEntity } from '../../app.entity';
 import { Member } from '../../member/entity/member';
-import { JoinColumn } from 'typeorm/browser';
 import { Question } from '../../question/entity/question';
+import { CreateCategoryRequest } from '../dto/createCategoryRequest';
 
 @Entity({ name: 'Category' })
 export class Category extends DefaultEntity {
@@ -17,13 +24,14 @@ export class Category extends DefaultEntity {
   @JoinTable({ name: 'CategoryQuestion' })
   questions: Question[];
 
-  constructor(name: string) {
-    super(undefined, new Date());
+  constructor(id: number, name: string, member: Member, createdAt: Date) {
+    super(id, createdAt);
+    this.member = member;
     this.name = name;
   }
 
-  static copyCategory(category: Category) {
-    return new Category(category.name);
+  static from(inputObj: CreateCategoryRequest | Category, member: Member) {
+    return new Category(undefined, inputObj.name, member, new Date());
   }
 
   getName() {
