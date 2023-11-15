@@ -1,11 +1,19 @@
+import React from 'react';
+import addChildElementProps from '@/utils/addChildElementProps';
+
 type TabProps = {
-  label?: string;
-  value?: string;
-  onClick?: (value?: string) => void;
+  children?: React.ReactNode;
+  name?: string;
+  value: string;
+  onClick?: (value: string) => void;
 };
 
-const Tab: React.FC<TabProps> = ({ label, value, onClick }) => (
-  <button onClick={() => onClick && onClick(value)}>{label}</button>
-);
+const Tab: React.FC<TabProps> = ({ children, name, value, onClick }) => {
+  return (
+    <div onClick={() => onClick && onClick(value)}>
+      {addChildElementProps({ children, newProps: { name, value } })}
+    </div>
+  );
+};
 
 export default Tab;

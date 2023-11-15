@@ -1,13 +1,12 @@
 import MyPageLayout from '@/components/myPage/MyPageLayout';
-import MyPageHeader from '@/components/myPage/MyPageHeader';
-import Profile from '@/components/myPage/Profile';
 import MyPagesTabs from '@components/myPage/MyPagesTabs';
+import MyPageHeader from '@components/myPage/MyPageHeader';
 
 const MyPage: React.FC = () => {
   return (
     <MyPageLayout>
       <MyPageHeader />
-      <Profile />
+      {/*<Profile />*/}
       <MyPagesTabs />
     </MyPageLayout>
   );
