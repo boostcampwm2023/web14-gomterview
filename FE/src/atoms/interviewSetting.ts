@@ -1,17 +1,16 @@
+import { Question } from '@/types/question';
 import { atom } from 'recoil';
 
 type PageStatus = 'pending' | 'success' | 'error';
 type RecordMethod = 'local' | 'idrive' | 'none' | undefined;
 
-type SelectedData = {
-  id: number;
-  content: string;
-  answer: string;
+type SelectedQuestion = Question & {
+  categoryId: number;
 };
 
 export const questionSetting = atom<{
   status: PageStatus;
-  selectedData: SelectedData[];
+  selectedData: SelectedQuestion[];
 }>({
   key: 'questionSetting',
   default: {
