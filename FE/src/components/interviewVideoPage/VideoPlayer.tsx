@@ -12,7 +12,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoName, date, url }) => {
       videoName={videoName}
       date={date}
       css={css`
-        width: 80vw;
+        width: 70vw;
       `}
     >
       <video
@@ -20,7 +20,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoName, date, url }) => {
         autoPlay
         controls
         css={css`
-          width: 80vw;
+          width: 70vw;
           align-self: center;
         `}
       />
