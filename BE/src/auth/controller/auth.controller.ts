@@ -57,7 +57,7 @@ export class AuthController {
         await this.authService.login(userRequest),
         COOKIE_OPTIONS,
       )
-      .send();
+      .redirect('https://www.gomterview.com/mypage');
   }
 
   @Delete('logout')
@@ -102,4 +102,5 @@ export class AuthController {
 const COOKIE_OPTIONS: CookieOptions = {
   httpOnly: true,
   path: '/',
+  sameSite: 'lax',
 };

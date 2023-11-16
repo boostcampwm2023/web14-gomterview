@@ -49,7 +49,7 @@ export class Video extends DefaultEntity {
     return new Video(
       member.id,
       createVidoeRequest.questionId,
-      createVidoeRequest.name,
+      createVidoeRequest.videoName,
       createVidoeRequest.url,
       false,
     );
