@@ -49,7 +49,7 @@ export class VideoService {
     const content = await this.getQuestionContent(
       createPreSignedUrlRequest.questionId,
     );
-    const key = `${member.nickname}_${content}_${uuidv4()}.mp4`;
+    const key = `${member.nickname}_${content}_${uuidv4()}.webm`;
 
     const s3 = getIdriveS3Client();
     try {
