@@ -1,5 +1,6 @@
 import { DefaultEntity } from 'src/app.entity';
 import { Column, Entity } from 'typeorm';
+import { objectEquals } from '../../util/util';
 
 @Entity({ name: 'Member' })
 export class Member extends DefaultEntity {
@@ -28,12 +29,6 @@ export class Member extends DefaultEntity {
   }
 
   equals(member: Member) {
-    for (const key of Object.keys(this)) {
-      if (member[key] !== this[key]) {
-        return false;
-      }
-    }
-
-    return true;
+    return objectEquals(this, member);
   }
 }

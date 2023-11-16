@@ -47,6 +47,8 @@ export class CategoryService {
     }
 
     if (!category.isOwnedBy(member)) {
+      console.log(member);
+      console.log(category.member);
       throw new UnauthorizedException();
     }
 
