@@ -7,7 +7,10 @@ import {
   oauthRequestFixture,
 } from '../../member/fixture/member.fixture';
 import { CreateCategoryRequest } from '../dto/createCategoryRequest';
-import { CategoryNameEmptyException } from '../exception/category.exception';
+import {
+  CategoryNameEmptyException,
+  CategoryNotFoundException,
+} from '../exception/category.exception';
 import { ManipulatedTokenNotFiltered } from '../../token/exception/token.exception';
 import { Request } from 'express';
 import * as request from 'supertest';
@@ -31,6 +34,7 @@ import {
 import { CategoryListResponse } from '../dto/categoryListResponse';
 import { TokenService } from '../../token/service/token.service';
 import { CategoryRepository } from '../repository/category.repository';
+import { UnauthorizedException } from '@nestjs/common';
 
 describe('CategoryController', () => {
   let controller: CategoryController;
@@ -38,6 +42,7 @@ describe('CategoryController', () => {
   const mockCategoryService = {
     createCategory: jest.fn(),
     findUsingCategories: jest.fn(),
+    deleteCategoryById: jest.fn(),
   };
 
   const mockTokenService = {
@@ -141,6 +146,72 @@ describe('CategoryController', () => {
     ).resolves.toEqual(
       CategoryListResponse.of(defaultCategoryListResponseFixture),
     );
+  });
+
+  it('Member객체가 있고, 존재하는 id의 삭제를 요청하면, Undefined가 반환된다.', async () => {
+    //given
+    const category = new Category(1, 'CS', memberFixture, new Date());
+
+    //when
+    mockCategoryService
+      .deleteCategoryById(memberFixture, category.id)
+      .mockResolvedValue(undefined);
+    //then
+    await expect(
+      controller.deleteCategoryById(mockReqWithMemberFixture, category.id),
+    ).resolves.toBeUndefined();
+  });
+
+  it('Member객체가 없이 id만을 요청하면 ManipulatedToken을 반환한다. => 미들웨어 통과지만 Repository에서 찾지 못한 경우', async () => {
+    //given
+    const category = new Category(1, 'CS', memberFixture, new Date());
+
+    //when
+    mockCategoryService
+      .deleteCategoryById(undefined, category.id)
+      .mockResolvedValue(new ManipulatedTokenNotFiltered());
+    //then
+    await expect(
+      controller.deleteCategoryById(undefined, category.id),
+    ).rejects.toThrow(new ManipulatedTokenNotFiltered());
+  });
+
+  it('Member객체가 있지만, id로 조회한 Category의 Member와 다르면 UnauthorizedException을 반환한다.', async () => {
+    //given
+    const category = new Category(
+      1,
+      'CS',
+      new Member(3, 'ja@ja.com', 'ja', 'http://www.gomterview.com', new Date()),
+      new Date(),
+    );
+
+    //when
+    mockCategoryService
+      .deleteCategoryById(memberFixture, category.id)
+      .mockResolvedValue(new UnauthorizedException());
+    //then
+    await expect(
+      controller.deleteCategoryById(mockReqWithMemberFixture, category.id),
+    ).rejects.toThrow(new UnauthorizedException());
+  });
+
+  it('Member객체가 있지만 id로 조회한 Category가 없을 경우 CategoryNotFoundException을 반환한다.', async () => {
+    //given
+    const category = new Category(
+      1,
+      'CS',
+      new Member(3, 'ja@ja.com', 'ja', 'http://www.gomterview.com', new Date()),
+      new Date(),
+    );
+
+    //when
+    mockCategoryService
+      .deleteCategoryById(memberFixture, category.id + 1)
+      .mockResolvedValue(new CategoryNotFoundException());
+    //then
+    await expect(
+      controller.deleteCategoryById(mockReqWithMemberFixture, category.id + 1),
+    ).rejects.toThrow(new CategoryNotFoundException());
   });
 });
 

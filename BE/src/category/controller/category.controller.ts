@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBody,
   ApiCookieAuth,
@@ -61,4 +69,9 @@ export class CategoryController {
 
     return CategoryListResponse.of(categories);
   }
+
+  deleteCategoryById(
+    @Req() req: Request,
+    @Query('categoryId') categoryId: number,
+  ) {}
 }
