@@ -1,6 +1,9 @@
 import InterviewVideoPageLayout from '@components/interviewVideoPage/InterviewVideoPageLayout';
 import VideoPlayer from '@components/interviewVideoPage/VideoPlayer';
 import Typography from '@foundation/Typography/Typography';
+import Button from '@foundation/Button/Button';
+import { Link } from 'react-router-dom';
+import { PATH } from '@constants/path';
 
 const InterviewVideoPage: React.FC = () => {
   const dummyData = {
@@ -13,6 +16,9 @@ const InterviewVideoPage: React.FC = () => {
     <InterviewVideoPageLayout>
       <Typography variant="title3">{dummyData.videoName}</Typography>
       <VideoPlayer {...dummyData} />
+      <Link to={PATH.INTERVIEW_SETTING}>
+        <Button size="lg">면접 시작하기</Button>
+      </Link>
     </InterviewVideoPageLayout>
   );
 };
