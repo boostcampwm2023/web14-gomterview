@@ -76,6 +76,14 @@ export class VideoService {
     return VideoDetailResponse.from(video, hash);
   }
 
+  async getVideoDetailByHash(hash: string) {
+    const decryptedUrl = this.getDecryptedUrl(hash);
+    const video = await this.videoRepository.findByUrl(decryptedUrl);
+
+    if (!video.isPublic) throw new VideoAccessForbiddenException();
+    return VideoDetailResponse.from(video, hash);
+  }
+
   async getAllVideosByMemberId(member: Member) {
     validateManipulatedToken(member);
     const videoList = await this.videoRepository.findAllVideosByMemberId(
