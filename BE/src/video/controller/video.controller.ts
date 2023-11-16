@@ -82,6 +82,11 @@ export class VideoController {
     return await this.videoService.getAllVideosByMemberId(req.user as Member);
   }
 
+  @Get('/hash/:hash')
+  async getVideoDetailByHash(@Param('hash') hash: string) {
+    return await this.videoService.getVideoDetailByHash(hash);
+  }
+
   @Get(':videoId')
   @UseGuards(AuthGuard('jwt'))
   @ApiCookieAuth()

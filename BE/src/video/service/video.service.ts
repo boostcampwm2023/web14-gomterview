@@ -76,6 +76,10 @@ export class VideoService {
     return VideoDetailResponse.from(video, hash);
   }
 
+  getVideoDetailByHash(hash: string) {
+    throw new Error('Method not implemented.');
+  }
+
   async getAllVideosByMemberId(member: Member) {
     validateManipulatedToken(member);
     const videoList = await this.videoRepository.findAllVideosByMemberId(
