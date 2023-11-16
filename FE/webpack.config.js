@@ -2,6 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   mode: process.env.production === 'true' ? 'production' : 'development',
@@ -31,6 +32,8 @@ module.exports = {
       '@constants': path.resolve(__dirname, 'src/constants/'),
       '@styles': path.resolve(__dirname, 'src/styles/'),
       '@assets': path.resolve(__dirname, 'src/assets/'),
+      '@atoms': path.resolve(__dirname, 'src/atoms/'),
+      '@hooks': path.resolve(__dirname, 'src/hooks/'),
     },
   },
 
@@ -38,11 +41,13 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html',
       filename: 'index.html',
+      favicon: './public/favicon.ico',
     }),
     new webpack.HotModuleReplacementPlugin(),
     new CopyPlugin({
       patterns: [{ from: 'public/mockServiceWorker.js', to: '' }],
     }),
+    new Dotenv(),
   ],
   module: {
     rules: [
@@ -70,10 +75,6 @@ module.exports = {
         options: {
           outputPath: 'assets/images',
         },
-      },
-      {
-        test: /\.svg$/,
-        use: ['@svgr/webpack'],
       },
     ],
   },

@@ -2,22 +2,40 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MemberController } from './member.controller';
 import { MemberResponse } from '../dto/memberResponse';
 import { Request } from 'express';
-import { Member } from '../entity/member';
 import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
 import { INestApplication } from '@nestjs/common';
-import { AppModule } from 'src/app.module';
 import * as request from 'supertest';
 import { AuthModule } from 'src/auth/auth.module';
 import { AuthService } from 'src/auth/service/auth.service';
-import { OAuthRequest } from 'src/auth/interface/auth.interface';
+import {
+  memberFixture,
+  mockReqWithMemberFixture,
+  oauthRequestFixture,
+} from '../fixture/member.fixture';
+import { MemberService } from '../service/member.service';
+import { TokenService } from '../../token/service/token.service';
+import { TokenModule } from '../../token/token.module';
+import { MemberModule } from '../member.module';
+import { Member } from '../entity/member';
+import { Token } from '../../token/entity/token';
+import { createIntegrationTestModule } from '../../util/test.util';
 
 describe('MemberController', () => {
   let memberController: MemberController;
 
+  const mockMemberService = {};
+  const mockTokenService = {};
+
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
+      providers: [MemberService, TokenService],
       controllers: [MemberController],
-    }).compile();
+    })
+      .overrideProvider(MemberService)
+      .useValue(mockMemberService)
+      .overrideProvider(TokenService)
+      .useValue(mockTokenService)
+      .compile();
     memberController = moduleRef.get<MemberController>(MemberController);
   });
 
@@ -26,19 +44,12 @@ describe('MemberController', () => {
   });
 
   it('should return member information as MemberResponse type', async () => {
-    const mockUser = new Member(
-      1,
-      'test@example.com',
-      'TestUser',
-      'https://example.com',
-      new Date(),
+    const result = memberController.getMyInfo(
+      mockReqWithMemberFixture as unknown as Request,
     );
 
-    const mockReq = { user: mockUser };
-    const result = memberController.getMyInfo(mockReq as unknown as Request);
-
     expect(result).toBeInstanceOf(MemberResponse);
-    expect(result).toEqual(MemberResponse.from(mockUser));
+    expect(result).toEqual(MemberResponse.from(memberFixture));
     expect(result['id']).toBe(1);
     expect(result['email']).toBe('test@example.com');
     expect(result['nickname']).toBe('TestUser');
@@ -59,9 +70,13 @@ describe('MemberController (E2E Test)', () => {
   let authService: AuthService;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule, AuthModule],
-    }).compile();
+    const modules = [AuthModule, TokenModule, MemberModule];
+    const entities = [Member, Token];
+
+    const moduleFixture: TestingModule = await createIntegrationTestModule(
+      modules,
+      entities,
+    );
 
     app = moduleFixture.createNestApplication();
     await app.init();
@@ -69,36 +84,32 @@ describe('MemberController (E2E Test)', () => {
     authService = moduleFixture.get<AuthService>(AuthService);
   });
 
-  it('GET /api/member (회원 정보 반환 성공)', async () => {
-    const oauthRequestFixture = {
-      email: 'fixture@example.com',
-      name: 'fixture',
-      img: 'https://test.com',
-    } as OAuthRequest;
-
-    const validToken = (await authService.login(oauthRequestFixture)).replace(
-      'Bearer ',
-      '',
-    );
-    const response = await request(app.getHttpServer())
-      .get('/api/member')
-      .set('Authorization', `Bearer ${validToken}`)
-      .expect(200);
-
-    console.log(response.body);
-
-    expect(response.body.email).toBe(oauthRequestFixture.email);
-    expect(response.body.nickname).toBe(oauthRequestFixture.name);
-    expect(response.body.profileImg).toBe(oauthRequestFixture.img);
+  it('GET /api/member (회원 정보 반환 성공)', (done) => {
+    authService
+      .login(oauthRequestFixture)
+      .then((validToken) => {
+        const agent = request.agent(app.getHttpServer());
+        agent
+          .get('/api/member')
+          .set('Cookie', [`accessToken=${validToken}`])
+          .expect(200)
+          .then((response) => {
+            expect(response.body.email).toBe(oauthRequestFixture.email);
+            expect(response.body.nickname).toBe(oauthRequestFixture.name);
+            expect(response.body.profileImg).toBe(oauthRequestFixture.img);
+            return;
+          });
+      })
+      .then(() => done());
   });
 
-  it('GET /api/member (유효하지 않은 토큰 사용으로 인한 회원 정보 반환 실패)', async () => {
-    const invalidToken = 'INVALID_TOKEN';
-
-    await request(app.getHttpServer())
+  it('GET /api/member (유효하지 않은 토큰 사용으로 인한 회원 정보 반환 실패)', (done) => {
+    const agent = request.agent(app.getHttpServer());
+    agent
       .get('/api/member')
-      .set('Authorization', `Bearer ${invalidToken}`)
-      .expect(401);
+      .set('Cookie', [`accessToken=Bearer INVALID_TOKEN`])
+      .expect(401)
+      .then(() => done());
   });
 
   afterAll(async () => {

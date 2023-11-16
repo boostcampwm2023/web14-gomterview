@@ -10,7 +10,7 @@ export const buttonSize = {
   `,
   md: css`
     padding: 0.5rem 1rem;
-    border-radius: 0.8rem 1rem;
+    border-radius: 0.8rem;
 
     ${theme.typography.body1}
   `,

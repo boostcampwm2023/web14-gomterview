@@ -5,6 +5,7 @@ import AppRouter from '@/AppRouter'; // AppRouter를 임포트합니다.
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import GlobalSVGProvider from '@/GlobalSvgProvider';
 
 const queryClient = new QueryClient();
 
@@ -16,6 +17,7 @@ function App() {
         <ThemeProvider theme={theme}>
           <Global styles={_global} />
           <AppRouter />
+          <GlobalSVGProvider />
         </ThemeProvider>
       </RecoilRoot>
     </QueryClientProvider>

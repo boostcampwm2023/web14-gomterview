@@ -1,16 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Strategy } from 'passport-jwt';
 import { TokenPayload } from '../interface/token.interface';
 import 'dotenv/config';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { InvalidTokenException } from '../exception/token.exception';
+import { Request } from 'express';
 
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private memberRepository: MemberRepository) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: (req: Request) => {
+        if (!req.cookies || !req.cookies['accessToken']) {
+          return '';
+        }
+        return req.cookies['accessToken'].replace('Bearer ', '');
+      },
       secretOrKey: process.env.JWT_SECRET,
     });
   }

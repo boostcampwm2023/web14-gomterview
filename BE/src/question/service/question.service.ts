@@ -1,12 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { QuestionRepository } from '../repository/question.repository';
 import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 import { Member } from 'src/member/entity/member';
 import { Question } from '../entity/question';
 import { isEmpty } from 'class-validator';
-import { isCategoryCustom } from '../util/question.util';
+import { isCategoryCustom, OUTPUT_FORM } from '../util/question.util';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { QuestionListResponse } from '../dto/questionListResponse';
+import { CustomQuestionRequest } from '../dto/customQuestionRequest';
+import { ContentEmptyException } from '../exception/question.exception';
 
 @Injectable()
 export class QuestionService {
@@ -15,17 +17,41 @@ export class QuestionService {
     private memberRepository: MemberRepository,
   ) {}
 
-  async createQuestion(
-    createQuestionRequest: CreateQuestionRequest,
+  // async createQuestion(
+  //   createQuestionRequest: CreateQuestionRequest,
+  //   member: Member,
+  // ) {
+  //   const question = Question.from(createQuestionRequest, member);
+  //   await this.questionRepository.save(question);
+  // }
+
+  async createCustomQuestion(
+    customQuestionRequest: CustomQuestionRequest,
     member: Member,
   ) {
-    const question = Question.from(createQuestionRequest, member);
+    if (isEmpty(customQuestionRequest.content)) {
+      throw new ContentEmptyException();
+    }
+
+    const questionRequest = {
+      category: 'CUSTOM',
+      content: customQuestionRequest.content,
+    } as CreateQuestionRequest;
+    const question = Question.from(questionRequest, member);
     await this.questionRepository.save(question);
+  }
+
+  async findCategories() {
+    const categories = (await this.questionRepository.findCategories()).map(
+        (categoryOnDB) => OUTPUT_FORM[categoryOnDB],
+    );
+    categories.sort();
+    return categories;
   }
 
   async findByCategory(category: string, memberId?: number) {
     if (isEmpty(memberId) && isCategoryCustom(category)) {
-      throw new Error('400. 비회원은 나만의 질문을 DB에서 조회할 수 없습니다.');
+      throw new UnauthorizedException();
     }
 
     const member = await this.memberRepository.findById(memberId);
@@ -36,5 +62,18 @@ export class QuestionService {
       );
 
     return QuestionListResponse.from(questionList);
+  }
+
+  async deleteById(id: number, member: Member) {
+    const question = await this.questionRepository.findQuestionByIdAndMember_Id(
+      id,
+      member.id,
+    );
+
+    if (isEmpty(question)) {
+      throw new UnauthorizedException();
+    }
+
+    await this.questionRepository.remove(question);
   }
 }

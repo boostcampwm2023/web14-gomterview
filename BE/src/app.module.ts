@@ -7,6 +7,8 @@ import { MemberModule } from './member/member.module';
 import { AuthModule } from './auth/auth.module';
 import { TokenModule } from './token/token.module';
 import { QuestionModule } from './question/question.module';
+import { VideoModule } from './video/video.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { QuestionModule } from './question/question.module';
     AuthModule,
     TokenModule,
     QuestionModule,
+    VideoModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

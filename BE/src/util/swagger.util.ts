@@ -7,9 +7,9 @@ export const createPropertyOption = (
   type: unknown,
 ): ApiPropertyOptions => {
   return {
-    example: example,
-    description: description,
-    type: type,
+    example,
+    description,
+    type,
   } as ApiPropertyOptions;
 };
 
@@ -19,9 +19,21 @@ export const createApiResponseOption = (
   type: unknown,
 ) => {
   return {
-    status: status,
-    description: description,
-    type: type,
+    status,
+    description,
+    type,
+  } as ApiResponseOptions;
+};
+
+export const createApiResponseOptionWithHeaders = (
+  status: number,
+  description: string,
+  headers: unknown,
+) => {
+  return {
+    status,
+    description,
+    headers,
   } as ApiResponseOptions;
 };
 

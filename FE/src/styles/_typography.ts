@@ -31,6 +31,16 @@ export const typography = {
   },
 
   /**
+   * 문제선택 tab, 마이페이지의 tab 컴포넌트에 사용됩니다.
+   */
+  title4: {
+    fontFamily: 'Pretendard',
+    fontStyle: 'normal',
+    fontWeight: 600,
+    fontSize: '1.125rem',
+  },
+
+  /**
    * 기본 글자에는 모두 이 스타일이 사용됩니다.
    */
   body1: {

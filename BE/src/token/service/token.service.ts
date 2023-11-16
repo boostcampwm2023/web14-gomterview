@@ -59,6 +59,16 @@ export class TokenService {
     }
   }
 
+  async findMemberByToken(singleToken: string) {
+    try {
+      return await this.memberRepository.findById(
+        (await this.getPayload(singleToken)).id,
+      );
+    } catch (error) {
+      return undefined;
+    }
+  }
+
   private async findByAccessToken(accessToken: string) {
     return await this.tokenRepository.findByAccessToken(accessToken);
   }
