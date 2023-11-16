@@ -83,6 +83,16 @@ export class VideoController {
   }
 
   @Get('/hash/:hash')
+  @ApiOperation({
+    summary: '해시값으로 비디오 정보 불러오기',
+  })
+  @ApiResponse(
+    createApiResponseOption(
+      200,
+      '해시값을 사용하여 비디오 정보 조회 완료',
+      VideoDetailResponse,
+    ),
+  )
   async getVideoDetailByHash(@Param('hash') hash: string) {
     return await this.videoService.getVideoDetailByHash(hash);
   }
