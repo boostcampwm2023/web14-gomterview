@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Post,
   Query,
@@ -70,8 +71,18 @@ export class CategoryController {
     return CategoryListResponse.of(categories);
   }
 
-  deleteCategoryById(
+  @Delete()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiCookieAuth()
+  @ApiOperation({
+    summary: '카테고리를 삭제한다.',
+  })
+  @ApiResponse(createApiResponseOption(204, '카테고리 삭제', null))
+  async deleteCategoryById(
     @Req() req: Request,
     @Query('categoryId') categoryId: number,
-  ) {}
+  ) {
+    const member = req.user as Member;
+    await this.categoryService.deleteCategoryById(member, categoryId);
+  }
 }

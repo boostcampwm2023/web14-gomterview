@@ -26,6 +26,7 @@ import { TokenModule } from '../../token/token.module';
 import { AuthService } from '../../auth/service/auth.service';
 import { Token } from '../../token/entity/token';
 import {
+  beCategoryFixture,
   categoryListFixture,
   categoryListResponseFixture,
   defaultCategoryListFixture,
@@ -153,9 +154,7 @@ describe('CategoryController', () => {
     const category = new Category(1, 'CS', memberFixture, new Date());
 
     //when
-    mockCategoryService
-      .deleteCategoryById(memberFixture, category.id)
-      .mockResolvedValue(undefined);
+    mockCategoryService.deleteCategoryById.mockResolvedValue(undefined);
     //then
     await expect(
       controller.deleteCategoryById(mockReqWithMemberFixture, category.id),
@@ -167,12 +166,15 @@ describe('CategoryController', () => {
     const category = new Category(1, 'CS', memberFixture, new Date());
 
     //when
-    mockCategoryService
-      .deleteCategoryById(undefined, category.id)
-      .mockResolvedValue(new ManipulatedTokenNotFiltered());
+    mockCategoryService.deleteCategoryById.mockRejectedValue(
+      new ManipulatedTokenNotFiltered(),
+    );
     //then
     await expect(
-      controller.deleteCategoryById(undefined, category.id),
+      controller.deleteCategoryById(
+        { user: undefined } as unknown as Request,
+        category.id,
+      ),
     ).rejects.toThrow(new ManipulatedTokenNotFiltered());
   });
 
@@ -186,9 +188,9 @@ describe('CategoryController', () => {
     );
 
     //when
-    mockCategoryService
-      .deleteCategoryById(memberFixture, category.id)
-      .mockResolvedValue(new UnauthorizedException());
+    mockCategoryService.deleteCategoryById.mockRejectedValue(
+      new UnauthorizedException(),
+    );
     //then
     await expect(
       controller.deleteCategoryById(mockReqWithMemberFixture, category.id),
@@ -205,9 +207,9 @@ describe('CategoryController', () => {
     );
 
     //when
-    mockCategoryService
-      .deleteCategoryById(memberFixture, category.id + 1)
-      .mockResolvedValue(new CategoryNotFoundException());
+    mockCategoryService.deleteCategoryById.mockRejectedValue(
+      new CategoryNotFoundException(),
+    );
     //then
     await expect(
       controller.deleteCategoryById(mockReqWithMemberFixture, category.id + 1),
@@ -235,25 +237,24 @@ describe('CategoryController 통합테스트', () => {
       moduleFixture.get<CategoryRepository>(CategoryRepository);
   });
 
+  beforeEach(async () => {
+    await categoryRepository.query('delete from MemberQuestion');
+    await categoryRepository.query('delete from Question');
+    await categoryRepository.query('delete from Category');
+    await categoryRepository.query('delete from Member');
+    await categoryRepository.query('delete from token');
+  });
+
   it('카테고리 저장을 성공시 201상태코드가 반환된다.', (done) => {
-    memberRepository
-      .save(memberFixture)
-      .then(() => {
-        return authService.login(oauthRequestFixture);
-      })
-      .then((token) => {
-        const agent = request.agent(app.getHttpServer());
-        agent
-          .post(`/api/category`)
-          .set('Cookie', [`accessToken=${token}`])
-          .send(new CreateCategoryRequest('tester'))
-          .expect(201)
-          .then((response) => {
-            expect(response).toBeUndefined();
-            return;
-          });
-      })
-      .then(done);
+    authService.login(oauthRequestFixture).then((validToken) => {
+      const agent = request.agent(app.getHttpServer());
+      agent
+        .post('/api/category')
+        .set('Cookie', [`accessToken=${validToken}`])
+        .send(new CreateCategoryRequest('tester'))
+        .expect(201)
+        .then(() => done());
+    });
   });
 
   it('회원이 카테고리 조회시 200코드와 CategoryListResponse가 반환된다.', (done) => {
@@ -308,9 +309,27 @@ describe('CategoryController 통합테스트', () => {
       .then(done);
   });
 
-  afterEach(async () => {
-    await categoryRepository.query('delete from Category');
-    await categoryRepository.query('delete from Member');
-    await categoryRepository.query('delete from token');
+  it('회원의 카테고리를 삭제한다.', (done) => {
+    //given
+    const category = Category.from(beCategoryFixture, memberFixture);
+    const oauthRequest = {
+      name: memberFixture.nickname,
+      email: memberFixture.email,
+      img: memberFixture.profileImg,
+    };
+    //when
+
+    //then
+    categoryRepository
+      .save(category)
+      .then(() => authService.login(oauthRequest))
+      .then((token) => {
+        const agent = request.agent(app.getHttpServer());
+        agent
+          .delete(`/api/category?id=1`)
+          .set('Cookie', [`accessToken=${token}`])
+          .expect(200)
+          .then(done);
+      });
   });
 });
