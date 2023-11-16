@@ -4,9 +4,10 @@ import SelectionBox from '@foundation/SelectionBox/SelectionBox';
 import { css } from '@emotion/react';
 import Box from '@foundation/Box/Box';
 import Typography from '@foundation/Typography/Typography';
+import VideoListTabPanel from '@components/myPage/TabPanel/VideoListTabPanel';
 
 const MyPagesTabs: React.FC = () => {
-  const [value, setValue] = useState('1');
+  const [value, setValue] = useState('2');
   return (
     <Tabs
       initialValue={value}
@@ -33,7 +34,6 @@ const MyPagesTabs: React.FC = () => {
               id="add-question"
               name="my-page"
               lineDirection="bottom"
-              defaultChecked
               css={css`
                 padding: 1rem 0;
               `}
@@ -46,6 +46,7 @@ const MyPagesTabs: React.FC = () => {
               id="replay"
               name="my-page"
               lineDirection="bottom"
+              defaultChecked
               css={css`
                 padding: 1rem 0;
               `}
@@ -55,14 +56,18 @@ const MyPagesTabs: React.FC = () => {
           </Tabs.Tab>
         </Tabs.TabList>
       </Box>
-      <Box
-        css={css`
-          padding: 3rem;
-        `}
-      >
-        <Tabs.TabPanel value="1">질문 추가 모달</Tabs.TabPanel>
-        <Tabs.TabPanel value="2">영상 리스트</Tabs.TabPanel>
-      </Box>
+      <Tabs.TabPanel value="1">
+        <Box
+          css={css`
+            padding: 3rem;
+          `}
+        >
+          질문 추가 모달
+        </Box>
+      </Tabs.TabPanel>
+      <Tabs.TabPanel value="2">
+        <VideoListTabPanel />
+      </Tabs.TabPanel>
     </Tabs>
   );
 };

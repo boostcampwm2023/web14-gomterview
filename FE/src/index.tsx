@@ -15,16 +15,21 @@ if (process.env.REACT_APP_GTAG_ID) {
   ReactGA.initialize(process.env.REACT_APP_GTAG_ID);
 }
 
-deferRender()
-  .then(() => {
-    const rootElement = document.getElementById('root');
-    if (rootElement) {
-      const root = ReactDOM.createRoot(rootElement);
-      root.render(<App />);
-    } else {
-      console.error('Root element not found');
-    }
-  })
-  .catch((err) => {
-    console.error('Failed to start mock service worker', err);
-  });
+const rootElement = document.getElementById('root');
+
+const root = ReactDOM.createRoot(rootElement!);
+root.render(<App />);
+
+// deferRender()
+//   .then(() => {
+//     const rootElement = document.getElementById('root');
+//     if (rootElement) {
+//       const root = ReactDOM.createRoot(rootElement);
+//       root.render(<App />);
+//     } else {
+//       console.error('Root element not found');
+//     }
+//   })
+//   .catch((err) => {
+//     console.error('Failed to start mock service worker', err);
+//   });
