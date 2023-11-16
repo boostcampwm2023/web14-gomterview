@@ -25,4 +25,8 @@ export class VideoRepository {
   async findById(id: number) {
     return await this.videoRepository.findOneBy({ id: id });
   }
+
+  async findByUrl(url: string) {
+    return await this.videoRepository.findOneBy({ url: url });
+  }
 }
