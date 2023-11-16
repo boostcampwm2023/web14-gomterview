@@ -12,7 +12,7 @@ const InterviewQuestion: React.FC<InterviewQuestionType> = ({ question }) => {
         display: flex;
         justify-content: center;
         align-items: center;
-        position: absolute;
+        position: fixed;
         top: 3.125rem;
         left: 50%;
         transform: translateX(-50%);
