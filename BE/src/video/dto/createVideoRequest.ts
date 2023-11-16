@@ -11,7 +11,7 @@ export class CreateVideoRequest {
   @ApiProperty(createPropertyOption('example.mp4', '비디오 파일 이름', String))
   @IsString()
   @IsNotEmpty()
-  name: string;
+  videoName: string;
 
   @ApiProperty(
     createPropertyOption('https://example.com', '비디오 URL', String),
