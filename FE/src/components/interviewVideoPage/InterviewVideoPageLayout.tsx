@@ -18,7 +18,18 @@ const InterviewVideoPageLayout: React.FC<InterviewVideoPageLayoutProps> = ({
       >
         <Logo />
       </div>
-      <Layout direction="column">{children}</Layout>
+      <Layout
+        direction="column"
+        full
+        css={css`
+          align-items: center;
+          row-gap: 1rem;
+          padding: 1rem;
+          height: auto;
+        `}
+      >
+        {children}
+      </Layout>
     </div>
   );
 };

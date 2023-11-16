@@ -2,20 +2,27 @@ import Typography from '@foundation/Typography/Typography';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
 import React from 'react';
+import { HTMLElementTypes } from '@/types/utils';
 
 type VideoItemProps = {
   children?: React.ReactNode;
   videoName: string;
   date: string;
-};
+} & HTMLElementTypes<HTMLDivElement>;
 
-const VideoItem: React.FC<VideoItemProps> = ({ children, videoName, date }) => {
+const VideoItem: React.FC<VideoItemProps> = ({
+  children,
+  videoName,
+  date,
+  ...args
+}) => {
   return (
     <div
       css={css`
         display: flex;
         flex-direction: column;
       `}
+      {...args}
     >
       {children}
       <div
