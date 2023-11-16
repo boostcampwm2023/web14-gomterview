@@ -277,6 +277,23 @@ describe('CategoryService 통합테스트', () => {
     ]);
   });
 
+  it('회원 카테고리를 삭제한다.', async () => {
+    //given
+    await memberRepository.save(memberFixture);
+
+    //when
+    await saveMembersCategory(memberFixture);
+    await saveDefaultCategory();
+    const categoryId = (
+      await categoryService.findUsingCategories(memberFixture)
+    ).pop().id;
+
+    //then
+    await expect(
+      categoryService.deleteCategoryById(memberFixture, categoryId),
+    ).resolves.toBeUndefined();
+  });
+
   afterEach(async () => {
     await categoryRepository.query('delete from Category');
     await categoryRepository.query('delete from Member');

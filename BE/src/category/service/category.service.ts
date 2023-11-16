@@ -42,7 +42,6 @@ export class CategoryService {
     validateManipulatedToken(member);
 
     const category = await this.categoryRepository.findByCategoryId(categoryId);
-
     if (isEmpty(category)) {
       throw new CategoryNotFoundException();
     }

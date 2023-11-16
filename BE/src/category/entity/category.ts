@@ -16,7 +16,7 @@ export class Category extends DefaultEntity {
   @Column()
   name: string;
 
-  @ManyToOne(() => Member, { nullable: true, onDelete: 'CASCADE' })
+  @ManyToOne(() => Member, { nullable: true, onDelete: 'CASCADE', eager: true })
   @JoinColumn({ name: 'memberId' })
   member: Member;
 
