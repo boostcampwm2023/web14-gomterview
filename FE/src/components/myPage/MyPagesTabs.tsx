@@ -4,7 +4,7 @@ import SelectionBox from '@foundation/SelectionBox/SelectionBox';
 import { css } from '@emotion/react';
 import Box from '@foundation/Box/Box';
 import Typography from '@foundation/Typography/Typography';
-import VideoListBox from '@components/myPage/VideoListBox';
+import VideoListTabPanel from '@components/myPage/TabPanel/VideoListTabPanel';
 
 const MyPagesTabs: React.FC = () => {
   const [value, setValue] = useState('2');
@@ -66,7 +66,7 @@ const MyPagesTabs: React.FC = () => {
         </Box>
       </Tabs.TabPanel>
       <Tabs.TabPanel value="2">
-        <VideoListBox />
+        <VideoListTabPanel />
       </Tabs.TabPanel>
     </Tabs>
   );

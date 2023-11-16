@@ -4,7 +4,7 @@ import VideoItem from '@common/VideoItem/VideoItem';
 import Thumbnail from '@components/myPage/Thumbnail';
 import CardCover from '@foundation/CardCover/CardCover';
 
-const VideoListBox: React.FC = () => {
+const VideoListTabPanel: React.FC = () => {
   return (
     <Box
       css={css`
@@ -52,4 +52,4 @@ const VideoListBox: React.FC = () => {
   );
 };
 
-export default VideoListBox;
+export default VideoListTabPanel;
