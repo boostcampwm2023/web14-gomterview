@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npx webpack build --env production",
+    "build": "npx webpack build --mode production",
     "start": "webpack --mode development",
     "dev": "webpack serve --mode development --open --hot"
   },
