@@ -26,7 +26,7 @@ const RecordControlButton: React.FC<RecordControlButtonType> = ({
       onClick={isRecording ? handleStopRecording : handleStartRecording}
     >
       {isRecording ? (
-        <Icon id="record-start" width="2rem" height="2rem" />
+        <Icon id="record-stop" width="2rem" height="2rem" />
       ) : (
         <Icon id="record-start" width="2rem" height="2rem" />
       )}
