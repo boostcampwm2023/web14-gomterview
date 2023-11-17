@@ -4,14 +4,17 @@ import { MemberRepository } from '../../member/repository/member.repository';
 import { CategoryRepository } from '../repository/category.repository';
 import { memberFixture } from '../../member/fixture/member.fixture';
 import { CreateCategoryRequest } from '../dto/createCategoryRequest';
-import { CategoryNameEmptyException } from '../exception/category.exception';
+import {
+  CategoryNameEmptyException,
+  CategoryNotFoundException,
+} from '../exception/category.exception';
 import { ManipulatedTokenNotFiltered } from '../../token/exception/token.exception';
 import { createIntegrationTestModule } from '../../util/test.util';
 import { CategoryModule } from '../category.module';
 import { MemberModule } from '../../member/member.module';
 import { Member } from '../../member/entity/member';
 import { Category } from '../entity/category';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, UnauthorizedException } from '@nestjs/common';
 import { Question } from '../../question/entity/question';
 import { CategoryResponse } from '../dto/categoryResponse';
 import {
@@ -27,6 +30,7 @@ describe('CategoryService', () => {
   const mockCategoryRepository = {
     save: jest.fn(),
     findAllByMemberId: jest.fn(),
+    findByCategoryId: jest.fn(),
     remove: jest.fn(),
   };
 
@@ -125,6 +129,64 @@ describe('CategoryService', () => {
       categoryFixtures.map(CategoryResponse.from),
     );
   });
+
+  it('member가 있고, category가 회원의 카테고리라면 성공적으로 삭제를 한다.', async () => {
+    //given
+
+    //when
+    mockCategoryRepository.findByCategoryId.mockResolvedValue(
+      Category.from(beCategoryFixture, memberFixture),
+    );
+    mockCategoryRepository.remove.mockResolvedValue(undefined);
+
+    //then
+    await expect(
+      service.deleteCategoryById(memberFixture, beCategoryFixture.id),
+    ).resolves.toBeUndefined();
+  });
+
+  it('member가 undefined라면 ManipulatedTokenException을 발생시킨다.', async () => {
+    //given
+
+    //when
+    mockCategoryRepository.findByCategoryId.mockResolvedValue(
+      Category.from(beCategoryFixture, memberFixture),
+    );
+
+    //then
+    await expect(
+      service.deleteCategoryById(undefined, beCategoryFixture.id),
+    ).rejects.toThrow(new ManipulatedTokenNotFiltered());
+  });
+
+  it('categoryId가 존재하지 않는 id라면, CategoryNotFoundException을 발생시킨다.', async () => {
+    //given
+
+    //when
+    mockCategoryRepository.findByCategoryId.mockResolvedValue(undefined);
+
+    //then
+    await expect(
+      service.deleteCategoryById(memberFixture, beCategoryFixture.id),
+    ).rejects.toThrow(new CategoryNotFoundException());
+  });
+
+  it('categoryId가 존재하지만, 자신의 카테고리가 아니라면 UnauthorizedException을 발생시킨다.', async () => {
+    //given
+
+    //when
+    mockCategoryRepository.findByCategoryId.mockResolvedValue(
+      Category.from(
+        beCategoryFixture,
+        new Member(20, 'ja@ja.com', 'ja', 'https://www.google.com', new Date()),
+      ),
+    );
+
+    //then
+    await expect(
+      service.deleteCategoryById(memberFixture, beCategoryFixture.id),
+    ).rejects.toThrow(new UnauthorizedException());
+  });
 });
 
 describe('CategoryService 통합테스트', () => {
@@ -213,6 +275,23 @@ describe('CategoryService 통합테스트', () => {
       'FE',
       '나만의 질문',
     ]);
+  });
+
+  it('회원 카테고리를 삭제한다.', async () => {
+    //given
+    await memberRepository.save(memberFixture);
+
+    //when
+    await saveMembersCategory(memberFixture);
+    await saveDefaultCategory();
+    const categoryId = (
+      await categoryService.findUsingCategories(memberFixture)
+    ).pop().id;
+
+    //then
+    await expect(
+      categoryService.deleteCategoryById(memberFixture, categoryId),
+    ).resolves.toBeUndefined();
   });
 
   afterEach(async () => {

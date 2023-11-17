@@ -7,7 +7,10 @@ import {
   oauthRequestFixture,
 } from '../../member/fixture/member.fixture';
 import { CreateCategoryRequest } from '../dto/createCategoryRequest';
-import { CategoryNameEmptyException } from '../exception/category.exception';
+import {
+  CategoryNameEmptyException,
+  CategoryNotFoundException,
+} from '../exception/category.exception';
 import { ManipulatedTokenNotFiltered } from '../../token/exception/token.exception';
 import { Request } from 'express';
 import * as request from 'supertest';
@@ -23,6 +26,7 @@ import { TokenModule } from '../../token/token.module';
 import { AuthService } from '../../auth/service/auth.service';
 import { Token } from '../../token/entity/token';
 import {
+  beCategoryFixture,
   categoryListFixture,
   categoryListResponseFixture,
   defaultCategoryListFixture,
@@ -31,6 +35,7 @@ import {
 import { CategoryListResponse } from '../dto/categoryListResponse';
 import { TokenService } from '../../token/service/token.service';
 import { CategoryRepository } from '../repository/category.repository';
+import { UnauthorizedException } from '@nestjs/common';
 
 describe('CategoryController', () => {
   let controller: CategoryController;
@@ -38,6 +43,7 @@ describe('CategoryController', () => {
   const mockCategoryService = {
     createCategory: jest.fn(),
     findUsingCategories: jest.fn(),
+    deleteCategoryById: jest.fn(),
   };
 
   const mockTokenService = {
@@ -142,6 +148,73 @@ describe('CategoryController', () => {
       CategoryListResponse.of(defaultCategoryListResponseFixture),
     );
   });
+
+  it('Member객체가 있고, 존재하는 id의 삭제를 요청하면, Undefined가 반환된다.', async () => {
+    //given
+    const category = new Category(1, 'CS', memberFixture, new Date());
+
+    //when
+    mockCategoryService.deleteCategoryById.mockResolvedValue(undefined);
+    //then
+    await expect(
+      controller.deleteCategoryById(mockReqWithMemberFixture, category.id),
+    ).resolves.toBeUndefined();
+  });
+
+  it('Member객체가 없이 id만을 요청하면 ManipulatedToken을 반환한다. => 미들웨어 통과지만 Repository에서 찾지 못한 경우', async () => {
+    //given
+    const category = new Category(1, 'CS', memberFixture, new Date());
+
+    //when
+    mockCategoryService.deleteCategoryById.mockRejectedValue(
+      new ManipulatedTokenNotFiltered(),
+    );
+    //then
+    await expect(
+      controller.deleteCategoryById(
+        { user: undefined } as unknown as Request,
+        category.id,
+      ),
+    ).rejects.toThrow(new ManipulatedTokenNotFiltered());
+  });
+
+  it('Member객체가 있지만, id로 조회한 Category의 Member와 다르면 UnauthorizedException을 반환한다.', async () => {
+    //given
+    const category = new Category(
+      1,
+      'CS',
+      new Member(3, 'ja@ja.com', 'ja', 'http://www.gomterview.com', new Date()),
+      new Date(),
+    );
+
+    //when
+    mockCategoryService.deleteCategoryById.mockRejectedValue(
+      new UnauthorizedException(),
+    );
+    //then
+    await expect(
+      controller.deleteCategoryById(mockReqWithMemberFixture, category.id),
+    ).rejects.toThrow(new UnauthorizedException());
+  });
+
+  it('Member객체가 있지만 id로 조회한 Category가 없을 경우 CategoryNotFoundException을 반환한다.', async () => {
+    //given
+    const category = new Category(
+      1,
+      'CS',
+      new Member(3, 'ja@ja.com', 'ja', 'http://www.gomterview.com', new Date()),
+      new Date(),
+    );
+
+    //when
+    mockCategoryService.deleteCategoryById.mockRejectedValue(
+      new CategoryNotFoundException(),
+    );
+    //then
+    await expect(
+      controller.deleteCategoryById(mockReqWithMemberFixture, category.id + 1),
+    ).rejects.toThrow(new CategoryNotFoundException());
+  });
 });
 
 describe('CategoryController 통합테스트', () => {
@@ -164,25 +237,24 @@ describe('CategoryController 통합테스트', () => {
       moduleFixture.get<CategoryRepository>(CategoryRepository);
   });
 
+  beforeEach(async () => {
+    await categoryRepository.query('delete from MemberQuestion');
+    await categoryRepository.query('delete from Question');
+    await categoryRepository.query('delete from Category');
+    await categoryRepository.query('delete from Member');
+    await categoryRepository.query('delete from token');
+  });
+
   it('카테고리 저장을 성공시 201상태코드가 반환된다.', (done) => {
-    memberRepository
-      .save(memberFixture)
-      .then(() => {
-        return authService.login(oauthRequestFixture);
-      })
-      .then((token) => {
-        const agent = request.agent(app.getHttpServer());
-        agent
-          .post(`/api/category`)
-          .set('Cookie', [`accessToken=${token}`])
-          .send(new CreateCategoryRequest('tester'))
-          .expect(201)
-          .then((response) => {
-            expect(response).toBeUndefined();
-            return;
-          });
-      })
-      .then(done);
+    authService.login(oauthRequestFixture).then((validToken) => {
+      const agent = request.agent(app.getHttpServer());
+      agent
+        .post('/api/category')
+        .set('Cookie', [`accessToken=${validToken}`])
+        .send(new CreateCategoryRequest('tester'))
+        .expect(201)
+        .then(() => done());
+    });
   });
 
   it('회원이 카테고리 조회시 200코드와 CategoryListResponse가 반환된다.', (done) => {
@@ -237,9 +309,27 @@ describe('CategoryController 통합테스트', () => {
       .then(done);
   });
 
-  afterEach(async () => {
-    await categoryRepository.query('delete from Category');
-    await categoryRepository.query('delete from Member');
-    await categoryRepository.query('delete from token');
+  it('회원의 카테고리를 삭제한다.', (done) => {
+    //given
+    const category = Category.from(beCategoryFixture, memberFixture);
+    const oauthRequest = {
+      name: memberFixture.nickname,
+      email: memberFixture.email,
+      img: memberFixture.profileImg,
+    };
+    //when
+
+    //then
+    categoryRepository
+      .save(category)
+      .then(() => authService.login(oauthRequest))
+      .then((token) => {
+        const agent = request.agent(app.getHttpServer());
+        agent
+          .delete(`/api/category?id=1`)
+          .set('Cookie', [`accessToken=${token}`])
+          .expect(200)
+          .then(done);
+      });
   });
 });

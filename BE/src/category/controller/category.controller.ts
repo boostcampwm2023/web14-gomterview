@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBody,
   ApiCookieAuth,
@@ -60,5 +69,20 @@ export class CategoryController {
     const categories = await this.categoryService.findUsingCategories(member);
 
     return CategoryListResponse.of(categories);
+  }
+
+  @Delete()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiCookieAuth()
+  @ApiOperation({
+    summary: '카테고리를 삭제한다.',
+  })
+  @ApiResponse(createApiResponseOption(204, '카테고리 삭제', null))
+  async deleteCategoryById(
+    @Req() req: Request,
+    @Query('categoryId') categoryId: number,
+  ) {
+    const member = req.user as Member;
+    await this.categoryService.deleteCategoryById(member, categoryId);
   }
 }

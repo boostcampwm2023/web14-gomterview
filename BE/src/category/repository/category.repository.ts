@@ -34,6 +34,10 @@ export class CategoryRepository {
     await this.repository.remove(category);
   }
 
+  async findByCategoryId(categoryId) {
+    return await this.repository.findOneBy({ id: categoryId });
+  }
+
   async query(query: string) {
     return await this.repository.query(query);
   }
