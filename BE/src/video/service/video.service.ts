@@ -68,10 +68,7 @@ export class VideoService {
     validateManipulatedToken(member);
     const memberId = member.id;
     const video = await this.videoRepository.findById(videoId);
-
-    if (isEmpty(video)) throw new VideoNotFoundException();
-    if (notEquals(memberId, video.memberId))
-      throw new VideoAccessForbiddenException();
+    this.validateVideoOwnership(video, memberId);
 
     const hash = video.isPublic ? this.getEncryptedurl(video.url) : null;
     return VideoDetailResponse.from(video, hash);
@@ -99,15 +96,18 @@ export class VideoService {
     validateManipulatedToken(member);
     const memberId = member.id;
     const video = await this.videoRepository.findById(videoId);
-
-    if (isEmpty(video)) throw new VideoNotFoundException();
-    if (notEquals(memberId, video.memberId))
-      throw new VideoAccessForbiddenException();
+    this.validateVideoOwnership(video, memberId);
 
     await this.videoRepository.toggleVideoStatus(videoId); // TODO: 좀 더 효율적인 Patch 로직이 있나 확인
 
     const hash = video.isPublic ? null : this.getEncryptedurl(video.url); // 현재가 public이었으면 토글 후 private이 되기에 null로 지정
     return new VideoHashResponse(hash);
+  }
+
+  private validateVideoOwnership(video: Video, memberId: number) {
+    if (isEmpty(video)) throw new VideoNotFoundException();
+    if (notEquals(memberId, video.memberId))
+      throw new VideoAccessForbiddenException();
   }
 
   private async getQuestionContent(questionId: number) {
