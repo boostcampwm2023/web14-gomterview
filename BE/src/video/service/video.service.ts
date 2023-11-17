@@ -94,6 +94,10 @@ export class VideoService {
     return VideoListResponse.from(videoList);
   }
 
+  async toggleVideoStatus(videoId: number, arg1: Member) {
+    throw new Error('Method not implemented.');
+  }
+
   private async getQuestionContent(questionId: number) {
     const question = await this.questionRepository.findById(questionId);
     return question ? question.content : '삭제된 질문';

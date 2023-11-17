@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Req,
   UseGuards,
@@ -110,8 +111,19 @@ export class VideoController {
       VideoDetailResponse,
     ),
   )
-  @UseGuards(AuthGuard('jwt'))
   async getVideoDetail(@Param('videoId') videoId: number, @Req() req: Request) {
     return await this.videoService.getVideoDetail(videoId, req.user as Member);
+  }
+
+  @Patch(':videoId')
+  @UseGuards(AuthGuard('jwt'))
+  async toggleVideoStatus(
+    @Param('videoId') videoId: number,
+    @Req() req: Request,
+  ) {
+    return await this.videoService.toggleVideoStatus(
+      videoId,
+      req.user as Member,
+    );
   }
 }
