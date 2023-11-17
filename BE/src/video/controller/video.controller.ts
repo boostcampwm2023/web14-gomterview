@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Req,
   UseGuards,
@@ -24,6 +25,7 @@ import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
 import { VideoListResponse } from '../dto/videoListResponse';
 import { VideoDetailResponse } from '../dto/videoDetailResponse';
+import { VideoHashResponse } from '../dto/videoHashResponse';
 
 @Controller('/api/video')
 @ApiTags('video')
@@ -110,8 +112,26 @@ export class VideoController {
       VideoDetailResponse,
     ),
   )
-  @UseGuards(AuthGuard('jwt'))
   async getVideoDetail(@Param('videoId') videoId: number, @Req() req: Request) {
     return await this.videoService.getVideoDetail(videoId, req.user as Member);
+  }
+
+  @Patch(':videoId')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiCookieAuth()
+  @ApiOperation({
+    summary: '비디오 공개/비공개 상태를 전환',
+  })
+  @ApiResponse(
+    createApiResponseOption(200, '비디오 상태 전환 완료', VideoHashResponse),
+  )
+  async toggleVideoStatus(
+    @Param('videoId') videoId: number,
+    @Req() req: Request,
+  ) {
+    return await this.videoService.toggleVideoStatus(
+      videoId,
+      req.user as Member,
+    );
   }
 }

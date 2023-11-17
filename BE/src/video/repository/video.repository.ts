@@ -29,4 +29,13 @@ export class VideoRepository {
   async findByUrl(url: string) {
     return await this.videoRepository.findOneBy({ url: url });
   }
+
+  async toggleVideoStatus(videoId: number) {
+    this.videoRepository
+      .createQueryBuilder()
+      .update(Video)
+      .set({ isPublic: () => 'NOT isPublic' })
+      .where('id = :id', { id: videoId })
+      .execute();
+  }
 }
