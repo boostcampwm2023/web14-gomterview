@@ -38,4 +38,8 @@ export class VideoRepository {
       .where('id = :id', { id: videoId })
       .execute();
   }
+
+  async remove(video: Video) {
+    await this.videoRepository.remove(video);
+  }
 }
