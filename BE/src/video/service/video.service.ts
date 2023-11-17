@@ -119,12 +119,6 @@ export class VideoService {
       throw new VideoAccessForbiddenException();
   }
 
-  private validateVideoOwnership(video: Video, memberId: number) {
-    if (isEmpty(video)) throw new VideoNotFoundException();
-    if (notEquals(memberId, video.memberId))
-      throw new VideoAccessForbiddenException();
-  }
-
   private async getQuestionContent(questionId: number) {
     const question = await this.questionRepository.findById(questionId);
     return question ? question.content : '삭제된 질문';
