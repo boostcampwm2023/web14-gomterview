@@ -139,6 +139,11 @@ export class VideoController {
 
   @Delete(':videoId')
   @UseGuards(AuthGuard('jwt'))
+  @ApiCookieAuth()
+  @ApiOperation({
+    summary: '비디오 삭제',
+  })
+  @ApiResponse(createApiResponseOption(204, '비디오 삭제 완료', null))
   async deleteVideo(
     @Param('videoId') videoId: number,
     @Req() req: Request,
