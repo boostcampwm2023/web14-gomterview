@@ -12,6 +12,7 @@ import { Member } from '../entity/member';
 import { createApiResponseOption } from 'src/util/swagger.util';
 import { MemberService } from '../service/member.service';
 import { validateManipulatedToken } from 'src/util/token.util';
+import { MemberNicknameResponse } from '../dto/memberNicknameResponse';
 
 @Controller('/api/member')
 @ApiTags('member')
@@ -45,7 +46,7 @@ export class MemberController {
     createApiResponseOption(
       200,
       `면접 화면에 표출할 이름(회원의 경우 저장된 이름을, 비회원의 경우 '면접자')을 반환한다.`,
-      String,
+      MemberNicknameResponse,
     ),
   )
   async getNameForInterview(@Req() req: Request) {

@@ -3,6 +3,7 @@ import { Request } from 'express';
 import { TokenService } from 'src/token/service/token.service';
 import { MemberRepository } from '../repository/member.repository';
 import { getTokenValue } from 'src/util/token.util';
+import { MemberNicknameResponse } from '../dto/memberNicknameResponse';
 
 @Injectable()
 export class MemberService {
@@ -14,7 +15,9 @@ export class MemberService {
     if (!req.cookies['accessToken']) return '면접자';
 
     // TODO: 추후에 랜덤 Prefix 생성할 필요가 있음
-    return (await this.getMemberByToken(getTokenValue(req))).nickname;
+    return new MemberNicknameResponse(
+      (await this.getMemberByToken(getTokenValue(req))).nickname,
+    );
   }
 
   async getMemberByToken(tokenValue: string) {
