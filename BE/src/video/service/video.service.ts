@@ -24,6 +24,7 @@ import { isEmpty, notEquals } from 'class-validator';
 import { VideoDetailResponse } from '../dto/videoDetailResponse';
 import * as crypto from 'crypto';
 import 'dotenv/config';
+import { VideoHashResponse } from '../dto/videoHashResponse';
 
 const algorithm = 'aes-256-cbc';
 const key = process.env.URL_ENCRYPT_KEY;
@@ -94,8 +95,19 @@ export class VideoService {
     return VideoListResponse.from(videoList);
   }
 
-  async toggleVideoStatus(videoId: number, arg1: Member) {
-    throw new Error('Method not implemented.');
+  async toggleVideoStatus(videoId: number, member: Member) {
+    validateManipulatedToken(member);
+    const memberId = member.id;
+    const video = await this.videoRepository.findById(videoId);
+
+    if (isEmpty(video)) throw new VideoNotFoundException();
+    if (notEquals(memberId, video.memberId))
+      throw new VideoAccessForbiddenException();
+
+    await this.videoRepository.toggleVideoStatus(videoId); // TODO: 좀 더 효율적인 Patch 로직이 있나 확인
+
+    const hash = video.isPublic ? null : this.getEncryptedurl(video.url); // 현재가 public이었으면 토글 후 private이 되기에 null로 지정
+    return new VideoHashResponse(hash);
   }
 
   private async getQuestionContent(questionId: number) {
