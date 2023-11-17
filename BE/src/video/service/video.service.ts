@@ -104,6 +104,10 @@ export class VideoService {
     return new VideoHashResponse(hash);
   }
 
+  async deleteVideo(videoId: number, member: Member) {
+    throw new Error('Method not implemented.');
+  }
+
   private validateVideoOwnership(video: Video, memberId: number) {
     if (isEmpty(video)) throw new VideoNotFoundException();
     if (notEquals(memberId, video.memberId))

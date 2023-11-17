@@ -1,16 +1,18 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { VideoService } from '../service/video.service';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { Member } from 'src/member/entity/member';
 import { CreateVideoRequest } from '../dto/createVideoRequest';
 import {
@@ -133,5 +135,16 @@ export class VideoController {
       videoId,
       req.user as Member,
     );
+  }
+
+  @Delete(':videoId')
+  @UseGuards(AuthGuard('jwt'))
+  async deleteVideo(
+    @Param('videoId') videoId: number,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    await this.videoService.deleteVideo(videoId, req.user as Member);
+    res.status(204).send();
   }
 }
