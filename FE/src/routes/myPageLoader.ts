@@ -4,9 +4,9 @@ import { redirect } from 'react-router-dom';
 import { PATH } from '@constants/path';
 
 const myPageLoader = ({ queryClient }: { queryClient: QueryClient }) => {
-  const data = queryClient.getQueryState(QUERY_KEY.MEMBER);
+  const queryState = queryClient.getQueryState(QUERY_KEY.MEMBER);
 
-  return data ? null : redirect(PATH.ROOT);
+  return queryState?.data ? null : redirect(PATH.ROOT);
 };
 
 export default myPageLoader;
