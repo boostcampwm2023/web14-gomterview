@@ -11,7 +11,7 @@ import { Question } from '@/types/question';
 import { css } from '@emotion/react';
 import { useRecoilState } from 'recoil';
 
-type QuestionListItemProps = {
+type QuestionAccordionProps = {
   question: Question;
   categoryId: number;
 };
@@ -21,7 +21,7 @@ const selectedStyle = css`
   color: ${theme.colors.text.white};
 `;
 
-const QuestionListItem: React.FC<QuestionListItemProps> = ({
+const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
   question,
   categoryId,
 }) => {
@@ -36,14 +36,14 @@ const QuestionListItem: React.FC<QuestionListItemProps> = ({
   const handleChange = () => {
     if (isSelected) {
       setSelectedQuestions((prevState) => ({
-        status: 'success',
+        isSuccess: true,
         selectedData: prevState.selectedData.filter(
           (item) => item.questionId !== question.questionId
         ),
       }));
     } else {
       setSelectedQuestions({
-        status: 'success',
+        isSuccess: false,
         selectedData: [
           ...selectedQuestions.selectedData,
           { ...question, categoryId: categoryId },
@@ -51,6 +51,7 @@ const QuestionListItem: React.FC<QuestionListItemProps> = ({
       });
     }
   };
+
   return (
     <Accordion
       onChange={handleChange}
@@ -82,4 +83,4 @@ const QuestionListItem: React.FC<QuestionListItemProps> = ({
   );
 };
 
-export default QuestionListItem;
+export default QuestionAccordion;
