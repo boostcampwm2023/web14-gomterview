@@ -1,4 +1,4 @@
-export const BASE_URL = '';
+export const BASE_URL = process.env.REACT_APP_BASE_API_URL;
 
 type Id = number;
 type Hash = string;
