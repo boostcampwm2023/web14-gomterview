@@ -19,14 +19,6 @@ module.exports = {
     port: 3000,
     hot: true,
     static: path.resolve(__dirname, 'dist'),
-    // proxy: {
-    //   '/auth/login': {
-    //     target:
-    //       'http://ec2-3-39-187-198.ap-northeast-2.compute.amazonaws.com:8080/api',
-    //     secure: false,
-    //     changeOrigin: true,
-    //   },
-    // },
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json'],
