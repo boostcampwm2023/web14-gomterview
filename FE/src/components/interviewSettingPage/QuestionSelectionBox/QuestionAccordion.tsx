@@ -1,4 +1,3 @@
-import { questionSetting } from '@/atoms/interviewSetting';
 import {
   Accordion,
   AccordionDetails,
@@ -6,10 +5,10 @@ import {
 } from '@/components/foundation/Accordion';
 import { LeadingDot } from '@/components/foundation/LeadingDot/LeadingDot';
 import Typography from '@/components/foundation/Typography/Typography';
+import useSelectQuestions from '@/hooks/atoms/useSelectQuestions';
 import { theme } from '@/styles/theme';
 import { Question } from '@/types/question';
 import { css } from '@emotion/react';
-import { useRecoilState } from 'recoil';
 
 type QuestionAccordionProps = {
   question: Question;
@@ -25,36 +24,14 @@ const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
   question,
   categoryId,
 }) => {
-  const [selectedQuestions, setSelectedQuestions] =
-    useRecoilState(questionSetting);
-
-  const isSelected = selectedQuestions.selectedData.some(
-    (item) =>
-      item.questionId === question.questionId && item.categoryId === categoryId
-  );
-
-  const handleChange = () => {
-    if (isSelected) {
-      setSelectedQuestions((prevState) => ({
-        isSuccess: true,
-        selectedData: prevState.selectedData.filter(
-          (item) => item.questionId !== question.questionId
-        ),
-      }));
-    } else {
-      setSelectedQuestions({
-        isSuccess: false,
-        selectedData: [
-          ...selectedQuestions.selectedData,
-          { ...question, categoryId: categoryId },
-        ],
-      });
-    }
-  };
+  const { isSelected, toggleSelected } = useSelectQuestions({
+    question: question,
+    categoryId: categoryId,
+  });
 
   return (
     <Accordion
-      onChange={handleChange}
+      onChange={toggleSelected}
       expanded={isSelected}
       css={css`
         margin-bottom: 1.2rem;
