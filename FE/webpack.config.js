@@ -19,7 +19,7 @@ module.exports = (env) => {
     },
     devServer: {
       historyApiFallback: true,
-      port: 3001,
+      port: 3000,
       hot: true,
       static: path.resolve(__dirname, 'dist'),
     },
