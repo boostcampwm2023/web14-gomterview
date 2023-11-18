@@ -11,7 +11,7 @@ module.exports = {
   output: {
     publicPath: '/',
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: '[hash].js',
     clean: true,
   },
   devServer: {
@@ -34,6 +34,7 @@ module.exports = {
       '@assets': path.resolve(__dirname, 'src/assets/'),
       '@atoms': path.resolve(__dirname, 'src/atoms/'),
       '@hooks': path.resolve(__dirname, 'src/hooks/'),
+      '@routes': path.resolve(__dirname, 'src/routes/'),
     },
   },
 
