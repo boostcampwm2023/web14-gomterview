@@ -3,10 +3,16 @@ import { theme } from '@styles/theme';
 import Typography from '@foundation/Typography/Typography';
 import Icon from '@foundation/Icon/Icon';
 import { HTMLElementTypes } from '@/types/utils';
+import { useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEY } from '@constants/queryKey';
 
 type GoogleLoginButtonProps = HTMLElementTypes<HTMLButtonElement>;
 
 const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ ...args }) => {
+  const queryState = useQueryClient().getQueryState(QUERY_KEY.MEMBER);
+
+  if (queryState?.data) return null;
+
   return (
     <button
       css={css`
