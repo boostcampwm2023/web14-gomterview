@@ -104,6 +104,15 @@ export class VideoService {
     return new VideoHashResponse(hash);
   }
 
+  async deleteVideo(videoId: number, member: Member) {
+    validateManipulatedToken(member);
+    const memberId = member.id;
+    const video = await this.videoRepository.findById(videoId);
+    this.validateVideoOwnership(video, memberId);
+
+    await this.videoRepository.remove(video);
+  }
+
   private validateVideoOwnership(video: Video, memberId: number) {
     if (isEmpty(video)) throw new VideoNotFoundException();
     if (notEquals(memberId, video.memberId))
