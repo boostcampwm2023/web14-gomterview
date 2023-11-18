@@ -57,7 +57,7 @@ export class AuthController {
         await this.authService.login(userRequest),
         COOKIE_OPTIONS,
       )
-      .redirect('https://www.gomterview.com/mypage');
+      .redirect(process.env.OAUTH_REDIRECT_URL);
   }
 
   @Delete('logout')
