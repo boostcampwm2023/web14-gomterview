@@ -7,7 +7,7 @@ export class Question extends DefaultEntity {
   @Column({ type: 'text' })
   readonly content: string;
 
-  @ManyToOne(() => Category, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Category, { onDelete: 'CASCADE', eager: true })
   @JoinColumn({ name: 'category' })
   readonly category: Category;
 
