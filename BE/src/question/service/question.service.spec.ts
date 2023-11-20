@@ -148,4 +148,26 @@ describe('QuestionService 통합 테스트', () => {
       ),
     ).resolves.toEqual(QuestionResponse.from(questionFixture));
   });
+
+  it('카테고리의 질문을 조회하면 QuestionResponse의 배열로 반환된다.', async () => {
+    //given
+    const member = await memberRepository.save(memberFixture);
+    await categoryRepository.save(categoryFixtureWithId);
+    const response = await questionService.createQuestion(
+      createQuestionRequestFixture,
+      memberFixture,
+    );
+
+    //when
+
+    const category = await categoryRepository.findByNameAndMember(
+      categoryFixtureWithId.name,
+      member.id,
+    );
+
+    //then
+    await expect(
+      questionService.findAllByCategory(category.id),
+    ).resolves.toEqual([response]);
+  });
 });
