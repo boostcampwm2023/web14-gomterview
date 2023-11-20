@@ -23,7 +23,7 @@ export class Category extends DefaultEntity {
   }
 
   isOwnedBy(member: Member) {
-    return this.member.equals(member);
+    return this.member.id === member.id;
   }
 
   getName() {

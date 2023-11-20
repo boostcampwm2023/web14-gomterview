@@ -10,6 +10,12 @@ export const memberFixture = new Member(
   new Date(),
 );
 
+export const memberFixturesOAuthRequest = {
+  email: 'test@example.com',
+  name: 'TestUser',
+  img: 'https://example.com',
+} as OAuthRequest;
+
 export const oauthRequestFixture = {
   email: 'fixture@example.com',
   name: 'fixture',

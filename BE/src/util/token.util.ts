@@ -4,11 +4,15 @@ import { Member } from 'src/member/entity/member';
 import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
 
 export const getTokenValue = (request: Request) => {
-  try {
+  if (request.cookies && request.cookies['accessToken']) {
     return request.cookies['accessToken'].split(' ').pop();
-  } catch (e) {
-    return '';
   }
+
+  if (request.get('cookie')) {
+    return request.get('cookie').split('Bearer ').pop();
+  }
+
+  return '';
 };
 
 export const validateManipulatedToken = (member: Member | undefined) => {

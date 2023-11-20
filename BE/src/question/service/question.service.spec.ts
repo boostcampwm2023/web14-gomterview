@@ -50,7 +50,7 @@ describe('QuestionService', () => {
     expect(service).toBeDefined();
   });
 
-  it('게시글 추가시, categoryId와 content가 있다면 성공적으로 질문을 추가한다.', async () => {
+  it('질문 추가시, categoryId와 content가 있다면 성공적으로 질문을 추가한다.', async () => {
     //given
 
     //when
@@ -61,11 +61,11 @@ describe('QuestionService', () => {
 
     //then
     await expect(
-      service.createQuestion(createQuestionRequestFixture),
+      service.createQuestion(createQuestionRequestFixture, memberFixture),
     ).resolves.toEqual(QuestionResponse.from(questionFixture));
   });
 
-  it('게시글 추가시, categoryId가 null이거나, 존재하지 않으면 CategoryNotFoundException을 반환한다.', async () => {
+  it('질문 추가시, categoryId가 null이거나, 존재하지 않으면 CategoryNotFoundException을 반환한다.', async () => {
     //given
 
     //when
@@ -73,11 +73,11 @@ describe('QuestionService', () => {
 
     //then
     await expect(
-      service.createQuestion(createQuestionRequestFixture),
+      service.createQuestion(createQuestionRequestFixture, memberFixture),
     ).rejects.toThrow(new CategoryNotFoundException());
   });
 
-  it('게시글 추가시, content가 isEmpty면 ContentNotFoundException을 반환한다.', async () => {
+  it('질문 추가시, content가 isEmpty면 ContentNotFoundException을 반환한다.', async () => {
     //given
 
     //when
@@ -89,6 +89,7 @@ describe('QuestionService', () => {
     await expect(
       service.createQuestion(
         new CreateQuestionRequest(categoryFixtureWithId.id, null),
+        memberFixture,
       ),
     ).rejects.toThrow(new ContentNotFoundException());
   });
@@ -132,7 +133,10 @@ describe('QuestionService 통합 테스트', () => {
 
     //then
     await expect(
-      questionService.createQuestion(createQuestionRequestFixture),
+      questionService.createQuestion(
+        createQuestionRequestFixture,
+        memberFixture,
+      ),
     ).resolves.toEqual(QuestionResponse.from(questionFixture));
   });
 });

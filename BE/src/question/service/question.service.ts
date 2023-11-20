@@ -25,11 +25,11 @@ export class QuestionService {
       createQuestionRequest.categoryId,
     );
 
+    this.validateCreateRequest(category, createQuestionRequest.content);
+
     if (!category.isOwnedBy(member)) {
       throw new UnauthorizedException();
     }
-
-    this.validateCreateRequest(category, createQuestionRequest.content);
 
     const question = await this.questionRepository.save(
       Question.of(category, null, createQuestionRequest.content),

@@ -17,7 +17,10 @@ import { CategoryRepository } from '../../category/repository/category.repositor
 import { MemberRepository } from '../../member/repository/member.repository';
 import { AuthModule } from '../../auth/auth.module';
 import { AuthService } from '../../auth/service/auth.service';
-import { oauthRequestFixture } from '../../member/fixture/member.fixture';
+import {
+  mockReqWithMemberFixture,
+  oauthRequestFixture,
+} from '../../member/fixture/member.fixture';
 import * as request from 'supertest';
 import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { Question } from '../entity/question';
@@ -57,7 +60,10 @@ describe('QuestionController', () => {
     );
     //then
     await expect(
-      controller.createCustomQuestion(createQuestionRequestFixture),
+      controller.createCustomQuestion(
+        createQuestionRequestFixture,
+        mockReqWithMemberFixture,
+      ),
     ).resolves.toEqual(QuestionResponse.from(questionFixture));
   });
 });
@@ -104,9 +110,7 @@ describe('QuestionController 통합테스트', () => {
       .set('Cookie', [`accessToken=${token}`])
       .send(createQuestionRequestFixture)
       .expect(201)
-      .then((response) => {
-        console.log(response);
-      });
+      .then(() => {});
     //then
   });
 });

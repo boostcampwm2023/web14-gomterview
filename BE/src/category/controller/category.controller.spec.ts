@@ -3,6 +3,7 @@ import { CategoryController } from './category.controller';
 import { CategoryService } from '../service/category.service';
 import {
   memberFixture,
+  memberFixturesOAuthRequest,
   mockReqWithMemberFixture,
   oauthRequestFixture,
 } from '../../member/fixture/member.fixture';
@@ -20,14 +21,12 @@ import { Member } from '../../member/entity/member';
 import { Category } from '../entity/category';
 import { Question } from '../../question/entity/question';
 import { createIntegrationTestModule } from '../../util/test.util';
-import { MemberRepository } from '../../member/repository/member.repository';
 import { AuthModule } from '../../auth/auth.module';
 import { TokenModule } from '../../token/token.module';
 import { AuthService } from '../../auth/service/auth.service';
 import { Token } from '../../token/entity/token';
 import {
-  beCategoryFixture,
-  categoryListFixture,
+  categoryFixtureWithId,
   categoryListResponseFixture,
   defaultCategoryListFixture,
   defaultCategoryListResponseFixture,
@@ -36,6 +35,7 @@ import { CategoryListResponse } from '../dto/categoryListResponse';
 import { TokenService } from '../../token/service/token.service';
 import { CategoryRepository } from '../repository/category.repository';
 import { UnauthorizedException } from '@nestjs/common';
+import { MemberRepository } from '../../member/repository/member.repository';
 
 describe('CategoryController', () => {
   let controller: CategoryController;
@@ -220,8 +220,8 @@ describe('CategoryController', () => {
 describe('CategoryController 통합테스트', () => {
   let app;
   let authService: AuthService;
-  let memberRepository: MemberRepository;
   let categoryRepository: CategoryRepository;
+  let memberRepository: MemberRepository;
 
   beforeAll(async () => {
     const modules = [CategoryModule, MemberModule, TokenModule, AuthModule];
@@ -232,17 +232,9 @@ describe('CategoryController 통합테스트', () => {
     await app.init();
 
     authService = moduleFixture.get<AuthService>(AuthService);
-    memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
     categoryRepository =
       moduleFixture.get<CategoryRepository>(CategoryRepository);
-  });
-
-  beforeEach(async () => {
-    await categoryRepository.query('delete from MemberQuestion');
-    await categoryRepository.query('delete from Question');
-    await categoryRepository.query('delete from Category');
-    await categoryRepository.query('delete from Member');
-    await categoryRepository.query('delete from token');
+    memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
   });
 
   it('카테고리 저장을 성공시 201상태코드가 반환된다.', (done) => {
@@ -257,79 +249,60 @@ describe('CategoryController 통합테스트', () => {
     });
   });
 
-  it('회원이 카테고리 조회시 200코드와 CategoryListResponse가 반환된다.', (done) => {
-    memberRepository
-      .save(memberFixture)
-      .then(async () => {
-        await Promise.all(
-          categoryListFixture.map(async (category) => {
-            await categoryRepository.save(category);
-          }),
-        );
-      })
-      .then(async () => {
-        return authService.login(oauthRequestFixture);
-      })
-      .then((token) => {
-        const agent = request.agent(app.getHttpServer());
-        agent
-          .get(`/api/category`)
-          .set('Cookie', [`accessToken=${token}`])
-          .expect(200)
-          .then((response) => {
-            expect(response.body.categoryList).toEqual(
-              categoryListResponseFixture,
-            );
-          });
-      })
-      .then(done);
+  it('회원이 카테고리 조회시 200코드와 CategoryListResponse가 반환된다.', async () => {
+    const token = await authService.login(memberFixturesOAuthRequest);
+    const member = await memberRepository.findByEmail(
+      memberFixturesOAuthRequest.email,
+    );
+    for (const each of defaultCategoryListFixture) {
+      await categoryRepository.save(Category.from(each, member));
+    }
+    const agent = request.agent(app.getHttpServer());
+    agent
+      .get(`/api/category`)
+      .set('Cookie', [`accessToken=${token}`])
+      .expect(200)
+      .then((response) => {
+        expect(response.body.categoryList).toEqual(categoryListResponseFixture);
+      });
   });
 
-  it('비회원이 카테고리 조회시 200코드와 CategoryListResponse가 반환된다.', (done) => {
-    memberRepository
-      .save(memberFixture)
-      .then(async () => {
-        await Promise.all(
-          defaultCategoryListFixture.map(async (category) => {
-            await categoryRepository.save(category);
-          }),
-        );
-      })
-      .then(() => {
-        const agent = request.agent(app.getHttpServer());
-        agent
-          .get(`/api/category`)
-          .expect(200)
-          .then((response) => {
-            expect(response.body.categoryList).toEqual(
-              categoryListResponseFixture,
-            );
-          });
-      })
-      .then(done);
+  it('비회원이 카테고리 조회시 200코드와 CategoryListResponse가 반환된다.', async () => {
+    for (const each of defaultCategoryListFixture) {
+      await categoryRepository.save(each);
+    }
+    const agent = request.agent(app.getHttpServer());
+    agent
+      .get(`/api/category`)
+      .expect(200)
+      .then((response) => {
+        expect(response.body.categoryList).toEqual(categoryListResponseFixture);
+      });
   });
 
-  it('회원의 카테고리를 삭제한다.', (done) => {
+  it('회원의 카테고리를 삭제한다.', async () => {
     //given
-    const category = Category.from(beCategoryFixture, memberFixture);
-    const oauthRequest = {
-      name: memberFixture.nickname,
-      email: memberFixture.email,
-      img: memberFixture.profileImg,
-    };
+
     //when
 
     //then
-    categoryRepository
-      .save(category)
-      .then(() => authService.login(oauthRequest))
-      .then((token) => {
-        const agent = request.agent(app.getHttpServer());
-        agent
-          .delete(`/api/category?id=1`)
-          .set('Cookie', [`accessToken=${token}`])
-          .expect(200)
-          .then(done);
-      });
+    await categoryRepository.save(categoryFixtureWithId);
+    const token = await authService.login(memberFixturesOAuthRequest);
+    const agent = request.agent(app.getHttpServer());
+    agent
+      .delete(`/api/category?id=1`)
+      .set('Cookie', [`accessToken=${token}`])
+      .expect(204);
+  });
+
+  afterEach(async () => {
+    await clearDB(categoryRepository);
   });
 });
+
+const clearDB = async (categoryRepository) => {
+  await categoryRepository.query('delete from Question');
+  await categoryRepository.query('delete from Category');
+  await categoryRepository.query('delete from Member');
+  await categoryRepository.query('delete from token');
+};
