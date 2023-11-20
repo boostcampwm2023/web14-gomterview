@@ -9,7 +9,7 @@ import {
   VideoPublicToggleResDto,
 } from '@/types/video';
 
-export const addVideo = async (body: VideoAddReqDto) => {
+export const postVideo = async (body: VideoAddReqDto) => {
   return await getAPIResponseData({
     method: 'post',
     url: API.VIDEO,
@@ -17,7 +17,7 @@ export const addVideo = async (body: VideoAddReqDto) => {
   });
 };
 
-export const getPreSignedUrl = async (body: VideoPreSignedReqDto) => {
+export const postPreSignedUrl = async (body: VideoPreSignedReqDto) => {
   return await getAPIResponseData<VideoPreSignedResDto, VideoPreSignedReqDto>({
     method: 'post',
     url: API.VIDEO_PRE_SIGNED,
@@ -46,7 +46,7 @@ export const getVideoById = async (videoId: number) => {
   });
 };
 
-export const toggleVideoPublic = async (videoId: number) => {
+export const patchVideoPublic = async (videoId: number) => {
   return await getAPIResponseData<VideoPublicToggleResDto>({
     method: 'patch',
     url: API.VIDEO_ID(videoId),
