@@ -19,4 +19,10 @@ export class CreateVideoRequest {
   @IsString()
   @IsNotEmpty()
   url: string;
+
+  constructor(questionId: number, videoName: string, url: string) {
+    this.questionId = questionId;
+    this.videoName = videoName;
+    this.url = url;
+  }
 }

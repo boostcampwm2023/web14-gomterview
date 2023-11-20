@@ -44,9 +44,12 @@ export class VideoController {
   @ApiResponse(createApiResponseOption(201, '비디오 정보 저장 완료', null))
   async createVideo(
     @Req() req: Request,
-    @Body() createVidoeRequest: CreateVideoRequest,
+    @Body() createVideoRequest: CreateVideoRequest,
   ) {
-    this.videoService.createVideo(req.user as Member, createVidoeRequest);
+    return this.videoService.createVideo(
+      req.user as Member,
+      createVideoRequest,
+    );
   }
 
   @Post('/pre-signed')

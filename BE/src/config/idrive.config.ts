@@ -1,4 +1,5 @@
 import * as AWS from 'aws-sdk';
+import 'dotenv/config';
 
 export const IDRIVE_CONFIG = {
   endpoint: new AWS.Endpoint(process.env.IDRIVE_ENDPOINT),
