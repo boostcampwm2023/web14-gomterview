@@ -1,11 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    // 결과 파일 형식
-    "module": "es2015",
-    // module 형식
-    "esModuleInterop": true,
-    // import시 namespace alias 가능
+    "target": "es5", // 결과 파일 형식
+    "module": "es2015", // module 형식
+    "esModuleInterop": true, // import시 namespace alias 가능
     "moduleResolution": "node",
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react",
@@ -13,42 +10,18 @@
     "noImplicitAny": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@components/*": [
-        "./src/components/*"
-      ],
-      "@common/*": [
-        "./src/components/common/*"
-      ],
-      "@foundation/*": [
-        "./src/components/foundation/*"
-      ],
-      "@page/*": [
-        "./src/page/*"
-      ],
-      "@constants/*": [
-        "./src/constants/*"
-      ],
-      "@styles/*": [
-        "./src/styles/*"
-      ],
-      "@assets/*": [
-        "./src/assets/*"
-      ],
-      "@atoms/*": [
-        "./src/atoms/*"
-      ],
-      "@hooks/*": [
-        "./src/hooks/*"
-      ],
-      "@routes/*": [
-        "./src/routes/*"
-      ]
+      "@/*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@common/*": ["./src/components/common/*"],
+      "@foundation/*": ["./src/components/foundation/*"],
+      "@page/*": ["./src/page/*"],
+      "@constants/*": ["./src/constants/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@atoms/*": ["./src/atoms/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@routes/*": ["./src/routes/*"]
     }
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }
