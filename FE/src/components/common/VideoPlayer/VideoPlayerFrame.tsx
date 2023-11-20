@@ -35,11 +35,6 @@ const VideoPlayerFrame: React.FC<VideoItemProps> = ({
           variant="title3"
           css={css`
             line-height: 1.25rem;
-
-            &:hover {
-              text-decoration: underline;
-              text-decoration-color: ${theme.colors.text.subStrong};
-            }
           `}
         >
           {videoName}
