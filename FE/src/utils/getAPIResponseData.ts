@@ -9,6 +9,7 @@ const getAPIResponseData = async <T, D = T>(option: AxiosRequestConfig<D>) => {
     if (axios.isAxiosError(e)) {
       process.env.NODE_ENV === 'development' && console.error(e.toJSON());
     }
+    throw e;
   }
 };
 
