@@ -10,6 +10,7 @@ import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 import myPageLoader from '@routes/myPageLoader';
 import invalidPathLoader from '@routes/invalidPathLoader';
 import rootLoader from '@routes/rootLoader';
+import InterviewVideoPublicPage from '@page/interviewVideoPublicPage';
 
 const routes = ({ queryClient }: { queryClient: QueryClient }) => {
   return createBrowserRouter([
@@ -36,13 +37,17 @@ const routes = ({ queryClient }: { queryClient: QueryClient }) => {
           element: <MyPage />,
         },
         {
-          path: PATH.INTERVIEW_VIDEO, // ":videoId" is a URL parameter
+          path: PATH.INTERVIEW_VIDEO,
           element: <InterviewVideoPage />,
+        },
+        {
+          path: PATH.INTERVIEW_VIDEO_PUBLIC,
+          element: <InterviewVideoPublicPage />,
         },
         {
           path: '*',
           loader: () => invalidPathLoader(),
-          element: <LandingPage />, //TODO url은 변경되지 않는 문제 해결해야함
+          element: <LandingPage />,
         },
       ],
     },

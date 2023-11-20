@@ -1,11 +1,8 @@
 import InterviewVideoPageLayout from '@components/interviewVideoPage/InterviewVideoPageLayout';
-import VideoPlayer from '@components/interviewVideoPage/VideoPlayer';
 import Typography from '@foundation/Typography/Typography';
-import Button from '@foundation/Button/Button';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { PATH } from '@constants/path';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const InterviewVideoPage: React.FC = () => {
+const InterviewVideoPublicPage: React.FC = () => {
   const navigate = useNavigate();
   const { videoId: videoParam } = useParams();
 
@@ -18,12 +15,12 @@ const InterviewVideoPage: React.FC = () => {
   return (
     <InterviewVideoPageLayout>
       <Typography variant="title3">{dummyData.videoName}</Typography>
-      <VideoPlayer {...dummyData} />
-      <Link to={PATH.INTERVIEW_SETTING}>
-        <Button size="lg">면접 시작하기</Button>
-      </Link>
+      {/*<VideoPlayer {...dummyData} />*/}
+      {/*<Link to={PATH.INTERVIEW_SETTING}>*/}
+      {/*  <Button size="lg">면접 시작하기</Button>*/}
+      {/*</Link>*/}
     </InterviewVideoPageLayout>
   );
 };
 
-export default InterviewVideoPage;
+export default InterviewVideoPublicPage;
