@@ -1,35 +1,38 @@
 import { DefaultEntity } from '../../app.entity';
-import { Column, Entity, ManyToMany, JoinTable } from 'typeorm';
-import { Member } from '../../member/entity/member';
-import { CreateQuestionRequest } from '../dto/createQuestionRequest';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Category } from '../../category/entity/category';
 
 @Entity({ name: 'Question' })
 export class Question extends DefaultEntity {
-  @Column()
-  readonly category: string;
-
   @Column({ type: 'text' })
   readonly content: string;
 
-  @ManyToMany(() => Member)
-  @JoinTable({ name: 'MemberQuestion' })
-  readonly members: Member[];
+  @ManyToOne(() => Category, { onDelete: 'CASCADE', eager: true })
+  @JoinColumn({ name: 'category' })
+  readonly category: Category;
 
-  constructor(category: string, content: string, members: Member[]) {
-    super(undefined, new Date());
-    this.category = category;
+  @ManyToOne(() => Question, { nullable: true, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'origin' })
+  readonly origin: Question;
+
+  constructor(
+    id: number,
+    content: string,
+    category: Category,
+    origin: Question,
+    createdAt: Date,
+  ) {
+    super(id, createdAt);
     this.content = content;
-    this.members = members;
+    this.category = category;
+    this.origin = origin;
   }
 
-  static from(
-    createQuestionRequest: CreateQuestionRequest,
-    member: Member,
-  ): Question {
-    return new Question(
-      createQuestionRequest.category,
-      createQuestionRequest.content,
-      [member],
-    );
+  static of(category: Category, origin: Question, content: string) {
+    return new Question(null, content, category, origin, new Date());
+  }
+
+  static copyOf(question: Question, category: Category) {
+    return new Question(null, question.content, category, question, new Date());
   }
 }

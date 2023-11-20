@@ -1,67 +1,27 @@
+import { Repository } from 'typeorm';
+import { Question } from '../entity/question';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Question } from '../entity/question';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class QuestionRepository {
   constructor(
-    @InjectRepository(Question)
-    private questionRepository: Repository<Question>,
+    @InjectRepository(Question) private repository: Repository<Question>,
   ) {}
 
   async save(question: Question) {
-    await this.questionRepository.save(question);
+    return await this.repository.save(question);
   }
 
-  async findAllByCategoryOrderByCreatedAtDesc(
-    category: string,
-    memberId: number,
-  ): Promise<Question[]> {
-    return (await this.constructQueryBuilder(category, memberId))
-      .orderBy('Question.createdAt', 'DESC')
-      .getMany();
+  async findByCategoryId(categoryId: number) {
+    return await this.repository.findBy({ category: { id: categoryId } });
   }
 
-  async findById(id: number) {
-    return await this.questionRepository.findOneBy({ id: id });
-  }
-
-  async findCategories(): Promise<string[]> {
-    const distinctCategories = (await this.questionRepository
-      .createQueryBuilder()
-      .select('DISTINCT category', 'category')
-      .getRawMany()) as Question[];
-
-    return distinctCategories.map((result) => result.category);
-  }
-
-  async findQuestionByIdAndMember_Id(questionId: number, memberId: number) {
-    return this.questionRepository.findOneBy({
-      members: { id: memberId },
-      id: questionId,
-    });
+  async findById(questionId: number) {
+    return await this.repository.findOneBy({ id: questionId });
   }
 
   async remove(question: Question) {
-    await this.questionRepository.remove(question);
-  }
-
-  async query(query: string) {
-    await this.questionRepository.query(query);
-  }
-
-  private async constructQueryBuilder(category: string, memberId: number) {
-    const queryBuilder = this.questionRepository.createQueryBuilder('Question');
-
-    if (category === 'CUSTOM') {
-      return queryBuilder
-        .leftJoin('Question.id', 'QuestionMember')
-        .leftJoin('QuestionMember.memberId', 'Member')
-        .where('Question.category = :category', { category })
-        .andWhere('member.id = :memberId', { memberId });
-    }
-
-    return queryBuilder.where('Question.category = :category', { category });
+    await this.repository.remove(question);
   }
 }
