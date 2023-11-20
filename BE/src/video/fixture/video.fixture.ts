@@ -1,3 +1,5 @@
+import { Video } from '../entity/video';
+
 export const videoListExample = [
   {
     id: 5,
@@ -23,4 +25,9 @@ export const videoListExample = [
     isPublic: false,
     createdAt: 1699858790176,
   },
+];
+
+export const videoListFixtureForTest = [
+  new Video(1, 1, '루이뷔통통튀기네', 'https://test.com', true),
+  new Video(1, 4, '루이뷔통통튀기네', 'https://foo.com', false),
 ];

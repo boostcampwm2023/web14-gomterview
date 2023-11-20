@@ -8,13 +8,16 @@ import { Request } from 'express';
 import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { IDriveException } from '../exception/video.exception';
+import { VideoListResponse } from '../dto/videoListResponse';
+import { videoListFixtureForTest } from '../fixture/video.fixture';
 
-describe('VideoController', () => {
+describe('VideoController 단위 테스트', () => {
   let controller: VideoController;
 
   const mockVideoService = {
     createVideo: jest.fn(),
     getPreSignedUrl: jest.fn(),
+    getAllVideosByMemberId: jest.fn(),
     getVideoDetail: jest.fn(),
     getVideoDetailByHash: jest.fn(),
     toggleVmideoStatus: jest.fn(),
@@ -121,6 +124,58 @@ describe('VideoController', () => {
       // then
       await expect(async () => {
         await controller.getPreSignedUrl(member, createPreSignedUrlRequest);
+      }).rejects.toThrow(ManipulatedTokenNotFiltered);
+    });
+  });
+
+  describe('getAllVideo', () => {
+    it('비디오 전체 조회 성공 시 VideoListResponse 객체 형태로 응답된다.', async () => {
+      //given
+      const videoList = videoListFixtureForTest;
+      const mockVideoListResponse = VideoListResponse.from(videoList);
+
+      //when
+      mockVideoService.getAllVideosByMemberId.mockResolvedValue(
+        mockVideoListResponse,
+      );
+
+      //then
+      const result = await controller.getAllVideo(mockReqWithMemberFixture);
+
+      expect(result).toBeInstanceOf(VideoListResponse);
+      expect(result).toBe(mockVideoListResponse);
+      expect(result.videoList).toBe(mockVideoListResponse.videoList);
+    });
+
+    it('비디오 전체 조회 시 회원이 저장한 비디오가 없으면 빈 배열을 반환한다.', async () => {
+      //given
+      const emptyVideoList = [];
+      const mockVideoListResponse = VideoListResponse.from(emptyVideoList);
+
+      //when
+      mockVideoService.getAllVideosByMemberId.mockResolvedValue(
+        mockVideoListResponse,
+      );
+
+      //then
+      const result = await controller.getAllVideo(mockReqWithMemberFixture);
+
+      expect(result).toBeInstanceOf(VideoListResponse);
+      expect(result.videoList).toStrictEqual(emptyVideoList);
+    });
+
+    it('비디오 전체 조회 시 회원 객체가 없으면 ManipulatedTokenNotFilteredException을 반환한다.', async () => {
+      // given
+      const member = { user: null } as unknown as Request;
+
+      // when
+      mockVideoService.getAllVideosByMemberId.mockRejectedValue(
+        new ManipulatedTokenNotFiltered(),
+      );
+
+      // then
+      await expect(async () => {
+        await controller.getAllVideo(member);
       }).rejects.toThrow(ManipulatedTokenNotFiltered);
     });
   });
