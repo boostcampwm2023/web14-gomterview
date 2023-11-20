@@ -7,11 +7,13 @@ import {
   ApiCookieAuth,
   ApiOperation,
   ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { createApiResponseOption } from '../../util/swagger.util';
 import { QuestionResponse } from '../dto/questionResponse';
 
-@Controller('question')
+@ApiTags('question')
+@Controller('/api/question')
 export class QuestionController {
   constructor(private questionService: QuestionService) {}
 
