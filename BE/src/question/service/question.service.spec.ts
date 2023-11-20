@@ -10,6 +10,7 @@ import { CategoryRepository } from '../../category/repository/category.repositor
 import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { CategoryNotFoundException } from '../../category/exception/category.exception';
 import { ContentNotFoundException } from '../exception/question.exception';
+import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 
 describe('QuestionService', () => {
   let service: QuestionService;
@@ -76,7 +77,9 @@ describe('QuestionService', () => {
 
     //then
     await expect(
-      service.createQuestion(createQuestionRequestFixture),
+      service.createQuestion(
+        new CreateQuestionRequest(categoryFixtureWithId.id, null),
+      ),
     ).rejects.toThrow(new ContentNotFoundException());
   });
 });

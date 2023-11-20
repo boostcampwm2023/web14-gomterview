@@ -6,9 +6,14 @@ import { Category } from '../category/entity/category';
 import { QuestionService } from './service/question.service';
 import { QuestionController } from './controller/question.controller';
 import { QuestionRepository } from './repository/question.repository';
+import { CategoryModule } from '../category/category.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Question, Category]), TokenModule],
+  imports: [
+    TypeOrmModule.forFeature([Question, Category]),
+    TokenModule,
+    CategoryModule,
+  ],
   providers: [QuestionService, QuestionRepository],
   controllers: [QuestionController],
 })
