@@ -2,6 +2,8 @@ import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
 import Icon from '@foundation/Icon/Icon';
 import Typography from '@foundation/Typography/Typography';
+import RecordStartModal from '../InterviewModal/RecordStartModal';
+import { useState } from 'react';
 
 type RecordControlButtonType = {
   isRecording: boolean;
@@ -14,26 +16,39 @@ const RecordControlButton: React.FC<RecordControlButtonType> = ({
   handleStartRecording,
   handleStopRecording,
 }) => {
+  const [recordStartModalIsOpen, setRecorStartModalIsOpen] =
+    useState<boolean>(false);
   return (
-    <div
-      css={css`
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 0.75rem;
-      `}
-      onClick={isRecording ? handleStopRecording : handleStartRecording}
-    >
-      {isRecording ? (
-        <Icon id="record-stop" width="2rem" height="2rem" />
-      ) : (
-        <Icon id="record-start" width="2rem" height="2rem" />
-      )}
-      <Typography variant={'body1'} color={theme.colors.text.white}>
-        {isRecording ? '녹화종료' : '녹화시작'}
-      </Typography>
-    </div>
+    <>
+      <div
+        css={css`
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 0.75rem;
+        `}
+        onClick={
+          isRecording
+            ? handleStopRecording
+            : () => setRecorStartModalIsOpen(true)
+        }
+      >
+        {isRecording ? (
+          <Icon id="record-stop" width="2rem" height="2rem" />
+        ) : (
+          <Icon id="record-start" width="2rem" height="2rem" />
+        )}
+        <Typography variant={'body1'} color={theme.colors.text.white}>
+          {isRecording ? '녹화종료' : '녹화시작'}
+        </Typography>
+      </div>
+      <RecordStartModal
+        isOpen={recordStartModalIsOpen}
+        handleStartRecording={handleStartRecording}
+        closeModal={() => setRecorStartModalIsOpen(false)}
+      />
+    </>
   );
 };
 export default RecordControlButton;
