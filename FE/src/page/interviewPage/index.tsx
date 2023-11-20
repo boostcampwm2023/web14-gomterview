@@ -11,6 +11,7 @@ import useIsAllSuccess from '@hooks/pages/Interview/usIsAllSuccess';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEY } from '@constants/queryKey';
+import { PATH } from '@constants/path';
 
 const InterviewPage: React.FC = () => {
   const navigate = useNavigate();
