@@ -8,10 +8,11 @@ import VideoSettingBox from './components/interviewSettingPage/VideoSettingBox';
 import RecordMethodBox from './components/interviewSettingPage/RecordMethodBox';
 import { PATH } from '@constants/path';
 import { QueryClient } from '@tanstack/react-query';
-import { createBrowserRouter, Outlet } from 'react-router-dom';
+import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 import myPageLoader from '@routes/myPageLoader';
 import invalidPathLoader from '@routes/invalidPathLoader';
 import rootLoader from '@routes/rootLoader';
+import React from 'react';
 
 const routes = ({ queryClient }: { queryClient: QueryClient }) => {
   return createBrowserRouter([
@@ -65,4 +66,10 @@ const routes = ({ queryClient }: { queryClient: QueryClient }) => {
   ]);
 };
 
-export default routes;
+const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
+  return (
+    <RouterProvider router={routes({queryClient: queryClient})} />
+  )
+}
+
+export default AppRouter;
