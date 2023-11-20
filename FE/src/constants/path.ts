@@ -14,6 +14,7 @@ export const PATH = {
   MYPAGE: `/${MYPAGE}`,
   INTERVIEW_VIDEO: `/${INTERVIEW}/:videoId`,
   INTERVIEW_VIDEO_PUBLIC: `/${INTERVIEW}/public/:videoHash`,
+  NOT_FOUND: `/404`,
 };
 
 export const SETTING_PATH = {

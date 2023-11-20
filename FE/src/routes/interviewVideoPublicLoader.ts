@@ -17,7 +17,7 @@ const interviewVideoPublicLoader = async ({
     queryFn: () => getVideoByHash(videoHash),
   });
   const queryState = queryClient.getQueryState(QUERY_KEY.VIDEO_HASH(videoHash));
-  return queryState?.data ? null : redirect(PATH.ROOT);
+  return queryState?.data ? null : redirect(PATH.NOT_FOUND);
 };
 
 export default interviewVideoPublicLoader;
