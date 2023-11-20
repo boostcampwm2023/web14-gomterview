@@ -12,6 +12,7 @@ const QuestionSelectionBox: React.FC<QuestionSelectionBoxProps> = ({
 }) => {
   return (
     <Box>
+      <Button onClick={onPrevClick}>이전</Button>
       여기에는 Question Box가 들어갑니다
       <Button onClick={onNextClick}>다음</Button>
     </Box>

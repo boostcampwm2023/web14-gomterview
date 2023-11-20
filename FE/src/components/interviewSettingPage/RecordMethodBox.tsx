@@ -12,7 +12,8 @@ const RecordMethodBox: React.FC<RecordMethodBoxProps> = ({
 }) => {
   return (
     <Box>
-      SaveMethodBox 입니다 <Button onClick={onNextClick}>다음</Button>
+      <Button onClick={onPrevClick}>이전</Button>SaveMethodBox 입니다{' '}
+      <Button onClick={onNextClick}>다음</Button>
     </Box>
   );
 };

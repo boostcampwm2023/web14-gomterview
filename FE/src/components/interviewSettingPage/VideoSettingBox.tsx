@@ -12,7 +12,9 @@ const VideoSettingBox: React.FC<VideoBoxProps> = ({
 }) => {
   return (
     <Box>
-      videoSettionBox 입니다 <Button onClick={onNextClick}>다음</Button>
+      <Button onClick={onPrevClick}>이전</Button>
+      videoSettionBox 입니다
+      <Button onClick={onNextClick}>다음</Button>
     </Box>
   );
 };

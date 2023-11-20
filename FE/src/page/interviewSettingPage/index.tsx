@@ -21,6 +21,7 @@ const InterviewSettingPage: React.FC = () => {
       path: SETTING_PATH.QUESTION,
       page: (
         <QuestionSelectionBox
+          onPrevClick={() => navigate('/')}
           onNextClick={() => changeSearchParams(SETTING_PATH.CONNECTION)}
         />
       ),
@@ -31,6 +32,7 @@ const InterviewSettingPage: React.FC = () => {
       path: SETTING_PATH.CONNECTION,
       page: (
         <VideoSettingBox
+          onPrevClick={() => changeSearchParams(SETTING_PATH.QUESTION)}
           onNextClick={() => changeSearchParams(SETTING_PATH.RECORD)}
         />
       ),
@@ -39,7 +41,12 @@ const InterviewSettingPage: React.FC = () => {
     {
       name: '녹화 설정',
       path: SETTING_PATH.RECORD,
-      page: <RecordMethodBox onNextClick={() => navigate('/interview')} />,
+      page: (
+        <RecordMethodBox
+          onPrevClick={() => changeSearchParams(SETTING_PATH.CONNECTION)}
+          onNextClick={() => navigate('/interview')}
+        />
+      ),
       state: useRecoilValue(recordSetting),
     },
   ];
@@ -50,7 +57,7 @@ const InterviewSettingPage: React.FC = () => {
   const changeSearchParams = (newPage: string) => {
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set('page', newPage);
-    setSearchParams(newSearchParams);
+    setSearchParams(newSearchParams, { replace: true });
   };
   // TODO: 로직이 더 길어지면 hook으로 분리해도 나쁘지 않을듯
 
