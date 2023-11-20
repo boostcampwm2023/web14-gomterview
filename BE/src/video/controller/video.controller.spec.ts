@@ -4,7 +4,7 @@ import { VideoService } from '../service/video.service';
 import { mockReqWithMemberFixture } from 'src/member/fixture/member.fixture';
 import { CreateVideoRequest } from '../dto/createVideoRequest';
 import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import {
@@ -20,6 +20,7 @@ import {
   videoListFixtureForTest,
 } from '../fixture/video.fixture';
 import { VideoDetailResponse } from '../dto/videoDetailResponse';
+import { VideoHashResponse } from '../dto/videoHashResponse';
 
 describe('VideoController 단위 테스트', () => {
   let controller: VideoController;
@@ -30,7 +31,7 @@ describe('VideoController 단위 테스트', () => {
     getAllVideosByMemberId: jest.fn(),
     getVideoDetail: jest.fn(),
     getVideoDetailByHash: jest.fn(),
-    toggleVmideoStatus: jest.fn(),
+    toggleVideoStatus: jest.fn(),
     deleteVideo: jest.fn(),
   };
 
@@ -262,10 +263,9 @@ describe('VideoController 단위 테스트', () => {
 
     it('비디오 상세 정보 조회 성공 시 비디오가 private이라면 VideoDetailResponse의 hash는 null로 설정되어 반환한다.', async () => {
       // given
-      const nullHash = null;
 
       // when
-      const mockVideoDetailWithHash = VideoDetailResponse.from(video, nullHash);
+      const mockVideoDetailWithHash = VideoDetailResponse.from(video, null);
       mockVideoService.getVideoDetail.mockResolvedValue(
         mockVideoDetailWithHash,
       );
@@ -275,7 +275,7 @@ describe('VideoController 단위 테스트', () => {
 
       expect(result).toBeInstanceOf(VideoDetailResponse);
       expect(result).toBe(mockVideoDetailWithHash);
-      expect(result.hash).toBe(nullHash);
+      expect(result.hash).toBeNull();
     });
 
     it('비디오 상세 정보 조회 시 회원 객체가 없으면 ManipulatedTokenNotFilteredException을 반환한다.', async () => {
@@ -332,6 +332,101 @@ describe('VideoController 단위 테스트', () => {
       // then
       await expect(async () => {
         await controller.getVideoDetail(1, mockReq);
+      }).rejects.toThrow(EncryptionException);
+    });
+  });
+
+  describe('toggleVideoStatus', () => {
+    const member = mockReqWithMemberFixture;
+
+    it('비디오 상태 토글 성공 시 VideoHashResponse 객체 형태로 응답된다.', async () => {
+      // given
+      const hash = 'fakeHash';
+      const mockVideoHashResponse = new VideoHashResponse(hash);
+
+      // when
+      mockVideoService.toggleVideoStatus.mockResolvedValue(
+        mockVideoHashResponse,
+      );
+
+      // then
+      const result = await controller.toggleVideoStatus(1, member);
+
+      expect(result).toBeInstanceOf(VideoHashResponse);
+      expect(result).toBe(mockVideoHashResponse);
+    });
+
+    it('비디오 상태 토글 성공 시 비디오의 상태가 private라면 VideoHashResponse의 hash는 null로 설정되어 반환한다.', async () => {
+      // given
+      const mockVideoHashResponse = new VideoHashResponse(null);
+
+      // when
+      mockVideoService.toggleVideoStatus.mockResolvedValue(
+        mockVideoHashResponse,
+      );
+
+      // then
+      const result = await controller.toggleVideoStatus(1, member);
+
+      expect(result).toBeInstanceOf(VideoHashResponse);
+      expect(result).toBe(mockVideoHashResponse);
+      expect(result.hash).toBeNull();
+    });
+
+    it('비디오 상세 정보 조회 시 회원 객체가 없으면 ManipulatedTokenNotFilteredException을 반환한다.', async () => {
+      // given
+      const nullMember = { user: null } as unknown as Request;
+
+      // when
+      mockVideoService.toggleVideoStatus.mockRejectedValue(
+        new ManipulatedTokenNotFiltered(),
+      );
+
+      // then
+      await expect(async () => {
+        await controller.toggleVideoStatus(1, nullMember);
+      }).rejects.toThrow(ManipulatedTokenNotFiltered);
+    });
+
+    it('비디오 상세 정보 조회 시 해당 비디오가 삭제되었다면 VideoNotFoundException를 반환한다.', async () => {
+      // given
+
+      // when
+      mockVideoService.toggleVideoStatus.mockRejectedValue(
+        new VideoNotFoundException(),
+      );
+
+      // then
+      await expect(async () => {
+        await controller.toggleVideoStatus(1, member);
+      }).rejects.toThrow(VideoNotFoundException);
+    });
+
+    it('비디오 상세 정보 조회 시 다른 회원의 비디오를 조회하려 한다면 VideoAccessForbiddenException를 반환한다.', async () => {
+      // given
+
+      // when
+      mockVideoService.toggleVideoStatus.mockRejectedValue(
+        new VideoAccessForbiddenException(),
+      );
+
+      // then
+      await expect(async () => {
+        await controller.toggleVideoStatus(1, member);
+      }).rejects.toThrow(VideoAccessForbiddenException);
+    });
+
+    it('비디오 상세 정보 조회 시 암호화에 실패하면 EncryptionException을 반환한다.', async () => {
+      // given
+
+      // when
+      mockVideoService.toggleVideoStatus.mockRejectedValue(
+        new EncryptionException(),
+      );
+
+      // then
+      await expect(async () => {
+        await controller.toggleVideoStatus(1, member);
       }).rejects.toThrow(EncryptionException);
     });
   });
