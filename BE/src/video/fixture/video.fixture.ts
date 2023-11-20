@@ -31,3 +31,11 @@ export const videoListFixtureForTest = [
   new Video(1, 1, '루이뷔통통튀기네', 'https://test.com', true),
   new Video(1, 4, '루이뷔통통튀기네', 'https://foo.com', false),
 ];
+
+export const videoFixtureForTest = new Video(
+  1,
+  1,
+  '루이뷔통통튀기네',
+  'https://test.com',
+  true,
+);

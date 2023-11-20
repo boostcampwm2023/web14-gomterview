@@ -7,9 +7,19 @@ import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception
 import { Request } from 'express';
 import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
-import { IDriveException } from '../exception/video.exception';
+import {
+  DecryptionException,
+  EncryptionException,
+  IDriveException,
+  VideoAccessForbiddenException,
+  VideoNotFoundException,
+} from '../exception/video.exception';
 import { VideoListResponse } from '../dto/videoListResponse';
-import { videoListFixtureForTest } from '../fixture/video.fixture';
+import {
+  videoFixtureForTest,
+  videoListFixtureForTest,
+} from '../fixture/video.fixture';
+import { VideoDetailResponse } from '../dto/videoDetailResponse';
 
 describe('VideoController 단위 테스트', () => {
   let controller: VideoController;
@@ -132,9 +142,9 @@ describe('VideoController 단위 테스트', () => {
     it('비디오 전체 조회 성공 시 VideoListResponse 객체 형태로 응답된다.', async () => {
       //given
       const videoList = videoListFixtureForTest;
-      const mockVideoListResponse = VideoListResponse.from(videoList);
 
       //when
+      const mockVideoListResponse = VideoListResponse.from(videoList);
       mockVideoService.getAllVideosByMemberId.mockResolvedValue(
         mockVideoListResponse,
       );
@@ -177,6 +187,55 @@ describe('VideoController 단위 테스트', () => {
       await expect(async () => {
         await controller.getAllVideo(member);
       }).rejects.toThrow(ManipulatedTokenNotFiltered);
+    });
+  });
+
+  describe('getVideoDetailByHash', () => {
+    const hash = 'fakeHash';
+
+    it('해시로 비디오 조회 성공 시 VideoDetailResponse 객체 형태로 응답된다.', async () => {
+      // given
+      const video = videoFixtureForTest;
+
+      // when
+      const mockVideoDetailWithHash = VideoDetailResponse.from(video, hash);
+      mockVideoService.getVideoDetailByHash.mockResolvedValue(
+        mockVideoDetailWithHash,
+      );
+
+      // then
+      const result = await controller.getVideoDetailByHash(hash);
+
+      expect(result).toBeInstanceOf(VideoDetailResponse);
+      expect(result).toBe(mockVideoDetailWithHash);
+    });
+
+    it('해시로 비디오 조회 시 비디오가 private이라면 VideoAccessForbiddenException을 반환한다.', async () => {
+      // given
+
+      // when
+      mockVideoService.getVideoDetailByHash.mockRejectedValue(
+        new VideoAccessForbiddenException(),
+      );
+
+      // then
+      await expect(async () => {
+        await controller.getVideoDetailByHash(hash);
+      }).rejects.toThrow(VideoAccessForbiddenException);
+    });
+
+    it('해시로 비디오 조회 시 복호화에 실패하면 DecryptionException을 반환한다.', async () => {
+      // given
+
+      // when
+      mockVideoService.getVideoDetailByHash.mockRejectedValue(
+        new DecryptionException(),
+      );
+
+      // then
+      await expect(async () => {
+        await controller.getVideoDetailByHash(hash);
+      }).rejects.toThrow(DecryptionException);
     });
   });
 });
