@@ -56,12 +56,16 @@ const InterviewFooter: React.FC<InterviewFooterProps> = ({
         handleInterviewExit={() => setInterviewExitModalIsOpen(true)}
       />
       <AnswerToggleButton handleAnswerToggle={handleScript} />
-      <RecordControlButton
-        isRecording={isRecording}
-        handleStartRecording={handleStartRecording}
-        handleStopRecording={handleStopRecording}
-      />
-      <NextButton handleNext={handleNext} />
+      {recordedBlobs.length === 0 && (
+        <RecordControlButton
+          isRecording={isRecording}
+          handleStartRecording={handleStartRecording}
+          handleStopRecording={handleStopRecording}
+        />
+      )}
+      {!isRecording && recordedBlobs.length > 0 && (
+        <NextButton handleNext={handleNext} />
+      )}
       <InterviewExitModal
         isOpen={interviewExitModalIsOpen}
         closeModal={() => setInterviewExitModalIsOpen((prev) => !prev)}
