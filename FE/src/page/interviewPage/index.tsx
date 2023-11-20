@@ -7,8 +7,19 @@ import InterviewFooter from '@/components/interviewPage/InterviewFooter/Intervie
 import InterviewIntroModal from '@components/interviewPage/InterviewModal/InterviewIntroModal';
 import InterviewTimeOverModal from '@components/interviewPage/InterviewModal/InterviewTimeOverModal';
 import InterviewFinishModal from '@components/interviewPage/InterviewModal/InterviewFinishModal';
+import useIsAllSuccess from '@hooks/pages/Interview/usIsAllSuccess';
+import { useNavigate } from 'react-router-dom';
 
 const InterviewPage: React.FC = () => {
+  const navigate = useNavigate();
+  const isAllSuccess = useIsAllSuccess();
+
+  useEffect(() => {
+    if (!isAllSuccess) {
+      navigate(PATH.ROOT);
+    }
+  }, [isAllSuccess, navigate]);
+
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [isScriptInView, setIsScriptInView] = useState(false);
@@ -28,7 +39,7 @@ const InterviewPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!stream) {
+    if (!stream && isAllSuccess) {
       void getMedia();
     }
 
@@ -37,7 +48,7 @@ const InterviewPage: React.FC = () => {
         stream.getTracks().forEach((track) => track.stop());
       }
     };
-  }, [stream]);
+  }, [isAllSuccess, stream]);
 
   const getMedia = async () => {
     try {
@@ -119,8 +130,8 @@ const InterviewPage: React.FC = () => {
       <InterviewMain
         mirrorVideoRef={mirrorVideoRef}
         isScriptInView={isScriptInView}
-        question="이것은 예시 질문입니다."
-        answer="이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!"
+        question={currentQuestion ? currentQuestion.questionContent : ''}
+        answer={currentQuestion ? currentQuestion.answerContent : ''}
       />
       <InterviewFooter
         isRecording={isRecording}
