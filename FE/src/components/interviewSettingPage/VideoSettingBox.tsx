@@ -1,6 +1,19 @@
 import Box from '@foundation/Box/Box';
+import Button from '@foundation/Button/Button';
 
-const VideoSettingBox: React.FC = () => {
-  return <Box>videoSettionBox 입니다</Box>;
+type VideoBoxProps = {
+  onNextClick?: () => void;
+  onPrevClick?: () => void;
+};
+
+const VideoSettingBox: React.FC<VideoBoxProps> = ({
+  onNextClick,
+  onPrevClick,
+}) => {
+  return (
+    <Box>
+      videoSettionBox 입니다 <Button onClick={onNextClick}>다음</Button>
+    </Box>
+  );
 };
 export default VideoSettingBox;
