@@ -19,7 +19,8 @@
       "@styles/*": ["./src/styles/*"],
       "@assets/*": ["./src/assets/*"],
       "@atoms/*": ["./src/atoms/*"],
-      "@hooks/*": ["./src/hooks/*"]
+      "@hooks/*": ["./src/hooks/*"],
+      "@routes/*": ["./src/routes/*"]
     }
   },
   "include": ["src"]

@@ -3,15 +3,12 @@ import { PATH } from '@constants/path';
 import Button from '@foundation/Button/Button';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
+import { useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEY } from '@constants/queryKey';
 
-type StartButtonProps = {
-  text?: string;
-};
+const InterviewStartButton: React.FC = () => {
+  const data = useQueryClient().getQueryState(QUERY_KEY.MEMBER);
 
-const InterviewStartButton: React.FC<StartButtonProps> = ({
-  text = '비회원으로 시작하기',
-}) => {
-  // 로그인 여부에 따라 버튼의 문구가 달라집니다.
   return (
     <div>
       <Link to={PATH.INTERVIEW_SETTING}>
@@ -23,6 +20,7 @@ const InterviewStartButton: React.FC<StartButtonProps> = ({
             border-radius: 3.125rem;
             background: ${theme.gradient.linear.blue};
             box-shadow: ${theme.shadow.buttonLargeDefaultShadow};
+            width: 100%;
             z-index: 2;
 
             &:hover {
@@ -31,7 +29,7 @@ const InterviewStartButton: React.FC<StartButtonProps> = ({
             }
           `}
         >
-          {text}
+          {data ? '면접 연습 시작하기' : '비회원으로 시작하기'}
         </Button>
       </Link>
     </div>
