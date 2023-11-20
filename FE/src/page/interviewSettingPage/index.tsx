@@ -5,10 +5,44 @@ import SettingProgressBar from '@/components/interviewSettingPage/SettingProgres
 import Description from '@/components/interviewSettingPage/Description';
 import Button from '@/components/foundation/Button/Button';
 import { PATH } from '@constants/path';
+import { useRecoilState } from 'recoil';
+import { questionSetting } from '@atoms/interviewSetting';
+import { useEffect } from 'react';
 
 const InterviewSettingPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [question, setQuestion] = useRecoilState(questionSetting);
+
+  useEffect(() => {
+    // 더 많은 초기 질문 데이터
+    const initialQuestions = [
+      {
+        categoryId: 1,
+        questionId: 1,
+        questionContent: '첫 번째 질문',
+        answerId: 1,
+        answerContent: '첫 번째 답변',
+      },
+      {
+        categoryId: 2,
+        questionId: 2,
+        questionContent: '두 번째 질문',
+        answerId: 2,
+        answerContent: '두 번째 답변',
+      },
+      {
+        categoryId: 3,
+        questionId: 3,
+        questionContent: '세 번째 질문',
+        answerId: 3,
+        answerContent: '세 번째 답변',
+      },
+    ];
+
+    setQuestion({ isSuccess: true, selectedData: initialQuestions });
+  }, [setQuestion]);
 
   function navigateNext() {
     switch (location.pathname) {
