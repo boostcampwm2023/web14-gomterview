@@ -50,7 +50,7 @@ const VideoPlayerFrame: React.FC<VideoItemProps> = ({
           `}
         >
           <Typography variant="body3" color={theme.colors.text.subStrong}>
-            {dayjs(Number(createdAt)).format('YYYY-MM-DD')}
+            {dayjs(Number(createdAt)).format('YYYY.MM.DD')}
           </Typography>
         </div>
       </div>
