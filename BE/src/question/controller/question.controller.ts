@@ -1,6 +1,7 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { QuestionService } from '../service/question.service';
 import { CreateQuestionRequest } from '../dto/createQuestionRequest';
+import { Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBody,
@@ -11,6 +12,7 @@ import {
 } from '@nestjs/swagger';
 import { createApiResponseOption } from '../../util/swagger.util';
 import { QuestionResponse } from '../dto/questionResponse';
+import { Member } from '../../member/entity/member';
 
 @ApiTags('question')
 @Controller('/api/question')
@@ -29,7 +31,11 @@ export class QuestionController {
   )
   async createCustomQuestion(
     @Body() createQuestionRequest: CreateQuestionRequest,
+    @Req() req: Request,
   ) {
-    return await this.questionService.createQuestion(createQuestionRequest);
+    return await this.questionService.createQuestion(
+      createQuestionRequest,
+      req.user as Member,
+    );
   }
 }
