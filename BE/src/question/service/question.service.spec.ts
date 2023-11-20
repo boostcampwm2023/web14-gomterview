@@ -11,6 +11,16 @@ import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { CategoryNotFoundException } from '../../category/exception/category.exception';
 import { ContentNotFoundException } from '../exception/question.exception';
 import { CreateQuestionRequest } from '../dto/createQuestionRequest';
+import { createIntegrationTestModule } from '../../util/test.util';
+import { QuestionModule } from '../question.module';
+import { CategoryModule } from '../../category/category.module';
+import { Question } from '../entity/question';
+import { Category } from '../../category/entity/category';
+import { INestApplication } from '@nestjs/common';
+import { Member } from '../../member/entity/member';
+import { MemberModule } from '../../member/member.module';
+import { MemberRepository } from '../../member/repository/member.repository';
+import { memberFixture } from '../../member/fixture/member.fixture';
 
 describe('QuestionService', () => {
   let service: QuestionService;
@@ -81,5 +91,48 @@ describe('QuestionService', () => {
         new CreateQuestionRequest(categoryFixtureWithId.id, null),
       ),
     ).rejects.toThrow(new ContentNotFoundException());
+  });
+});
+
+describe('QuestionService 통합 테스트', () => {
+  let app: INestApplication;
+  let questionService: QuestionService;
+  let categoryRepository: CategoryRepository;
+  let questionRepository: QuestionRepository;
+  let memberRepository: MemberRepository;
+
+  beforeAll(async () => {
+    const modules = [QuestionModule, CategoryModule, MemberModule];
+    const entities = [Question, Category, Member];
+
+    const moduleFixture = await createIntegrationTestModule(modules, entities);
+    app = moduleFixture.createNestApplication();
+    await app.init();
+
+    questionService = moduleFixture.get<QuestionService>(QuestionService);
+    categoryRepository =
+      moduleFixture.get<CategoryRepository>(CategoryRepository);
+    questionRepository =
+      moduleFixture.get<QuestionRepository>(QuestionRepository);
+    memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
+  });
+
+  beforeEach(async () => {
+    await categoryRepository.query('delete from Question');
+    await categoryRepository.query('delete from Category');
+    await categoryRepository.query('delete from Member');
+  });
+
+  it('새로운 질문을 저장할 때 QuestionResponse객체를 반환한다.', async () => {
+    //given
+    await memberRepository.save(memberFixture);
+    await categoryRepository.save(categoryFixtureWithId);
+
+    //when
+
+    //then
+    await expect(
+      questionService.createQuestion(createQuestionRequestFixture),
+    ).resolves.toEqual(QuestionResponse.from(questionFixture));
   });
 });

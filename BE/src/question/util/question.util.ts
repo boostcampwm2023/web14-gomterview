@@ -3,7 +3,7 @@ import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 
 export const questionFixture = new Question(
-  100,
+  1,
   'tester',
   categoryFixtureWithId,
   null,
