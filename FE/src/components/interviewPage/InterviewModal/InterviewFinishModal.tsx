@@ -5,6 +5,8 @@ import Typography from '@foundation/Typography/Typography';
 import Button from '@foundation/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '@constants/path';
+import { useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEY } from '@constants/queryKey';
 
 type InterviewFinishModalProps = {
   isOpen: boolean;
@@ -16,7 +18,7 @@ const InterviewFinishModal: React.FC<InterviewFinishModalProps> = ({
   closeModal,
 }) => {
   const navigate = useNavigate();
-  const isLogin = false;
+  const isLogin = useQueryClient().getQueryState(QUERY_KEY.MEMBER);
 
   return (
     <Modal isOpen={isOpen} closeModal={closeModal}>
