@@ -9,10 +9,13 @@ import InterviewTimeOverModal from '@components/interviewPage/InterviewModal/Int
 import useInterviewFlow from '@hooks/pages/Interview/useInterviewFlow';
 import useIsAllSuccess from '@hooks/pages/Interview/usIsAllSuccess';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEY } from '@constants/queryKey';
 
 const InterviewPage: React.FC = () => {
   const navigate = useNavigate();
   const isAllSuccess = useIsAllSuccess();
+  const isLogin = useQueryClient().getQueryState(QUERY_KEY.MEMBER);
 
   useEffect(() => {
     if (!isAllSuccess) {
@@ -100,17 +103,28 @@ const InterviewPage: React.FC = () => {
 
   const handleDownload = () => {
     const blob = new Blob(recordedBlobs, { type: selectedMimeType });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.href = url;
-    a.download = 'recorded.webm';
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => {
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-    }, 100);
+    if (isLogin) {
+      // login 관련 api 처리를 수행합니다.
+    } else {
+      // 비회원의 경우 수행할 과정입니다.
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = `${
+        currentQuestion ? currentQuestion.questionContent : 'recorded'
+      }.webm`;
+
+      document.body.appendChild(a);
+      a.click();
+
+      setTimeout(() => {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      }, 100);
+    }
+
+    setRecordedBlobs([]);
   };
 
   const getSupportedMimeTypes = () => {
