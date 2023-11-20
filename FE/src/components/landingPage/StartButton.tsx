@@ -11,7 +11,7 @@ const InterviewStartButton: React.FC = () => {
 
   return (
     <div>
-      <Link to={PATH.INTERVIEW_SETTING}>
+      <Link to={PATH.MYPAGE}>
         <Button
           size="lg"
           css={css`

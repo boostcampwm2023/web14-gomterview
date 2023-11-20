@@ -1,6 +1,6 @@
 import Box from '@foundation/Box/Box';
 import { css } from '@emotion/react';
-import VideoItem from '@common/VideoItem/VideoItem';
+import VideoItem from '@components/myPage/VideoItem/VideoItem';
 import Thumbnail from '@components/myPage/Thumbnail';
 import CardCover from '@foundation/CardCover/CardCover';
 
