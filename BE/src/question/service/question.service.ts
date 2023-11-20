@@ -8,6 +8,7 @@ import { Question } from '../entity/question';
 import { Category } from '../../category/entity/category';
 import { QuestionResponse } from '../dto/questionResponse';
 import { Member } from '../../member/entity/member';
+import { NeedToFindByCategoryIdException } from '../exception/question.exception';
 
 @Injectable()
 export class QuestionService {
@@ -24,7 +25,7 @@ export class QuestionService {
       createQuestionRequest.categoryId,
     );
 
-    this.validateCreateRequest(category, createQuestionRequest.content);
+    this.validateCreateRequest(category);
 
     if (!category.isOwnedBy(member)) {
       throw new UnauthorizedException();
@@ -37,7 +38,17 @@ export class QuestionService {
     return QuestionResponse.from(question);
   }
 
-  private validateCreateRequest(category: Category, content: string) {
+  async findAllByCategory(categoryId: number) {
+    if (isEmpty(categoryId)) {
+      throw new NeedToFindByCategoryIdException();
+    }
+
+    const questions =
+      await this.questionRepository.findByCategoryId(categoryId);
+    return questions.map(QuestionResponse.from);
+  }
+
+  private validateCreateRequest(category: Category) {
     if (isEmpty(category)) {
       throw new CategoryNotFoundException();
     }
