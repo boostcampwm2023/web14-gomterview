@@ -430,4 +430,67 @@ describe('VideoController 단위 테스트', () => {
       }).rejects.toThrow(EncryptionException);
     });
   });
+
+  describe('deleteVideo', () => {
+    const member = mockReqWithMemberFixture;
+    const response = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    } as unknown as Response;
+
+    it('비디오 삭제 성공 시 undefined를 반환한다.', async () => {
+      //given
+
+      //when
+      mockVideoService.deleteVideo.mockResolvedValue(undefined);
+
+      //then
+      await expect(
+        controller.deleteVideo(1, member, response),
+      ).resolves.toBeUndefined();
+    });
+
+    it('비디오 삭제 시 회원 객체가 없으면 ManipulatedTokenNotFilteredException을 반환한다.', async () => {
+      //given
+      const nullMember = { user: null } as unknown as Request;
+
+      //when
+      mockVideoService.deleteVideo.mockRejectedValue(
+        new ManipulatedTokenNotFiltered(),
+      );
+
+      //then
+      await expect(async () => {
+        await controller.deleteVideo(1, nullMember, response);
+      }).rejects.toThrow(ManipulatedTokenNotFiltered);
+    });
+
+    it('비디오 삭제 시 해당 비디오가 이미 삭제되었다면 VideoNotFoundException를 반환한다.', async () => {
+      // given
+
+      // when
+      mockVideoService.deleteVideo.mockRejectedValue(
+        new VideoNotFoundException(),
+      );
+
+      // then
+      await expect(async () => {
+        await controller.deleteVideo(1, member, response);
+      }).rejects.toThrow(VideoNotFoundException);
+    });
+
+    it('비디오 삭제 시 다른 회원의 비디오를 조회하려 한다면 VideoAccessForbiddenException를 반환한다.', async () => {
+      // given
+
+      // when
+      mockVideoService.deleteVideo.mockRejectedValue(
+        new VideoAccessForbiddenException(),
+      );
+
+      // then
+      await expect(async () => {
+        await controller.deleteVideo(1, member, response);
+      }).rejects.toThrow(VideoAccessForbiddenException);
+    });
+  });
 });

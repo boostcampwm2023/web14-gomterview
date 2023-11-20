@@ -152,7 +152,10 @@ export class VideoController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    await this.videoService.deleteVideo(videoId, req.user as Member);
-    res.status(204).send();
+    return this.videoService
+      .deleteVideo(videoId, req.user as Member)
+      .then(() => {
+        res.status(204).send();
+      });
   }
 }
