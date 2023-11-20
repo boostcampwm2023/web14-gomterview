@@ -4,7 +4,7 @@ import { getVideoByHash } from '@/apis/video';
 
 const useVideoHashQuery = (hash: string) => {
   return useQuery({
-    queryKey: QUERY_KEY.VIDEO,
+    queryKey: QUERY_KEY.VIDEO_HASH(hash),
     queryFn: () => getVideoByHash(hash),
   });
 };
