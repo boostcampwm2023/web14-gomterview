@@ -1,24 +1,29 @@
 import InterviewVideoPageLayout from '@components/interviewVideoPage/InterviewVideoPageLayout';
-import VideoPlayer from '@components/interviewVideoPage/VideoPlayer';
+import PrivateVideoPlayer from '@components/interviewVideoPage/PrivateVideoPlayer';
 import Typography from '@foundation/Typography/Typography';
 import Button from '@foundation/Button/Button';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { PATH } from '@constants/path';
+import useVideoItemQuery from '@hooks/queries/video/useVideoItemQuery';
+import LoadingBounce from '@common/Loading/LoadingBounce';
+import CenterLayout from '@components/layout/CenterLayout';
 
 const InterviewVideoPage: React.FC = () => {
-  const navigate = useNavigate();
-  const { videoId: videoParam } = useParams();
+  const { videoId } = useParams();
+  const { data, isFetching } = useVideoItemQuery(Number(videoId));
 
-  const dummyData = {
-    videoName: '비디오 이름',
-    date: '2001.07.17',
-    url: 'https://u2e0.c18.e2-4.dev/videos/%EB%A3%A8%EC%9D%B4%EB%B7%94%ED%86%B5%ED%86%B5%ED%8A%80%EA%B8%B0%EB%84%A4_test_07ab3e8a-1a0a-453f-8d60-afacb57b0075.webm',
-  };
-
+  //TODO 현재 api에는 유저이름이 없어서 추가 논의해야함
   return (
     <InterviewVideoPageLayout>
-      <Typography variant="title3">{dummyData.videoName}</Typography>
-      <VideoPlayer {...dummyData} />
+      <Typography variant="title3">곰터뷰님의 면접 연습 영상입니다.</Typography>
+      {isFetching ? (
+        //TODO 로딩화면 일단 임시로 처리
+        <CenterLayout>
+          <LoadingBounce />
+        </CenterLayout>
+      ) : (
+        <PrivateVideoPlayer {...data!} />
+      )}
       <Link to={PATH.INTERVIEW_SETTING}>
         <Button size="lg">면접 시작하기</Button>
       </Link>

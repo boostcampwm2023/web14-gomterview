@@ -1,25 +1,29 @@
-import InterviewVideoPageLayout from '@components/interviewVideoPage/InterviewVideoPageLayout';
 import Typography from '@foundation/Typography/Typography';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
+import { PATH } from '@constants/path';
+import Button from '@foundation/Button/Button';
+import InterviewVideoPublicPageLayout from '@components/interviewVideoPublicPage/InterviewVideoPublicPageLayout';
+import PublicVideoPlayer from '@components/interviewVideoPublicPage/PublicVideoPlayer';
+import { useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEY } from '@constants/queryKey';
+import { VideoItemResDto } from '@/types/video';
 
 const InterviewVideoPublicPage: React.FC = () => {
-  const navigate = useNavigate();
-  const { videoId: videoParam } = useParams();
+  const { videoHash = '' } = useParams();
+  const data = useQueryClient().getQueryData<VideoItemResDto>(
+    QUERY_KEY.VIDEO_HASH(videoHash)
+  );
 
-  const dummyData = {
-    videoName: '비디오 이름',
-    date: '2001.07.17',
-    url: 'https://u2e0.c18.e2-4.dev/videos/%EB%A3%A8%EC%9D%B4%EB%B7%94%ED%86%B5%ED%86%B5%ED%8A%80%EA%B8%B0%EB%84%A4_test_07ab3e8a-1a0a-453f-8d60-afacb57b0075.webm',
-  };
+  if (!data) return <Navigate to={PATH.NOT_FOUND} />;
 
   return (
-    <InterviewVideoPageLayout>
-      <Typography variant="title3">{dummyData.videoName}</Typography>
-      {/*<VideoPlayer {...dummyData} />*/}
-      {/*<Link to={PATH.INTERVIEW_SETTING}>*/}
-      {/*  <Button size="lg">면접 시작하기</Button>*/}
-      {/*</Link>*/}
-    </InterviewVideoPageLayout>
+    <InterviewVideoPublicPageLayout>
+      <Typography variant="title3">곰터뷰님의 면접 연습 영상입니다.</Typography>
+      <PublicVideoPlayer {...data} />
+      <Link to={PATH.INTERVIEW_SETTING}>
+        <Button size="lg">면접 시작하기</Button>
+      </Link>
+    </InterviewVideoPublicPageLayout>
   );
 };
 
