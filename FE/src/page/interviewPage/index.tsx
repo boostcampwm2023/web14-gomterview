@@ -6,7 +6,7 @@ import InterviewMain from '@/components/interviewPage/InterviewMain/InterviewMai
 import InterviewFooter from '@/components/interviewPage/InterviewFooter/InterviewFooter';
 import InterviewIntroModal from '@components/interviewPage/InterviewModal/InterviewIntroModal';
 import InterviewTimeOverModal from '@components/interviewPage/InterviewModal/InterviewTimeOverModal';
-import InterviewFinishModal from '@components/interviewPage/InterviewModal/InterviewFinishModal';
+import useInterviewFlow from '@hooks/pages/Interview/useInterviewFlow';
 import useIsAllSuccess from '@hooks/pages/Interview/usIsAllSuccess';
 import { useNavigate } from 'react-router-dom';
 
