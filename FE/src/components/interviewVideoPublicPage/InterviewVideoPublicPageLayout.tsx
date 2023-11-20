@@ -13,7 +13,8 @@ const InterviewVideoPublicPageLayout: React.FC<
     <div>
       <div
         css={css`
-          padding: 1.5rem;
+          display: flex;
+          padding: 2rem 2rem 0 2rem;
         `}
       >
         <Logo />
