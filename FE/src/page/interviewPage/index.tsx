@@ -125,9 +125,11 @@ const InterviewPage: React.FC = () => {
       <InterviewFooter
         isRecording={isRecording}
         recordedBlobs={recordedBlobs}
+        isLastQuestion={isLastQuestion}
         handleStartRecording={handleStartRecording}
         handleStopRecording={handleStopRecording}
         handleScript={() => setIsScriptInView((prev) => !prev)}
+        handleNextQuestion={getNextQuestion}
         handleDownload={handleDownload}
       />
       <InterviewIntroModal
