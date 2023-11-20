@@ -1,66 +1,53 @@
 import InterviewSettingPageLayout from '@/components/interviewSettingPage/InterviewSettingPageLayout';
-import { css } from '@emotion/react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import SettingProgressBar from '@/components/interviewSettingPage/SettingProgressBar';
-import Description from '@/components/interviewSettingPage/Description';
-import Button from '@/components/foundation/Button/Button';
-import { PATH } from '@constants/path';
+import { useSearchParams } from 'react-router-dom';
+import QuestionSelectionBox from '@/components/interviewSettingPage/QustionSelectionBox';
+import { PATH } from '@/constants/path';
+import VideoSettingBox from '@/components/interviewSettingPage/VideoSettingBox';
+import RecordMethodBox from '@/components/interviewSettingPage/RecordMethodBox';
+import StepPage from '@/components/foundation/StepPages';
 
 const InterviewSettingPage: React.FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const data = [
+    {
+      name: '문제 선택',
+      path: 'question',
+      page: (
+        <QuestionSelectionBox
+          onNextClick={() => changeSearchParams(PATH.CONNECTION)}
+        />
+      ),
+    },
+    {
+      name: '화면과 소리설정',
+      path: PATH.CONNECTION,
+      page: <VideoSettingBox />,
+    },
+    {
+      name: '녹화 설정',
+      path: PATH.RECORD,
+      page: <RecordMethodBox />,
+    },
+  ];
 
-  function navigateNext() {
-    switch (location.pathname) {
-      case PATH.INTERVIEW_SETTING:
-        navigate(PATH.INTERVIEW_SETTING_CONNECTION);
-        break;
-      case PATH.INTERVIEW_SETTING_CONNECTION:
-        navigate(PATH.INTERVIEW_SETTING_RECORD);
-        break;
-      case PATH.INTERVIEW_SETTING_RECORD:
-        navigate(PATH.INTERVIEW);
-        break;
-      default:
-        navigate(PATH.ROOT);
-        break;
-    }
-  }
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  function navigatePrev() {
-    switch (location.pathname) {
-      case PATH.INTERVIEW_SETTING:
-        navigate(PATH.ROOT);
-        break;
-      case PATH.INTERVIEW_SETTING_CONNECTION:
-        navigate(PATH.INTERVIEW_SETTING);
-        break;
-      case PATH.INTERVIEW_SETTING_RECORD:
-        navigate(PATH.INTERVIEW_SETTING_CONNECTION);
-        break;
-      default:
-        navigate(PATH.ROOT);
-        break;
-    }
-  }
+  const changeSearchParams = (newPage: string) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set('page', newPage);
+    setSearchParams(newSearchParams);
+  };
+
+  const currentPage = searchParams.get('page');
 
   return (
     <InterviewSettingPageLayout>
-      <SettingProgressBar />
-      <Description />
-      <Outlet />
-      <div
-        css={css`
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border: 1px solid red;
-          gap: 1.25rem;
-        `}
-      >
-        <Button onClick={navigatePrev}>이전</Button>
-        <Button onClick={navigateNext}>다음</Button>
-      </div>
+      <StepPage page={currentPage}>
+        {data.map((item) => (
+          <StepPage.step key={item.path} path={item.path} page={currentPage}>
+            {item.page}
+          </StepPage.step>
+        ))}
+      </StepPage>
     </InterviewSettingPageLayout>
   );
 };
