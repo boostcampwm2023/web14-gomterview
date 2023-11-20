@@ -11,6 +11,7 @@ import myPageLoader from '@routes/myPageLoader';
 import invalidPathLoader from '@routes/invalidPathLoader';
 import rootLoader from '@routes/rootLoader';
 import InterviewVideoPublicPage from '@page/interviewVideoPublicPage';
+import InterviewVideoPublicLoader from '@routes/interviewVideoPublicLoader';
 
 const routes = ({ queryClient }: { queryClient: QueryClient }) => {
   return createBrowserRouter([
@@ -43,6 +44,11 @@ const routes = ({ queryClient }: { queryClient: QueryClient }) => {
         {
           path: PATH.INTERVIEW_VIDEO_PUBLIC,
           element: <InterviewVideoPublicPage />,
+          loader: ({ params }) =>
+            InterviewVideoPublicLoader({
+              params: params,
+              queryClient: queryClient,
+            }),
         },
         {
           path: '*',
