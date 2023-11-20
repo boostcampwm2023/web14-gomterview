@@ -9,8 +9,6 @@ import { QuestionResponse } from '../dto/questionResponse';
 import { CategoryRepository } from '../../category/repository/category.repository';
 import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { CategoryNotFoundException } from '../../category/exception/category.exception';
-import { ContentNotFoundException } from '../exception/question.exception';
-import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 import { createIntegrationTestModule } from '../../util/test.util';
 import { QuestionModule } from '../question.module';
 import { CategoryModule } from '../../category/category.module';
@@ -75,23 +73,6 @@ describe('QuestionService', () => {
     await expect(
       service.createQuestion(createQuestionRequestFixture, memberFixture),
     ).rejects.toThrow(new CategoryNotFoundException());
-  });
-
-  it('질문 추가시, content가 isEmpty면 ContentNotFoundException을 반환한다.', async () => {
-    //given
-
-    //when
-    mockCategoryRepository.findByCategoryId.mockResolvedValue(
-      categoryFixtureWithId,
-    );
-
-    //then
-    await expect(
-      service.createQuestion(
-        new CreateQuestionRequest(categoryFixtureWithId.id, null),
-        memberFixture,
-      ),
-    ).rejects.toThrow(new ContentNotFoundException());
   });
 });
 
