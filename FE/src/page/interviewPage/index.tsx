@@ -20,6 +20,8 @@ const InterviewPage: React.FC = () => {
     }
   }, [isAllSuccess, navigate]);
 
+  const { currentQuestion, getNextQuestion, isLastQuestion } =
+    useInterviewFlow();
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [isScriptInView, setIsScriptInView] = useState(false);
