@@ -26,6 +26,12 @@ export const customCategoryFixture = new Category(
   null,
   new Date(),
 );
+export const categoryFixtureWithId = new Category(
+  100,
+  '나만의 질문',
+  memberFixture,
+  new Date(),
+);
 
 export const categoryListFixture = [
   new Category(1, 'BE', memberFixture, new Date()),
