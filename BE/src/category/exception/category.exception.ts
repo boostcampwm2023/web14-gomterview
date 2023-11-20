@@ -8,7 +8,7 @@ class CategoryNameEmptyException extends HttpException {
 
 class CategoryNotFoundException extends HttpException {
   constructor() {
-    super('카테고리자 존재하지 않습니다.', 404);
+    super('카테고리가 존재하지 않습니다.', 404);
   }
 }
 

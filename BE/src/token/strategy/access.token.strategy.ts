@@ -12,19 +12,31 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private memberRepository: MemberRepository) {
     super({
       jwtFromRequest: (req: Request) => {
-        if (!req.cookies || !req.cookies['accessToken']) {
-          return '';
+        if (
+          (!req.cookies || !req.cookies['accessToken']) &&
+          !req.get('cookie')
+        ) {
+          throw new InvalidTokenException();
         }
-        return req.cookies['accessToken'].replace('Bearer ', '');
+        return this.getCookieValue(req);
       },
       secretOrKey: process.env.JWT_SECRET,
     });
   }
 
   async validate(payload: TokenPayload) {
+    console.log(`토큰 파싱 결과 : ${payload}`);
     const id = payload.id;
     const user = await this.memberRepository.findById(id);
     if (!user) throw new InvalidTokenException(); // 회원이 조회가 되지 않았다면, 탈퇴한 회원의 token을 사용한 것이므로 유효하지 않은 토큰을 사용한 것임
     return user;
+  }
+
+  private getCookieValue(req: Request) {
+    if (req.cookies && req.cookies['accessToken']) {
+      return req.cookies['accessToken'].replace('Bearer ', '');
+    }
+
+    return req.get('cookie').split('Bearer ')[1];
   }
 }
