@@ -1,41 +1,39 @@
+import { Question } from '@/types/question';
 import { atom } from 'recoil';
 
-type PageStatus = 'pending' | 'success' | 'error';
 type RecordMethod = 'local' | 'idrive' | 'none' | undefined;
 
-type SelectedData = {
-  id: number;
-  content: string;
-  answer: string;
+type SelectedQuestion = Question & {
+  categoryId: number;
 };
 
 export const questionSetting = atom<{
-  status: PageStatus;
-  selectedData: SelectedData[];
+  isSuccess: boolean;
+  selectedData: SelectedQuestion[];
 }>({
   key: 'questionSetting',
   default: {
-    status: 'pending',
+    isSuccess: false,
     selectedData: [],
   },
 });
 
 export const videoSetting = atom<{
-  status: PageStatus;
+  isSuccess: boolean;
 }>({
   key: 'videoSetting',
   default: {
-    status: 'pending',
+    isSuccess: false,
   },
 });
 
 export const recordSetting = atom<{
-  status: PageStatus;
+  isSuccess: boolean;
   method: RecordMethod;
 }>({
   key: 'recordSetting',
   default: {
-    status: 'pending',
+    isSuccess: false,
     method: undefined,
   },
 });

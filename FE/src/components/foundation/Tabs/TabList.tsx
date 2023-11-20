@@ -1,24 +1,24 @@
-import { SyntheticEvent, useContext } from 'react';
-import { TabContext } from '@foundation/Tabs/index';
+import { SyntheticEvent } from 'react';
 import { css } from '@emotion/react';
 import Tab from '@foundation/Tabs/Tab';
 import enhanceChildElement from '@/utils/enhanceChildElement';
+import { HTMLElementTypes } from '@/types/utils';
 
 type TabListProps = {
   children: React.ReactNode;
   name?: string;
   direction?: 'row' | 'column';
   gap?: string;
-  onChange: (e: SyntheticEvent, value: string) => void;
-};
+  onTabChange: (e: SyntheticEvent, value: string) => void;
+} & HTMLElementTypes<HTMLDivElement>;
 
 const TabList: React.FC<TabListProps> = ({
   children,
   direction = 'row',
   gap = '0.5rem',
+  onTabChange,
+  ...args
 }) => {
-  const { handleTabChange } = useContext(TabContext);
-
   return (
     <div
       css={css`
@@ -26,11 +26,12 @@ const TabList: React.FC<TabListProps> = ({
         flex-direction: ${direction};
         gap: ${gap};
       `}
+      {...args}
     >
       {enhanceChildElement({
         children,
         component: Tab,
-        newProps: { onClick: handleTabChange },
+        newProps: { onTabChange: onTabChange },
       })}
     </div>
   );

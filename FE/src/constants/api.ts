@@ -17,4 +17,6 @@ export const API = {
   ANSWER: '/answer',
   ANSWER_DEFAULT: '/answer/default',
   ANSWER_ID: (id?: Id) => `/answer/${id ?? ':id'}`,
-};
+  CATEGORY: '/category',
+  CATEGORY_ID: (id?: Id) => `/category/${id ?? ':id'}`,
+} as const;
