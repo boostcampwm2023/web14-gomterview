@@ -46,10 +46,7 @@ export class VideoController {
     @Req() req: Request,
     @Body() createVideoRequest: CreateVideoRequest,
   ) {
-    return this.videoService.createVideo(
-      req.user as Member,
-      createVideoRequest,
-    );
+    await this.videoService.createVideo(req.user as Member, createVideoRequest);
   }
 
   @Post('/pre-signed')
@@ -152,10 +149,7 @@ export class VideoController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    return this.videoService
-      .deleteVideo(videoId, req.user as Member)
-      .then(() => {
-        res.status(204).send();
-      });
+    await this.videoService.deleteVideo(videoId, req.user as Member);
+    res.status(204).send();
   }
 }
