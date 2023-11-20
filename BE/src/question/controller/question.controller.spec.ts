@@ -7,7 +7,7 @@ import {
   createQuestionRequestFixture,
   questionFixture,
 } from '../util/question.util';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { TokenModule } from '../../token/token.module';
 import { Member } from '../../member/entity/member';
 import { Token } from '../../token/entity/token';
@@ -25,6 +25,8 @@ import * as request from 'supertest';
 import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { Question } from '../entity/question';
 import { Category } from '../../category/entity/category';
+import { CreateQuestionRequest } from '../dto/createQuestionRequest';
+import * as cookieParser from 'cookie-parser';
 
 describe('QuestionController', () => {
   let controller: QuestionController;
@@ -84,6 +86,8 @@ describe('QuestionController 통합테스트', () => {
     );
 
     app = moduleFixture.createNestApplication();
+    app.use(cookieParser());
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
 
     categoryRepository =
@@ -110,6 +114,22 @@ describe('QuestionController 통합테스트', () => {
       .set('Cookie', [`accessToken=${token}`])
       .send(createQuestionRequestFixture)
       .expect(201)
+      .then(() => {});
+    //then
+  });
+
+  it('content가 isEmpty면 예외처리한다.', async () => {
+    //given
+    const token = await authService.login(oauthRequestFixture);
+    await categoryRepository.save(categoryFixtureWithId);
+
+    //when
+    const agent = request.agent(app.getHttpServer());
+    await agent
+      .post('/api/question')
+      .set('Cookie', [`accessToken=${token}`])
+      .send(new CreateQuestionRequest(categoryFixtureWithId.id, null))
+      .expect(400)
       .then(() => {});
     //then
   });

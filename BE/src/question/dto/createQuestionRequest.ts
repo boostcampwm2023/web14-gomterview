@@ -1,5 +1,4 @@
-import { IsNotEmpty, IsString } from '@nestjs/class-validator';
-import { IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateQuestionRequest {
   @IsNotEmpty()

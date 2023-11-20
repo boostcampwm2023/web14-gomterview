@@ -34,8 +34,9 @@ import {
 import { CategoryListResponse } from '../dto/categoryListResponse';
 import { TokenService } from '../../token/service/token.service';
 import { CategoryRepository } from '../repository/category.repository';
-import { UnauthorizedException } from '@nestjs/common';
+import { UnauthorizedException, ValidationPipe } from '@nestjs/common';
 import { MemberRepository } from '../../member/repository/member.repository';
+import * as cookieParser from 'cookie-parser';
 
 describe('CategoryController', () => {
   let controller: CategoryController;
@@ -229,6 +230,8 @@ describe('CategoryController 통합테스트', () => {
     const moduleFixture = await createIntegrationTestModule(modules, entities);
 
     app = moduleFixture.createNestApplication();
+    app.use(cookieParser());
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
 
     authService = moduleFixture.get<AuthService>(AuthService);
