@@ -3,6 +3,7 @@ const SETTING = 'setting';
 const CONNECTION = 'connection';
 const RECORD = 'record';
 const MYPAGE = 'mypage';
+const QUESTION = 'question';
 
 export const PATH = {
   ROOT: '/',
@@ -11,7 +12,11 @@ export const PATH = {
   INTERVIEW_SETTING_CONNECTION: `/${INTERVIEW}/${SETTING}/${CONNECTION}`,
   INTERVIEW_SETTING_RECORD: `/${INTERVIEW}/${SETTING}/${RECORD}`,
   MYPAGE: `/${MYPAGE}`,
+  INTERVIEW_VIDEO: `/${INTERVIEW}/:videoId`,
+};
+
+export const SETTING_PATH = {
   CONNECTION: `${CONNECTION}`,
   RECORD: `${RECORD}`,
-  INTERVIEW_VIDEO: `/${INTERVIEW}/:videoId`,
+  QUESTION: `${QUESTION}`,
 };
