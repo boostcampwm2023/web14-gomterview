@@ -6,6 +6,7 @@ import NextButton from './NextButton';
 import InterviewExitModal from '@components/interviewPage/InterviewModal/InterviewExitModal';
 import { useState } from 'react';
 import { theme } from '@styles/theme';
+import InterviewFinishModal from '@components/interviewPage/InterviewModal/InterviewFinishModal';
 
 type InterviewFooterProps = {
   isRecording: boolean;
@@ -58,6 +59,10 @@ const InterviewFooter: React.FC<InterviewFooterProps> = ({
       <InterviewExitModal
         isOpen={interviewExitModalIsOpen}
         closeModal={() => setInterviewExitModalIsOpen((prev) => !prev)}
+      />
+      <InterviewFinishModal
+        isOpen={InterviewFinishModalIsOpen}
+        closeModal={() => setInterviewFinishModalIsOpen(false)}
       />
     </div>
   );

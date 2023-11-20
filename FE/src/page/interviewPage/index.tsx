@@ -138,10 +138,6 @@ const InterviewPage: React.FC = () => {
         isOpen={false}
         closeModal={() => console.log('모달을 종료합니다.')}
       />
-      <InterviewFinishModal
-        isOpen={false}
-        closeModal={() => console.log('모달을 종료합니다.')}
-      />
     </InterviewPageLayout>
   );
 };
