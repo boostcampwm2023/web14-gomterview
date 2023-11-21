@@ -8,6 +8,7 @@ import { PATH } from '@constants/path';
 import { useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEY } from '@constants/queryKey';
 import Confetti from 'react-confetti';
+import { useEffect, useState } from 'react';
 
 type InterviewFinishModalProps = {
   isOpen: boolean;
@@ -22,10 +23,32 @@ const InterviewFinishModal: React.FC<InterviewFinishModalProps> = ({
 
   const isLogin = useQueryClient().getQueryState(QUERY_KEY.MEMBER);
 
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <>
       <Modal isOpen={isOpen} closeModal={closeModal}>
-        {isOpen && <Confetti />}
+        {isOpen && (
+          <Confetti width={windowSize.width} height={windowSize.height} />
+        )}
         <Modal.content>
           <div
             css={css`
