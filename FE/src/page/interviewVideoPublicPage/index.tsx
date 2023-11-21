@@ -1,12 +1,11 @@
-import Typography from '@foundation/Typography/Typography';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { PATH } from '@constants/path';
-import Button from '@foundation/Button/Button';
 import InterviewVideoPublicPageLayout from '@components/interviewVideoPublicPage/InterviewVideoPublicPageLayout';
 import PublicVideoPlayer from '@components/interviewVideoPublicPage/PublicVideoPlayer';
 import { useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEY } from '@constants/queryKey';
 import { VideoItemResDto } from '@/types/video';
+import StartButton from '@common/StartButton/StartButton';
 
 const InterviewVideoPublicPage: React.FC = () => {
   const { videoHash = '' } = useParams();
@@ -18,11 +17,8 @@ const InterviewVideoPublicPage: React.FC = () => {
 
   return (
     <InterviewVideoPublicPageLayout>
-      <Typography variant="title3">곰터뷰님의 면접 연습 영상입니다.</Typography>
       <PublicVideoPlayer {...data} />
-      <Link to={PATH.INTERVIEW_SETTING}>
-        <Button size="lg">면접 시작하기</Button>
-      </Link>
+      <StartButton />
     </InterviewVideoPublicPageLayout>
   );
 };
