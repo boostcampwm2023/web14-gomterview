@@ -70,10 +70,7 @@ const InterviewFooter: React.FC<InterviewFooterProps> = ({
         isOpen={interviewExitModalIsOpen}
         closeModal={() => setInterviewExitModalIsOpen((prev) => !prev)}
       />
-      <InterviewFinishModal
-        isOpen={InterviewFinishModalIsOpen}
-        closeModal={() => setInterviewFinishModalIsOpen(false)}
-      />
+      <InterviewFinishModal isOpen={InterviewFinishModalIsOpen} />
     </div>
   );
 };

@@ -12,12 +12,10 @@ import useWindowSize from '@hooks/pages/Interview/useWindowSize';
 
 type InterviewFinishModalProps = {
   isOpen: boolean;
-  closeModal: () => void;
 };
 
 const InterviewFinishModal: React.FC<InterviewFinishModalProps> = ({
   isOpen,
-  closeModal,
 }) => {
   const navigate = useNavigate();
   const isLogin = useQueryClient().getQueryState(QUERY_KEY.MEMBER);
@@ -26,6 +24,12 @@ const InterviewFinishModal: React.FC<InterviewFinishModalProps> = ({
   return (
     <>
       <Modal
+        isOpen={isOpen}
+        closeModal={() => {
+          if (isLogin) navigate(PATH.MYPAGE);
+          else navigate(PATH.ROOT);
+        }}
+      >
         {isOpen && (
           <Confetti width={windowSize.width} height={windowSize.height} />
         )}
