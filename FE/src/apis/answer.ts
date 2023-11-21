@@ -9,7 +9,13 @@ export const getQuestionAnswer = async (questionId: number) => {
   });
 };
 
-export const postAnswer = async (questionId: number, content: string) => {
+export const postAnswer = async ({
+  questionId,
+  content,
+}: {
+  questionId: number;
+  content: string;
+}) => {
   return await getAPIResponseData({
     method: 'post',
     url: API.ANSWER,

@@ -8,15 +8,22 @@ import {
 
 const useQuestionAnswerMutation = (
   questionId: number,
-  customAnswer: string,
-  options?: UseMutationOptions<unknown, Error, void, unknown>
+  options?: UseMutationOptions<
+    unknown,
+    Error,
+    {
+      questionId: number;
+      content: string;
+    },
+    unknown
+  >
 ) => {
   const queryClient = useQueryClient();
 
   const { onSuccess, ...leftOption } = options || {};
 
   return useMutation({
-    mutationFn: () => postAnswer(questionId, customAnswer),
+    mutationFn: postAnswer,
     onSuccess: (...args) => {
       void queryClient.invalidateQueries({
         queryKey: QUERY_KEY.QUESTION_ANSWER(questionId),
