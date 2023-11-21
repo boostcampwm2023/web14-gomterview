@@ -8,7 +8,11 @@ import { Question } from '../entity/question';
 import { Category } from '../../category/entity/category';
 import { QuestionResponse } from '../dto/questionResponse';
 import { Member } from '../../member/entity/member';
-import { NeedToFindByCategoryIdException } from '../exception/question.exception';
+import {
+  NeedToFindByCategoryIdException,
+  QuestionNotFoundException,
+} from '../exception/question.exception';
+import { validateManipulatedToken } from '../../util/token.util';
 
 @Injectable()
 export class QuestionService {
@@ -25,7 +29,7 @@ export class QuestionService {
       createQuestionRequest.categoryId,
     );
 
-    this.validateCreateRequest(category);
+    this.validateCategory(category);
 
     if (!category.isOwnedBy(member)) {
       throw new UnauthorizedException();
@@ -48,7 +52,34 @@ export class QuestionService {
     return questions.map(QuestionResponse.from);
   }
 
-  private validateCreateRequest(category: Category) {
+  async deleteQuestionById(questionId: number, member: Member) {
+    validateManipulatedToken(member);
+
+    const question = await this.questionRepository.findById(questionId);
+
+    if (isEmpty(question)) {
+      throw new QuestionNotFoundException();
+    }
+
+    await this.validateMembersCategoryById(question.category.id, member);
+
+    await this.questionRepository.remove(question);
+  }
+
+  private async validateMembersCategoryById(
+    categoryId: number,
+    member: Member,
+  ) {
+    const category = await this.categoryRepository.findByCategoryId(categoryId);
+
+    this.validateCategory(category);
+
+    if (!category.isOwnedBy(member)) {
+      throw new UnauthorizedException();
+    }
+  }
+
+  private validateCategory(category: Category) {
     if (isEmpty(category)) {
       throw new CategoryNotFoundException();
     }
