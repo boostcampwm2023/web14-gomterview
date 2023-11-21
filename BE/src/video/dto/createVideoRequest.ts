@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Matches,
+} from 'class-validator';
 import { createPropertyOption } from 'src/util/swagger.util';
 
 export class CreateVideoRequest {
@@ -34,6 +40,9 @@ export class CreateVideoRequest {
   @ApiProperty(createPropertyOption('03:29', '비디오 길이', String))
   @IsString()
   @IsNotEmpty()
+  @Matches(/^\d{2}:\d{2}$/, {
+    message: `유효하지 않은 비디오 길이 형태입니다. "mm:ss" 형태로 요청해주세요.`,
+  })
   videoLength: string;
 
   constructor(
