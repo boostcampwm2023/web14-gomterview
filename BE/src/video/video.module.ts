@@ -6,10 +6,17 @@ import { Video } from './entity/video';
 import { VideoRepository } from './repository/video.repository';
 import { QuestionRepository } from 'src/question/repository/question.repository';
 import { Question } from 'src/question/entity/question';
+import { Member } from 'src/member/entity/member';
+import { MemberRepository } from 'src/member/repository/member.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Video, Question])],
+  imports: [TypeOrmModule.forFeature([Video, Question, Member])],
   controllers: [VideoController],
-  providers: [VideoService, VideoRepository, QuestionRepository],
+  providers: [
+    VideoService,
+    VideoRepository,
+    QuestionRepository,
+    MemberRepository,
+  ],
 })
 export class VideoModule {}

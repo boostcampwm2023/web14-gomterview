@@ -29,3 +29,9 @@ export class DecryptionException extends HttpException {
     super('복호화 중 에러가 발생했습니다.', 500);
   }
 }
+
+export class VideoOfWithdrawnMemberException extends HttpException {
+  constructor() {
+    super('탈퇴한 회원의 비디오를 조회할 수 없습니다.', 404);
+  }
+}

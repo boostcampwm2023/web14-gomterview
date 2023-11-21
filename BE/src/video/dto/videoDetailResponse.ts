@@ -6,6 +6,9 @@ export class VideoDetailResponse {
   @ApiProperty(createPropertyOption(1, '비디오의 ID', Number))
   readonly id: number;
 
+  @ApiProperty(createPropertyOption('foobar', '회원의 닉네임', String))
+  private nickname: string;
+
   @ApiProperty(
     createPropertyOption('https://example-video.com', '비디오의 URL', String),
   )
@@ -33,21 +36,24 @@ export class VideoDetailResponse {
 
   constructor(
     id: number,
+    nickname: string,
     url: string,
     videoName: string,
     hash: string,
     createdAt: number,
   ) {
     this.id = id;
+    this.nickname = nickname;
     this.url = url;
     this.videoName = videoName;
     this.hash = hash;
     this.createdAt = createdAt;
   }
 
-  static from(video: Video, hash: string | null) {
+  static from(video: Video, nickname: string, hash: string | null) {
     return new VideoDetailResponse(
       video.id,
+      nickname,
       video.url,
       video.name,
       hash,
