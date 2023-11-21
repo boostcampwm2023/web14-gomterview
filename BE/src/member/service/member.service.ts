@@ -28,11 +28,13 @@ export class MemberService {
   ) {}
   async getNameForInterview(req: Request) {
     if (!req.cookies['accessToken'])
-      return new MemberNicknameResponse(`면접자`);
+      return new MemberNicknameResponse(this.getNameWithPrefix(`면접자`));
 
     // TODO: 추후에 랜덤 Prefix 생성할 필요가 있음
     return new MemberNicknameResponse(
-      (await this.getMemberByToken(getTokenValue(req))).nickname,
+      this.getNameWithPrefix(
+        (await this.getMemberByToken(getTokenValue(req))).nickname,
+      ),
     );
   }
 
