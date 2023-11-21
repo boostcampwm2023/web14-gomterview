@@ -4,21 +4,7 @@ import { TokenService } from 'src/token/service/token.service';
 import { MemberRepository } from '../repository/member.repository';
 import { getTokenValue } from 'src/util/token.util';
 import { MemberNicknameResponse } from '../dto/memberNicknameResponse';
-
-const companies = [
-  '네이버',
-  '카카오',
-  '라인',
-  '쿠팡',
-  '우아한형제들',
-  '당근',
-  '비바리퍼블리카',
-  'Microsoft',
-  'Apple',
-  'Google',
-  'Amazon',
-  'Meta',
-];
+import { companies } from 'src/constant/constant';
 
 @Injectable()
 export class MemberService {
