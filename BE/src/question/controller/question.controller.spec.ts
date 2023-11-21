@@ -18,6 +18,8 @@ import { MemberRepository } from '../../member/repository/member.repository';
 import { AuthModule } from '../../auth/auth.module';
 import { AuthService } from '../../auth/service/auth.service';
 import {
+  memberFixture,
+  memberFixturesOAuthRequest,
   mockReqWithMemberFixture,
   oauthRequestFixture,
 } from '../../member/fixture/member.fixture';
@@ -28,12 +30,15 @@ import { Category } from '../../category/entity/category';
 import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 import * as cookieParser from 'cookie-parser';
 import { QuestionResponseList } from '../dto/questionResponseList';
+import { QuestionRepository } from '../repository/question.repository';
+import { response } from 'express';
 
 describe('QuestionController', () => {
   let controller: QuestionController;
   const mockQuestionService = {
     createQuestion: jest.fn(),
     findAllByCategory: jest.fn(),
+    deleteQuestionById: jest.fn(),
   };
   const mockTokenService = {};
 
@@ -83,6 +88,18 @@ describe('QuestionController', () => {
       QuestionResponseList.of([QuestionResponse.from(questionFixture)]),
     );
   });
+
+  it('질문 삭제시 undefined를 반환한다.', async () => {
+    //given
+
+    //when
+    mockQuestionService.findAllByCategory.mockResolvedValue(undefined);
+
+    //then
+    await expect(
+      controller.deleteQuestionById(1, mockReqWithMemberFixture, response),
+    ).resolves.toBeUndefined();
+  });
 });
 
 describe('QuestionController 통합테스트', () => {
@@ -90,6 +107,7 @@ describe('QuestionController 통합테스트', () => {
   let categoryRepository: CategoryRepository;
   let memberRepository: MemberRepository;
   let authService: AuthService;
+  let questionRepository: QuestionRepository;
 
   beforeAll(async () => {
     const modules = [QuestionModule, TokenModule, AuthModule];
@@ -109,12 +127,8 @@ describe('QuestionController 통합테스트', () => {
       moduleFixture.get<CategoryRepository>(CategoryRepository);
     memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
     authService = moduleFixture.get<AuthService>(AuthService);
-  });
-
-  beforeEach(async () => {
-    await categoryRepository.query('delete from Question');
-    await categoryRepository.query('delete from Category');
-    await categoryRepository.query('delete from Member');
+    questionRepository =
+      moduleFixture.get<QuestionRepository>(QuestionRepository);
   });
 
   it('쿠키를 가지고 질문 생성을 요청하면 201코드와 생성된 질문의 Response가 반환된다.', async () => {
@@ -147,5 +161,79 @@ describe('QuestionController 통합테스트', () => {
       .expect(400)
       .then(() => {});
     //then
+  });
+
+  describe('질문 삭제', () => {
+    it('Member객체와 questionId를 입력했을 때 정상적으로 질문을 삭제한다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(categoryFixtureWithId, member),
+      );
+      const question = await questionRepository.save(
+        Question.of(category, null, 'tester'),
+      );
+
+      //when & then
+      const token = await authService.login(memberFixturesOAuthRequest);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .delete(`/api/question?questionId=${question.id}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(204);
+    });
+
+    it('토큰이 없으면 UnauthorizedException을 발생시킨다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(categoryFixtureWithId, member),
+      );
+      const question = await questionRepository.save(
+        Question.of(category, null, 'tester'),
+      );
+
+      //when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent.delete(`/api/question?questionId=${question.id}`).expect(401);
+    });
+
+    it('questionId로 질문이 조회되지 않으면 QuestionNotFoundException을 발생시킨다.', async () => {
+      //given
+
+      //when & then
+      const token = await authService.login(memberFixturesOAuthRequest);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .delete(`/api/question?questionId=${1000}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(404);
+    });
+
+    it('question의 카테고리를 조회했을 때 카테고리가 Member의 카테고리가 아니라면 권한 없음을 발생시킨다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(categoryFixtureWithId, member),
+      );
+      const question = await questionRepository.save(
+        Question.of(category, null, 'tester'),
+      );
+
+      //when & then
+      const token = await authService.login(oauthRequestFixture);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .delete(`/api/question?questionId=${question.id}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(401);
+    });
+  });
+
+  afterEach(async () => {
+    await categoryRepository.query('delete from token');
+    await categoryRepository.query('delete from Question');
+    await categoryRepository.query('delete from Category');
+    await categoryRepository.query('delete from Member');
   });
 });
