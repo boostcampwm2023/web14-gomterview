@@ -1,6 +1,21 @@
 import Box from '@foundation/Box/Box';
+import Button from '../foundation/Button/Button';
 
-const QuestionSelectionBox: React.FC = () => {
-  return <Box>여기에는 Question Box가 들어갑니다</Box>;
+type QuestionSelectionBoxProps = {
+  onNextClick?: () => void;
+  onPrevClick?: () => void;
+};
+
+const QuestionSelectionBox: React.FC<QuestionSelectionBoxProps> = ({
+  onNextClick,
+  onPrevClick,
+}) => {
+  return (
+    <Box>
+      <Button onClick={onPrevClick}>이전</Button>
+      여기에는 Question Box가 들어갑니다
+      <Button onClick={onNextClick}>다음</Button>
+    </Box>
+  );
 };
 export default QuestionSelectionBox;
