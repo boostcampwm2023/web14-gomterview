@@ -16,7 +16,7 @@ const RecordControlButton: React.FC<RecordControlButtonType> = ({
   handleStartRecording,
   handleStopRecording,
 }) => {
-  const [recordStartModalIsOpen, setRecorStartModalIsOpen] =
+  const [recordStartModalIsOpen, setRecordStartModalIsOpen] =
     useState<boolean>(false);
   return (
     <>
@@ -31,7 +31,7 @@ const RecordControlButton: React.FC<RecordControlButtonType> = ({
         onClick={
           isRecording
             ? handleStopRecording
-            : () => setRecorStartModalIsOpen(true)
+            : () => setRecordStartModalIsOpen(true)
         }
       >
         {isRecording ? (
@@ -46,7 +46,7 @@ const RecordControlButton: React.FC<RecordControlButtonType> = ({
       <RecordStartModal
         isOpen={recordStartModalIsOpen}
         handleStartRecording={handleStartRecording}
-        closeModal={() => setRecorStartModalIsOpen(false)}
+        closeModal={() => setRecordStartModalIsOpen(false)}
       />
     </>
   );
