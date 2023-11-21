@@ -65,7 +65,7 @@ describe('VideoController 단위 테스트', () => {
       mockVideoService.createVideo.mockResolvedValue(undefined);
 
       //then
-      await expect(
+      expect(
         controller.createVideo(mockReqWithMemberFixture, createVideoRequest),
       ).resolves.toBeUndefined();
     });
@@ -80,9 +80,9 @@ describe('VideoController 단위 테스트', () => {
       );
 
       //then
-      await expect(async () => {
-        await controller.createVideo(member, createVideoRequest);
-      }).rejects.toThrow(ManipulatedTokenNotFiltered);
+      expect(
+        controller.createVideo(member, createVideoRequest),
+      ).rejects.toThrow(ManipulatedTokenNotFiltered);
     });
   });
 
@@ -115,12 +115,12 @@ describe('VideoController 단위 테스트', () => {
       mockVideoService.getPreSignedUrl.mockRejectedValue(new IDriveException());
 
       // then
-      await expect(async () => {
-        await controller.getPreSignedUrl(
+      expect(
+        controller.getPreSignedUrl(
           mockReqWithMemberFixture,
           createPreSignedUrlRequest,
-        );
-      }).rejects.toThrow(IDriveException);
+        ),
+      ).rejects.toThrow(IDriveException);
     });
 
     it('Pre-Signed URL 생성 시 회원 객체가 없으면 ManipulatedTokenNotFilteredException을 반환한다.', async () => {
@@ -133,9 +133,9 @@ describe('VideoController 단위 테스트', () => {
       );
 
       // then
-      await expect(async () => {
-        await controller.getPreSignedUrl(member, createPreSignedUrlRequest);
-      }).rejects.toThrow(ManipulatedTokenNotFiltered);
+      expect(
+        controller.getPreSignedUrl(member, createPreSignedUrlRequest),
+      ).rejects.toThrow(ManipulatedTokenNotFiltered);
     });
   });
 
@@ -185,9 +185,9 @@ describe('VideoController 단위 테스트', () => {
       );
 
       // then
-      await expect(async () => {
-        await controller.getAllVideo(member);
-      }).rejects.toThrow(ManipulatedTokenNotFiltered);
+      expect(controller.getAllVideo(member)).rejects.toThrow(
+        ManipulatedTokenNotFiltered,
+      );
     });
   });
 
@@ -220,9 +220,9 @@ describe('VideoController 단위 테스트', () => {
       );
 
       // then
-      await expect(async () => {
-        await controller.getVideoDetailByHash(hash);
-      }).rejects.toThrow(VideoAccessForbiddenException);
+      expect(controller.getVideoDetailByHash(hash)).rejects.toThrow(
+        VideoAccessForbiddenException,
+      );
     });
 
     it('해시로 비디오 조회 시 복호화에 실패하면 DecryptionException을 반환한다.', async () => {
@@ -234,9 +234,9 @@ describe('VideoController 단위 테스트', () => {
       );
 
       // then
-      await expect(async () => {
-        await controller.getVideoDetailByHash(hash);
-      }).rejects.toThrow(DecryptionException);
+      expect(controller.getVideoDetailByHash(hash)).rejects.toThrow(
+        DecryptionException,
+      );
     });
   });
 
@@ -288,9 +288,9 @@ describe('VideoController 단위 테스트', () => {
       );
 
       // then
-      await expect(async () => {
-        await controller.getVideoDetail(1, member);
-      }).rejects.toThrow(ManipulatedTokenNotFiltered);
+      expect(controller.getVideoDetail(1, member)).rejects.toThrow(
+        ManipulatedTokenNotFiltered,
+      );
     });
 
     it('비디오 상세 정보 조회 시 해당 비디오가 삭제되었다면 VideoNotFoundException를 반환한다.', async () => {
@@ -302,9 +302,9 @@ describe('VideoController 단위 테스트', () => {
       );
 
       // then
-      await expect(async () => {
-        await controller.getVideoDetail(1, mockReq);
-      }).rejects.toThrow(VideoNotFoundException);
+      expect(controller.getVideoDetail(1, mockReq)).rejects.toThrow(
+        VideoNotFoundException,
+      );
     });
 
     it('비디오 상세 정보 조회 시 다른 회원의 비디오를 조회하려 한다면 VideoAccessForbiddenException를 반환한다.', async () => {
@@ -316,9 +316,9 @@ describe('VideoController 단위 테스트', () => {
       );
 
       // then
-      await expect(async () => {
-        await controller.getVideoDetail(1, mockReq);
-      }).rejects.toThrow(VideoAccessForbiddenException);
+      expect(controller.getVideoDetail(1, mockReq)).rejects.toThrow(
+        VideoAccessForbiddenException,
+      );
     });
 
     it('비디오 상세 정보 조회 시 암호화에 실패하면 EncryptionException을 반환한다.', async () => {
@@ -330,9 +330,9 @@ describe('VideoController 단위 테스트', () => {
       );
 
       // then
-      await expect(async () => {
-        await controller.getVideoDetail(1, mockReq);
-      }).rejects.toThrow(EncryptionException);
+      expect(controller.getVideoDetail(1, mockReq)).rejects.toThrow(
+        EncryptionException,
+      );
     });
   });
 
@@ -383,9 +383,9 @@ describe('VideoController 단위 테스트', () => {
       );
 
       // then
-      await expect(async () => {
-        await controller.toggleVideoStatus(1, nullMember);
-      }).rejects.toThrow(ManipulatedTokenNotFiltered);
+      expect(controller.toggleVideoStatus(1, nullMember)).rejects.toThrow(
+        ManipulatedTokenNotFiltered,
+      );
     });
 
     it('비디오 상세 정보 조회 시 해당 비디오가 삭제되었다면 VideoNotFoundException를 반환한다.', async () => {
@@ -397,9 +397,9 @@ describe('VideoController 단위 테스트', () => {
       );
 
       // then
-      await expect(async () => {
-        await controller.toggleVideoStatus(1, member);
-      }).rejects.toThrow(VideoNotFoundException);
+      expect(controller.toggleVideoStatus(1, member)).rejects.toThrow(
+        VideoNotFoundException,
+      );
     });
 
     it('비디오 상세 정보 조회 시 다른 회원의 비디오를 조회하려 한다면 VideoAccessForbiddenException를 반환한다.', async () => {
@@ -411,9 +411,9 @@ describe('VideoController 단위 테스트', () => {
       );
 
       // then
-      await expect(async () => {
-        await controller.toggleVideoStatus(1, member);
-      }).rejects.toThrow(VideoAccessForbiddenException);
+      expect(controller.toggleVideoStatus(1, member)).rejects.toThrow(
+        VideoAccessForbiddenException,
+      );
     });
 
     it('비디오 상세 정보 조회 시 암호화에 실패하면 EncryptionException을 반환한다.', async () => {
@@ -425,9 +425,9 @@ describe('VideoController 단위 테스트', () => {
       );
 
       // then
-      await expect(async () => {
-        await controller.toggleVideoStatus(1, member);
-      }).rejects.toThrow(EncryptionException);
+      expect(controller.toggleVideoStatus(1, member)).rejects.toThrow(
+        EncryptionException,
+      );
     });
   });
 
@@ -445,7 +445,7 @@ describe('VideoController 단위 테스트', () => {
       mockVideoService.deleteVideo.mockResolvedValue(undefined);
 
       //then
-      await expect(
+      expect(
         controller.deleteVideo(1, member, response),
       ).resolves.toBeUndefined();
     });
@@ -460,9 +460,9 @@ describe('VideoController 단위 테스트', () => {
       );
 
       //then
-      await expect(async () => {
-        await controller.deleteVideo(1, nullMember, response);
-      }).rejects.toThrow(ManipulatedTokenNotFiltered);
+      expect(controller.deleteVideo(1, nullMember, response)).rejects.toThrow(
+        ManipulatedTokenNotFiltered,
+      );
     });
 
     it('비디오 삭제 시 해당 비디오가 이미 삭제되었다면 VideoNotFoundException를 반환한다.', async () => {
@@ -474,9 +474,9 @@ describe('VideoController 단위 테스트', () => {
       );
 
       // then
-      await expect(async () => {
-        await controller.deleteVideo(1, member, response);
-      }).rejects.toThrow(VideoNotFoundException);
+      expect(controller.deleteVideo(1, member, response)).rejects.toThrow(
+        VideoNotFoundException,
+      );
     });
 
     it('비디오 삭제 시 다른 회원의 비디오를 조회하려 한다면 VideoAccessForbiddenException를 반환한다.', async () => {
@@ -488,9 +488,9 @@ describe('VideoController 단위 테스트', () => {
       );
 
       // then
-      await expect(async () => {
-        await controller.deleteVideo(1, member, response);
-      }).rejects.toThrow(VideoAccessForbiddenException);
+      expect(controller.deleteVideo(1, member, response)).rejects.toThrow(
+        VideoAccessForbiddenException,
+      );
     });
   });
 });
