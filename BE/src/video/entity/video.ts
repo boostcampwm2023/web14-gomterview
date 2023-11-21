@@ -4,6 +4,7 @@ import { DefaultEntity } from 'src/app.entity';
 import { Member } from 'src/member/entity/member';
 import { Question } from 'src/question/entity/question';
 import { CreateVideoRequest } from '../dto/createVideoRequest';
+import { DEFAULT_THUMBNAIL } from 'src/constant/constant';
 
 @Entity({ name: 'Video' })
 export class Video extends DefaultEntity {
@@ -61,7 +62,7 @@ export class Video extends DefaultEntity {
       createVidoeRequest.questionId,
       createVidoeRequest.videoName,
       createVidoeRequest.url,
-      createVidoeRequest.thumbnail,
+      createVidoeRequest.thumbnail || DEFAULT_THUMBNAIL,
       createVidoeRequest.videoLength,
       false,
     );
