@@ -71,15 +71,14 @@ export class VideoService {
     this.validateVideoOwnership(video, memberId);
 
     const hash = video.isPublic ? this.getEncryptedurl(video.url) : null;
-    return VideoDetailResponse.from(video, hash);
+    return VideoDetailResponse.from(video, member.nickname, hash);
   }
 
   async getVideoDetailByHash(hash: string) {
     const decryptedUrl = this.getDecryptedUrl(hash);
     const video = await this.videoRepository.findByUrl(decryptedUrl);
-
     if (!video.isPublic) throw new VideoAccessForbiddenException();
-    return VideoDetailResponse.from(video, hash);
+    return VideoDetailResponse.from(video, 'test', hash);
   }
 
   async getAllVideosByMemberId(member: Member) {
