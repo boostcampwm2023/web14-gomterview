@@ -12,9 +12,13 @@ import { useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEY } from '@constants/queryKey';
 import { PATH } from '@constants/path';
 import { Navigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { recordSetting } from '@/atoms/interviewSetting';
 
 const InterviewPage: React.FC = () => {
   const isAllSuccess = useIsAllSuccess();
+  const { method } = useRecoilValue(recordSetting);
+
   const isLogin = useQueryClient().getQueryState(QUERY_KEY.MEMBER);
   const { currentQuestion, getNextQuestion, isLastQuestion } =
     useInterviewFlow();
@@ -93,23 +97,29 @@ const InterviewPage: React.FC = () => {
 
   const handleDownload = () => {
     const blob = new Blob(recordedBlobs, { type: selectedMimeType });
-    if (isLogin) {
-      // login 관련 api 처리를 수행합니다.
-    } else {
-      // 비회원의 경우 수행할 과정입니다.
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.style.display = 'none';
-      a.href = url;
-      a.download = `${currentQuestion.questionContent}.webm`;
 
-      document.body.appendChild(a);
-      a.click();
+    switch (method) {
+      case 'idrive': {
+        // login 관련 api 처리를 수행합니다.
+        break;
+      }
+      case 'local': {
+        // 비회원의 경우 수행할 과정입니다.
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `${currentQuestion.questionContent}.webm`;
 
-      setTimeout(() => {
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-      }, 100);
+        document.body.appendChild(a);
+        a.click();
+
+        setTimeout(() => {
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        }, 100);
+        break;
+      }
     }
 
     setRecordedBlobs([]);
