@@ -265,4 +265,19 @@ describe('QuestionService 통합 테스트', () => {
       questionService.findAllByCategory(category.id),
     ).resolves.toEqual([response]);
   });
+
+  it('id로 질문을 삭제하면 undefined를 반환한다.', async () => {
+    //given
+    const member = await memberRepository.save(memberFixture);
+    const category = await categoryRepository.save(categoryFixtureWithId);
+    const question = await questionRepository.save(
+      Question.of(category, null, 'tester'),
+    );
+    //when
+
+    //then
+    await expect(
+      questionService.deleteQuestionById(question.id, member),
+    ).resolves.toBeUndefined();
+  });
 });
