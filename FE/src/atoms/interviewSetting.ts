@@ -3,7 +3,7 @@ import { atom } from 'recoil';
 
 type RecordMethod = 'local' | 'idrive' | 'none' | undefined;
 
-export type SelectedQuestion = Question & {
+type SelectedQuestion = Question & {
   categoryId: number;
 };
 
