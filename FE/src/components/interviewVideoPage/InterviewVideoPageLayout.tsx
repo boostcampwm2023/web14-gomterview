@@ -14,7 +14,7 @@ const InterviewVideoPageLayout: React.FC<InterviewVideoPageLayoutProps> = ({
       <div
         css={css`
           display: flex;
-          padding: 2rem 2rem 0 2rem;
+          padding: 2rem;
         `}
       >
         <Logo />
@@ -25,7 +25,6 @@ const InterviewVideoPageLayout: React.FC<InterviewVideoPageLayoutProps> = ({
         css={css`
           align-items: center;
           row-gap: 1rem;
-          padding: 1rem;
           height: auto;
         `}
       >
