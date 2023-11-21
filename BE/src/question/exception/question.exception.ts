@@ -8,7 +8,7 @@ class ContentNotFoundException extends HttpException {
 
 class NeedToFindByCategoryIdException extends HttpException {
   constructor() {
-    super('카테고리 id를 입력해주세요 합니다.', 400);
+    super('카테고리 id를 입력해주세요.', 400);
   }
 }
 
