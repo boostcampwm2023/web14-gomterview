@@ -74,6 +74,7 @@ export const colors = {
     weak: colorChips.grayscale300, // #EDEDED
     weakHover: colorChips.grayscale500,
     black100: colorChips.grayscaleBlack, // #000000
+    active: colorChips.green50,
   },
   point: {
     primary: {
