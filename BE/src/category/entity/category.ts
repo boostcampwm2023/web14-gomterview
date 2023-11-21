@@ -9,7 +9,7 @@ export class Category extends DefaultEntity {
   name: string;
 
   @ManyToOne(() => Member, { nullable: true, onDelete: 'CASCADE', eager: true })
-  @JoinColumn({ name: 'memberId' })
+  @JoinColumn({ name: 'member' })
   member: Member;
 
   constructor(id: number, name: string, member: Member, createdAt: Date) {

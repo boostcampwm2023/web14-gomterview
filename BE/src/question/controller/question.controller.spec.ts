@@ -27,11 +27,13 @@ import { Question } from '../entity/question';
 import { Category } from '../../category/entity/category';
 import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 import * as cookieParser from 'cookie-parser';
+import { QuestionResponseList } from '../dto/questionResponseList';
 
 describe('QuestionController', () => {
   let controller: QuestionController;
   const mockQuestionService = {
     createQuestion: jest.fn(),
+    findAllByCategory: jest.fn(),
   };
   const mockTokenService = {};
 
@@ -67,6 +69,19 @@ describe('QuestionController', () => {
         mockReqWithMemberFixture,
       ),
     ).resolves.toEqual(QuestionResponse.from(questionFixture));
+  });
+
+  it('조회시 QuestionResponseList객체를 반환한다.', async () => {
+    //given
+
+    //when
+    mockQuestionService.findAllByCategory.mockResolvedValue([
+      QuestionResponse.from(questionFixture),
+    ]);
+    //then
+    await expect(controller.findCategoryQuestions(1)).resolves.toEqual(
+      QuestionResponseList.of([QuestionResponse.from(questionFixture)]),
+    );
   });
 });
 

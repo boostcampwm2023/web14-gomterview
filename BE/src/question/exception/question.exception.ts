@@ -6,4 +6,10 @@ class ContentNotFoundException extends HttpException {
   }
 }
 
-export { ContentNotFoundException };
+class NeedToFindByCategoryIdException extends HttpException {
+  constructor() {
+    super('카테고리 id를 입력해주세요.', 400);
+  }
+}
+
+export { ContentNotFoundException, NeedToFindByCategoryIdException };

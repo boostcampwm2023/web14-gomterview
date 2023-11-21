@@ -25,7 +25,6 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(payload: TokenPayload) {
-    console.log(`토큰 파싱 결과 : ${payload}`);
     const id = payload.id;
     const user = await this.memberRepository.findById(id);
     if (!user) throw new InvalidTokenException(); // 회원이 조회가 되지 않았다면, 탈퇴한 회원의 token을 사용한 것이므로 유효하지 않은 토큰을 사용한 것임

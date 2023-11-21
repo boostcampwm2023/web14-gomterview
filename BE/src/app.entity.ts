@@ -22,4 +22,8 @@ export class DefaultEntity extends BaseEntity {
   static new(): DefaultEntity {
     return new DefaultEntity(undefined, new Date());
   }
+
+  getId() {
+    return this.id;
+  }
 }

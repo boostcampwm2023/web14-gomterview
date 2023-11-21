@@ -19,12 +19,14 @@ import { Member } from '../../member/entity/member';
 import { MemberModule } from '../../member/member.module';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { memberFixture } from '../../member/fixture/member.fixture';
+import { NeedToFindByCategoryIdException } from '../exception/question.exception';
 
 describe('QuestionService', () => {
   let service: QuestionService;
 
   const mockQuestionRepository = {
     save: jest.fn(),
+    findByCategoryId: jest.fn(),
   };
 
   const mockCategoryRepository = {
@@ -74,6 +76,32 @@ describe('QuestionService', () => {
       service.createQuestion(createQuestionRequestFixture, memberFixture),
     ).rejects.toThrow(new CategoryNotFoundException());
   });
+
+  // Todo: Answer API 구현시에 DefaultAnswer 까지 등록하기
+  it('카테고리 id로 질문들을 조회하면, 해당 카테고리 내부 질문들이 반환된다.', async () => {
+    //given
+
+    //when
+    mockQuestionRepository.findByCategoryId.mockResolvedValue([
+      questionFixture,
+    ]);
+
+    //then
+    await expect(service.findAllByCategory(1)).resolves.toEqual([
+      QuestionResponse.from(questionFixture),
+    ]);
+  });
+
+  it('카테고리 id가 isEmpty이면 NeedToFindByCategoryIdException을 발생시킨다..', async () => {
+    //given
+
+    //when
+
+    //then
+    await expect(service.findAllByCategory(null)).rejects.toThrow(
+      new NeedToFindByCategoryIdException(),
+    );
+  });
 });
 
 describe('QuestionService 통합 테스트', () => {
@@ -119,5 +147,27 @@ describe('QuestionService 통합 테스트', () => {
         memberFixture,
       ),
     ).resolves.toEqual(QuestionResponse.from(questionFixture));
+  });
+
+  it('카테고리의 질문을 조회하면 QuestionResponse의 배열로 반환된다.', async () => {
+    //given
+    const member = await memberRepository.save(memberFixture);
+    await categoryRepository.save(categoryFixtureWithId);
+    const response = await questionService.createQuestion(
+      createQuestionRequestFixture,
+      memberFixture,
+    );
+
+    //when
+
+    const category = await categoryRepository.findByNameAndMember(
+      categoryFixtureWithId.name,
+      member.id,
+    );
+
+    //then
+    await expect(
+      questionService.findAllByCategory(category.id),
+    ).resolves.toEqual([response]);
   });
 });
