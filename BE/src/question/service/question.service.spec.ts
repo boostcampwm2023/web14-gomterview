@@ -88,7 +88,6 @@ describe('QuestionService', () => {
   });
 
   describe('카테고리별 질문 조회', () => {
-    // Todo: Answer API 구현시에 DefaultAnswer 까지 등록하기
     it('카테고리 id로 질문들을 조회하면, 해당 카테고리 내부 질문들이 반환된다.', async () => {
       //given
 

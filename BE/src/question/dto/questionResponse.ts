@@ -1,6 +1,7 @@
 import { Question } from '../entity/question';
 import { ApiProperty } from '@nestjs/swagger';
 import { createPropertyOption } from '../../util/swagger.util';
+import { isEmpty } from 'class-validator';
 
 export class QuestionResponse {
   @ApiProperty(createPropertyOption(1, '질문의 ID', Number))
@@ -29,6 +30,15 @@ export class QuestionResponse {
   }
 
   static from(question: Question) {
-    return new QuestionResponse(question.id, question.content, null, null);
+    const answer = question.defaultAnswer;
+    if (isEmpty(answer))
+      return new QuestionResponse(question.id, question.content, null, null);
+
+    return new QuestionResponse(
+      question.id,
+      question.content,
+      answer.id,
+      answer.content,
+    );
   }
 }

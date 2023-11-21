@@ -16,9 +16,13 @@ export class Question extends DefaultEntity {
   @JoinColumn({ name: 'origin' })
   readonly origin: Question;
 
-  @ManyToOne(() => Answer, { nullable: true, onDelete: 'SET NULL' })
+  @ManyToOne(() => Answer, {
+    nullable: true,
+    onDelete: 'SET NULL',
+    eager: true,
+  })
   @JoinColumn({ name: 'defaultQuestion' })
-  defaultQuestion: Question;
+  defaultAnswer: Answer;
 
   constructor(
     id: number,
@@ -26,13 +30,13 @@ export class Question extends DefaultEntity {
     category: Category,
     origin: Question,
     createdAt: Date,
-    defaultQuestion: Question,
+    defaultAnswer: Answer,
   ) {
     super(id, createdAt);
     this.content = content;
     this.category = category;
     this.origin = origin;
-    this.defaultQuestion = defaultQuestion;
+    this.defaultAnswer = defaultAnswer;
   }
 
   static of(category: Category, origin: Question, content: string) {
@@ -46,7 +50,7 @@ export class Question extends DefaultEntity {
       category,
       question,
       new Date(),
-      question.defaultQuestion,
+      question.defaultAnswer,
     );
   }
 }
