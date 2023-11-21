@@ -10,7 +10,13 @@ type ToggleProps = {
 const Toggle: React.FC<ToggleProps> = ({ isToggled, ...args }) => {
   return (
     <>
-      <input id="toggle" type="checkbox" css={ToggleInputStyle} {...args} />
+      <input
+        id="toggle"
+        type="checkbox"
+        defaultChecked={isToggled}
+        css={ToggleInputStyle}
+        {...args}
+      />
       <label htmlFor="toggle" css={ToggleLabelStyle} />
     </>
   );
