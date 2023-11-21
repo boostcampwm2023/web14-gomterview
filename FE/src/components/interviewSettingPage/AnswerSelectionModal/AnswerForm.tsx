@@ -20,7 +20,7 @@ const AnswerForm: React.FC<AnswerFormProps> = ({ questionId, question }) => {
   } = useInput<HTMLTextAreaElement>('');
   const { mutate } = useQuestionAnswerMutation(questionId, customAnswer, {
     onSuccess: () => {
-      clearCustomAnswer();
+      void clearCustomAnswer();
     },
   });
 
