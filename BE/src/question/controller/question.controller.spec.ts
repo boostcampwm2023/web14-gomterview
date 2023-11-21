@@ -17,6 +17,7 @@ import { CategoryRepository } from '../../category/repository/category.repositor
 import { MemberRepository } from '../../member/repository/member.repository';
 import { AuthModule } from '../../auth/auth.module';
 import { AuthService } from '../../auth/service/auth.service';
+import { Response } from 'express';
 import {
   memberFixture,
   memberFixturesOAuthRequest,
@@ -31,7 +32,6 @@ import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 import * as cookieParser from 'cookie-parser';
 import { QuestionResponseList } from '../dto/questionResponseList';
 import { QuestionRepository } from '../repository/question.repository';
-import { response } from 'express';
 
 describe('QuestionController', () => {
   let controller: QuestionController;
@@ -91,13 +91,21 @@ describe('QuestionController', () => {
 
   it('질문 삭제시 undefined를 반환한다.', async () => {
     //given
+    const res = {
+      status: jest.fn().mockReturnThis(), // Mock the status method
+      send: jest.fn(), // Mock the send method
+    } as unknown as Response;
 
     //when
-    mockQuestionService.findAllByCategory.mockResolvedValue(undefined);
+    mockQuestionService.deleteQuestionById.mockResolvedValue(undefined);
 
     //then
     await expect(
-      controller.deleteQuestionById(1, mockReqWithMemberFixture, response),
+      controller.deleteQuestionById(
+        1,
+        mockReqWithMemberFixture,
+        res as unknown as Response,
+      ),
     ).resolves.toBeUndefined();
   });
 });
@@ -149,15 +157,18 @@ describe('QuestionController 통합테스트', () => {
 
   it('content가 isEmpty면 예외처리한다.', async () => {
     //given
-    const token = await authService.login(oauthRequestFixture);
-    await categoryRepository.save(categoryFixtureWithId);
+    const member = await memberRepository.save(memberFixture);
+    const token = await authService.login(memberFixturesOAuthRequest);
+    const category = await categoryRepository.save(
+      Category.from(categoryFixtureWithId, member),
+    );
 
     //when
     const agent = request.agent(app.getHttpServer());
     await agent
       .post('/api/question')
       .set('Cookie', [`accessToken=${token}`])
-      .send(new CreateQuestionRequest(categoryFixtureWithId.id, null))
+      .send(new CreateQuestionRequest(category.id, null))
       .expect(400)
       .then(() => {});
     //then
