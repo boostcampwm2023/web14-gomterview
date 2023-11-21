@@ -9,6 +9,7 @@ import { TokenModule } from './token/token.module';
 import { QuestionModule } from './question/question.module';
 import { VideoModule } from './video/video.module';
 import { CategoryModule } from './category/category.module';
+import { AnswerModule } from './answer/answer.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { CategoryModule } from './category/category.module';
     QuestionModule,
     VideoModule,
     CategoryModule,
+    AnswerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
