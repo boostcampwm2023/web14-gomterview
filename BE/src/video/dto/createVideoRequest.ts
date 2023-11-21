@@ -14,15 +14,38 @@ export class CreateVideoRequest {
   videoName: string;
 
   @ApiProperty(
-    createPropertyOption('https://example.com', '비디오 URL', String),
+    createPropertyOption('https://video-example.com', '비디오 URL', String),
   )
   @IsString()
   @IsNotEmpty()
   url: string;
 
-  constructor(questionId: number, videoName: string, url: string) {
+  @ApiProperty(
+    createPropertyOption(
+      'https://thumb-example.com',
+      '비디오 썸네일 URL',
+      String,
+    ),
+  )
+  @IsString()
+  thumbnail: string;
+
+  @ApiProperty(createPropertyOption('03:29', '비디오 길이', String))
+  @IsString()
+  @IsNotEmpty()
+  videoLength: string;
+
+  constructor(
+    questionId: number,
+    videoName: string,
+    url: string,
+    thumbnail: string,
+    videoLength: string,
+  ) {
     this.questionId = questionId;
     this.videoName = videoName;
     this.url = url;
+    this.thumbnail = thumbnail;
+    this.videoLength = videoLength;
   }
 }
