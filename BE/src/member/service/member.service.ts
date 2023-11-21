@@ -30,7 +30,6 @@ export class MemberService {
     if (!req.cookies['accessToken'])
       return new MemberNicknameResponse(this.getNameWithPrefix(`면접자`));
 
-    // TODO: 추후에 랜덤 Prefix 생성할 필요가 있음
     return new MemberNicknameResponse(
       this.getNameWithPrefix(
         (await this.getMemberByToken(getTokenValue(req))).nickname,
