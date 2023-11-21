@@ -24,6 +24,8 @@ import {
   QuestionNotFoundException,
 } from '../exception/question.exception';
 import { ManipulatedTokenNotFiltered } from '../../token/exception/token.exception';
+import { Answer } from '../../answer/entity/answer';
+import { AnswerModule } from '../../answer/answer.module';
 
 describe('QuestionService', () => {
   let service: QuestionService;
@@ -207,8 +209,13 @@ describe('QuestionService 통합 테스트', () => {
   let memberRepository: MemberRepository;
 
   beforeAll(async () => {
-    const modules = [QuestionModule, CategoryModule, MemberModule];
-    const entities = [Question, Category, Member];
+    const modules = [
+      QuestionModule,
+      CategoryModule,
+      MemberModule,
+      AnswerModule,
+    ];
+    const entities = [Question, Category, Member, Answer];
 
     const moduleFixture = await createIntegrationTestModule(modules, entities);
     app = moduleFixture.createNestApplication();

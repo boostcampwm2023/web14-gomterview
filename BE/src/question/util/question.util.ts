@@ -8,6 +8,7 @@ export const questionFixture = new Question(
   categoryFixtureWithId,
   null,
   new Date(),
+  null,
 );
 
 export const createQuestionRequestFixture = new CreateQuestionRequest(
