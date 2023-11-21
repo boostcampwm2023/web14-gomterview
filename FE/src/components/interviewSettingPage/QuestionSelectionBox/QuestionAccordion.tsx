@@ -7,10 +7,13 @@ import {
 import Icon from '@/components/foundation/Icon/Icon';
 import { LeadingDot } from '@/components/foundation/LeadingDot/LeadingDot';
 import Typography from '@/components/foundation/Typography/Typography';
+import { QUERY_KEY } from '@/constants/queryKey';
 import useSelectQuestions from '@/hooks/atoms/useSelectQuestions';
 import { theme } from '@/styles/theme';
 import { Question } from '@/types/question';
+import { User } from '@/types/user';
 import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 
 type QuestionAccordionProps = {
@@ -31,6 +34,8 @@ const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
     question: question,
     categoryId: categoryId,
   });
+  const queryClient = useQueryClient();
+  const userInfo = queryClient.getQueryData<User | undefined>(QUERY_KEY.MEMBER);
 
   const setModal = useSetRecoilState(QuestionAnswerSelectionModal);
 
@@ -41,6 +46,11 @@ const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
       question: question,
       categoryId: categoryId,
     });
+  };
+
+  const handleEditGuestUser = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    alert('로그인 후 이용해 주세요');
   };
 
   return (
@@ -76,7 +86,7 @@ const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
           `}
           width="2rem"
           height="2rem"
-          onClick={handleEditModal}
+          onClick={userInfo ? handleEditModal : handleEditGuestUser}
         />
       </AccordionDetails>
     </Accordion>
