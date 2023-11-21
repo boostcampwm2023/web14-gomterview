@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { createPropertyOption } from 'src/util/swagger.util';
 
 export class CreateVideoRequest {
@@ -28,7 +28,8 @@ export class CreateVideoRequest {
     ),
   )
   @IsString()
-  thumbnail: string;
+  @IsOptional()
+  thumbnail: string | null;
 
   @ApiProperty(createPropertyOption('03:29', '비디오 길이', String))
   @IsString()
