@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import InterviewPageLayout from '@components/interviewPage/InterviewPageLayout';
 import InterviewHeader from '@/components/interviewPage/InterviewHeader/InterviewHeader';
@@ -6,12 +6,26 @@ import InterviewMain from '@/components/interviewPage/InterviewMain/InterviewMai
 import InterviewFooter from '@/components/interviewPage/InterviewFooter/InterviewFooter';
 import InterviewIntroModal from '@components/interviewPage/InterviewModal/InterviewIntroModal';
 import InterviewTimeOverModal from '@components/interviewPage/InterviewModal/InterviewTimeOverModal';
-import InterviewFinishModal from '@components/interviewPage/InterviewModal/InterviewFinishModal';
+import useInterviewFlow from '@hooks/pages/Interview/useInterviewFlow';
+import useIsAllSuccess from '@/hooks/pages/Interview/useIsAllSuccess';
+import { useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEY } from '@constants/queryKey';
+import { PATH } from '@constants/path';
+import { Navigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { recordSetting } from '@/atoms/interviewSetting';
 
 const InterviewPage: React.FC = () => {
+  const isAllSuccess = useIsAllSuccess();
+  const { method } = useRecoilValue(recordSetting);
+
+  const isLogin = useQueryClient().getQueryState(QUERY_KEY.MEMBER);
+  const { currentQuestion, getNextQuestion, isLastQuestion } =
+    useInterviewFlow();
+
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [isRecording, setIsRecording] = useState(false);
-  const [isScriptInView, setIsScriptInView] = useState(false);
+  const [isScriptInView, setIsScriptInView] = useState(true);
   const [recordedBlobs, setRecordedBlobs] = useState<Blob[]>([]);
   const [selectedMimeType, setSelectedMimeType] = useState('');
   const [interviewIntroModalIsOpen, setInterviewIntroModalIsOpen] =
@@ -20,28 +34,24 @@ const InterviewPage: React.FC = () => {
   const mirrorVideoRef = useRef<HTMLVideoElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
-  useLayoutEffect(() => {
-    const mimeTypes = getSupportedMimeTypes();
-    if (mimeTypes.length > 0) {
-      setSelectedMimeType(mimeTypes[0]);
-    }
-  }, []);
-
   useEffect(() => {
-    if (!stream) {
+    if (!stream && isAllSuccess) {
       void getMedia();
     }
+    const mimeTypes = getSupportedMimeTypes();
+    if (mimeTypes.length > 0) setSelectedMimeType(mimeTypes[0]);
 
     return () => {
       if (stream) {
+        // recoil 을 모두 초기화
         stream.getTracks().forEach((track) => track.stop());
       }
     };
-  }, [stream]);
+  }, [isAllSuccess, stream]);
 
   const getMedia = async () => {
     try {
-      const constraints = {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: { exact: true },
         },
@@ -49,13 +59,11 @@ const InterviewPage: React.FC = () => {
           width: 1280,
           height: 720,
         },
-      };
-      const mediaStream =
-        await navigator.mediaDevices.getUserMedia(constraints);
+      });
+
       setStream(mediaStream);
-      if (mirrorVideoRef.current) {
+      if (mirrorVideoRef.current)
         mirrorVideoRef.current.srcObject = mediaStream;
-      }
     } catch (e) {
       console.log(`현재 마이크와 카메라가 연결되지 않았습니다`);
     }
@@ -73,6 +81,8 @@ const InterviewPage: React.FC = () => {
       };
       mediaRecorderRef.current.start();
       setIsRecording(true);
+      // RecordStartingTime 을 초기화합니다.
+      // pre-signed url을 받습니다.
     } catch (e) {
       console.log(`MediaRecorder error`);
     }
@@ -83,21 +93,40 @@ const InterviewPage: React.FC = () => {
       mediaRecorderRef.current.stop();
     }
     setIsRecording(false);
+    // RecordEndTime을 초기화합니다.
   };
 
   const handleDownload = () => {
     const blob = new Blob(recordedBlobs, { type: selectedMimeType });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.href = url;
-    a.download = 'recorded.webm';
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => {
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-    }, 100);
+
+    switch (method) {
+      case 'idrive': {
+        // mutate({
+        //   questionId: currentQuestion.questionId,
+        // });
+
+        // console.log(curPreSignedUrl);
+
+        break;
+      }
+      case 'local': {
+        // 비회원의 경우 수행할 과정입니다.
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `${currentQuestion.questionContent}.webm`;
+
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+
+        break;
+      }
+    }
+
+    setRecordedBlobs([]);
   };
 
   const getSupportedMimeTypes = () => {
@@ -110,6 +139,8 @@ const InterviewPage: React.FC = () => {
     return types.filter((type) => MediaRecorder.isTypeSupported(type));
   };
 
+  if (!isAllSuccess) return <Navigate to={PATH.ROOT} />;
+
   return (
     <InterviewPageLayout>
       <InterviewHeader
@@ -119,15 +150,17 @@ const InterviewPage: React.FC = () => {
       <InterviewMain
         mirrorVideoRef={mirrorVideoRef}
         isScriptInView={isScriptInView}
-        question="이것은 예시 질문입니다."
-        answer="이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!이것은 예시답변입니다!!!!"
+        question={currentQuestion.questionContent}
+        answer={currentQuestion.answerContent}
       />
       <InterviewFooter
         isRecording={isRecording}
         recordedBlobs={recordedBlobs}
+        isLastQuestion={isLastQuestion}
         handleStartRecording={handleStartRecording}
         handleStopRecording={handleStopRecording}
         handleScript={() => setIsScriptInView((prev) => !prev)}
+        handleNextQuestion={getNextQuestion}
         handleDownload={handleDownload}
       />
       <InterviewIntroModal
@@ -135,10 +168,6 @@ const InterviewPage: React.FC = () => {
         closeModal={() => setInterviewIntroModalIsOpen((prev) => !prev)}
       />
       <InterviewTimeOverModal
-        isOpen={false}
-        closeModal={() => console.log('모달을 종료합니다.')}
-      />
-      <InterviewFinishModal
         isOpen={false}
         closeModal={() => console.log('모달을 종료합니다.')}
       />

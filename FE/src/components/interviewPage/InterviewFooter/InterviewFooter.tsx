@@ -6,31 +6,38 @@ import NextButton from './NextButton';
 import InterviewExitModal from '@components/interviewPage/InterviewModal/InterviewExitModal';
 import { useState } from 'react';
 import { theme } from '@styles/theme';
+import InterviewFinishModal from '@components/interviewPage/InterviewModal/InterviewFinishModal';
 
 type InterviewFooterProps = {
   isRecording: boolean;
   recordedBlobs: Blob[];
+  isLastQuestion: boolean;
   handleStartRecording: () => void;
   handleStopRecording: () => void;
   handleScript: () => void;
+  handleNextQuestion: () => void;
   handleDownload: () => void;
 };
 
 const InterviewFooter: React.FC<InterviewFooterProps> = ({
   isRecording,
   recordedBlobs,
+  isLastQuestion,
   handleStartRecording,
   handleStopRecording,
   handleScript,
+  handleNextQuestion,
   handleDownload,
 }) => {
   const [interviewExitModalIsOpen, setInterviewExitModalIsOpen] =
     useState<boolean>(false);
+  const [InterviewFinishModalIsOpen, setInterviewFinishModalIsOpen] =
+    useState<boolean>(false);
 
   const handleNext = () => {
-    alert('다음면접을 진행합니다');
-    if (!isRecording && recordedBlobs.length > 0) handleDownload();
-    else alert('저장할 수 없습니다');
+    handleDownload();
+    if (!isLastQuestion) handleNextQuestion();
+    else setInterviewFinishModalIsOpen(true);
   };
 
   return (
@@ -49,16 +56,21 @@ const InterviewFooter: React.FC<InterviewFooterProps> = ({
         handleInterviewExit={() => setInterviewExitModalIsOpen(true)}
       />
       <AnswerToggleButton handleAnswerToggle={handleScript} />
-      <RecordControlButton
-        isRecording={isRecording}
-        handleStartRecording={handleStartRecording}
-        handleStopRecording={handleStopRecording}
-      />
-      <NextButton handleNext={handleNext} />
+      {recordedBlobs.length === 0 && (
+        <RecordControlButton
+          isRecording={isRecording}
+          handleStartRecording={handleStartRecording}
+          handleStopRecording={handleStopRecording}
+        />
+      )}
+      {!isRecording && recordedBlobs.length > 0 && (
+        <NextButton handleNext={handleNext} />
+      )}
       <InterviewExitModal
         isOpen={interviewExitModalIsOpen}
         closeModal={() => setInterviewExitModalIsOpen((prev) => !prev)}
       />
+      <InterviewFinishModal isOpen={InterviewFinishModalIsOpen} />
     </div>
   );
 };
