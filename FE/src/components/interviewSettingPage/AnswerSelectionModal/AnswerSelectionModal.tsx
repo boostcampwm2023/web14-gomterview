@@ -58,8 +58,6 @@ const AnswerSelectionModal: React.FC<AnswerSelectionModalProps> = ({
               <AnswerScript
                 key={answer.answerId}
                 answer={answer}
-                questionId={question.questionId}
-                closeModal={closeModal}
                 onClick={() =>
                   selectAnswerMutate({
                     questionId: question.questionId,

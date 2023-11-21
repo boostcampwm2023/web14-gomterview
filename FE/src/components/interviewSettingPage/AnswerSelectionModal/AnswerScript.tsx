@@ -7,8 +7,6 @@ import { css } from '@emotion/react';
 
 type AnswerScriptProps = {
   answer: Answer;
-  questionId: number;
-  closeModal: () => void;
   onClick: () => void;
 };
 
