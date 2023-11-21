@@ -27,6 +27,12 @@ export class Video extends DefaultEntity {
   @Column()
   url: string;
 
+  @Column()
+  thumbnail: string;
+
+  @Column()
+  videoLength: string;
+
   @Column({ default: false })
   isPublic: boolean;
 
@@ -35,6 +41,8 @@ export class Video extends DefaultEntity {
     questionId: number,
     name: string,
     url: string,
+    thumbnail: string,
+    videoLength: string,
     isPublic: boolean,
   ) {
     super(undefined, new Date());
@@ -42,6 +50,8 @@ export class Video extends DefaultEntity {
     this.questionId = questionId;
     this.name = name;
     this.url = url;
+    this.thumbnail = thumbnail;
+    this.videoLength = videoLength;
     this.isPublic = isPublic;
   }
 
@@ -51,6 +61,8 @@ export class Video extends DefaultEntity {
       createVidoeRequest.questionId,
       createVidoeRequest.videoName,
       createVidoeRequest.url,
+      createVidoeRequest.thumbnail,
+      createVidoeRequest.videoLength,
       false,
     );
   }

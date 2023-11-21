@@ -39,10 +39,10 @@ export class VideoService {
     private questionRepository: QuestionRepository,
     private memberRepository: MemberRepository,
   ) {}
-  async createVideo(member: Member, createVidoeRequest: CreateVideoRequest) {
+  async createVideo(member: Member, createVideoRequest: CreateVideoRequest) {
     validateManipulatedToken(member);
 
-    const newVideo = Video.from(member, createVidoeRequest);
+    const newVideo = Video.from(member, createVideoRequest);
     await this.videoRepository.save(newVideo);
   }
 
