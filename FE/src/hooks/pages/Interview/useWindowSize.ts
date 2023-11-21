@@ -7,7 +7,7 @@ const useWindowSize = () => {
   });
 
   useEffect(() => {
-    let timeoutId: number | undefined;
+    let timeoutId: number;
 
     const handleResize = () => {
       window.clearTimeout(timeoutId);
@@ -23,7 +23,7 @@ const useWindowSize = () => {
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
+      window.clearTimeout(timeoutId);
     };
   }, []);
 
