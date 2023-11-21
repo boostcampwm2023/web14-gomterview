@@ -48,9 +48,9 @@ export class SingleVideoResponse {
   static from(video: Video) {
     return new SingleVideoResponse(
       video.id,
-      'https://test-thumbnail.com',
+      video.thumbnail,
       video.name,
-      '02:42',
+      video.videoLength,
       video.isPublic,
       video.createdAt.getTime(),
     );
