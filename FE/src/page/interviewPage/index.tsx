@@ -7,7 +7,7 @@ import InterviewFooter from '@/components/interviewPage/InterviewFooter/Intervie
 import InterviewIntroModal from '@components/interviewPage/InterviewModal/InterviewIntroModal';
 import InterviewTimeOverModal from '@components/interviewPage/InterviewModal/InterviewTimeOverModal';
 import useInterviewFlow from '@hooks/pages/Interview/useInterviewFlow';
-import useIsAllSuccess from '@hooks/pages/Interview/usIsAllSuccess';
+import useIsAllSuccess from '@/hooks/pages/Interview/useIsAllSuccess';
 import { useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEY } from '@constants/queryKey';
 import { PATH } from '@constants/path';
