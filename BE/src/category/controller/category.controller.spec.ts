@@ -289,8 +289,8 @@ describe('CategoryController 통합테스트', () => {
     //when
 
     //then
-    await categoryRepository.save(categoryFixtureWithId);
     const token = await authService.login(memberFixturesOAuthRequest);
+    await categoryRepository.save(categoryFixtureWithId);
     const agent = request.agent(app.getHttpServer());
     agent
       .delete(`/api/category?id=1`)

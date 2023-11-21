@@ -10,7 +10,7 @@ export class CategoryRepository {
   ) {}
 
   async save(category: Category) {
-    await this.repository.save(category);
+    return await this.repository.save(category);
   }
 
   async findAllByMemberId(memberId: number) {

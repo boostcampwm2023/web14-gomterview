@@ -1,15 +1,17 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Post,
   Query,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { QuestionService } from '../service/question.service';
 import { CreateQuestionRequest } from '../dto/createQuestionRequest';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBody,
@@ -63,5 +65,24 @@ export class QuestionController {
     const questionResponses =
       await this.questionService.findAllByCategory(categoryId);
     return QuestionResponseList.of(questionResponses);
+  }
+
+  @Delete()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiCookieAuth()
+  @ApiOperation({
+    summary: '질문 삭제',
+  })
+  @ApiResponse(createApiResponseOption(204, '질문 삭제', null))
+  async deleteQuestionById(
+    @Query('questionId') questionId: number,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    await this.questionService.deleteQuestionById(
+      questionId,
+      req.user as Member,
+    );
+    res.status(204).send();
   }
 }
