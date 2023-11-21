@@ -28,17 +28,17 @@ const InterviewVideoPage: React.FC = () => {
           onClick={() => setIsOpen(!isOpen)}
         />
       </div>
-      {isFetching ? (
+      {!data ? (
         //TODO 로딩화면 일단 임시로 처리
         <CenterLayout>
           <LoadingBounce />
         </CenterLayout>
       ) : (
         <>
-          <PrivateVideoPlayer {...data!} />
+          <PrivateVideoPlayer {...data} />
           <VideoShareModal
-            videoId={Number(data!.id)}
-            videoName={data!.videoName}
+            videoId={Number(data.id)}
+            videoName={data.videoName}
             isPublic={!!data?.hash}
             isOpen={isOpen}
             closeModal={() => setIsOpen(false)}
