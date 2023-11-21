@@ -39,6 +39,7 @@ const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
     setModal({
       isOpen: true,
       question: question,
+      categoryId: categoryId,
     });
   };
 

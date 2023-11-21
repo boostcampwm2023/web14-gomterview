@@ -3,6 +3,7 @@ import { atom } from 'recoil';
 
 export const QuestionAnswerSelectionModal = atom<{
   isOpen: boolean;
+  categoryId?: number;
   question?: Question;
 }>({
   key: 'questionAnswerSelectionModal',

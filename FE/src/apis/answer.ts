@@ -17,10 +17,13 @@ export const postAnswer = async (questionId: number, content: string) => {
   });
 };
 
-export const postDefaultAnswer = async (
-  questionId: number,
-  answerId: number
-) => {
+export const postDefaultAnswer = async ({
+  questionId,
+  answerId,
+}: {
+  questionId: number;
+  answerId: number;
+}) => {
   return await getAPIResponseData({
     method: 'post',
     url: API.ANSWER_DEFAULT,

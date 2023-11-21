@@ -2,21 +2,19 @@ import Avatar from '@/components/foundation/Avatar/Avatar';
 import Box from '@/components/foundation/Box/Box';
 import Typography from '@/components/foundation/Typography/Typography';
 import { theme } from '@/styles/theme';
+import { Answer } from '@/types/answer';
 import { css } from '@emotion/react';
 
 type AnswerScriptProps = {
-  name: string;
-  content: string;
-  userImg: string;
+  answer: Answer;
+  questionId: number;
+  closeModal: () => void;
+  onClick: () => void;
 };
 
-const AnswerScript: React.FC<AnswerScriptProps> = ({
-  name,
-  content,
-  userImg,
-}) => {
+const AnswerScript: React.FC<AnswerScriptProps> = ({ answer, onClick }) => {
   return (
-    <Box>
+    <Box onClick={onClick}>
       <div
         css={css`
           display: flex;
@@ -28,8 +26,8 @@ const AnswerScript: React.FC<AnswerScriptProps> = ({
           border-radius: 1rem 1rem 0 0;
         `}
       >
-        <Avatar width="1.5rem" height="1.5rem" src={userImg} />
-        <Typography>{name}</Typography>
+        <Avatar width="1.5rem" height="1.5rem" src={answer.memberImage} />
+        <Typography>{answer.memberName}</Typography>
       </div>
       <Typography
         component="p"
@@ -37,7 +35,7 @@ const AnswerScript: React.FC<AnswerScriptProps> = ({
           padding: 0.7rem;
         `}
       >
-        {content}
+        {answer.content}
       </Typography>
     </Box>
   );
