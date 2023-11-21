@@ -24,6 +24,8 @@ import {
   QuestionNotFoundException,
 } from '../exception/question.exception';
 import { ManipulatedTokenNotFiltered } from '../../token/exception/token.exception';
+import { Answer } from '../../answer/entity/answer';
+import { AnswerModule } from '../../answer/answer.module';
 
 describe('QuestionService', () => {
   let service: QuestionService;
@@ -86,7 +88,6 @@ describe('QuestionService', () => {
   });
 
   describe('카테고리별 질문 조회', () => {
-    // Todo: Answer API 구현시에 DefaultAnswer 까지 등록하기
     it('카테고리 id로 질문들을 조회하면, 해당 카테고리 내부 질문들이 반환된다.', async () => {
       //given
 
@@ -207,8 +208,13 @@ describe('QuestionService 통합 테스트', () => {
   let memberRepository: MemberRepository;
 
   beforeAll(async () => {
-    const modules = [QuestionModule, CategoryModule, MemberModule];
-    const entities = [Question, Category, Member];
+    const modules = [
+      QuestionModule,
+      CategoryModule,
+      MemberModule,
+      AnswerModule,
+    ];
+    const entities = [Question, Category, Member, Answer];
 
     const moduleFixture = await createIntegrationTestModule(modules, entities);
     app = moduleFixture.createNestApplication();

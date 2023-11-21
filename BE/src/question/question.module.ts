@@ -9,12 +9,15 @@ import { QuestionRepository } from './repository/question.repository';
 import { CategoryModule } from '../category/category.module';
 import { CategoryRepository } from '../category/repository/category.repository';
 import { Member } from '../member/entity/member';
+import { AnswerModule } from '../answer/answer.module';
+import { Answer } from '../answer/entity/answer';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Question, Category, Member]),
+    TypeOrmModule.forFeature([Question, Category, Member, Answer]),
     TokenModule,
     CategoryModule,
+    AnswerModule,
   ],
   providers: [QuestionService, QuestionRepository, CategoryRepository],
   controllers: [QuestionController],
