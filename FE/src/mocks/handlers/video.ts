@@ -1,5 +1,5 @@
 import { API } from '@/constants/api';
-import { http, HttpResponse } from 'msw';
+import { delay, http, HttpResponse } from 'msw';
 
 const videoHandlers = [
   http.post(API.VIDEO, ({ request }) => {
@@ -73,8 +73,9 @@ const videoHandlers = [
       { status: 200 }
     );
   }),
-  http.patch(API.VIDEO_ID(), () => {
-    return HttpResponse.json(null, { status: 204 });
+  http.patch(API.VIDEO_ID(), async () => {
+    await delay(1000);
+    return HttpResponse.json(null, { status: 200 });
   }),
   http.delete(API.VIDEO_ID(), ({ request }) => {
     return HttpResponse.json(null, { status: 204 });

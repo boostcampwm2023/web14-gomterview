@@ -3,25 +3,29 @@ import Typography from '@foundation/Typography/Typography';
 import { truncateText } from '@/utils/textUtils';
 import { css } from '@emotion/react';
 import ShareRangeSetting from '@components/interviewVideoPage/Modal/ShareRangeSetting';
-import { useState } from 'react';
 import VideoShareModalFooter from '@components/interviewVideoPage/Modal/VideoShareModalFooter';
+import useToggleVideoPublicMutation from '@hooks/mutations/video/useToggleVideoPublicMutation';
 
 type VideoShareModalProps = {
   videoId: number;
   videoName: string;
+  isPublic: boolean;
   isOpen: boolean;
   closeModal: () => void;
 };
 const VideoShareModal: React.FC<VideoShareModalProps> = ({
   videoId,
   videoName,
+  isPublic,
   isOpen,
   closeModal,
 }) => {
-  const [isPublic, setIsPublic] = useState(false);
+  const { mutate, data, isPending } = useToggleVideoPublicMutation(videoId);
 
   const handleVideoShareToggleClick = () => {
-    setIsPublic(!isPublic);
+    if (!isPublic) {
+      mutate();
+    }
   };
 
   return (
@@ -37,11 +41,16 @@ const VideoShareModal: React.FC<VideoShareModalProps> = ({
         <Typography variant="title3">
           {`"${truncateText(videoName, 15)}" 공유`}
         </Typography>
-        <ShareRangeSetting
-          isPublic={isPublic}
-          onClick={handleVideoShareToggleClick}
-        />
-        <VideoShareModalFooter closeModal={closeModal} />
+        {isPending ? (
+          '로딩중' //TODO 디자인은 임시입니다.
+        ) : (
+          <ShareRangeSetting
+            isPublic={isPublic}
+            onClick={handleVideoShareToggleClick}
+          />
+        )}
+
+        <VideoShareModalFooter hashUrl={data?.hash} closeModal={closeModal} />
       </div>
     </Modal>
   );
