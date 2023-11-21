@@ -16,6 +16,7 @@ import {
   IDriveException,
   VideoAccessForbiddenException,
   VideoNotFoundException,
+  VideoOfWithdrawnMemberException,
 } from '../exception/video.exception';
 import { VideoListResponse } from '../dto/videoListResponse';
 import { CreateVideoRequest } from '../dto/createVideoRequest';
@@ -25,6 +26,7 @@ import { VideoDetailResponse } from '../dto/videoDetailResponse';
 import * as crypto from 'crypto';
 import 'dotenv/config';
 import { VideoHashResponse } from '../dto/videoHashResponse';
+import { MemberRepository } from 'src/member/repository/member.repository';
 
 const algorithm = 'aes-256-cbc';
 const key = process.env.URL_ENCRYPT_KEY;
@@ -35,6 +37,7 @@ export class VideoService {
   constructor(
     private videoRepository: VideoRepository,
     private questionRepository: QuestionRepository,
+    private memberRepository: MemberRepository,
   ) {}
   async createVideo(member: Member, createVidoeRequest: CreateVideoRequest) {
     validateManipulatedToken(member);
@@ -78,7 +81,11 @@ export class VideoService {
     const decryptedUrl = this.getDecryptedUrl(hash);
     const video = await this.videoRepository.findByUrl(decryptedUrl);
     if (!video.isPublic) throw new VideoAccessForbiddenException();
-    return VideoDetailResponse.from(video, 'test', hash);
+
+    const videoOwner = await this.memberRepository.findById(video.memberId);
+    if (!videoOwner) throw new VideoOfWithdrawnMemberException();
+
+    return VideoDetailResponse.from(video, videoOwner.nickname, hash);
   }
 
   async getAllVideosByMemberId(member: Member) {
