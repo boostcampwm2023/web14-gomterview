@@ -3,14 +3,17 @@ import { theme } from '@styles/theme';
 import Icon from '@foundation/Icon/Icon';
 import Typography from '@foundation/Typography/Typography';
 import { css } from '@emotion/react';
+import { MouseEventHandler } from 'react';
 
 type IconButtonProps = {
   text: string;
   iconName: string;
+  onClick: MouseEventHandler<HTMLButtonElement>;
 };
-const IconButton: React.FC<IconButtonProps> = ({ text, iconName }) => {
+const IconButton: React.FC<IconButtonProps> = ({ text, iconName, onClick }) => {
   return (
     <Button
+      onClick={onClick}
       css={css`
         display: flex;
         justify-content: center;
