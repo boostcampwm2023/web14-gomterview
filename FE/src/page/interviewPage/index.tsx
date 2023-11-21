@@ -22,6 +22,7 @@ const InterviewPage: React.FC = () => {
   const isLogin = useQueryClient().getQueryState(QUERY_KEY.MEMBER);
   const { currentQuestion, getNextQuestion, isLastQuestion } =
     useInterviewFlow();
+
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [isScriptInView, setIsScriptInView] = useState(true);
@@ -100,7 +101,12 @@ const InterviewPage: React.FC = () => {
 
     switch (method) {
       case 'idrive': {
-        // login 관련 api 처리를 수행합니다.
+        // mutate({
+        //   questionId: currentQuestion.questionId,
+        // });
+
+        // console.log(curPreSignedUrl);
+
         break;
       }
       case 'local': {
@@ -113,11 +119,9 @@ const InterviewPage: React.FC = () => {
 
         document.body.appendChild(a);
         a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
 
-        setTimeout(() => {
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(url);
-        }, 100);
         break;
       }
     }
