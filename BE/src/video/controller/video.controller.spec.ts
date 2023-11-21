@@ -60,6 +60,8 @@ describe('VideoController 단위 테스트', () => {
       1,
       'test.webm',
       'https://test.com',
+      'https://thumbnail-test.com',
+      '01:12',
     );
 
     it('비디오 저장 성공 시 undefined를 반환한다.', async () => {
