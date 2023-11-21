@@ -1,7 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { VideoController } from './video.controller';
 import { VideoService } from '../service/video.service';
-import { mockReqWithMemberFixture } from 'src/member/fixture/member.fixture';
+import {
+  memberFixture,
+  mockReqWithMemberFixture,
+} from 'src/member/fixture/member.fixture';
 import { CreateVideoRequest } from '../dto/createVideoRequest';
 import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
 import { Request, Response } from 'express';
@@ -13,6 +16,7 @@ import {
   IDriveException,
   VideoAccessForbiddenException,
   VideoNotFoundException,
+  VideoOfWithdrawnMemberException,
 } from '../exception/video.exception';
 import { VideoListResponse } from '../dto/videoListResponse';
 import {
@@ -193,13 +197,18 @@ describe('VideoController 단위 테스트', () => {
 
   describe('getVideoDetailByHash', () => {
     const hash = 'fakeHash';
+    const nickname = 'fakeNickname';
 
     it('해시로 비디오 조회 성공 시 VideoDetailResponse 객체 형태로 응답된다.', async () => {
       // given
       const video = videoFixtureForTest;
 
       // when
-      const mockVideoDetailWithHash = VideoDetailResponse.from(video, hash);
+      const mockVideoDetailWithHash = VideoDetailResponse.from(
+        video,
+        nickname,
+        hash,
+      );
       mockVideoService.getVideoDetailByHash.mockResolvedValue(
         mockVideoDetailWithHash,
       );
@@ -225,6 +234,20 @@ describe('VideoController 단위 테스트', () => {
       );
     });
 
+    it('해시로 비디오 조회 시 탈퇴한 회원의 비디오라면 VideoOfWithdrawnMemberException을 반환한다.', async () => {
+      // given
+
+      // when
+      mockVideoService.getVideoDetailByHash.mockRejectedValue(
+        new VideoOfWithdrawnMemberException(),
+      );
+
+      // then
+      expect(controller.getVideoDetailByHash(hash)).rejects.toThrow(
+        VideoOfWithdrawnMemberException,
+      );
+    });
+
     it('해시로 비디오 조회 시 복호화에 실패하면 DecryptionException을 반환한다.', async () => {
       // given
 
@@ -242,6 +265,7 @@ describe('VideoController 단위 테스트', () => {
 
   describe('getVideoDetail', () => {
     const mockReq = mockReqWithMemberFixture;
+    const nickname = memberFixture.nickname;
     const hash = 'fakeHash';
     const video = videoFixtureForTest;
 
@@ -249,7 +273,11 @@ describe('VideoController 단위 테스트', () => {
       // given
 
       // when
-      const mockVideoDetailWithHash = VideoDetailResponse.from(video, hash);
+      const mockVideoDetailWithHash = VideoDetailResponse.from(
+        video,
+        nickname,
+        hash,
+      );
       mockVideoService.getVideoDetail.mockResolvedValue(
         mockVideoDetailWithHash,
       );
@@ -265,7 +293,11 @@ describe('VideoController 단위 테스트', () => {
       // given
 
       // when
-      const mockVideoDetailWithHash = VideoDetailResponse.from(video, null);
+      const mockVideoDetailWithHash = VideoDetailResponse.from(
+        video,
+        nickname,
+        null,
+      );
       mockVideoService.getVideoDetail.mockResolvedValue(
         mockVideoDetailWithHash,
       );
