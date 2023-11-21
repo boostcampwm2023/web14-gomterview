@@ -12,7 +12,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ url }) => {
       controls
       muted
       css={css`
-        height: 60vh;
+        //16:9 비율로 설정
+        width: 96vh;
+        height: 54vh;
+        object-fit: contain;
         align-self: center;
       `}
     />
