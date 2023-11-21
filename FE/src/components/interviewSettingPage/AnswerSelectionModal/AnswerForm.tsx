@@ -16,8 +16,13 @@ const AnswerForm: React.FC<AnswerFormProps> = ({ questionId, question }) => {
     value: customAnswer,
     onChange: handleCustomAnswerChange,
     isEmpty: isCustomAnswerEmpty,
+    clearInput: clearCustomAnswer,
   } = useInput<HTMLTextAreaElement>('');
-  const { mutate } = useQuestionAnswerMutation(questionId, customAnswer);
+  const { mutate } = useQuestionAnswerMutation(questionId, customAnswer, {
+    onSuccess: () => {
+      clearCustomAnswer();
+    },
+  });
 
   const handleCustomAnswerSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

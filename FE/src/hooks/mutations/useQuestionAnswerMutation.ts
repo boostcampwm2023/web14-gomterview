@@ -1,19 +1,29 @@
 import { postAnswer } from '@/apis/answer';
 import { QUERY_KEY } from '@/constants/queryKey';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  UseMutationOptions,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 const useQuestionAnswerMutation = (
   questionId: number,
-  customAnswer: string
+  customAnswer: string,
+  options?: UseMutationOptions<unknown, Error, void, unknown>
 ) => {
   const queryClient = useQueryClient();
+
+  const { onSuccess, ...leftOption } = options || {};
+
   return useMutation({
     mutationFn: () => postAnswer(questionId, customAnswer),
-    onSuccess: () => {
+    onSuccess: (...args) => {
       void queryClient.invalidateQueries({
         queryKey: QUERY_KEY.QUESTION_ANSWER(questionId),
       });
+      onSuccess?.(...args);
     },
+    ...leftOption,
   });
 };
 
