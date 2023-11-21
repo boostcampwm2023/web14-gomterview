@@ -72,7 +72,7 @@ export const colors = {
     default: colorChips.grayscaleWhite, // #FFFFFF
     inner: colorChips.grayscale100, // #F5F5F5
     weak: colorChips.grayscale300, // #EDEDED
-    black50: colorChips.grayscaleBlack, // #000000
+    weakHover: colorChips.grayscale500,
     black100: colorChips.grayscaleBlack, // #000000
   },
   point: {

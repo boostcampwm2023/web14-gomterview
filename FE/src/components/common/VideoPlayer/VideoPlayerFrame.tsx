@@ -18,6 +18,7 @@ const VideoPlayerFrame: React.FC<VideoItemProps> = ({
       css={css`
         display: flex;
         flex-direction: column;
+        row-gap: 0.75rem;
       `}
     >
       {children}
