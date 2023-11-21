@@ -10,7 +10,7 @@ export class VideoHashResponse {
     ),
   )
   @ApiProperty({ nullable: true })
-  private hash: string;
+  readonly hash: string;
   constructor(hash: string) {
     this.hash = hash;
   }

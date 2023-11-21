@@ -7,4 +7,8 @@ export class CreatePreSignedUrlRequest {
   @IsNumber()
   @IsNotEmpty()
   questionId: number;
+
+  constructor(questionId: number) {
+    this.questionId = questionId;
+  }
 }
