@@ -15,7 +15,7 @@ import { useRecoilValue } from 'recoil';
 
 const InterviewSettingPage: React.FC = () => {
   const navigate = useNavigate();
-  const data = [
+  const pageInfo = [
     {
       name: '문제 선택',
       path: SETTING_PATH.QUESTION,
@@ -50,7 +50,7 @@ const InterviewSettingPage: React.FC = () => {
       state: useRecoilValue(recordSetting),
     },
   ];
-  const validPagePaths = data.map((item) => item.path);
+  const validPagePaths = pageInfo.map((item) => item.path);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -70,7 +70,7 @@ const InterviewSettingPage: React.FC = () => {
   return (
     <InterviewSettingPageLayout>
       <ProgressStepBar>
-        {data.map((item) => (
+        {pageInfo.map((item) => (
           <ProgressStepBar.Item
             key={item.name}
             name={item.name}
@@ -79,7 +79,7 @@ const InterviewSettingPage: React.FC = () => {
         ))}
       </ProgressStepBar>
       <StepPage page={currentPage}>
-        {data.map((item) => (
+        {pageInfo.map((item) => (
           <StepPage.step key={item.path} path={item.path} page={currentPage}>
             {item.page}
           </StepPage.step>
