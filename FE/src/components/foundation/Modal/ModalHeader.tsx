@@ -38,7 +38,7 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
         <Icon
           id="close"
           width="0.75rem"
-          height="auto"
+          height="0.75rem"
           css={css`
             cursor: pointer;
           `}
