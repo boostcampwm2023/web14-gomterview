@@ -53,4 +53,8 @@ export class Question extends DefaultEntity {
       question.defaultAnswer,
     );
   }
+
+  setDefaultAnswer(answer: Answer) {
+    this.defaultAnswer = answer;
+  }
 }
