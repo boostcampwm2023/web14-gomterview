@@ -1,17 +1,9 @@
 import { useState, useCallback } from 'react';
 import { useRecoilValue } from 'recoil';
 import { questionSetting } from '@atoms/interviewSetting';
-import { SelectedQuestion } from '@atoms/interviewSetting';
 
-type UseInterviewFlow = {
-  currentQuestion: SelectedQuestion | undefined;
-  getNextQuestion: () => void;
-  isLastQuestion: boolean;
-};
-
-function useInterviewFlow(): UseInterviewFlow {
-  const { selectedData }: { selectedData: SelectedQuestion[] } =
-    useRecoilValue(questionSetting);
+function useInterviewFlow() {
+  const { selectedData } = useRecoilValue(questionSetting);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const isLastQuestion = currentIndex === selectedData.length - 1;

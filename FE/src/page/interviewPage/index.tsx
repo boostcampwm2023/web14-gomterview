@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import InterviewPageLayout from '@components/interviewPage/InterviewPageLayout';
 import InterviewHeader from '@/components/interviewPage/InterviewHeader/InterviewHeader';
@@ -8,27 +8,19 @@ import InterviewIntroModal from '@components/interviewPage/InterviewModal/Interv
 import InterviewTimeOverModal from '@components/interviewPage/InterviewModal/InterviewTimeOverModal';
 import useInterviewFlow from '@hooks/pages/Interview/useInterviewFlow';
 import useIsAllSuccess from '@hooks/pages/Interview/usIsAllSuccess';
-import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEY } from '@constants/queryKey';
 import { PATH } from '@constants/path';
+import { Navigate } from 'react-router-dom';
 
 const InterviewPage: React.FC = () => {
-  const navigate = useNavigate();
   const isAllSuccess = useIsAllSuccess();
   const isLogin = useQueryClient().getQueryState(QUERY_KEY.MEMBER);
-
-  useEffect(() => {
-    if (!isAllSuccess) {
-      navigate(PATH.ROOT);
-    }
-  }, [isAllSuccess, navigate]);
-
   const { currentQuestion, getNextQuestion, isLastQuestion } =
     useInterviewFlow();
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [isRecording, setIsRecording] = useState(false);
-  const [isScriptInView, setIsScriptInView] = useState(false);
+  const [isScriptInView, setIsScriptInView] = useState(true);
   const [recordedBlobs, setRecordedBlobs] = useState<Blob[]>([]);
   const [selectedMimeType, setSelectedMimeType] = useState('');
   const [interviewIntroModalIsOpen, setInterviewIntroModalIsOpen] =
@@ -37,20 +29,16 @@ const InterviewPage: React.FC = () => {
   const mirrorVideoRef = useRef<HTMLVideoElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
-  useLayoutEffect(() => {
-    const mimeTypes = getSupportedMimeTypes();
-    if (mimeTypes.length > 0) {
-      setSelectedMimeType(mimeTypes[0]);
-    }
-  }, []);
-
   useEffect(() => {
     if (!stream && isAllSuccess) {
       void getMedia();
     }
+    const mimeTypes = getSupportedMimeTypes();
+    if (mimeTypes.length > 0) setSelectedMimeType(mimeTypes[0]);
 
     return () => {
       if (stream) {
+        // recoil 을 모두 초기화
         stream.getTracks().forEach((track) => track.stop());
       }
     };
@@ -58,7 +46,7 @@ const InterviewPage: React.FC = () => {
 
   const getMedia = async () => {
     try {
-      const constraints = {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: { exact: true },
         },
@@ -66,13 +54,11 @@ const InterviewPage: React.FC = () => {
           width: 1280,
           height: 720,
         },
-      };
-      const mediaStream =
-        await navigator.mediaDevices.getUserMedia(constraints);
+      });
+
       setStream(mediaStream);
-      if (mirrorVideoRef.current) {
+      if (mirrorVideoRef.current)
         mirrorVideoRef.current.srcObject = mediaStream;
-      }
     } catch (e) {
       console.log(`현재 마이크와 카메라가 연결되지 않았습니다`);
     }
@@ -90,6 +76,8 @@ const InterviewPage: React.FC = () => {
       };
       mediaRecorderRef.current.start();
       setIsRecording(true);
+      // RecordStartingTime 을 초기화합니다.
+      // pre-signed url을 받습니다.
     } catch (e) {
       console.log(`MediaRecorder error`);
     }
@@ -100,6 +88,7 @@ const InterviewPage: React.FC = () => {
       mediaRecorderRef.current.stop();
     }
     setIsRecording(false);
+    // RecordEndTime을 초기화합니다.
   };
 
   const handleDownload = () => {
@@ -112,9 +101,7 @@ const InterviewPage: React.FC = () => {
       const a = document.createElement('a');
       a.style.display = 'none';
       a.href = url;
-      a.download = `${
-        currentQuestion ? currentQuestion.questionContent : 'recorded'
-      }.webm`;
+      a.download = `${currentQuestion.questionContent}.webm`;
 
       document.body.appendChild(a);
       a.click();
@@ -138,6 +125,8 @@ const InterviewPage: React.FC = () => {
     return types.filter((type) => MediaRecorder.isTypeSupported(type));
   };
 
+  if (!isAllSuccess) return <Navigate to={PATH.ROOT} />;
+
   return (
     <InterviewPageLayout>
       <InterviewHeader
@@ -147,8 +136,8 @@ const InterviewPage: React.FC = () => {
       <InterviewMain
         mirrorVideoRef={mirrorVideoRef}
         isScriptInView={isScriptInView}
-        question={currentQuestion ? currentQuestion.questionContent : ''}
-        answer={currentQuestion ? currentQuestion.answerContent : ''}
+        question={currentQuestion.questionContent}
+        answer={currentQuestion.answerContent}
       />
       <InterviewFooter
         isRecording={isRecording}
