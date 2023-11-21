@@ -1,10 +1,10 @@
 import Modal from '@foundation/Modal';
 import Typography from '@foundation/Typography/Typography';
-import { truncateText } from '@/utils/textUtils';
 import { css } from '@emotion/react';
 import ShareRangeSetting from '@components/interviewVideoPage/Modal/ShareRangeSetting';
 import VideoShareModalFooter from '@components/interviewVideoPage/Modal/VideoShareModalFooter';
 import useToggleVideoPublicMutation from '@hooks/mutations/video/useToggleVideoPublicMutation';
+import { truncateText } from '@/utils/textUtils';
 
 type VideoShareModalProps = {
   videoId: number;
