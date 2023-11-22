@@ -13,6 +13,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { createApiResponseOption } from '../../util/swagger.util';
 import { Member } from '../../member/entity/member';
 import { AnswerResponse } from '../dto/answerResponse';
+import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
 
 @ApiTags('answer')
 @Controller('/api/answer')
@@ -33,6 +34,24 @@ export class AnswerController {
   ) {
     return await this.answerService.addAnswer(
       createAnswerRequest,
+      req.user as Member,
+    );
+  }
+
+  @Post('default')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiCookieAuth()
+  @ApiBody({ type: DefaultAnswerRequest })
+  @ApiOperation({
+    summary: '질문의 대표답변 설정',
+  })
+  @ApiResponse(createApiResponseOption(201, '대표답변 설정 완료', null))
+  async updateDefaultAnswer(
+    @Body() defaultAnswerRequest: DefaultAnswerRequest,
+    @Req() req: Request,
+  ) {
+    return await this.answerService.setDefaultAnswer(
+      defaultAnswerRequest,
       req.user as Member,
     );
   }

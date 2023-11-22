@@ -24,9 +24,16 @@ class NeedToLoginException extends HttpException {
   }
 }
 
+class ForbiddenException extends HttpException {
+  constructor() {
+    super('권한이 없습니다', 403);
+  }
+}
+
 export {
   InvalidTokenException,
   TokenExpiredException,
   ManipulatedTokenNotFiltered,
   NeedToLoginException,
+  ForbiddenException,
 };

@@ -6,10 +6,12 @@ import {
   memberFixture,
   memberFixturesOAuthRequest,
   mockReqWithMemberFixture,
+  oauthRequestFixture,
 } from '../../member/fixture/member.fixture';
 import {
   answerFixture,
   createAnswerRequestFixture,
+  defaultAnswerRequestFixture,
 } from '../fixture/answer.fixture';
 import { INestApplication } from '@nestjs/common';
 import { CategoryRepository } from '../../category/repository/category.repository';
@@ -25,7 +27,10 @@ import {
   addAppModules,
   createIntegrationTestModule,
 } from '../../util/test.util';
-import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
+import {
+  beCategoryFixture,
+  categoryFixtureWithId,
+} from '../../category/fixture/category.fixture';
 import * as request from 'supertest';
 import { AuthService } from '../../auth/service/auth.service';
 import { AuthModule } from '../../auth/auth.module';
@@ -35,12 +40,14 @@ import { CreateAnswerRequest } from '../dto/createAnswerRequest';
 import { Token } from '../../token/entity/token';
 import { AnswerRepository } from '../repository/answer.repository';
 import { MemberRepository } from '../../member/repository/member.repository';
+import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
 
 describe('AnswerController 단위테스트', () => {
   let controller: AnswerController;
 
   const mockAnswerService = {
     addAnswer: jest.fn(),
+    setDefaultAnswer: jest.fn(),
   };
 
   beforeAll(async () => {
@@ -75,6 +82,23 @@ describe('AnswerController 단위테스트', () => {
           mockReqWithMemberFixture,
         ),
       ).resolves.toEqual(AnswerResponse.from(answerFixture, memberFixture));
+    });
+  });
+
+  describe('대표답변 변경', () => {
+    it('각 질문에 대한 대표 답변을 설정할 수 있다.', async () => {
+      //given
+      mockAnswerService.setDefaultAnswer.mockResolvedValue(undefined);
+
+      //when
+
+      //then
+      await expect(
+        controller.updateDefaultAnswer(
+          defaultAnswerRequestFixture,
+          mockReqWithMemberFixture,
+        ),
+      ).resolves.toBeUndefined();
     });
   });
 });
@@ -218,6 +242,124 @@ describe('AnswerController 통합테스트', () => {
         .send(new CreateAnswerRequest(question.id, ''))
         .expect(400)
         .then(() => {});
+    });
+  });
+
+  describe('대표답변 변경', () => {
+    it('토큰을 가지고 존재하는 질문에 대해 존재하는 답변으로 대표답변 설정을 요청하면 성공적으로 변경해준다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(beCategoryFixture, member),
+      );
+      const question = await questionRepository.save(
+        Question.of(category, null, 'question'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+      //when&then
+      const token = await authService.login(memberFixturesOAuthRequest);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .post('/api/answer/default')
+        .set('Cookie', [`accessToken=${token}`])
+        .send(new DefaultAnswerRequest(question.id, answer.id))
+        .expect(201);
+    });
+
+    it('토큰이 없으면 권한없음 처리한다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(beCategoryFixture, member),
+      );
+
+      const question = await questionRepository.save(
+        Question.of(category, null, 'question'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+
+      //when&then
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .post('/api/answer/default')
+        .send(new DefaultAnswerRequest(question.id, answer.id))
+        .expect(401);
+    });
+
+    it('다른 사람의 질문 id로 대표답변을 수정하려하면 403코드를 반환한다', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(beCategoryFixture, member),
+      );
+
+      const question = await questionRepository.save(
+        Question.of(category, null, 'question'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+
+      //when&then
+      const token = await authService.login(oauthRequestFixture);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .post('/api/answer/default')
+        .set('Cookie', [`accessToken=${token}`])
+        .send(new DefaultAnswerRequest(question.id, answer.id))
+        .expect(403);
+    });
+
+    it('질문 id가 존재하지 않으면 404코드를 반환한다', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(beCategoryFixture, member),
+      );
+
+      const question = await questionRepository.save(
+        Question.of(category, null, 'question'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+
+      //when&then
+      const token = await authService.login(memberFixturesOAuthRequest);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .post('/api/answer/default')
+        .set('Cookie', [`accessToken=${token}`])
+        .send(new DefaultAnswerRequest(12341, answer.id))
+        .expect(404);
+    });
+
+    it('답변 id가 존재하지 않으면 404코드를 반환한다', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(beCategoryFixture, member),
+      );
+
+      const question = await questionRepository.save(
+        Question.of(category, null, 'question'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+
+      //when&then
+      const token = await authService.login(memberFixturesOAuthRequest);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .post('/api/answer/default')
+        .set('Cookie', [`accessToken=${token}`])
+        .send(new DefaultAnswerRequest(question.id, 124321))
+        .expect(404);
     });
   });
 });

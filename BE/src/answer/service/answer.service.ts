@@ -8,16 +8,21 @@ import { Member } from '../../member/entity/member';
 import { Question } from '../../question/entity/question';
 import { Answer } from '../entity/answer';
 import { AnswerResponse } from '../dto/answerResponse';
+import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
+import { CategoryRepository } from '../../category/repository/category.repository';
+import { AnswerNotFoundException } from '../exception/answer.exception';
+import { CategoryForbiddenException } from '../../category/exception/category.exception';
 
 @Injectable()
 export class AnswerService {
   constructor(
     private answerRepository: AnswerRepository,
     private questionRepository: QuestionRepository,
+    private categoryRepository: CategoryRepository,
   ) {}
 
   async addAnswer(createAnswerRequest: CreateAnswerRequest, member: Member) {
-    const question = await this.questionRepository.findById(
+    const question = await this.questionRepository.findWithOriginById(
       createAnswerRequest.questionId,
     );
 
@@ -31,6 +36,37 @@ export class AnswerService {
       member,
     );
     return AnswerResponse.from(answer, member);
+  }
+
+  async setDefaultAnswer(
+    defaultAnswerRequest: DefaultAnswerRequest,
+    member: Member,
+  ) {
+    const question = await this.questionRepository.findById(
+      defaultAnswerRequest.questionId,
+    );
+    if (isEmpty(question)) {
+      throw new QuestionNotFoundException();
+    }
+
+    const category = await this.categoryRepository.findByCategoryId(
+      question.category.id,
+    );
+
+    if (!category.isOwnedBy(member)) {
+      throw new CategoryForbiddenException();
+    }
+
+    const answer = await this.answerRepository.findById(
+      defaultAnswerRequest.answerId,
+    );
+
+    if (isEmpty(answer)) {
+      throw new AnswerNotFoundException();
+    }
+
+    question.setDefaultAnswer(answer);
+    await this.questionRepository.save(question);
   }
 
   private async saveAnswerAndQuestion(

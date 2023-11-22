@@ -21,6 +21,26 @@ export class QuestionRepository {
     return await this.repository.findOneBy({ id: questionId });
   }
 
+  async findWithOriginById(id: number): Promise<Question | null> {
+    const question = await this.repository
+      .createQueryBuilder('Question')
+      .leftJoinAndSelect('Question.origin', 'origin')
+      .where('Question.id = :id', { id })
+      .getOne();
+
+    if (!question) {
+      return null;
+    }
+
+    const originQuestion = question.origin as Question | null;
+
+    if (!originQuestion) {
+      return question;
+    }
+
+    return originQuestion;
+  }
+
   async remove(question: Question) {
     await this.repository.remove(question);
   }

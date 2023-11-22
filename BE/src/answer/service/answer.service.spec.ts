@@ -20,25 +20,45 @@ import { Member } from '../../member/entity/member';
 import { createIntegrationTestModule } from '../../util/test.util';
 import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { QuestionModule } from '../../question/question.module';
-import { createAnswerRequestFixture } from '../fixture/answer.fixture';
+import {
+  answerFixture,
+  createAnswerRequestFixture,
+  defaultAnswerRequestFixture,
+} from '../fixture/answer.fixture';
+import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
+import { ForbiddenException } from '../../token/exception/token.exception';
 
 describe('AnswerService 단위 테스트', () => {
   let service: AnswerService;
   const mockAnswerRepository = {
     save: jest.fn(),
+    findById: jest.fn(),
   };
   const mockQuestionRepository = {
     findById: jest.fn(),
+    findWithOriginById: jest.fn(),
+    save: jest.fn(),
+  };
+
+  const mockCategoryRepository = {
+    findByCategoryId: jest.fn(),
   };
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AnswerService, AnswerRepository, QuestionRepository],
+      providers: [
+        AnswerService,
+        AnswerRepository,
+        QuestionRepository,
+        CategoryRepository,
+      ],
     })
       .overrideProvider(AnswerRepository)
       .useValue(mockAnswerRepository)
       .overrideProvider(QuestionRepository)
       .useValue(mockQuestionRepository)
+      .overrideProvider(CategoryRepository)
+      .useValue(mockCategoryRepository)
       .compile();
 
     service = module.get<AnswerService>(AnswerService);
@@ -48,10 +68,12 @@ describe('AnswerService 단위 테스트', () => {
     expect(service).toBeDefined();
   });
 
-  describe('질문추가', () => {
+  describe('답변 추가', () => {
     it('질문에 답변을 추가한다.', async () => {
       //given
-      mockQuestionRepository.findById.mockResolvedValue(questionFixture);
+      mockQuestionRepository.findWithOriginById.mockResolvedValue(
+        questionFixture,
+      );
 
       //when
       const answer = Answer.of('test', memberFixture, questionFixture);
@@ -65,7 +87,7 @@ describe('AnswerService 단위 테스트', () => {
 
     it('질문에 답변을 추가할 때 id로 질문을 확인할 수 없을 때 QuestionNotFoundException을 반환한다.', async () => {
       //given
-      mockQuestionRepository.findById.mockRejectedValue(
+      mockQuestionRepository.findWithOriginById.mockRejectedValue(
         new QuestionNotFoundException(),
       );
 
@@ -77,6 +99,66 @@ describe('AnswerService 단위 테스트', () => {
       await expect(
         service.addAnswer(createAnswerRequestFixture, memberFixture),
       ).rejects.toThrow(new QuestionNotFoundException());
+    });
+  });
+
+  describe('질문에 대표답변 등록', () => {
+    it('질문에 대한 대표답변을 등록하면 해당 Question에 바로 대표답변을 추가한다.', async () => {
+      //given
+
+      //when
+      mockQuestionRepository.findById.mockResolvedValue(questionFixture);
+      mockQuestionRepository.save.mockResolvedValue(questionFixture);
+      mockCategoryRepository.findByCategoryId.mockResolvedValue(
+        categoryFixtureWithId,
+      );
+      mockAnswerRepository.findById.mockResolvedValue(answerFixture);
+
+      //then
+      await expect(
+        service.setDefaultAnswer(defaultAnswerRequestFixture, memberFixture),
+      ).resolves.toBeUndefined();
+    });
+
+    it('해당 id의 질문이 없으면 QuestionNotFoundException을 발생시킨다..', async () => {
+      //given
+
+      //when
+      mockQuestionRepository.findById.mockResolvedValue(undefined);
+      mockCategoryRepository.findByCategoryId.mockResolvedValue(
+        categoryFixtureWithId,
+      );
+      mockAnswerRepository.findById.mockResolvedValue(answerFixture);
+
+      //then
+      await expect(
+        service.setDefaultAnswer(defaultAnswerRequestFixture, memberFixture),
+      ).rejects.toThrow(new QuestionNotFoundException());
+    });
+
+    it('질문에 대한 카테고리가 본인의 소유가 Forbidden 예외처리한다(해당 질문이 속한 카테고리는 본인의 소유여야 한다)', async () => {
+      //given
+
+      //when
+      mockQuestionRepository.findById.mockResolvedValue(questionFixture);
+      mockCategoryRepository.findByCategoryId.mockResolvedValue(
+        Category.from(
+          categoryFixtureWithId,
+          new Member(
+            100,
+            'janghee@janghee.com',
+            'janghee',
+            'https://jangsarchive.tistory.com',
+            new Date(),
+          ),
+        ),
+      );
+      mockAnswerRepository.findById.mockResolvedValue(answerFixture);
+
+      //then
+      await expect(
+        service.setDefaultAnswer(defaultAnswerRequestFixture, memberFixture),
+      ).rejects.toThrow(new ForbiddenException());
     });
   });
 });
@@ -118,7 +200,7 @@ describe('AnswerService 통합테스트', () => {
     await categoryRepository.query('delete from Member');
   });
 
-  describe('질문추가', () => {
+  describe('답변 추가', () => {
     it('질문에 대한 응답을 추가할 수 있다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
@@ -175,9 +257,35 @@ describe('AnswerService 통합테스트', () => {
       const answer = await answerRepository.findByContentMemberIdAndQuestionId(
         'testAnswer',
         member.id,
-        question.id,
+        originalQuestion.id,
       );
       expect(answerResponse).toEqual(AnswerResponse.from(answer, member));
+    });
+  });
+
+  describe('대표답변 설정', () => {
+    it('Member와 알맞은 Questin이 온다면, 정상적으로 대표 답변을 설정해준다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(categoryFixtureWithId, member),
+      );
+      const question = await questionRepository.save(
+        Question.of(category, null, 'test'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+
+      //when
+      await answerService.setDefaultAnswer(
+        new DefaultAnswerRequest(question.id, answer.id),
+        member,
+      );
+      const updatedQuestion = await questionRepository.findById(question.id);
+
+      //then
+      expect(updatedQuestion.defaultAnswer.id).toEqual(answer.id);
     });
   });
 });
