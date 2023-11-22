@@ -12,7 +12,11 @@ const useInput = <T extends HTMLInputElement | HTMLTextAreaElement>(
     return value === '';
   };
 
-  return { value, onChange, setValue, isEmpty };
+  const clearInput = () => {
+    setValue('');
+  };
+
+  return { value, onChange, setValue, isEmpty, clearInput };
 };
 
 export default useInput;
