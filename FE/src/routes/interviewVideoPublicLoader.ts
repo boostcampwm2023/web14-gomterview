@@ -3,6 +3,7 @@ import { QUERY_KEY } from '@constants/queryKey';
 import { Params, redirect } from 'react-router-dom';
 import { PATH } from '@constants/path';
 import { getVideoByHash } from '@/apis/video';
+import axios from 'axios';
 
 const interviewVideoPublicLoader = async ({
   params,
@@ -12,12 +13,18 @@ const interviewVideoPublicLoader = async ({
   queryClient: QueryClient;
 }) => {
   const { videoHash = '' } = params;
-  await queryClient.ensureQueryData({
-    queryKey: QUERY_KEY.VIDEO_HASH(videoHash),
-    queryFn: () => getVideoByHash(videoHash),
-  });
+  await queryClient
+    .ensureQueryData({
+      queryKey: QUERY_KEY.VIDEO_HASH(videoHash),
+      queryFn: () => getVideoByHash(videoHash),
+    })
+    .catch((e) => {
+      if (axios.isAxiosError(e)) {
+        process.env.NODE_ENV === 'development' && console.error(e.toJSON());
+      }
+    });
   const queryState = queryClient.getQueryState(QUERY_KEY.VIDEO_HASH(videoHash));
-  return queryState?.data ? null : redirect(PATH.NOT_FOUND);
+  return queryState?.data ? null : redirect(PATH.ROOT);
 };
 
 export default interviewVideoPublicLoader;
