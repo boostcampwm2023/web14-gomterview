@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { AnswerRepository } from '../repository/answer.repository';
 import { QuestionRepository } from '../../question/repository/question.repository';
 import { QuestionNotFoundException } from '../../question/exception/question.exception';
@@ -10,6 +10,8 @@ import { Answer } from '../entity/answer';
 import { AnswerResponse } from '../dto/answerResponse';
 import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
 import { CategoryRepository } from '../../category/repository/category.repository';
+import { ForbiddenException } from '../../token/exception/token.exception';
+import { AnswerNotFoundException } from '../exception/answer.exception';
 
 @Injectable()
 export class AnswerService {
@@ -52,12 +54,16 @@ export class AnswerService {
     );
 
     if (!category.isOwnedBy(member)) {
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     }
 
     const answer = await this.answerRepository.findById(
       defaultAnswerRequest.answerId,
     );
+
+    if (isEmpty(answer)) {
+      throw new AnswerNotFoundException();
+    }
 
     question.setDefaultAnswer(answer);
     await this.questionRepository.save(question);
