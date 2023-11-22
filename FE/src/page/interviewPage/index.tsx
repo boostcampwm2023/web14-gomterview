@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 import InterviewPageLayout from '@components/interviewPage/InterviewPageLayout';
 import InterviewHeader from '@/components/interviewPage/InterviewHeader/InterviewHeader';
@@ -8,21 +8,21 @@ import InterviewIntroModal from '@components/interviewPage/InterviewModal/Interv
 import InterviewTimeOverModal from '@components/interviewPage/InterviewModal/InterviewTimeOverModal';
 import useInterviewFlow from '@hooks/pages/Interview/useInterviewFlow';
 import useIsAllSuccess from '@/hooks/pages/Interview/useIsAllSuccess';
-import { useQueryClient } from '@tanstack/react-query';
-import { QUERY_KEY } from '@constants/queryKey';
 import { PATH } from '@constants/path';
 import { Navigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { recordSetting } from '@/atoms/interviewSetting';
 import useMedia from '@/hooks/useMedia';
+import { localDownload, startRecording, stopRecording } from '@/utils/record';
+import { useUploadToIDrive } from '@/hooks/pages/Interview/useUploadToIdrive';
+import useTimeTracker from '@/hooks/pages/Interview/useTimeTracker';
 
-import { useNavigate } from 'react-router-dom';
 const InterviewPage: React.FC = () => {
+  const { startTimer, stopTimer, calculateDuration, isTimeOver } =
+    useTimeTracker();
   const isAllSuccess = useIsAllSuccess();
   const { method } = useRecoilValue(recordSetting);
-
-  const isLogin = useQueryClient().getQueryState(QUERY_KEY.MEMBER);
-  const navigate = useNavigate();
+  const uploadToDrive = useUploadToIDrive();
   const { currentQuestion, getNextQuestion, isLastQuestion } =
     useInterviewFlow();
 
@@ -38,68 +38,56 @@ const InterviewPage: React.FC = () => {
   const [recordedBlobs, setRecordedBlobs] = useState<Blob[]>([]);
   const [interviewIntroModalIsOpen, setInterviewIntroModalIsOpen] =
     useState<boolean>(true);
+  const [interviewTimeOverModalIsOpen, setInterviewTimeOverModalIsOpen] =
+    useState<boolean>(false);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
-  const handleStartRecording = () => {
-    try {
-      mediaRecorderRef.current = new MediaRecorder(media as MediaStream, {
-        mimeType: selectedMimeType,
-      });
-      mediaRecorderRef.current.ondataavailable = (event) => {
-        if (event.data && event.data.size > 0) {
-          setRecordedBlobs([event.data]);
-        }
-      };
-      mediaRecorderRef.current.start();
-      setIsRecording(true);
-      // RecordStartingTime 을 초기화합니다.
-      // pre-signed url을 받습니다.
-    } catch (e) {
-      console.log(`MediaRecorder error`);
-    }
-  };
+  const handleStartRecording = useCallback(() => {
+    startRecording({
+      media,
+      selectedMimeType,
+      mediaRecorderRef,
+      setRecordedBlobs,
+    });
+    setIsRecording(true);
+    startTimer();
+  }, [media, selectedMimeType, mediaRecorderRef, setRecordedBlobs, startTimer]);
 
-  const handleStopRecording = () => {
-    if (mediaRecorderRef.current) {
-      mediaRecorderRef.current.stop();
-    }
+  const handleStopRecording = useCallback(() => {
+    stopRecording(mediaRecorderRef);
     setIsRecording(false);
-    // RecordEndTime을 초기화합니다.
-  };
+    stopTimer();
+  }, [mediaRecorderRef, stopTimer]);
 
-  const handleDownload = () => {
+  const handleDownload = useCallback(() => {
     const blob = new Blob(recordedBlobs, { type: selectedMimeType });
-
+    const recordingTime = calculateDuration();
+    console.log(recordingTime);
     switch (method) {
-      case 'idrive': {
-        // mutate({
-        //   questionId: currentQuestion.questionId,
-        // });
-
-        // console.log(curPreSignedUrl);
-
+      case 'idrive':
+        void uploadToDrive({ blob, currentQuestion });
         break;
-      }
-      case 'local': {
-        // 비회원의 경우 수행할 과정입니다.
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        a.download = `${currentQuestion.questionContent}.webm`;
-
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-
+      case 'local':
+        localDownload(blob, currentQuestion);
         break;
-      }
     }
-
     setRecordedBlobs([]);
-  };
+  }, [
+    recordedBlobs,
+    selectedMimeType,
+    method,
+    currentQuestion,
+    uploadToDrive,
+    calculateDuration,
+  ]);
+
+  useEffect(() => {
+    if (isTimeOver) {
+      setInterviewTimeOverModalIsOpen(true);
+      handleStopRecording();
+    }
+  }, [handleStopRecording, isTimeOver]);
 
   if (!isAllSuccess || connectStatus === 'fail') {
     return <Navigate to={PATH.ROOT} />;
@@ -128,8 +116,8 @@ const InterviewPage: React.FC = () => {
           closeModal={() => setInterviewIntroModalIsOpen((prev) => !prev)}
         />
         <InterviewTimeOverModal
-          isOpen={false}
-          closeModal={() => console.log('모달을 종료합니다.')}
+          isOpen={interviewTimeOverModalIsOpen}
+          closeModal={() => setInterviewTimeOverModalIsOpen(false)}
         />
       </InterviewPageLayout>
     );
