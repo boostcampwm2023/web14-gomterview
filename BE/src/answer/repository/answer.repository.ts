@@ -8,4 +8,8 @@ export class AnswerRepository {
   constructor(
     @InjectRepository(Answer) private repository: Repository<Answer>,
   ) {}
+
+  async save(answer: Answer) {
+    return await this.repository.save(answer);
+  }
 }
