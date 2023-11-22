@@ -3,7 +3,6 @@ import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import QuestionSelectionBox from '@/components/interviewSettingPage/QustionSelectionBox';
 import { SETTING_PATH } from '@/constants/path';
 import VideoSettingBox from '@/components/interviewSettingPage/VideoSettingBox';
-import RecordMethodBox from '@/components/interviewSettingPage/RecordMethodBox';
 import StepPage from '@/components/foundation/StepPages';
 import ProgressStepBar from '@/components/common/ProgressStepBar/ProgressStepBar';
 import {
@@ -12,6 +11,7 @@ import {
   videoSetting,
 } from '@/atoms/interviewSetting';
 import { useRecoilValue } from 'recoil';
+import RecordSettingPage from './RecordSettingPage';
 
 const InterviewSettingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ const InterviewSettingPage: React.FC = () => {
       name: '녹화 설정',
       path: SETTING_PATH.RECORD,
       page: (
-        <RecordMethodBox
+        <RecordSettingPage
           onPrevClick={() => changeSearchParams(SETTING_PATH.CONNECTION)}
           onNextClick={() => navigate('/interview')}
         />
