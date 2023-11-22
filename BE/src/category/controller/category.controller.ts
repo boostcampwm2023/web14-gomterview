@@ -66,7 +66,6 @@ export class CategoryController {
     const token = getTokenValue(req);
     const member = await this.tokenService.findMemberByToken(token);
     const categories = await this.categoryService.findUsingCategories(member);
-    console.log(categories);
 
     return CategoryListResponse.of(categories);
   }
