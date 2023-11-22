@@ -48,7 +48,7 @@ describe('AnswerService 단위 테스트', () => {
     expect(service).toBeDefined();
   });
 
-  describe('답변 추가', () => {
+  describe('질문추가', () => {
     it('질문에 답변을 추가한다.', async () => {
       //given
       mockQuestionRepository.findById.mockResolvedValue(questionFixture);
@@ -118,7 +118,7 @@ describe('AnswerService 통합테스트', () => {
     await categoryRepository.query('delete from Member');
   });
 
-  describe('질문추가 통합테스트', () => {
+  describe('질문추가', () => {
     it('질문에 대한 응답을 추가할 수 있다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
