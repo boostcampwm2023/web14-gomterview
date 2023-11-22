@@ -73,9 +73,19 @@ const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
           {question.questionContent}
         </Typography>
       </AccordionSummary>
-      <AccordionDetails>
+      <AccordionDetails
+        css={css`
+          justify-content: space-between;
+        `}
+      >
         <LeadingDot>
-          <Typography noWrap variant="body3">
+          <Typography
+            noWrap
+            variant="body3"
+            css={css`
+              min-width: 100%;
+            `}
+          >
             {question.answerContent}
           </Typography>
         </LeadingDot>
