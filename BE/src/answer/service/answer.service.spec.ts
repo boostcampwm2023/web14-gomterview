@@ -288,4 +288,67 @@ describe('AnswerService 통합테스트', () => {
       expect(updatedQuestion.defaultAnswer.id).toEqual(answer.id);
     });
   });
+
+  describe('질문에 대한 답변들 조회', () => {
+    it('질문에 대한 모든 답변들이 반환된다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const member1 = await memberRepository.save(
+        new Member(
+          null,
+          'ja@ja.com',
+          'ja',
+          'https://jangsarchive.tistory.com',
+          new Date(),
+        ),
+      );
+      const category = await categoryRepository.save(
+        Category.from(categoryFixtureWithId, member),
+      );
+      const question = await questionRepository.save(
+        Question.of(category, null, 'test'),
+      );
+      for (let index = 1; index <= 10; index++) {
+        await answerRepository.save(
+          Answer.of(`test${index}`, member, question),
+        );
+        await answerRepository.save(
+          Answer.of(`TEST${index}`, member1, question),
+        );
+      }
+
+      //when
+
+      //then
+      const list = await answerService.getAnswerList(question.id);
+      expect(list.length).toEqual(20);
+    });
+
+    it('대표답변으로 설정하면 처음으로 온다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(categoryFixtureWithId, member),
+      );
+      const question = await questionRepository.save(
+        Question.of(category, null, 'test'),
+      );
+      for (let index = 1; index <= 10; index++) {
+        await answerRepository.save(
+          Answer.of(`test${index}`, member, question),
+        );
+      }
+      const answer = await answerRepository.save(
+        Answer.of(`defaultAnswer`, member, question),
+      );
+      question.setDefaultAnswer(answer);
+      await questionRepository.save(question);
+
+      //when
+
+      //then
+      const list = await answerService.getAnswerList(question.id);
+      expect(list[0].content).toEqual('defaultAnswer');
+    });
+  });
 });
