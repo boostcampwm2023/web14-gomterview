@@ -12,7 +12,12 @@ type AnswerScriptProps = {
 
 const AnswerScript: React.FC<AnswerScriptProps> = ({ answer, onClick }) => {
   return (
-    <Box onClick={onClick}>
+    <Box
+      onClick={onClick}
+      css={css`
+        cursor: pointer;
+      `}
+    >
       <div
         css={css`
           display: flex;

@@ -1,5 +1,4 @@
 import { questionSetting } from '@/atoms/interviewSetting';
-import Button from '@/components/foundation/Button/Button';
 import Tabs from '@/components/foundation/Tabs';
 import Typography from '@/components/foundation/Typography/Typography';
 import { theme } from '@/styles/theme';
@@ -9,6 +8,7 @@ import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import QuestionAccordion from './QuestionAccordion';
 import useQuestionCategoryQuery from '@/hooks/queries/useQuestionCategoryQuery';
+import Toggle from '@/components/foundation/Toggle/Toggle';
 
 type TabPanelItemProps = {
   selectedTabIndex: string;
@@ -91,15 +91,24 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
             border-radius: 0 0 1rem 0;
           `}
         >
-          <Button
-            css={css`
-              margin-left: auto;
-            `}
-            size="sm"
+          <div
             onClick={toggleShowSelectionOption}
+            css={css`
+              display: flex;
+              cursor: pointer;
+              align-items: center;
+              column-gap: 0.25rem;
+            `}
           >
-            선택된 질문만 보기
-          </Button>
+            <Toggle
+              css={css`
+                margin-left: auto;
+              `}
+              onClick={toggleShowSelectionOption}
+              isToggled={onlySelectedOption}
+            />
+            <Typography variant="body3">선택된 질문만 보기</Typography>
+          </div>
         </div>
       </div>
     </Tabs.TabPanel>
