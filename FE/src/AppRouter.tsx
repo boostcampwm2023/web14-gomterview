@@ -9,12 +9,12 @@ import { QueryClient } from '@tanstack/react-query';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 import myPageLoader from '@routes/myPageLoader';
 import invalidPathLoader from '@routes/invalidPathLoader';
-import rootLoader from '@routes/rootLoader';
 import InterviewVideoPublicPage from '@page/interviewVideoPublicPage';
 import InterviewVideoPublicLoader from '@routes/interviewVideoPublicLoader';
+import rootLoader from '@routes/rootLoader';
 
-const routes = ({ queryClient }: { queryClient: QueryClient }) => {
-  return createBrowserRouter([
+const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
+  const routes = createBrowserRouter([
     {
       path: PATH.ROOT,
       element: <Outlet />,
@@ -58,10 +58,7 @@ const routes = ({ queryClient }: { queryClient: QueryClient }) => {
       ],
     },
   ]);
-};
-
-const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
-  return <RouterProvider router={routes({ queryClient: queryClient })} />;
+  return <RouterProvider router={routes} />;
 };
 
 export default AppRouter;
