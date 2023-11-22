@@ -27,7 +27,11 @@ import * as crypto from 'crypto';
 import 'dotenv/config';
 import { VideoHashResponse } from '../dto/videoHashResponse';
 import { MemberRepository } from 'src/member/repository/member.repository';
-import { deleteFromRedis, saveToRedis } from 'src/util/redis.util';
+import {
+  deleteFromRedis,
+  getValueFromRedis,
+  saveToRedis,
+} from 'src/util/redis.util';
 
 const algorithm = 'aes-256-cbc';
 const key = process.env.URL_ENCRYPT_KEY;
@@ -79,8 +83,8 @@ export class VideoService {
   }
 
   async getVideoDetailByHash(hash: string) {
-    const decryptedUrl = this.getDecryptedUrl(hash);
-    const video = await this.videoRepository.findByUrl(decryptedUrl);
+    const originUrl = await getValueFromRedis(hash);
+    const video = await this.videoRepository.findByUrl(originUrl);
     if (!video.isPublic) throw new VideoAccessForbiddenException();
 
     const videoOwner = await this.memberRepository.findById(video.memberId);
@@ -105,15 +109,7 @@ export class VideoService {
     this.validateVideoOwnership(video, memberId);
 
     await this.videoRepository.toggleVideoStatus(videoId); // TODO: 좀 더 효율적인 Patch 로직이 있나 확인
-
-    const hash = this.getHashedUrl(video.url);
-    if (video.isPublic) {
-      // 현재가 public이었으면 토글 후 private이 되기에 redis에서 해시값 삭제 후 null 반환
-      await deleteFromRedis(hash);
-      return new VideoHashResponse(null);
-    }
-    await saveToRedis(hash, video.url);
-    return new VideoHashResponse(hash);
+    return this.updateVideoHashInRedis(video);
   }
 
   async deleteVideo(videoId: number, member: Member) {
@@ -138,6 +134,19 @@ export class VideoService {
 
   private getHashedUrl(url: string) {
     return crypto.createHash('md5').update(url).digest('hex');
+  }
+
+  private async updateVideoHashInRedis(video: Video) {
+    const hash = this.getHashedUrl(video.url);
+
+    if (video.isPublic) {
+      // 현재가 public이었으면 토글 후 private이 되기에 redis에서 해시값 삭제 후 null 반환
+      await deleteFromRedis(hash);
+      return new VideoHashResponse(null);
+    }
+
+    await saveToRedis(hash, video.url);
+    return new VideoHashResponse(hash);
   }
 
   private getEncryptedurl(url: string) {
