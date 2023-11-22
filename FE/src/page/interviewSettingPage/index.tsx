@@ -1,7 +1,6 @@
 import InterviewSettingPageLayout from '@/components/interviewSettingPage/InterviewSettingPageLayout';
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { SETTING_PATH } from '@/constants/path';
-import VideoSettingBox from '@/components/interviewSettingPage/VideoSettingBox';
 import StepPage from '@/components/foundation/StepPages';
 import ProgressStepBar from '@/components/common/ProgressStepBar/ProgressStepBar';
 import {
@@ -13,6 +12,7 @@ import { useRecoilValue } from 'recoil';
 import QuestionSettingPage from './QuestionSettingPage';
 import { css } from '@emotion/react';
 import RecordSettingPage from './RecordSettingPage';
+import VideoSettingPage from './VideoSettingPage';
 
 const InterviewSettingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ const InterviewSettingPage: React.FC = () => {
       name: '화면과 소리설정',
       path: SETTING_PATH.CONNECTION,
       page: (
-        <VideoSettingBox
+        <VideoSettingPage
           onPrevClick={() => changeSearchParams(SETTING_PATH.QUESTION)}
           onNextClick={() => changeSearchParams(SETTING_PATH.RECORD)}
         />
