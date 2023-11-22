@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBody,
   ApiCookieAuth,
@@ -14,6 +22,7 @@ import { createApiResponseOption } from '../../util/swagger.util';
 import { Member } from '../../member/entity/member';
 import { AnswerResponse } from '../dto/answerResponse';
 import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
+import { AnswerListResponse } from '../dto/answerListResponse';
 
 @ApiTags('answer')
 @Controller('/api/answer')
@@ -54,5 +63,21 @@ export class AnswerController {
       defaultAnswerRequest,
       req.user as Member,
     );
+  }
+
+  @Get(':questionId')
+  @ApiOperation({
+    summary: '질문의 답변 리스트 반환',
+  })
+  @ApiResponse(
+    createApiResponseOption(
+      200,
+      '답변 리스트 캡슐화해 반환',
+      AnswerListResponse,
+    ),
+  )
+  async getQuestionAnswers(@Param('questionId') questionId: number) {
+    const answerList = await this.answerService.getAnswerList(questionId);
+    return AnswerListResponse.of(answerList);
   }
 }
