@@ -57,16 +57,15 @@ const RecordSettingPage: React.FC<RecordSettingPageProps> = ({
           gap: 2rem;
         `}
       >
-        {userInfo && (
-          <RecordRadio
-            group="record"
-            IconId="save-idrive"
-            onChange={() => handleRecordChange('idrive')}
-            defaultChecked={setting.method === 'idrive'}
-          >
-            서버에 저장
-          </RecordRadio>
-        )}
+        <RecordRadio
+          group="record"
+          IconId="save-idrive"
+          onChange={() => handleRecordChange('idrive')}
+          disabled={!userInfo}
+          defaultChecked={setting.method === 'idrive'}
+        >
+          서버에 저장
+        </RecordRadio>
         <RecordRadio
           group="record"
           IconId="save-local"

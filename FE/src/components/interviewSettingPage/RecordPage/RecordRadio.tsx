@@ -10,6 +10,7 @@ type RecordRadioProps = {
   children: React.ReactNode;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   defaultChecked?: boolean;
+  disabled?: boolean;
 };
 
 const RecordRadio: React.FC<RecordRadioProps> = ({
@@ -18,6 +19,7 @@ const RecordRadio: React.FC<RecordRadioProps> = ({
   children,
   onChange,
   defaultChecked,
+  disabled,
 }) => {
   return (
     <>
@@ -27,6 +29,7 @@ const RecordRadio: React.FC<RecordRadioProps> = ({
         type="radio"
         name={group}
         defaultChecked={defaultChecked}
+        disabled={disabled}
         css={css`
           display: none;
           &:checked + label > div {
@@ -34,7 +37,10 @@ const RecordRadio: React.FC<RecordRadioProps> = ({
           }
         `}
       />
-      <label htmlFor={`record-${IconId}`}>
+      <label
+        htmlFor={`record-${IconId}`}
+        onClick={() => disabled && alert('로그인 후 이용해 주세요.')}
+      >
         <Box
           css={css`
             display: flex;
