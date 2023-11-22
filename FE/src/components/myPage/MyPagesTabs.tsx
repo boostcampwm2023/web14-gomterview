@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import Tabs from '@foundation/Tabs';
 import SelectionBox from '@foundation/SelectionBox/SelectionBox';
 import { css } from '@emotion/react';
@@ -8,6 +8,11 @@ import VideoListTabPanel from '@components/myPage/TabPanel/VideoListTabPanel';
 
 const MyPagesTabs: React.FC = () => {
   const [value, setValue] = useState('2');
+
+  const handleTabChange = (_: SyntheticEvent, v: string) => {
+    setValue(v);
+  };
+
   return (
     <Tabs
       initialValue={value}
@@ -24,11 +29,7 @@ const MyPagesTabs: React.FC = () => {
           padding: 0.5rem 1.5rem;
         `}
       >
-        <Tabs.TabList
-          name="my-page"
-          gap="1rem"
-          onChange={(_, v) => setValue(v)}
-        >
+        <Tabs.TabList name="my-page" gap="1rem" onTabChange={handleTabChange}>
           <Tabs.Tab value="1">
             <SelectionBox
               id="add-question"

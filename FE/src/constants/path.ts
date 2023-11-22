@@ -12,7 +12,8 @@ export const PATH = {
   INTERVIEW_SETTING_CONNECTION: `/${INTERVIEW}/${SETTING}/${CONNECTION}`,
   INTERVIEW_SETTING_RECORD: `/${INTERVIEW}/${SETTING}/${RECORD}`,
   MYPAGE: `/${MYPAGE}`,
-  INTERVIEW_VIDEO: `/${INTERVIEW}/:videoId`,
+  INTERVIEW_VIDEO: (videoId?: number) =>
+    `/${INTERVIEW}/${videoId ?? ':videoId'}`,
   INTERVIEW_VIDEO_PUBLIC: `/${INTERVIEW}/public/:videoHash`,
   NOT_FOUND: `/404`,
 };
