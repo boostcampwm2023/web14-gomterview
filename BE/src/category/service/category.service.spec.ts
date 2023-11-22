@@ -23,6 +23,7 @@ import {
   customCategoryFixture,
   feCategoryFixture,
 } from '../fixture/category.fixture';
+import { Answer } from '../../answer/entity/answer';
 
 describe('CategoryService', () => {
   let service: CategoryService;
@@ -197,7 +198,7 @@ describe('CategoryService 통합테스트', () => {
 
   beforeAll(async () => {
     const modules = [CategoryModule, MemberModule];
-    const entities = [Member, Category, Question];
+    const entities = [Member, Category, Question, Answer];
     const moduleFixture = await createIntegrationTestModule(modules, entities);
 
     app = moduleFixture.createNestApplication();
@@ -237,7 +238,7 @@ describe('CategoryService 통합테스트', () => {
     );
 
     //then
-    expect(result).toBeUndefined();
+    expect(result.name).toEqual('tester');
     expect(category.pop().name).toEqual('tester');
   });
 

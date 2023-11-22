@@ -32,6 +32,7 @@ import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 import * as cookieParser from 'cookie-parser';
 import { QuestionResponseList } from '../dto/questionResponseList';
 import { QuestionRepository } from '../repository/question.repository';
+import { Answer } from '../../answer/entity/answer';
 
 describe('QuestionController', () => {
   let controller: QuestionController;
@@ -119,7 +120,7 @@ describe('QuestionController 통합테스트', () => {
 
   beforeAll(async () => {
     const modules = [QuestionModule, TokenModule, AuthModule];
-    const entities = [Member, Token, Category, Question];
+    const entities = [Member, Token, Category, Question, Answer];
 
     const moduleFixture: TestingModule = await createIntegrationTestModule(
       modules,

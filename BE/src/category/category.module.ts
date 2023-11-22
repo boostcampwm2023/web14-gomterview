@@ -6,9 +6,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Category } from './entity/category';
 import { Question } from '../question/entity/question';
 import { TokenModule } from '../token/token.module';
+import { Answer } from '../answer/entity/answer';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Category, Question]), TokenModule],
+  imports: [
+    TypeOrmModule.forFeature([Category, Question, Answer]),
+    TokenModule,
+  ],
   providers: [CategoryRepository, CategoryService],
   controllers: [CategoryController],
 })

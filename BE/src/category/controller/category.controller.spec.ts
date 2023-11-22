@@ -26,17 +26,18 @@ import { TokenModule } from '../../token/token.module';
 import { AuthService } from '../../auth/service/auth.service';
 import { Token } from '../../token/entity/token';
 import {
-  categoryFixtureWithId,
+  beCategoryFixture,
   categoryListResponseFixture,
   defaultCategoryListFixture,
-  defaultCategoryListResponseFixture,
 } from '../fixture/category.fixture';
-import { CategoryListResponse } from '../dto/categoryListResponse';
 import { TokenService } from '../../token/service/token.service';
 import { CategoryRepository } from '../repository/category.repository';
 import { UnauthorizedException, ValidationPipe } from '@nestjs/common';
 import { MemberRepository } from '../../member/repository/member.repository';
 import * as cookieParser from 'cookie-parser';
+import { Answer } from '../../answer/entity/answer';
+import { CategoryResponse } from '../dto/categoryResponse';
+import { CategoryListResponse } from '../dto/categoryListResponse';
 
 describe('CategoryController', () => {
   let controller: CategoryController;
@@ -118,38 +119,6 @@ describe('CategoryController', () => {
     ).rejects.toThrow(new ManipulatedTokenNotFiltered());
   });
 
-  it('Member객체가 있고, 회원의 카테고리를 조회할 때, CategoryListResponse 객체 형태로 조회된다. ', async () => {
-    //given
-
-    //when
-    mockCategoryService.findUsingCategories.mockResolvedValue(
-      categoryListResponseFixture,
-    );
-    mockTokenService.findMemberByToken.mockResolvedValue(memberFixture);
-
-    //then
-    await expect(
-      controller.findCategories(mockReqWithMemberFixture),
-    ).resolves.toEqual(CategoryListResponse.of(categoryListResponseFixture));
-  });
-
-  it('Member객체 없이, 회원의 카테고리를 조회할 때, CategoryListResponse 객체 형태로 조회된다. ', async () => {
-    //given
-
-    //when
-    mockCategoryService.findUsingCategories.mockResolvedValue(
-      defaultCategoryListResponseFixture,
-    );
-    mockTokenService.findMemberByToken.mockResolvedValue(undefined);
-
-    //then
-    await expect(
-      controller.findCategories({ user: undefined } as unknown as Request),
-    ).resolves.toEqual(
-      CategoryListResponse.of(defaultCategoryListResponseFixture),
-    );
-  });
-
   it('Member객체가 있고, 존재하는 id의 삭제를 요청하면, Undefined가 반환된다.', async () => {
     //given
     const category = new Category(1, 'CS', memberFixture, new Date());
@@ -226,7 +195,7 @@ describe('CategoryController 통합테스트', () => {
 
   beforeAll(async () => {
     const modules = [CategoryModule, MemberModule, TokenModule, AuthModule];
-    const entities = [Member, Category, Question, Token];
+    const entities = [Member, Category, Question, Token, Answer];
     const moduleFixture = await createIntegrationTestModule(modules, entities);
 
     app = moduleFixture.createNestApplication();
@@ -253,10 +222,8 @@ describe('CategoryController 통합테스트', () => {
   });
 
   it('회원이 카테고리 조회시 200코드와 CategoryListResponse가 반환된다.', async () => {
+    const member = await memberRepository.save(memberFixture);
     const token = await authService.login(memberFixturesOAuthRequest);
-    const member = await memberRepository.findByEmail(
-      memberFixturesOAuthRequest.email,
-    );
     for (const each of defaultCategoryListFixture) {
       await categoryRepository.save(Category.from(each, member));
     }
@@ -272,14 +239,18 @@ describe('CategoryController 통합테스트', () => {
 
   it('비회원이 카테고리 조회시 200코드와 CategoryListResponse가 반환된다.', async () => {
     for (const each of defaultCategoryListFixture) {
-      await categoryRepository.save(each);
+      await categoryRepository.save(Category.from(each, null));
     }
+    const categoryResponses = defaultCategoryListFixture.map(
+      CategoryResponse.from,
+    );
+    const categoryListResponse = CategoryListResponse.of(categoryResponses);
     const agent = request.agent(app.getHttpServer());
     agent
       .get(`/api/category`)
       .expect(200)
       .then((response) => {
-        expect(response.body.categoryList).toEqual(categoryListResponseFixture);
+        expect(response.body).toEqual(categoryListResponse);
       });
   });
 
@@ -289,23 +260,22 @@ describe('CategoryController 통합테스트', () => {
     //when
 
     //then
+    const member = await memberRepository.save(memberFixture);
     const token = await authService.login(memberFixturesOAuthRequest);
-    await categoryRepository.save(categoryFixtureWithId);
+    const category = await categoryRepository.save(
+      Category.from(beCategoryFixture, member),
+    );
     const agent = request.agent(app.getHttpServer());
     agent
-      .delete(`/api/category?id=1`)
+      .delete(`/api/category?id=${category.id}`)
       .set('Cookie', [`accessToken=${token}`])
       .expect(204);
   });
 
   afterEach(async () => {
-    await clearDB(categoryRepository);
+    await categoryRepository.query('delete from Question');
+    await categoryRepository.query('delete from Category');
+    await categoryRepository.query('delete from Member');
+    await categoryRepository.query('delete from token');
   });
 });
-
-const clearDB = async (categoryRepository) => {
-  await categoryRepository.query('delete from Question');
-  await categoryRepository.query('delete from Category');
-  await categoryRepository.query('delete from Member');
-  await categoryRepository.query('delete from token');
-};

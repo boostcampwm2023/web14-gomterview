@@ -65,7 +65,7 @@ export class TokenService {
         (await this.getPayload(singleToken)).id,
       );
     } catch (error) {
-      return undefined;
+      return null;
     }
   }
 
