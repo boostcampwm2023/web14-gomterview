@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 
 import InterviewPageLayout from '@components/interviewPage/InterviewPageLayout';
 import InterviewHeader from '@/components/interviewPage/InterviewHeader/InterviewHeader';
@@ -14,6 +14,7 @@ import { PATH } from '@constants/path';
 import { Navigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { recordSetting } from '@/atoms/interviewSetting';
+import useMedia from '@/hooks/useMedia';
 
 const InterviewPage: React.FC = () => {
   const isAllSuccess = useIsAllSuccess();
@@ -23,55 +24,24 @@ const InterviewPage: React.FC = () => {
   const { currentQuestion, getNextQuestion, isLastQuestion } =
     useInterviewFlow();
 
-  const [stream, setStream] = useState<MediaStream | null>(null);
+  const {
+    media,
+    videoRef: mirrorVideoRef,
+    isConnected,
+    selectedMimeType,
+  } = useMedia();
+
   const [isRecording, setIsRecording] = useState(false);
   const [isScriptInView, setIsScriptInView] = useState(true);
   const [recordedBlobs, setRecordedBlobs] = useState<Blob[]>([]);
-  const [selectedMimeType, setSelectedMimeType] = useState('');
   const [interviewIntroModalIsOpen, setInterviewIntroModalIsOpen] =
     useState<boolean>(true);
 
-  const mirrorVideoRef = useRef<HTMLVideoElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-
-  useEffect(() => {
-    if (!stream && isAllSuccess) {
-      void getMedia();
-    }
-    const mimeTypes = getSupportedMimeTypes();
-    if (mimeTypes.length > 0) setSelectedMimeType(mimeTypes[0]);
-
-    return () => {
-      if (stream) {
-        // recoil 을 모두 초기화
-        stream.getTracks().forEach((track) => track.stop());
-      }
-    };
-  }, [isAllSuccess, stream]);
-
-  const getMedia = async () => {
-    try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          echoCancellation: { exact: true },
-        },
-        video: {
-          width: 1280,
-          height: 720,
-        },
-      });
-
-      setStream(mediaStream);
-      if (mirrorVideoRef.current)
-        mirrorVideoRef.current.srcObject = mediaStream;
-    } catch (e) {
-      console.log(`현재 마이크와 카메라가 연결되지 않았습니다`);
-    }
-  };
 
   const handleStartRecording = () => {
     try {
-      mediaRecorderRef.current = new MediaRecorder(stream as MediaStream, {
+      mediaRecorderRef.current = new MediaRecorder(media as MediaStream, {
         mimeType: selectedMimeType,
       });
       mediaRecorderRef.current.ondataavailable = (event) => {
@@ -129,50 +99,37 @@ const InterviewPage: React.FC = () => {
     setRecordedBlobs([]);
   };
 
-  const getSupportedMimeTypes = () => {
-    const types = [
-      'video/webm; codecs=vp8',
-      'video/webm; codecs=vp9',
-      'video/webm; codecs=h264',
-      'video/mp4; codecs=h264',
-    ];
-    return types.filter((type) => MediaRecorder.isTypeSupported(type));
-  };
-
-  if (!isAllSuccess) return <Navigate to={PATH.ROOT} />;
-
-  return (
-    <InterviewPageLayout>
-      <InterviewHeader
-        isRecording={isRecording}
-        intervieweeName="가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하"
-      />
-      <InterviewMain
-        mirrorVideoRef={mirrorVideoRef}
-        isScriptInView={isScriptInView}
-        question={currentQuestion.questionContent}
-        answer={currentQuestion.answerContent}
-      />
-      <InterviewFooter
-        isRecording={isRecording}
-        recordedBlobs={recordedBlobs}
-        isLastQuestion={isLastQuestion}
-        handleStartRecording={handleStartRecording}
-        handleStopRecording={handleStopRecording}
-        handleScript={() => setIsScriptInView((prev) => !prev)}
-        handleNextQuestion={getNextQuestion}
-        handleDownload={handleDownload}
-      />
-      <InterviewIntroModal
-        isOpen={interviewIntroModalIsOpen}
-        closeModal={() => setInterviewIntroModalIsOpen((prev) => !prev)}
-      />
-      <InterviewTimeOverModal
-        isOpen={false}
-        closeModal={() => console.log('모달을 종료합니다.')}
-      />
-    </InterviewPageLayout>
-  );
+  if (!isAllSuccess || !isConnected) return <Navigate to={PATH.ROOT} />;
+  else
+    return (
+      <InterviewPageLayout>
+        <InterviewHeader isRecording={isRecording} intervieweeName="면접자" />
+        <InterviewMain
+          mirrorVideoRef={mirrorVideoRef}
+          isScriptInView={isScriptInView}
+          question={currentQuestion.questionContent}
+          answer={currentQuestion.answerContent}
+        />
+        <InterviewFooter
+          isRecording={isRecording}
+          recordedBlobs={recordedBlobs}
+          isLastQuestion={isLastQuestion}
+          handleStartRecording={handleStartRecording}
+          handleStopRecording={handleStopRecording}
+          handleScript={() => setIsScriptInView((prev) => !prev)}
+          handleNextQuestion={getNextQuestion}
+          handleDownload={handleDownload}
+        />
+        <InterviewIntroModal
+          isOpen={interviewIntroModalIsOpen}
+          closeModal={() => setInterviewIntroModalIsOpen((prev) => !prev)}
+        />
+        <InterviewTimeOverModal
+          isOpen={false}
+          closeModal={() => console.log('모달을 종료합니다.')}
+        />
+      </InterviewPageLayout>
+    );
 };
 
 export default InterviewPage;
