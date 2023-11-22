@@ -38,7 +38,7 @@ const routes = ({ queryClient }: { queryClient: QueryClient }) => {
           element: <MyPage />,
         },
         {
-          path: PATH.INTERVIEW_VIDEO,
+          path: PATH.INTERVIEW_VIDEO(),
           element: <InterviewVideoPage />,
         },
         {
