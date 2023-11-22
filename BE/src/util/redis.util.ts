@@ -3,7 +3,7 @@ import 'dotenv/config';
 
 let redisInstance: Redis;
 
-export function getRedisInstance() {
+function getRedisInstance() {
   if (!redisInstance) {
     const redisUrl: string = process.env.REDIS_URL as string;
     if (!redisUrl) {
@@ -12,4 +12,14 @@ export function getRedisInstance() {
     redisInstance = new Redis(redisUrl);
   }
   return redisInstance;
+}
+
+export async function saveToRedis(key: string, value: string) {
+  const redis = getRedisInstance();
+  await redis.set(key, value);
+}
+
+export async function deleteFromRedis(key: string) {
+  const redis = getRedisInstance();
+  await redis.del(key);
 }
