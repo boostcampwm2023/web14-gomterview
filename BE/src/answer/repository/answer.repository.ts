@@ -13,6 +13,10 @@ export class AnswerRepository {
     return await this.repository.save(answer);
   }
 
+  async findById(id: number) {
+    return await this.repository.findOneBy({ id: id });
+  }
+
   async findByContentMemberIdAndQuestionId(
     content: string,
     memberId: number,

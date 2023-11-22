@@ -29,16 +29,26 @@ describe('AnswerService 단위 테스트', () => {
   };
   const mockQuestionRepository = {
     findById: jest.fn(),
+    findWithOriginById: jest.fn(),
   };
+
+  const mockCategoryRepository = {};
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AnswerService, AnswerRepository, QuestionRepository],
+      providers: [
+        AnswerService,
+        AnswerRepository,
+        QuestionRepository,
+        CategoryRepository,
+      ],
     })
       .overrideProvider(AnswerRepository)
       .useValue(mockAnswerRepository)
       .overrideProvider(QuestionRepository)
       .useValue(mockQuestionRepository)
+      .overrideProvider(CategoryRepository)
+      .useValue(mockCategoryRepository)
       .compile();
 
     service = module.get<AnswerService>(AnswerService);
@@ -51,7 +61,9 @@ describe('AnswerService 단위 테스트', () => {
   describe('질문추가', () => {
     it('질문에 답변을 추가한다.', async () => {
       //given
-      mockQuestionRepository.findById.mockResolvedValue(questionFixture);
+      mockQuestionRepository.findWithOriginById.mockResolvedValue(
+        questionFixture,
+      );
 
       //when
       const answer = Answer.of('test', memberFixture, questionFixture);
@@ -65,7 +77,7 @@ describe('AnswerService 단위 테스트', () => {
 
     it('질문에 답변을 추가할 때 id로 질문을 확인할 수 없을 때 QuestionNotFoundException을 반환한다.', async () => {
       //given
-      mockQuestionRepository.findById.mockRejectedValue(
+      mockQuestionRepository.findWithOriginById.mockRejectedValue(
         new QuestionNotFoundException(),
       );
 
@@ -175,7 +187,7 @@ describe('AnswerService 통합테스트', () => {
       const answer = await answerRepository.findByContentMemberIdAndQuestionId(
         'testAnswer',
         member.id,
-        question.id,
+        originalQuestion.id,
       );
       expect(answerResponse).toEqual(AnswerResponse.from(answer, member));
     });
