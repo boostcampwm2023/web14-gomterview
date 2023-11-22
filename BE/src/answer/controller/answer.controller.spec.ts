@@ -366,17 +366,89 @@ describe('AnswerController 통합테스트', () => {
   describe('질문의 답변 조회', () => {
     it('질문을 조회할 때 회원 정보가 없으면 모든 답변이 최신순으로 정렬된다. ', async () => {
       //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(beCategoryFixture, member),
+      );
+
+      const question = await questionRepository.save(
+        Question.of(category, null, 'question'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+      for (let index = 1; index <= 10; index++) {
+        await answerRepository.save(
+          Answer.of(`test${index}`, member, question),
+        );
+      }
+
       //when&then
+      const token = await authService.login(memberFixturesOAuthRequest);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .get(`/api/answer/${question.id}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(200);
     });
 
     it('질문을 조회할 때 회원 정보가 있으면 모든 등록한 DefaultAnswer부터 정렬된다. ', async () => {
       //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(beCategoryFixture, member),
+      );
+
+      const question = await questionRepository.save(
+        Question.of(category, null, 'question'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+      question.setDefaultAnswer(answer);
+      await questionRepository.save(question);
+      for (let index = 1; index <= 10; index++) {
+        await answerRepository.save(
+          Answer.of(`test${index}`, member, question),
+        );
+      }
+
       //when&then
+      const token = await authService.login(memberFixturesOAuthRequest);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .get(`/api/answer/${question.id}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(200)
+        .then((response) => console.log(response.body));
     });
 
     it('존재하지 않는 질문의 id를 조회하면 404에러를 반환한다. ', async () => {
       //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(beCategoryFixture, member),
+      );
+
+      const question = await questionRepository.save(
+        Question.of(category, null, 'question'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+      for (let index = 1; index <= 10; index++) {
+        await answerRepository.save(
+          Answer.of(`test${index}`, member, question),
+        );
+      }
+
       //when&then
+      const token = await authService.login(memberFixturesOAuthRequest);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .get(`/api/answer/130998`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(404);
     });
   });
 });
