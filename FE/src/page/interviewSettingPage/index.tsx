@@ -14,6 +14,9 @@ import { css } from '@emotion/react';
 import RecordSettingPage from './RecordSettingPage';
 import VideoSettingPage from './VideoSettingPage';
 
+const FIRST_PAGE_INDEX = 0;
+const PREV_PAGE_INDEX = -1;
+
 const InterviewSettingPage: React.FC = () => {
   const navigate = useNavigate();
   const pageInfo = [
@@ -51,7 +54,6 @@ const InterviewSettingPage: React.FC = () => {
       state: useRecoilValue(recordSetting),
     },
   ];
-  const validPagePaths = pageInfo.map((item) => item.path);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -63,9 +65,23 @@ const InterviewSettingPage: React.FC = () => {
   // TODO: 로직이 더 길어지면 hook으로 분리해도 나쁘지 않을듯
 
   const currentPage = searchParams.get('page');
+  const currentIndex = pageInfo.findIndex((item) => item.path === currentPage);
 
-  if (!currentPage || !validPagePaths.includes(currentPage)) {
+  const isValidatePath = currentIndex !== -1;
+  if (!isValidatePath) {
     return <Navigate to={`?page=${SETTING_PATH.QUESTION}`} replace />;
+  }
+
+  const prevPageInfo =
+    currentIndex === FIRST_PAGE_INDEX
+      ? pageInfo[FIRST_PAGE_INDEX]
+      : pageInfo[currentIndex + PREV_PAGE_INDEX];
+
+  const isValidatePrevPageStatus =
+    currentIndex !== FIRST_PAGE_INDEX && !prevPageInfo.state.isSuccess;
+
+  if (isValidatePrevPageStatus) {
+    return <Navigate to={`?page=${prevPageInfo.path}`} replace />;
   }
 
   return (
