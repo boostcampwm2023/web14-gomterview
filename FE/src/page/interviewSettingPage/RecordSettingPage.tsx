@@ -1,7 +1,9 @@
+import { RecordMethod, recordSetting } from '@/atoms/interviewSetting';
 import Description from '@/components/interviewSettingPage/Description';
 import RecordRadio from '@/components/interviewSettingPage/RecordPage/RecordRadio';
 import { css } from '@emotion/react';
 import Button from '@foundation/Button/Button';
+import { useRecoilState } from 'recoil';
 
 type RecordSettingPageProps = {
   onNextClick?: () => void;
@@ -12,6 +14,15 @@ const RecordSettingPage: React.FC<RecordSettingPageProps> = ({
   onNextClick,
   onPrevClick,
 }) => {
+  const [setting, setSetting] = useRecoilState(recordSetting);
+
+  const handleRecordChange = (name: RecordMethod) => {
+    setSetting({
+      isSuccess: true,
+      method: name,
+    });
+  };
+
   return (
     <div
       css={css`
@@ -30,6 +41,7 @@ const RecordSettingPage: React.FC<RecordSettingPageProps> = ({
         <br />- 기타 기술적인 문제나 화면 공유 문제가 있으시면, 채팅창이나
         연락처를 통해 알려주시길 바랍니다.
       </Description>
+      {/* TODO: 엔터 인식해서 자동으로 줄바꿈 해주는 기능 추가 */}
       <div
         css={css`
           max-width: 30rem;
@@ -40,13 +52,28 @@ const RecordSettingPage: React.FC<RecordSettingPageProps> = ({
           gap: 2rem;
         `}
       >
-        <RecordRadio group="record" IconId="save-idrive">
+        <RecordRadio
+          group="record"
+          IconId="save-idrive"
+          onChange={() => handleRecordChange('idrive')}
+          defaultChecked={setting.method === 'idrive'}
+        >
           서버에 저장
         </RecordRadio>
-        <RecordRadio group="record" IconId="save-local">
+        <RecordRadio
+          group="record"
+          IconId="save-local"
+          onChange={() => handleRecordChange('local')}
+          defaultChecked={setting.method === 'local'}
+        >
           로컬에 저장
         </RecordRadio>
-        <RecordRadio group="record" IconId="save-not">
+        <RecordRadio
+          group="record"
+          IconId="save-not"
+          onChange={() => handleRecordChange('none')}
+          defaultChecked={setting.method === 'none'}
+        >
           저장하지 않음
         </RecordRadio>
       </div>
@@ -73,6 +100,7 @@ const RecordSettingPage: React.FC<RecordSettingPageProps> = ({
           css={css`
             padding: 0.6rem 2rem;
           `}
+          disabled={!setting.isSuccess}
         >
           다음
         </Button>

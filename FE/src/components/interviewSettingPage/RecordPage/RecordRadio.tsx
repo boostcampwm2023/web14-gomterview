@@ -8,19 +8,25 @@ type RecordRadioProps = {
   group: string;
   IconId: string;
   children: React.ReactNode;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  defaultChecked?: boolean;
 };
 
 const RecordRadio: React.FC<RecordRadioProps> = ({
   group,
   IconId,
   children,
+  onChange,
+  defaultChecked,
 }) => {
   return (
     <>
       <input
         id={`record-${IconId}`}
+        onChange={onChange}
         type="radio"
         name={group}
+        defaultChecked={defaultChecked}
         css={css`
           display: none;
           &:checked + label > div {

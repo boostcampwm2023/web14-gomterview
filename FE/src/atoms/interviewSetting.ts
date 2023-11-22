@@ -1,7 +1,7 @@
 import { Question } from '@/types/question';
 import { atom } from 'recoil';
 
-type RecordMethod = 'local' | 'idrive' | 'none' | undefined;
+export type RecordMethod = 'local' | 'idrive' | 'none' | undefined;
 
 type SelectedQuestion = Question & {
   categoryId: number;
