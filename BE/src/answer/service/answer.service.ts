@@ -69,6 +69,28 @@ export class AnswerService {
     await this.questionRepository.save(question);
   }
 
+  async getAnswerList(questionId: number) {
+    const question = await this.questionRepository.findById(questionId);
+    const originalQuestion =
+      await this.questionRepository.findWithOriginById(questionId);
+
+    if (isEmpty(originalQuestion)) {
+      throw new QuestionNotFoundException();
+    }
+
+    const answers = (
+      await this.answerRepository.findAllByQuestionId(originalQuestion.id)
+    ).map((answer) => AnswerResponse.from(answer, answer.member));
+
+    if (question.defaultAnswer) {
+      answers.unshift(
+        AnswerResponse.from(question.defaultAnswer, question.category.member),
+      );
+    }
+
+    return answers;
+  }
+
   private async saveAnswerAndQuestion(
     createAnswerRequest: CreateAnswerRequest,
     question: Question,
