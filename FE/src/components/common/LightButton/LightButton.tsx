@@ -18,22 +18,23 @@ const LightButton: React.FC<LightButtonProps> = ({
       size={size}
       {...args}
       css={css`
-          color: ${theme.colors.text.default};
-          border: 1px solid ${theme.colors.border.default};
-          background-color: ${theme.colors.surface.default};
-          outline: none;
+        color: ${theme.colors.text.default};
+        border: 1px solid ${theme.colors.border.default};
+        background-color: ${theme.colors.surface.default};
+        outline: none;
 
-          transition: background-color 0.15s ease-in-out;
-          cursor: pointer;
+        transition: background-color 0.15s ease-in-out;
+        cursor: pointer;
 
-          &:disabled {
-            background-color: ${theme.colors.surface.weakHover};
-            cursor: not-allowed;
-          }
+        &:disabled {
+          background-color: ${theme.colors.surface.weakHover};
+          cursor: not-allowed;
+        }
 
-          &:not(:disabled):hover {
-            background-color: ${theme.colors.surface.weak};
-          `}
+        &:not(:disabled):hover {
+          background-color: ${theme.colors.surface.weak};
+        }
+      `}
     >
       {children}
     </Button>
