@@ -8,7 +8,7 @@ import { questionFixture } from '../../question/util/question.util';
 import { CreateAnswerRequest } from '../dto/createAnswerRequest';
 import { AnswerResponse } from '../dto/answerResponse';
 import { QuestionNotFoundException } from '../../question/exception/question.exception';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, UnauthorizedException } from '@nestjs/common';
 import { CategoryRepository } from '../../category/repository/category.repository';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { CategoryModule } from '../../category/category.module';
@@ -20,19 +20,27 @@ import { Member } from '../../member/entity/member';
 import { createIntegrationTestModule } from '../../util/test.util';
 import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { QuestionModule } from '../../question/question.module';
-import { createAnswerRequestFixture } from '../fixture/answer.fixture';
+import {
+  answerFixture,
+  createAnswerRequestFixture,
+  defaultAnswerRequestFixture,
+} from '../fixture/answer.fixture';
 
 describe('AnswerService 단위 테스트', () => {
   let service: AnswerService;
   const mockAnswerRepository = {
     save: jest.fn(),
+    findById: jest.fn(),
   };
   const mockQuestionRepository = {
     findById: jest.fn(),
     findWithOriginById: jest.fn(),
+    save: jest.fn(),
   };
 
-  const mockCategoryRepository = {};
+  const mockCategoryRepository = {
+    findByCategoryId: jest.fn(),
+  };
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -89,6 +97,66 @@ describe('AnswerService 단위 테스트', () => {
       await expect(
         service.addAnswer(createAnswerRequestFixture, memberFixture),
       ).rejects.toThrow(new QuestionNotFoundException());
+    });
+  });
+
+  describe('질문에 대표답변 등록', () => {
+    it('질문에 대한 대표답변을 등록하면 해당 Question에 바로 대표답변을 추가한다.', async () => {
+      //given
+
+      //when
+      mockQuestionRepository.findById.mockResolvedValue(questionFixture);
+      mockQuestionRepository.save.mockResolvedValue(questionFixture);
+      mockCategoryRepository.findByCategoryId.mockResolvedValue(
+        categoryFixtureWithId,
+      );
+      mockAnswerRepository.findById.mockResolvedValue(answerFixture);
+
+      //then
+      await expect(
+        service.setDefaultAnswer(defaultAnswerRequestFixture, memberFixture),
+      ).resolves.toBeUndefined();
+    });
+
+    it('해당 id의 질문이 없으면 QuestionNotFoundException을 발생시킨다..', async () => {
+      //given
+
+      //when
+      mockQuestionRepository.findById.mockResolvedValue(undefined);
+      mockCategoryRepository.findByCategoryId.mockResolvedValue(
+        categoryFixtureWithId,
+      );
+      mockAnswerRepository.findById.mockResolvedValue(answerFixture);
+
+      //then
+      await expect(
+        service.setDefaultAnswer(defaultAnswerRequestFixture, memberFixture),
+      ).rejects.toThrow(new QuestionNotFoundException());
+    });
+
+    it('질문에 대한 카테고리가 본인의 소유가 UnauthorizedException 예외처리한다(해당 질문이 속한 카테고리는 본인의 소유여야 한다)', async () => {
+      //given
+
+      //when
+      mockQuestionRepository.findById.mockResolvedValue(questionFixture);
+      mockCategoryRepository.findByCategoryId.mockResolvedValue(
+        Category.from(
+          categoryFixtureWithId,
+          new Member(
+            100,
+            'janghee@janghee.com',
+            'janghee',
+            'https://jangsarchive.tistory.com',
+            new Date(),
+          ),
+        ),
+      );
+      mockAnswerRepository.findById.mockResolvedValue(answerFixture);
+
+      //then
+      await expect(
+        service.setDefaultAnswer(defaultAnswerRequestFixture, memberFixture),
+      ).rejects.toThrow(new UnauthorizedException());
     });
   });
 });
