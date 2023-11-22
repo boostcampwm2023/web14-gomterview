@@ -1,4 +1,4 @@
-import { postAnswer } from '@/apis/answer';
+import { postDefaultAnswer } from '@/apis/answer';
 import { QUERY_KEY } from '@/constants/queryKey';
 import {
   UseMutationOptions,
@@ -6,27 +6,26 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-const useQuestionAnswerMutation = (
-  questionId: number,
+const useAnswerDefaultMutation = (
+  categoryId: number,
   options?: UseMutationOptions<
     unknown,
     Error,
     {
       questionId: number;
-      content: string;
+      answerId: number;
     },
     unknown
   >
 ) => {
   const queryClient = useQueryClient();
-
   const { onSuccess, ...leftOption } = options || {};
 
   return useMutation({
-    mutationFn: postAnswer,
+    mutationFn: postDefaultAnswer,
     onSuccess: (...args) => {
       void queryClient.invalidateQueries({
-        queryKey: QUERY_KEY.QUESTION_ANSWER(questionId),
+        queryKey: QUERY_KEY.QUESTION_CATEGORY(categoryId),
       });
       onSuccess?.(...args);
     },
@@ -34,4 +33,4 @@ const useQuestionAnswerMutation = (
   });
 };
 
-export default useQuestionAnswerMutation;
+export default useAnswerDefaultMutation;

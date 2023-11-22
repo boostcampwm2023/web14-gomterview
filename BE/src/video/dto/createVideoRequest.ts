@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Matches,
+} from 'class-validator';
 import { createPropertyOption } from 'src/util/swagger.util';
 
 export class CreateVideoRequest {
@@ -14,15 +20,42 @@ export class CreateVideoRequest {
   videoName: string;
 
   @ApiProperty(
-    createPropertyOption('https://example.com', '비디오 URL', String),
+    createPropertyOption('https://video-example.com', '비디오 URL', String),
   )
   @IsString()
   @IsNotEmpty()
   url: string;
 
-  constructor(questionId: number, videoName: string, url: string) {
+  @ApiProperty(
+    createPropertyOption(
+      'https://thumb-example.com',
+      '비디오 썸네일 URL',
+      String,
+    ),
+  )
+  @IsString()
+  @IsOptional()
+  thumbnail: string | null;
+
+  @ApiProperty(createPropertyOption('03:29', '비디오 길이', String))
+  @IsString()
+  @IsNotEmpty()
+  @Matches(/^\d{2}:\d{2}$/, {
+    message: `유효하지 않은 비디오 길이 형태입니다. "mm:ss" 형태로 요청해주세요.`,
+  })
+  videoLength: string;
+
+  constructor(
+    questionId: number,
+    videoName: string,
+    url: string,
+    thumbnail: string,
+    videoLength: string,
+  ) {
     this.questionId = questionId;
     this.videoName = videoName;
     this.url = url;
+    this.thumbnail = thumbnail;
+    this.videoLength = videoLength;
   }
 }

@@ -5,21 +5,29 @@ import Typography from '../../foundation/Typography/Typography';
 import useQuestionAnswerQuery from '@/hooks/queries/useQuestionAnswerQuery';
 import AnswerScript from './AnswerScript';
 import AnswerForm from './AnswerForm';
+import useAnswerDefaultMutation from '@/hooks/mutations/useAnswerDefaultMutation';
+import { Question } from '@/types/question';
 
 type AnswerSelectionModalProps = {
   isOpen: boolean;
+  categoryId: number;
   closeModal: () => void;
-  questionId: number;
-  question: string;
+  question: Question;
 };
 
 const AnswerSelectionModal: React.FC<AnswerSelectionModalProps> = ({
   isOpen,
+  categoryId,
   closeModal,
-  questionId,
   question,
 }) => {
-  const { data } = useQuestionAnswerQuery(questionId);
+  const { data } = useQuestionAnswerQuery(question.questionId);
+
+  const { mutate: selectAnswerMutate } = useAnswerDefaultMutation(categoryId, {
+    onSuccess: () => {
+      closeModal();
+    },
+  });
 
   if (!data) return;
 
@@ -32,7 +40,10 @@ const AnswerSelectionModal: React.FC<AnswerSelectionModalProps> = ({
             max-width: 60rem;
           `}
         >
-          <AnswerForm question={question} questionId={questionId} />
+          <AnswerForm
+            question={question.answerContent}
+            questionId={question.questionId}
+          />
           <div
             css={css`
               display: flex;
@@ -46,9 +57,13 @@ const AnswerSelectionModal: React.FC<AnswerSelectionModalProps> = ({
             {data.map((answer) => (
               <AnswerScript
                 key={answer.answerId}
-                name={answer.memberName}
-                content={answer.content}
-                userImg={answer.memberImage}
+                answer={answer}
+                onClick={() =>
+                  selectAnswerMutate({
+                    questionId: question.questionId,
+                    answerId: answer.answerId,
+                  })
+                }
               />
             ))}
           </div>
