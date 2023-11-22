@@ -8,7 +8,7 @@ import { questionFixture } from '../../question/util/question.util';
 import { CreateAnswerRequest } from '../dto/createAnswerRequest';
 import { AnswerResponse } from '../dto/answerResponse';
 import { QuestionNotFoundException } from '../../question/exception/question.exception';
-import { INestApplication, UnauthorizedException } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { CategoryRepository } from '../../category/repository/category.repository';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { CategoryModule } from '../../category/category.module';
@@ -26,6 +26,7 @@ import {
   defaultAnswerRequestFixture,
 } from '../fixture/answer.fixture';
 import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
+import { ForbiddenException } from '../../token/exception/token.exception';
 
 describe('AnswerService 단위 테스트', () => {
   let service: AnswerService;
@@ -67,7 +68,7 @@ describe('AnswerService 단위 테스트', () => {
     expect(service).toBeDefined();
   });
 
-  describe('질문추가', () => {
+  describe('답변 추가', () => {
     it('질문에 답변을 추가한다.', async () => {
       //given
       mockQuestionRepository.findWithOriginById.mockResolvedValue(
@@ -135,7 +136,7 @@ describe('AnswerService 단위 테스트', () => {
       ).rejects.toThrow(new QuestionNotFoundException());
     });
 
-    it('질문에 대한 카테고리가 본인의 소유가 UnauthorizedException 예외처리한다(해당 질문이 속한 카테고리는 본인의 소유여야 한다)', async () => {
+    it('질문에 대한 카테고리가 본인의 소유가 Forbidden 예외처리한다(해당 질문이 속한 카테고리는 본인의 소유여야 한다)', async () => {
       //given
 
       //when
@@ -157,7 +158,7 @@ describe('AnswerService 단위 테스트', () => {
       //then
       await expect(
         service.setDefaultAnswer(defaultAnswerRequestFixture, memberFixture),
-      ).rejects.toThrow(new UnauthorizedException());
+      ).rejects.toThrow(new ForbiddenException());
     });
   });
 });
@@ -199,7 +200,7 @@ describe('AnswerService 통합테스트', () => {
     await categoryRepository.query('delete from Member');
   });
 
-  describe('질문추가', () => {
+  describe('답변 추가', () => {
     it('질문에 대한 응답을 추가할 수 있다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
@@ -270,7 +271,7 @@ describe('AnswerService 통합테스트', () => {
         Category.from(categoryFixtureWithId, member),
       );
       const question = await questionRepository.save(
-        Question.copyOf(questionFixture, category),
+        Question.of(category, null, 'test'),
       );
       const answer = await answerRepository.save(
         Answer.of('test', member, question),
