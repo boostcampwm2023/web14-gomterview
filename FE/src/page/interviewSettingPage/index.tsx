@@ -19,6 +19,10 @@ const PREV_PAGE_INDEX = -1;
 
 const InterviewSettingPage: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const currentPage = searchParams.get('page');
+
   const pageInfo = [
     {
       name: '문제 선택',
@@ -36,6 +40,7 @@ const InterviewSettingPage: React.FC = () => {
       path: SETTING_PATH.CONNECTION,
       page: (
         <VideoSettingPage
+          isCurrentPage={currentPage === SETTING_PATH.CONNECTION}
           onPrevClick={() => changeSearchParams(SETTING_PATH.QUESTION)}
           onNextClick={() => changeSearchParams(SETTING_PATH.RECORD)}
         />
@@ -55,7 +60,7 @@ const InterviewSettingPage: React.FC = () => {
     },
   ];
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const currentIndex = pageInfo.findIndex((item) => item.path === currentPage);
 
   const changeSearchParams = (newPage: string) => {
     const newSearchParams = new URLSearchParams(searchParams);
@@ -63,9 +68,6 @@ const InterviewSettingPage: React.FC = () => {
     setSearchParams(newSearchParams, { replace: true });
   };
   // TODO: 로직이 더 길어지면 hook으로 분리해도 나쁘지 않을듯
-
-  const currentPage = searchParams.get('page');
-  const currentIndex = pageInfo.findIndex((item) => item.path === currentPage);
 
   const isValidatePath = currentIndex !== -1;
   if (!isValidatePath) {

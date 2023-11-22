@@ -1,7 +1,7 @@
 import { closeMedia, getMedia, getSupportedMimeTypes } from '@/utils/media';
 import { useState, useEffect, useCallback, useRef } from 'react';
 
-const useMedia = () => {
+const useMedia = (trigger: boolean = true) => {
   const [media, setMedia] = useState<MediaStream | null>(null);
   const [selectedMimeType, setSelectedMimeType] = useState('');
   const [connectStatus, setIsConnectedStatus] = useState<
@@ -23,7 +23,7 @@ const useMedia = () => {
   }, []);
 
   useEffect(() => {
-    if (!media) {
+    if (!media && trigger) {
       void connectMedia();
     }
     const mimeTypes = getSupportedMimeTypes();
@@ -32,7 +32,7 @@ const useMedia = () => {
     return () => {
       closeMedia(media);
     };
-  }, [media, connectMedia]);
+  }, [media, connectMedia, trigger]);
 
   return { media, videoRef, connectStatus, selectedMimeType };
 };

@@ -11,16 +11,18 @@ import { useRecoilState } from 'recoil';
 type VideoSettingPageProps = {
   onNextClick?: () => void;
   onPrevClick?: () => void;
+  isCurrentPage: boolean;
 };
 
 const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
   onNextClick,
   onPrevClick,
+  isCurrentPage,
 }) => {
   const [videoSettingState, setVideoSettingState] =
     useRecoilState(videoSetting);
 
-  const { videoRef: mirrorVideoRef, connectStatus } = useMedia();
+  const { videoRef: mirrorVideoRef, connectStatus } = useMedia(isCurrentPage);
 
   useEffect(() => {
     if (connectStatus === 'connect') {
