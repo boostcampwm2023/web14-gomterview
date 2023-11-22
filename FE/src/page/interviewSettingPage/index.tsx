@@ -12,6 +12,7 @@ import {
 import { useRecoilValue } from 'recoil';
 import QuestionSettingPage from './QuestionSettingPage';
 import { css } from '@emotion/react';
+import RecordSettingPage from './RecordSettingPage';
 
 const InterviewSettingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ const InterviewSettingPage: React.FC = () => {
       name: '녹화 설정',
       path: SETTING_PATH.RECORD,
       page: (
-        <QuestionSettingPage
+        <RecordSettingPage
           onPrevClick={() => changeSearchParams(SETTING_PATH.CONNECTION)}
           onNextClick={() => navigate('/interview')}
         />
