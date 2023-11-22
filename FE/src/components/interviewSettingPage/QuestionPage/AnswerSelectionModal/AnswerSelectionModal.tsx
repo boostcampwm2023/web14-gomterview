@@ -1,7 +1,7 @@
-import Modal from '../../foundation/Modal';
+import Modal from '../../../foundation/Modal';
 import { css } from '@emotion/react';
 import { theme } from '@/styles/theme';
-import Typography from '../../foundation/Typography/Typography';
+import Typography from '../../../foundation/Typography/Typography';
 import useQuestionAnswerQuery from '@/hooks/queries/useQuestionAnswerQuery';
 import AnswerScript from './AnswerScript';
 import AnswerForm from './AnswerForm';
