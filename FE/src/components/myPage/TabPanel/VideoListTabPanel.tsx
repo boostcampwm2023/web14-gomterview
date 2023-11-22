@@ -6,6 +6,7 @@ import Thumbnail from '@components/myPage/Thumbnail';
 import CardCover from '@foundation/CardCover/CardCover';
 import useVideoListQuery from '@hooks/queries/video/useVideoListQuery';
 import { PATH } from '@constants/path';
+import { theme } from '@styles/theme';
 
 const VideoListTabPanel: React.FC = () => {
   const { data } = useVideoListQuery();
@@ -20,6 +21,10 @@ const VideoListTabPanel: React.FC = () => {
         justify-content: center;
         gap: 1.5rem;
         padding: 1.5rem;
+        @media (max-width: ${theme.breakpoints.tablet}) {
+          grid-template-columns: 1fr;
+          padding: 1rem;
+        }
       `}
     >
       {data.map((video) => (
