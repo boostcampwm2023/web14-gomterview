@@ -2,13 +2,13 @@ import Layout from '@/components/layout/Layout';
 import Logo from '@common/Logo/Logo';
 import { css } from '@emotion/react';
 
-type InterviewVideoPageLayoutProps = {
+type InterviewVideoPublicPageLayoutProps = {
   children: React.ReactNode;
 };
 
-const InterviewVideoPageLayout: React.FC<InterviewVideoPageLayoutProps> = ({
-  children,
-}) => {
+const InterviewVideoPublicPageLayout: React.FC<
+  InterviewVideoPublicPageLayoutProps
+> = ({ children }) => {
   return (
     <div>
       <div
@@ -25,6 +25,7 @@ const InterviewVideoPageLayout: React.FC<InterviewVideoPageLayoutProps> = ({
         css={css`
           align-items: center;
           row-gap: 1rem;
+          padding: 1rem;
           height: auto;
         `}
       >
@@ -34,4 +35,4 @@ const InterviewVideoPageLayout: React.FC<InterviewVideoPageLayoutProps> = ({
   );
 };
 
-export default InterviewVideoPageLayout;
+export default InterviewVideoPublicPageLayout;

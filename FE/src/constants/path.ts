@@ -13,6 +13,8 @@ export const PATH = {
   INTERVIEW_SETTING_RECORD: `/${INTERVIEW}/${SETTING}/${RECORD}`,
   MYPAGE: `/${MYPAGE}`,
   INTERVIEW_VIDEO: `/${INTERVIEW}/:videoId`,
+  INTERVIEW_VIDEO_PUBLIC: `/${INTERVIEW}/public/:videoHash`,
+  NOT_FOUND: `/404`,
 };
 
 export const SETTING_PATH = {
