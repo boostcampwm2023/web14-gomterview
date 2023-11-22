@@ -29,7 +29,33 @@ const MyPagesTabs: React.FC = () => {
           padding: 0.5rem 1.5rem;
         `}
       >
-        <MyPageTabList onTabChange={handleTabChange} />
+        <Tabs.TabList name="my-page" gap="1rem" onTabChange={handleTabChange}>
+          <Tabs.Tab value="1">
+            <SelectionBox
+              id="add-question"
+              name="my-page"
+              lineDirection="bottom"
+              css={css`
+                padding: 1rem 0;
+              `}
+            >
+              <Typography variant="title4">질문 추가</Typography>
+            </SelectionBox>
+          </Tabs.Tab>
+          <Tabs.Tab value="2">
+            <SelectionBox
+              id="replay"
+              name="my-page"
+              lineDirection="bottom"
+              defaultChecked
+              css={css`
+                padding: 1rem 0;
+              `}
+            >
+              <Typography variant="title4">영상 다시보기</Typography>
+            </SelectionBox>
+          </Tabs.Tab>
+        </Tabs.TabList>
       </Box>
       <Tabs.TabPanel value="1">
         <Box
@@ -44,42 +70,6 @@ const MyPagesTabs: React.FC = () => {
         <VideoListTabPanel />
       </Tabs.TabPanel>
     </Tabs>
-  );
-};
-
-const MyPageTabList = ({
-  onTabChange,
-}: {
-  onTabChange: (e: SyntheticEvent, value: string) => void;
-}) => {
-  return (
-    <Tabs.TabList name="my-page" gap="1rem" onTabChange={onTabChange}>
-      <Tabs.Tab value="1">
-        <SelectionBox
-          id="add-question"
-          name="my-page"
-          lineDirection="bottom"
-          css={css`
-            padding: 1rem 0;
-          `}
-        >
-          <Typography variant="title4">질문 추가</Typography>
-        </SelectionBox>
-      </Tabs.Tab>
-      <Tabs.Tab value="2">
-        <SelectionBox
-          id="replay"
-          name="my-page"
-          lineDirection="bottom"
-          defaultChecked
-          css={css`
-            padding: 1rem 0;
-          `}
-        >
-          <Typography variant="title4">영상 다시보기</Typography>
-        </SelectionBox>
-      </Tabs.Tab>
-    </Tabs.TabList>
   );
 };
 
