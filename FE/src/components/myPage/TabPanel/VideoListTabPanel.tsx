@@ -3,13 +3,28 @@ import Box from '@foundation/Box/Box';
 import { css } from '@emotion/react';
 import VideoItem from '@components/myPage/VideoItem/VideoItem';
 import Thumbnail from '@components/myPage/Thumbnail';
-import CardCover from '@foundation/CardCover/CardCover';
 import useVideoListQuery from '@hooks/queries/video/useVideoListQuery';
 import { PATH } from '@constants/path';
 import { theme } from '@styles/theme';
+import useDeleteVideoMutation from '@hooks/mutations/video/useDeleteVideoMutation';
+import DeleteCheckModal from '@components/myPage/DeleteCheckModal';
+import { useState } from 'react';
 
 const VideoListTabPanel: React.FC = () => {
   const { data } = useVideoListQuery();
+  const { mutate } = useDeleteVideoMutation();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedVideoId, setSelectVideoId] = useState<number | null>(null);
+
+  const handleDeleteIconClick = (videoId: number) => {
+    setIsDeleteModalOpen(true);
+    setSelectVideoId(videoId);
+  };
+
+  const handleConfirmModal = () => {
+    selectedVideoId && mutate(selectedVideoId);
+    setIsDeleteModalOpen(false);
+  };
 
   if (!data) return <div>로딩중</div>;
 
@@ -34,15 +49,20 @@ const VideoListTabPanel: React.FC = () => {
           date={dayjs(Number(video.createdAt)).format('YYYY-MM-DD')}
           path={`${PATH.INTERVIEW_VIDEO(video.id)}`}
         >
-          <CardCover borderRadius="1rem">
-            <Thumbnail
-              image={video.thumbnail}
-              videoName={video.videoName}
-              videoLength={video.videoLength}
-            />
-          </CardCover>
+          <Thumbnail
+            image={video.thumbnail}
+            videoName={video.videoName}
+            videoLength={video.videoLength}
+            onDeleteIconClick={() => handleDeleteIconClick(video.id)}
+          />
         </VideoItem>
       ))}
+      <DeleteCheckModal
+        isOpen={isDeleteModalOpen}
+        content="영상을 삭제 하시겠습니까?"
+        closeModal={() => setIsDeleteModalOpen(false)}
+        confirmModal={handleConfirmModal}
+      />
     </Box>
   );
 };
