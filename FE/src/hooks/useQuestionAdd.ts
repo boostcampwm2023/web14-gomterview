@@ -15,9 +15,9 @@ const useQuestionAdd = (
     onSuccess: onSuccess,
   });
 
-  const createNewQuestion = (content: string, lastId: number = 0) => {
+  const createNewQuestion = (content: string, lastId: number = 1) => {
     return {
-      questionId: lastId + 1,
+      questionId: lastId - 1,
       questionContent: content,
       answerId: 0,
       answerContent: '',
@@ -38,11 +38,7 @@ const useQuestionAdd = (
         QUERY_KEY.QUESTION_CATEGORY(categoryId),
         (prev) => {
           if (!prev) return [createNewQuestion(value)];
-
-          return [
-            createNewQuestion(value, prev[prev.length - 1].questionId),
-            ...prev,
-          ];
+          return [createNewQuestion(value, prev[0].questionId), ...prev];
         }
       );
       onSuccess && onSuccess();
