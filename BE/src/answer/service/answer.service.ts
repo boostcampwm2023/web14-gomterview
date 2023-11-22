@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AnswerRepository } from '../repository/answer.repository';
 import { QuestionRepository } from '../../question/repository/question.repository';
 import { QuestionNotFoundException } from '../../question/exception/question.exception';
@@ -8,16 +8,19 @@ import { Member } from '../../member/entity/member';
 import { Question } from '../../question/entity/question';
 import { Answer } from '../entity/answer';
 import { AnswerResponse } from '../dto/answerResponse';
+import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
+import { CategoryRepository } from '../../category/repository/category.repository';
 
 @Injectable()
 export class AnswerService {
   constructor(
     private answerRepository: AnswerRepository,
     private questionRepository: QuestionRepository,
+    private categoryRepository: CategoryRepository,
   ) {}
 
   async addAnswer(createAnswerRequest: CreateAnswerRequest, member: Member) {
-    const question = await this.questionRepository.findById(
+    const question = await this.questionRepository.findWithOriginById(
       createAnswerRequest.questionId,
     );
 
@@ -33,6 +36,33 @@ export class AnswerService {
     return AnswerResponse.from(answer, member);
   }
 
+  async setDefaultAnswer(
+    defaultAnswerRequest: DefaultAnswerRequest,
+    member: Member,
+  ) {
+    const question = await this.findQuestionById(
+      defaultAnswerRequest.questionId,
+    );
+    if (isEmpty(question)) {
+      throw new QuestionNotFoundException();
+    }
+
+    const category = await this.categoryRepository.findByCategoryId(
+      question.category.id,
+    );
+
+    if (!category.isOwnedBy(member)) {
+      throw new UnauthorizedException();
+    }
+
+    const answer = await this.answerRepository.findById(
+      defaultAnswerRequest.answerId,
+    );
+
+    question.setDefaultAnswer(answer);
+    await this.questionRepository.save(question);
+  }
+
   private async saveAnswerAndQuestion(
     createAnswerRequest: CreateAnswerRequest,
     question: Question,
@@ -46,5 +76,9 @@ export class AnswerService {
     return isEmpty(question.origin)
       ? question
       : this.questionRepository.findById(question.origin.id);
+  }
+
+  private async findQuestionById(questionId: number) {
+    return await this.questionRepository.findById(questionId);
   }
 }
