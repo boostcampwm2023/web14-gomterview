@@ -9,14 +9,15 @@ import {
 let redisInstance: Redis;
 
 function getRedisInstance() {
-  if (!redisInstance) {
-    const redisUrl: string = process.env.REDIS_URL as string;
-    if (!redisUrl) {
-      throw new Error('REDIS_URL environment variable is not defined.');
-    }
+  if (redisInstance) return redisInstance;
+
+  const redisUrl: string = process.env.REDIS_URL as string;
+  if (redisUrl) {
     redisInstance = new Redis(redisUrl);
+    return redisInstance;
   }
-  return redisInstance;
+
+  throw new Error('REDIS_URL 환경 변수가 설정되지 않았습니다.');
 }
 
 export const saveToRedis = async (key: string, value: string) => {
