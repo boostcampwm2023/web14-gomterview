@@ -77,8 +77,8 @@ const videoHandlers = [
     await delay(1000);
     return HttpResponse.json(null, { status: 200 });
   }),
-  http.delete(API.VIDEO_ID(), ({ request }) => {
-    return HttpResponse.json(null, { status: 204 });
+  http.delete(API.VIDEO_ID(), () => {
+    return new HttpResponse(null, { status: 204 });
   }),
 ];
 

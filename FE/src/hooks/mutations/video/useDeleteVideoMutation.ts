@@ -2,10 +2,10 @@ import { QUERY_KEY } from '@/constants/queryKey';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteVideoById } from '@/apis/video';
 
-const useDeleteVideoMutation = (videoId: number) => {
+const useDeleteVideoMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: () => deleteVideoById(videoId),
+    mutationFn: deleteVideoById,
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: QUERY_KEY.VIDEO,

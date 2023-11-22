@@ -1,11 +1,16 @@
 import { css } from '@emotion/react';
+import { HTMLElementTypes } from '@/types/utils';
 
 type CardCoverProps = {
   children: React.ReactNode;
   borderRadius: string;
-};
+} & HTMLElementTypes<HTMLDivElement>;
 
-const CardCover: React.FC<CardCoverProps> = ({ children, borderRadius }) => {
+const CardCover: React.FC<CardCoverProps> = ({
+  children,
+  borderRadius,
+  ...args
+}) => {
   return (
     <div
       css={css`
@@ -19,11 +24,12 @@ const CardCover: React.FC<CardCoverProps> = ({ children, borderRadius }) => {
           left: 0;
           right: 0;
           bottom: 0;
-          background-color: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.3);
           border-radius: ${borderRadius};
           z-index: 1;
         }
       `}
+      {...args}
     >
       {children}
     </div>
