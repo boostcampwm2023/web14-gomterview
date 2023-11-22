@@ -25,7 +25,7 @@ const InterviewVideoPageLayout: React.FC<InterviewVideoPageLayoutProps> = ({
         css={css`
           align-items: center;
           row-gap: 1rem;
-          height: auto;
+          min-height: auto;
         `}
       >
         {children}

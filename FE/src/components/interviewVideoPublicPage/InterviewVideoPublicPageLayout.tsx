@@ -26,7 +26,7 @@ const InterviewVideoPublicPageLayout: React.FC<
           align-items: center;
           row-gap: 1rem;
           padding: 1rem;
-          height: auto;
+          min-height: auto;
         `}
       >
         {children}
