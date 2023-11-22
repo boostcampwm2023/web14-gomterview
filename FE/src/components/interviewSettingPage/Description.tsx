@@ -1,19 +1,32 @@
 import { css } from '@emotion/react';
+import Typography from '../foundation/Typography/Typography';
 
-const Description: React.FC = () => {
+type DescriptionProps = {
+  title: string;
+  children: React.ReactNode;
+};
+
+const Description: React.FC<DescriptionProps> = ({ title, children }) => {
   return (
-    <div
-      css={css`
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        height: 35%;
-        border: 1px solid red;
-      `}
-    >
-      설명
-    </div>
+    <>
+      <Typography
+        variant="title3"
+        component="p"
+        css={css`
+          margin-bottom: 2rem;
+        `}
+      >
+        {title}
+      </Typography>
+      <Typography
+        variant="body1"
+        css={css`
+          line-height: 2rem;
+        `}
+      >
+        {children}
+      </Typography>
+    </>
   );
 };
 export default Description;
