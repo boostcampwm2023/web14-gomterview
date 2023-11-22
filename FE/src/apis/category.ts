@@ -1,9 +1,9 @@
 import { API } from '@/constants/api';
-import { Category } from '@/types/category';
+import { CategoryResDto } from '@/types/category';
 import getAPIResponseData from '@/utils/getAPIResponseData';
 
 export const getCategory = async () => {
-  return await getAPIResponseData<Category[]>({
+  return await getAPIResponseData<CategoryResDto>({
     method: 'get',
     url: API.CATEGORY,
   });
