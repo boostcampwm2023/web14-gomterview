@@ -36,6 +36,12 @@ export class RedisRetrieveException extends HttpException {
   }
 }
 
+export class Md5HashError extends HttpException {
+  constructor() {
+    super('MD5 해시 생성 중 오류가 발생했습니다.', 500);
+  }
+}
+
 export class VideoOfWithdrawnMemberException extends HttpException {
   constructor() {
     super('탈퇴한 회원의 비디오를 조회할 수 없습니다.', 404);

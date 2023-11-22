@@ -126,10 +126,14 @@ export class VideoService {
     return question ? question.content : '삭제된 질문';
   }
 
-  private getHashedUrl(url: string) {
-    return crypto.createHash('md5').update(url).digest('hex');
+  private getHashedUrl(url: string): string {
+    try {
+      const hash = crypto.createHash('md5').update(url).digest('hex');
+      return hash;
+    } catch (error) {
+      throw new Md5HashError();
+    }
   }
-
   private async updateVideoHashInRedis(video: Video) {
     const hash = this.getHashedUrl(video.url);
 
