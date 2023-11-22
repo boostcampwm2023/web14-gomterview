@@ -20,6 +20,7 @@ import { Member } from '../../member/entity/member';
 import { createIntegrationTestModule } from '../../util/test.util';
 import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { QuestionModule } from '../../question/question.module';
+import { createAnswerRequestFixture } from '../fixture/answer.fixture';
 
 describe('AnswerService 단위 테스트', () => {
   let service: AnswerService;
@@ -55,14 +56,10 @@ describe('AnswerService 단위 테스트', () => {
       //when
       const answer = Answer.of('test', memberFixture, questionFixture);
       mockAnswerRepository.save.mockResolvedValue(answer);
-      const createAnswerRequest = new CreateAnswerRequest(
-        questionFixture.id,
-        'test',
-      );
 
       //then
       await expect(
-        service.addAnswer(createAnswerRequest, memberFixture),
+        service.addAnswer(createAnswerRequestFixture, memberFixture),
       ).resolves.toEqual(AnswerResponse.from(answer, memberFixture));
     });
 
@@ -75,14 +72,10 @@ describe('AnswerService 단위 테스트', () => {
       //when
       const answer = Answer.of('test', memberFixture, questionFixture);
       mockAnswerRepository.save.mockResolvedValue(answer);
-      const createAnswerRequest = new CreateAnswerRequest(
-        questionFixture.id,
-        'test',
-      );
 
       //then
       await expect(
-        service.addAnswer(createAnswerRequest, memberFixture),
+        service.addAnswer(createAnswerRequestFixture, memberFixture),
       ).rejects.toThrow(new QuestionNotFoundException());
     });
   });
