@@ -3,7 +3,7 @@ import Button from '@/components/foundation/Button/Button';
 import Description from '@/components/interviewSettingPage/Description';
 import QuestionSelectionBox from '@/components/interviewSettingPage/QuestionSelectionBox/QuestionSelectionBox';
 import { css } from '@emotion/react';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 
 type QuestionSettingPageProps = {
   onNextClick?: () => void;
@@ -14,7 +14,7 @@ const QuestionSettingPage: React.FC<QuestionSettingPageProps> = ({
   onNextClick,
   onPrevClick,
 }) => {
-  const [setting, setSetting] = useRecoilState(questionSetting);
+  const setting = useRecoilValue(questionSetting);
 
   return (
     <div
@@ -38,7 +38,7 @@ const QuestionSettingPage: React.FC<QuestionSettingPageProps> = ({
           margin-top: 2rem;
         `}
       >
-        <QuestionSelectionBox></QuestionSelectionBox>
+        <QuestionSelectionBox />
       </div>
       <div
         css={css`
