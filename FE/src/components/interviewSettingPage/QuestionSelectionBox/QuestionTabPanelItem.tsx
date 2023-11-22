@@ -97,6 +97,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
               display: flex;
               cursor: pointer;
               align-items: center;
+              column-gap: 0.25rem;
             `}
           >
             <Toggle
@@ -105,7 +106,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
               `}
               onClick={toggleShowSelectionOption}
               isToggled={onlySelectedOption}
-            ></Toggle>
+            />
             <Typography variant="body3">선택된 질문만 보기</Typography>
           </div>
         </div>
