@@ -11,9 +11,11 @@ import { Request, Response } from 'express';
 import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import {
-  DecryptionException,
-  EncryptionException,
   IDriveException,
+  Md5HashException,
+  RedisDeleteException,
+  RedisRetrieveException,
+  RedisSaveException,
   VideoAccessForbiddenException,
   VideoNotFoundException,
   VideoOfWithdrawnMemberException,
@@ -250,17 +252,17 @@ describe('VideoController 단위 테스트', () => {
       );
     });
 
-    it('해시로 비디오 조회 시 복호화에 실패하면 DecryptionException을 반환한다.', async () => {
+    it('해시로 비디오 조회 시 Redis에서 비디오의 URL을 얻어내는 중 에러가 발생하면 RedisRetrieveException을 반환한다.', async () => {
       // given
 
       // when
       mockVideoService.getVideoDetailByHash.mockRejectedValue(
-        new DecryptionException(),
+        new RedisRetrieveException(),
       );
 
       // then
       expect(controller.getVideoDetailByHash(hash)).rejects.toThrow(
-        DecryptionException,
+        RedisRetrieveException,
       );
     });
   });
@@ -355,17 +357,15 @@ describe('VideoController 단위 테스트', () => {
       );
     });
 
-    it('비디오 상세 정보 조회 시 암호화에 실패하면 EncryptionException을 반환한다.', async () => {
+    it('비디오 상세 정보 조회 시 해시 생성에 실패한다면 Md5HashException를 반환한다.', async () => {
       // given
 
       // when
-      mockVideoService.getVideoDetail.mockRejectedValue(
-        new EncryptionException(),
-      );
+      mockVideoService.getVideoDetail.mockRejectedValue(new Md5HashException());
 
       // then
       expect(controller.getVideoDetail(1, mockReq)).rejects.toThrow(
-        EncryptionException,
+        Md5HashException,
       );
     });
   });
@@ -407,7 +407,7 @@ describe('VideoController 단위 테스트', () => {
       expect(result.hash).toBeNull();
     });
 
-    it('비디오 상세 정보 조회 시 회원 객체가 없으면 ManipulatedTokenNotFilteredException을 반환한다.', async () => {
+    it('비디오 상태 토글 시 회원 객체가 없으면 ManipulatedTokenNotFilteredException을 반환한다.', async () => {
       // given
       const nullMember = { user: null } as unknown as Request;
 
@@ -422,7 +422,7 @@ describe('VideoController 단위 테스트', () => {
       );
     });
 
-    it('비디오 상세 정보 조회 시 해당 비디오가 삭제되었다면 VideoNotFoundException를 반환한다.', async () => {
+    it('비디오 상태 토글 시 해당 비디오가 삭제되었다면 VideoNotFoundException를 반환한다.', async () => {
       // given
 
       // when
@@ -436,7 +436,7 @@ describe('VideoController 단위 테스트', () => {
       );
     });
 
-    it('비디오 상세 정보 조회 시 다른 회원의 비디오를 조회하려 한다면 VideoAccessForbiddenException를 반환한다.', async () => {
+    it('비디오 상태 토글 시 다른 회원의 비디오를 토글하려 한다면 VideoAccessForbiddenException를 반환한다.', async () => {
       // given
 
       // when
@@ -450,17 +450,45 @@ describe('VideoController 단위 테스트', () => {
       );
     });
 
-    it('비디오 상세 정보 조회 시 암호화에 실패하면 EncryptionException을 반환한다.', async () => {
+    it('비디오 상태 토글 시 url 해싱에 실패한다면 Md5HashException를 반환한다.', async () => {
       // given
 
       // when
       mockVideoService.toggleVideoStatus.mockRejectedValue(
-        new EncryptionException(),
+        new Md5HashException(),
       );
 
       // then
       expect(controller.toggleVideoStatus(1, member)).rejects.toThrow(
-        EncryptionException,
+        Md5HashException,
+      );
+    });
+
+    it('비디오 상태 토글 시 Redis에 데이터 저장 중 에러가 발생한다면 RedisSaveException을 반환한다.', async () => {
+      // given
+
+      // when
+      mockVideoService.toggleVideoStatus.mockRejectedValue(
+        new RedisSaveException(),
+      );
+
+      // then
+      expect(controller.toggleVideoStatus(1, member)).rejects.toThrow(
+        RedisSaveException,
+      );
+    });
+
+    it('비디오 상태 토글 시 Redis에서 데이터 삭제 도중 에러가 발생한다면 RedisDeleteException을 반환한다.', async () => {
+      // given
+
+      // when
+      mockVideoService.toggleVideoStatus.mockRejectedValue(
+        new RedisDeleteException(),
+      );
+
+      // then
+      expect(controller.toggleVideoStatus(1, member)).rejects.toThrow(
+        RedisDeleteException,
       );
     });
   });

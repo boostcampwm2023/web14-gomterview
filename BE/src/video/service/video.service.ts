@@ -12,6 +12,7 @@ import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { QuestionRepository } from 'src/question/repository/question.repository';
 import {
   IDriveException,
+  Md5HashException,
   VideoAccessForbiddenException,
   VideoNotFoundException,
   VideoOfWithdrawnMemberException,
@@ -131,7 +132,7 @@ export class VideoService {
       const hash = crypto.createHash('md5').update(url).digest('hex');
       return hash;
     } catch (error) {
-      throw new Md5HashError();
+      throw new Md5HashException();
     }
   }
   private async updateVideoHashInRedis(video: Video) {

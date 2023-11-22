@@ -36,7 +36,7 @@ export class RedisRetrieveException extends HttpException {
   }
 }
 
-export class Md5HashError extends HttpException {
+export class Md5HashException extends HttpException {
   constructor() {
     super('MD5 해시 생성 중 오류가 발생했습니다.', 500);
   }
