@@ -12,4 +12,14 @@ class CategoryNotFoundException extends HttpException {
   }
 }
 
-export { CategoryNameEmptyException, CategoryNotFoundException };
+class CategoryForbiddenException extends HttpException {
+  constructor() {
+    super('해당 카테고리/질문에 대한 권한이 없습니다.', 403);
+  }
+}
+
+export {
+  CategoryNameEmptyException,
+  CategoryNotFoundException,
+  CategoryForbiddenException,
+};

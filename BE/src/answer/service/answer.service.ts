@@ -10,8 +10,8 @@ import { Answer } from '../entity/answer';
 import { AnswerResponse } from '../dto/answerResponse';
 import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
 import { CategoryRepository } from '../../category/repository/category.repository';
-import { ForbiddenException } from '../../token/exception/token.exception';
 import { AnswerNotFoundException } from '../exception/answer.exception';
+import { CategoryForbiddenException } from '../../category/exception/category.exception';
 
 @Injectable()
 export class AnswerService {
@@ -54,7 +54,7 @@ export class AnswerService {
     );
 
     if (!category.isOwnedBy(member)) {
-      throw new ForbiddenException();
+      throw new CategoryForbiddenException();
     }
 
     const answer = await this.answerRepository.findById(
