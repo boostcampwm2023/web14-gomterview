@@ -8,6 +8,9 @@ import { useState } from 'react';
 import SelectionBox from '@/components/foundation/SelectionBox/SelectionBox';
 import TabPanelItem from './QuestionTabPanelItem';
 import useCategoryQuery from '@/hooks/queries/useCategoryQuery';
+import AnswerSelectionModal from '../AnswerSelectionModal/AnswerSelectionModal';
+import { useRecoilState } from 'recoil';
+import { QuestionAnswerSelectionModal } from '@/atoms/modal';
 
 const QuestionSelectionBox = () => {
   const [selectedTabIndex, setSelectedTabIndex] = useState('0');
@@ -15,68 +18,86 @@ const QuestionSelectionBox = () => {
   // HOW: 해당 state는 몇번째 Tab을 클릭했는지 저장하는 state이다. 따라서 Index값을 가지고 있고 이를 바탕으로 questionAPI 데이터를 가져와야 한다.
 
   const { data: categoryData } = useCategoryQuery();
+  const [{ isOpen, categoryId, question }, setModalState] = useRecoilState(
+    QuestionAnswerSelectionModal
+  );
   return (
-    <Box
-      css={css`
-        background-color: ${theme.colors.surface.inner};
-        width: 100%;
-        height: 40rem;
-      `}
-    >
-      <Tabs
-        initialValue={selectedTabIndex}
+    <>
+      {categoryId && question && (
+        <AnswerSelectionModal
+          isOpen={isOpen}
+          categoryId={categoryId}
+          question={question}
+          closeModal={() =>
+            setModalState((pre) => ({
+              ...pre,
+              isOpen: false,
+            }))
+          }
+        />
+      )}
+      <Box
         css={css`
-          display: flex;
+          background-color: ${theme.colors.surface.inner};
           width: 100%;
-          height: 100%;
-          row-gap: 1.5rem;
+          height: 40rem;
         `}
       >
-        <Tabs.TabList
-          name="category"
+        <Tabs
+          initialValue={selectedTabIndex}
           css={css`
-            background-color: ${theme.colors.surface.default};
-            width: 12rem;
-            border-radius: 1rem 0 0 1rem;
-            padding-top: 6rem;
             display: flex;
-            flex-direction: column;
-            > * {
-              margin-bottom: 1rem;
-            }
-          `}
-          onTabChange={(_, value) => setSelectedTabIndex(value)}
-        >
-          {categoryData?.map((category, index) => (
-            <Tabs.Tab value={index.toString()} key={category.id}>
-              <SelectionBox
-                id={`category-${category.id.toString()}`}
-                name="category"
-                defaultChecked={index === 0}
-              >
-                <Typography variant="title4">{category.name}</Typography>
-              </SelectionBox>
-            </Tabs.Tab>
-          ))}
-        </Tabs.TabList>
-
-        <div
-          css={css`
             width: 100%;
-            max-width: calc(100% - 12rem);
+            height: 100%;
+            row-gap: 1.5rem;
           `}
         >
-          {categoryData?.map((category, index) => (
-            <TabPanelItem
-              selectedTabIndex={selectedTabIndex}
-              tabIndex={index.toString()}
-              category={category}
-              key={category.id}
-            />
-          ))}
-        </div>
-      </Tabs>
-    </Box>
+          <Tabs.TabList
+            name="category"
+            css={css`
+              background-color: ${theme.colors.surface.default};
+              width: 12rem;
+              border-radius: 1rem 0 0 1rem;
+              padding-top: 6rem;
+              display: flex;
+              flex-direction: column;
+              > * {
+                margin-bottom: 1rem;
+              }
+            `}
+            onTabChange={(_, value) => setSelectedTabIndex(value)}
+          >
+            {categoryData?.map((category, index) => (
+              <Tabs.Tab value={index.toString()} key={category.id}>
+                <SelectionBox
+                  id={`category-${category.id.toString()}`}
+                  name="category"
+                  defaultChecked={index === 0}
+                >
+                  <Typography variant="title4">{category.name}</Typography>
+                </SelectionBox>
+              </Tabs.Tab>
+            ))}
+          </Tabs.TabList>
+
+          <div
+            css={css`
+              width: 100%;
+              max-width: calc(100% - 12rem);
+            `}
+          >
+            {categoryData?.map((category, index) => (
+              <TabPanelItem
+                selectedTabIndex={selectedTabIndex}
+                tabIndex={index.toString()}
+                category={category}
+                key={category.id}
+              />
+            ))}
+          </div>
+        </Tabs>
+      </Box>
+    </>
   );
 };
 
