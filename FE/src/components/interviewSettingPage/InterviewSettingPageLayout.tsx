@@ -12,7 +12,7 @@ const InterviewSettingPageLayout: React.FC<InterviewSettingPageLayoutProps> = ({
     <Layout
       direction="column"
       css={css`
-        padding: 0 1rem 1rem 1rem;
+        padding: 0rem 1rem 1rem 1rem;
         height: auto;
       `}
     >

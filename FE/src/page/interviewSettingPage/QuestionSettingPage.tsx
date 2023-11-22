@@ -17,11 +17,7 @@ const QuestionSettingPage: React.FC<QuestionSettingPageProps> = ({
   const setting = useRecoilValue(questionSetting);
 
   return (
-    <div
-      css={css`
-        padding-top: 3rem;
-      `}
-    >
+    <>
       <Description title="문제 선택">
         - 주어진 카테고리 중에서 관련 있는 문제를 선택해 주세요.
         <br />
@@ -68,7 +64,7 @@ const QuestionSettingPage: React.FC<QuestionSettingPageProps> = ({
           다음
         </Button>
       </div>
-    </div>
+    </>
   );
 };
 

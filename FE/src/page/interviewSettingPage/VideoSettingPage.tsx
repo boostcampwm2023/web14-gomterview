@@ -35,11 +35,7 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
   }, [connectStatus, setVideoSettingState]);
 
   return (
-    <div
-      css={css`
-        padding-top: 3rem;
-      `}
-    >
+    <>
       <Description title="문제 선택">
         - 면접 시작 전, 사용하시는 장치의 화면 및 소리가 정상적으로 연결되어
         있는지 확인해 주세요.
@@ -111,7 +107,7 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
           다음
         </Button>
       </div>
-    </div>
+    </>
   );
 };
 

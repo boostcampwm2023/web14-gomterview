@@ -29,11 +29,7 @@ const RecordSettingPage: React.FC<RecordSettingPageProps> = ({
   };
 
   return (
-    <div
-      css={css`
-        padding-top: 3rem;
-      `}
-    >
+    <>
       <Description title="녹화 설정">
         - 면접 시작 전, 사용하시는 장치의 화면 및 소리가 정상적으로 연결되어
         있는지 확인해 주세요.
@@ -111,7 +107,7 @@ const RecordSettingPage: React.FC<RecordSettingPageProps> = ({
           다음
         </Button>
       </div>
-    </div>
+    </>
   );
 };
 export default RecordSettingPage;
