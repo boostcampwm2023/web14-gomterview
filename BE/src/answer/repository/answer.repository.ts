@@ -8,4 +8,20 @@ export class AnswerRepository {
   constructor(
     @InjectRepository(Answer) private repository: Repository<Answer>,
   ) {}
+
+  async save(answer: Answer) {
+    return await this.repository.save(answer);
+  }
+
+  async findByContentMemberIdAndQuestionId(
+    content: string,
+    memberId: number,
+    questionId: number,
+  ) {
+    return await this.repository.findOneBy({
+      content: content,
+      member: { id: memberId },
+      question: { id: questionId },
+    });
+  }
 }

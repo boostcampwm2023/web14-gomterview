@@ -3,7 +3,7 @@ import { DefaultEntity } from '../../app.entity';
 import { Member } from '../../member/entity/member';
 import { Question } from '../../question/entity/question';
 
-@Entity()
+@Entity({ name: 'Answer' })
 export class Answer extends DefaultEntity {
   @Column()
   content: string;

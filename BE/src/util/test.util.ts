@@ -1,7 +1,12 @@
 import { Test } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EntitySchema } from 'typeorm';
-import { DynamicModule } from '@nestjs/common';
+import {
+  DynamicModule,
+  INestApplication,
+  ValidationPipe,
+} from '@nestjs/common';
+import * as cookieParser from 'cookie-parser';
 
 export const createIntegrationTestModule = async (
   modules: unknown[],
@@ -19,4 +24,9 @@ export const createIntegrationTestModule = async (
   return await Test.createTestingModule({
     imports: modules as DynamicModule[],
   }).compile();
+};
+
+export const addAppModules = (app: INestApplication) => {
+  app.use(cookieParser());
+  app.useGlobalPipes(new ValidationPipe());
 };
