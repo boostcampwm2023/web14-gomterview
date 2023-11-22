@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import Tabs from '@foundation/Tabs';
 import SelectionBox from '@foundation/SelectionBox/SelectionBox';
 import { css } from '@emotion/react';
@@ -8,6 +8,11 @@ import VideoListTabPanel from '@components/myPage/TabPanel/VideoListTabPanel';
 
 const MyPagesTabs: React.FC = () => {
   const [value, setValue] = useState('2');
+
+  const handleTabChange = (_: SyntheticEvent, v: string) => {
+    setValue(v);
+  };
+
   return (
     <Tabs
       initialValue={value}
@@ -24,37 +29,7 @@ const MyPagesTabs: React.FC = () => {
           padding: 0.5rem 1.5rem;
         `}
       >
-        <Tabs.TabList
-          name="my-page"
-          gap="1rem"
-          onTabChange={(_, v) => setValue(v)}
-        >
-          <Tabs.Tab value="1">
-            <SelectionBox
-              id="add-question"
-              name="my-page"
-              lineDirection="bottom"
-              css={css`
-                padding: 1rem 0;
-              `}
-            >
-              <Typography variant="title4">질문 추가</Typography>
-            </SelectionBox>
-          </Tabs.Tab>
-          <Tabs.Tab value="2">
-            <SelectionBox
-              id="replay"
-              name="my-page"
-              lineDirection="bottom"
-              defaultChecked
-              css={css`
-                padding: 1rem 0;
-              `}
-            >
-              <Typography variant="title4">영상 다시보기</Typography>
-            </SelectionBox>
-          </Tabs.Tab>
-        </Tabs.TabList>
+        <MyPageTabList onTabChange={handleTabChange} />
       </Box>
       <Tabs.TabPanel value="1">
         <Box
@@ -69,6 +44,42 @@ const MyPagesTabs: React.FC = () => {
         <VideoListTabPanel />
       </Tabs.TabPanel>
     </Tabs>
+  );
+};
+
+const MyPageTabList = ({
+  onTabChange,
+}: {
+  onTabChange: (e: SyntheticEvent, value: string) => void;
+}) => {
+  return (
+    <Tabs.TabList name="my-page" gap="1rem" onTabChange={onTabChange}>
+      <Tabs.Tab value="1">
+        <SelectionBox
+          id="add-question"
+          name="my-page"
+          lineDirection="bottom"
+          css={css`
+            padding: 1rem 0;
+          `}
+        >
+          <Typography variant="title4">질문 추가</Typography>
+        </SelectionBox>
+      </Tabs.Tab>
+      <Tabs.Tab value="2">
+        <SelectionBox
+          id="replay"
+          name="my-page"
+          lineDirection="bottom"
+          defaultChecked
+          css={css`
+            padding: 1rem 0;
+          `}
+        >
+          <Typography variant="title4">영상 다시보기</Typography>
+        </SelectionBox>
+      </Tabs.Tab>
+    </Tabs.TabList>
   );
 };
 
