@@ -24,16 +24,7 @@ const SelectionBox: React.FC<SelectionButtonProps> = ({
   ...args
 }) => {
   return (
-    <label
-      htmlFor={id}
-      css={css`
-        display: inline-block;
-        position: relative;
-        padding: 0 2rem;
-        color: ${theme.colors.text.subStrong};
-      `}
-      {...args}
-    >
+    <div>
       <input
         id={id}
         name={name}
@@ -43,21 +34,26 @@ const SelectionBox: React.FC<SelectionButtonProps> = ({
         defaultChecked={defaultChecked}
         css={css`
           display: none;
-        `}
-      />
-      <label
-        htmlFor={id}
-        css={css`
-          ${'#' + id}:checked + & {
+          &:checked + label {
             ${selectionBox}
             ${selectionBoxDirection[lineDirection]}
             color: ${theme.colors.text.default};
           }
         `}
+      />
+      <label
+        htmlFor={id}
+        css={css`
+          display: inline-block;
+          position: relative;
+          padding: 0 2rem;
+          color: ${theme.colors.text.subStrong};
+        `}
+        {...args}
       >
         {children}
       </label>
-    </label>
+    </div>
   );
 };
 
