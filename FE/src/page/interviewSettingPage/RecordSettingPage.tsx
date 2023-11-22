@@ -1,8 +1,11 @@
 import { RecordMethod, recordSetting } from '@/atoms/interviewSetting';
 import Description from '@/components/interviewSettingPage/Description';
 import RecordRadio from '@/components/interviewSettingPage/RecordPage/RecordRadio';
+import { QUERY_KEY } from '@/constants/queryKey';
+import { User } from '@/types/user';
 import { css } from '@emotion/react';
 import Button from '@foundation/Button/Button';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRecoilState } from 'recoil';
 
 type RecordSettingPageProps = {
@@ -15,6 +18,8 @@ const RecordSettingPage: React.FC<RecordSettingPageProps> = ({
   onPrevClick,
 }) => {
   const [setting, setSetting] = useRecoilState(recordSetting);
+  const queryClient = useQueryClient();
+  const userInfo = queryClient.getQueryData<User | undefined>(QUERY_KEY.MEMBER);
 
   const handleRecordChange = (name: RecordMethod) => {
     setSetting({
@@ -52,14 +57,16 @@ const RecordSettingPage: React.FC<RecordSettingPageProps> = ({
           gap: 2rem;
         `}
       >
-        <RecordRadio
-          group="record"
-          IconId="save-idrive"
-          onChange={() => handleRecordChange('idrive')}
-          defaultChecked={setting.method === 'idrive'}
-        >
-          서버에 저장
-        </RecordRadio>
+        {userInfo && (
+          <RecordRadio
+            group="record"
+            IconId="save-idrive"
+            onChange={() => handleRecordChange('idrive')}
+            defaultChecked={setting.method === 'idrive'}
+          >
+            서버에 저장
+          </RecordRadio>
+        )}
         <RecordRadio
           group="record"
           IconId="save-local"
