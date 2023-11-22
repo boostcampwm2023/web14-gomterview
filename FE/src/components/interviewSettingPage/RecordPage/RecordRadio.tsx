@@ -1,6 +1,7 @@
 import Box from '@/components/foundation/Box/Box';
 import Icon from '@/components/foundation/Icon/Icon';
 import Typography from '@/components/foundation/Typography/Typography';
+import { theme } from '@/styles/theme';
 import { css } from '@emotion/react';
 
 type RecordRadioProps = {
@@ -23,7 +24,7 @@ const RecordRadio: React.FC<RecordRadioProps> = ({
         css={css`
           display: none;
           &:checked + label > div {
-            border-left: 16px solid #e0e0e0;
+            border-left: 16px solid ${theme.colors.point.primary.default};
           }
         `}
       />
