@@ -21,7 +21,7 @@ const Layout: React.FC<MainProps> = ({
         width: ${full ? '100%' : 'auto'};
         max-width: ${full ? 'none' : '46.875rem'};
         margin: 0 auto;
-        min-height: 100vh;
+        height: 100vh;
       `}
       {...args}
     >
