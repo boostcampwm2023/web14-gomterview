@@ -11,8 +11,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { QuestionRepository } from 'src/question/repository/question.repository';
 import {
-  DecryptionException,
-  EncryptionException,
   IDriveException,
   VideoAccessForbiddenException,
   VideoNotFoundException,
@@ -32,10 +30,6 @@ import {
   getValueFromRedis,
   saveToRedis,
 } from 'src/util/redis.util';
-
-const algorithm = 'aes-256-cbc';
-const key = process.env.URL_ENCRYPT_KEY;
-const iv = crypto.randomBytes(16);
 
 @Injectable()
 export class VideoService {
@@ -78,7 +72,7 @@ export class VideoService {
     const video = await this.videoRepository.findById(videoId);
     this.validateVideoOwnership(video, memberId);
 
-    const hash = video.isPublic ? this.getEncryptedurl(video.url) : null;
+    const hash = video.isPublic ? this.getHashedUrl(video.url) : null;
     return VideoDetailResponse.from(video, member.nickname, hash);
   }
 
@@ -147,27 +141,5 @@ export class VideoService {
 
     await saveToRedis(hash, video.url);
     return new VideoHashResponse(hash);
-  }
-
-  private getEncryptedurl(url: string) {
-    try {
-      const cipher = crypto.createCipheriv(algorithm, Buffer.from(key), iv);
-      let encrypted = cipher.update(url, 'utf-8', 'hex');
-      encrypted += cipher.final('hex');
-      return encrypted;
-    } catch (error) {
-      throw new EncryptionException();
-    }
-  }
-
-  private getDecryptedUrl(encryptedUrl: string) {
-    try {
-      const decipher = crypto.createDecipheriv(algorithm, Buffer.from(key), iv);
-      let decrypted = decipher.update(encryptedUrl, 'hex', 'utf-8');
-      decrypted += decipher.final('utf-8');
-      return decrypted;
-    } catch (error) {
-      throw new DecryptionException();
-    }
   }
 }

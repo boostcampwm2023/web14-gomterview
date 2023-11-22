@@ -18,15 +18,21 @@ export class VideoNotFoundException extends HttpException {
   }
 }
 
-export class EncryptionException extends HttpException {
+export class RedisSaveException extends HttpException {
   constructor() {
-    super('암호화 중 에러가 발생했습니다.', 500);
+    super('Redis에 저장 중 오류가 발생하였습니다.', 500);
   }
 }
 
-export class DecryptionException extends HttpException {
+export class RedisDeleteException extends HttpException {
   constructor() {
-    super('복호화 중 에러가 발생했습니다.', 500);
+    super('Redis에서 삭제 중 오류가 발생하였습니다.', 500);
+  }
+}
+
+export class RedisRetrieveException extends HttpException {
+  constructor() {
+    super('Redis에서 정보를 가져오는 중 오류가 발생하였습니다.', 500);
   }
 }
 
