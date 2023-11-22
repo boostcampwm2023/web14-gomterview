@@ -9,3 +9,20 @@ export const getQuestion = async (id: number) => {
     params: { category: id },
   });
 };
+
+export const postQuestion = async ({
+  categoryId,
+  content,
+}: {
+  categoryId: number;
+  content: string;
+}) => {
+  return await getAPIResponseData({
+    method: 'post',
+    url: API.QUESTION,
+    data: {
+      categoryId: categoryId,
+      content: content,
+    },
+  });
+};

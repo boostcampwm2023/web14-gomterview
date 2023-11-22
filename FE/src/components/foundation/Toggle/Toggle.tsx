@@ -11,9 +11,10 @@ const Toggle: React.FC<ToggleProps> = ({ isToggled, ...args }) => {
   return (
     <>
       <input
+        readOnly
         id="toggle"
         type="checkbox"
-        defaultChecked={isToggled}
+        checked={isToggled}
         css={ToggleInputStyle}
         {...args}
       />

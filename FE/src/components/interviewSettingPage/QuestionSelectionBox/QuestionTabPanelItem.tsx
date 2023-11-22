@@ -9,18 +9,26 @@ import { useRecoilValue } from 'recoil';
 import QuestionAccordion from './QuestionAccordion';
 import useQuestionCategoryQuery from '@/hooks/queries/useQuestionCategoryQuery';
 import Toggle from '@/components/foundation/Toggle/Toggle';
+import QuestionAddForm from './QuestionAddForm';
 
 type TabPanelItemProps = {
   selectedTabIndex: string;
   tabIndex: string;
   category: Category;
+  type: 'custom' | 'default';
 };
 
 const TabPanelItem: React.FC<TabPanelItemProps> = ({
   selectedTabIndex,
   category,
   tabIndex,
+  type,
 }) => {
+  const settingPage = useRecoilValue(questionSetting);
+  const selectedQuestions = settingPage.selectedData.filter(
+    (question) => question.categoryId === category.id
+  );
+
   const [onlySelectedOption, setOnlySelectedOption] = useState(false);
 
   const toggleShowSelectionOption = () => {
@@ -31,11 +39,6 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
     categoryId: category.id,
     enabled: selectedTabIndex === tabIndex,
   });
-
-  const settingPage = useRecoilValue(questionSetting);
-  const selectedQuestions = settingPage.selectedData.filter(
-    (question) => question.categoryId === category.id
-  );
 
   const questionData = onlySelectedOption ? selectedQuestions : questionAPIData;
   if (!questionData) return;
@@ -65,6 +68,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
         >
           {questionData.length}개의 질문
         </Typography>
+        {type === 'custom' && <QuestionAddForm categoryId={category.id} />}
         <div
           css={css`
             height: 100%;
