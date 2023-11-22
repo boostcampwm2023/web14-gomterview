@@ -80,4 +80,15 @@ export const typography = {
     fontWeight: 600,
     fontSize: '0.75rem',
   },
+
+  /**
+   * 영상 공유 모달의 링크에 대한 부연설명에 사용됩니다.
+   * 크게 강조하지 않을 설명 텍스트에 사용하세요
+   */
+  captionWeak: {
+    fontFamily: 'Pretendard',
+    fontStyle: 'normal',
+    fontWeight: 400,
+    fontSize: '0.75rem',
+  },
 };

@@ -1,24 +1,51 @@
 import InterviewVideoPageLayout from '@components/interviewVideoPage/InterviewVideoPageLayout';
-import VideoPlayer from '@components/interviewVideoPage/VideoPlayer';
-import Typography from '@foundation/Typography/Typography';
-import Button from '@foundation/Button/Button';
-import { Link } from 'react-router-dom';
-import { PATH } from '@constants/path';
+import { useParams } from 'react-router-dom';
+import useVideoItemQuery from '@hooks/queries/video/useVideoItemQuery';
+import LoadingBounce from '@common/Loading/LoadingBounce';
+import CenterLayout from '@components/layout/CenterLayout';
+import StartButton from '@common/StartButton/StartButton';
+import { useState } from 'react';
+import IconButton from '@common/VideoPlayer/IconButton';
+import { css } from '@emotion/react';
+import PrivateVideoPlayer from '@components/interviewVideoPage/PrivateVideoPlayer';
+import VideoShareModal from '@components/interviewVideoPage/Modal/VideoShareModal';
 
 const InterviewVideoPage: React.FC = () => {
-  const dummyData = {
-    videoName: '비디오 이름',
-    date: '2001.07.17',
-    url: 'https://u2e0.c18.e2-4.dev/videos/%EB%A3%A8%EC%9D%B4%EB%B7%94%ED%86%B5%ED%86%B5%ED%8A%80%EA%B8%B0%EB%84%A4_test_07ab3e8a-1a0a-453f-8d60-afacb57b0075.webm',
-  };
+  const { videoId } = useParams();
+  const { data, isFetching } = useVideoItemQuery(Number(videoId));
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <InterviewVideoPageLayout>
-      <Typography variant="title3">{dummyData.videoName}</Typography>
-      <VideoPlayer {...dummyData} />
-      <Link to={PATH.INTERVIEW_SETTING}>
-        <Button size="lg">면접 시작하기</Button>
-      </Link>
+      <div
+        css={css`
+          margin: 0 auto;
+        `}
+      >
+        <IconButton
+          text="영상 공유하기"
+          iconName="send"
+          onClick={() => setIsOpen(!isOpen)}
+        />
+      </div>
+      {!data ? (
+        //TODO 로딩화면 일단 임시로 처리
+        <CenterLayout>
+          <LoadingBounce />
+        </CenterLayout>
+      ) : (
+        <>
+          <PrivateVideoPlayer {...data} />
+          <VideoShareModal
+            videoId={Number(data.id)}
+            videoName={data.videoName}
+            isPublic={!!data?.hash}
+            isOpen={isOpen}
+            closeModal={() => setIsOpen(false)}
+          />
+        </>
+      )}
+      <StartButton />
     </InterviewVideoPageLayout>
   );
 };
