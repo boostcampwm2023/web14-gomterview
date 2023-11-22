@@ -103,4 +103,5 @@ const COOKIE_OPTIONS: CookieOptions = {
   httpOnly: true,
   path: '/',
   sameSite: 'lax',
+  domain: 'localhost',
 };
