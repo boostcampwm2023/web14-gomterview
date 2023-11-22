@@ -16,18 +16,20 @@ import { useRecoilValue } from 'recoil';
 import { recordSetting } from '@/atoms/interviewSetting';
 import useMedia from '@/hooks/useMedia';
 
+import { useNavigate } from 'react-router-dom';
 const InterviewPage: React.FC = () => {
   const isAllSuccess = useIsAllSuccess();
   const { method } = useRecoilValue(recordSetting);
 
   const isLogin = useQueryClient().getQueryState(QUERY_KEY.MEMBER);
+  const navigate = useNavigate();
   const { currentQuestion, getNextQuestion, isLastQuestion } =
     useInterviewFlow();
 
   const {
     media,
     videoRef: mirrorVideoRef,
-    isConnected,
+    connectStatus,
     selectedMimeType,
   } = useMedia();
 
@@ -99,8 +101,9 @@ const InterviewPage: React.FC = () => {
     setRecordedBlobs([]);
   };
 
-  if (!isAllSuccess || !isConnected) return <Navigate to={PATH.ROOT} />;
-  else
+  if (!isAllSuccess || connectStatus === 'fail') {
+    return <Navigate to={PATH.ROOT} />;
+  } else
     return (
       <InterviewPageLayout>
         <InterviewHeader isRecording={isRecording} intervieweeName="면접자" />
