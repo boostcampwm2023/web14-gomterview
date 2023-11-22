@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AnswerRepository } from '../repository/answer.repository';
 import { QuestionRepository } from '../../question/repository/question.repository';
-import { QuestionNotFoundException } from '../../question/exception/question.exception';
 import { isEmpty } from 'class-validator';
 import { CreateAnswerRequest } from '../dto/createAnswerRequest';
 import { Member } from '../../member/entity/member';
@@ -10,8 +9,8 @@ import { Answer } from '../entity/answer';
 import { AnswerResponse } from '../dto/answerResponse';
 import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
 import { CategoryRepository } from '../../category/repository/category.repository';
-import { AnswerNotFoundException } from '../exception/answer.exception';
 import { CategoryForbiddenException } from '../../category/exception/category.exception';
+import { validateAnswer } from '../util/answer.util';
 import { validateQuestion } from '../../question/util/question.util';
 
 @Injectable()
@@ -27,9 +26,7 @@ export class AnswerService {
       createAnswerRequest.questionId,
     );
 
-    if (isEmpty(question)) {
-      throw new QuestionNotFoundException();
-    }
+    validateQuestion(question);
 
     const answer = await this.saveAnswerAndQuestion(
       createAnswerRequest,
@@ -60,9 +57,7 @@ export class AnswerService {
       defaultAnswerRequest.answerId,
     );
 
-    if (isEmpty(answer)) {
-      throw new AnswerNotFoundException();
-    }
+    validateAnswer(answer);
 
     question.setDefaultAnswer(answer);
     await this.questionRepository.save(question);

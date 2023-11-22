@@ -1,7 +1,7 @@
 import { QuestionResponse } from './questionResponse';
 import { ApiProperty } from '@nestjs/swagger';
 import { createPropertyOption } from '../../util/swagger.util';
-import { questionFixture } from '../util/question.util';
+import { questionFixture } from '../fixture/question.fixture';
 
 export class QuestionResponseList {
   @ApiProperty(

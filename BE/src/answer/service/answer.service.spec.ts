@@ -4,7 +4,7 @@ import { AnswerRepository } from '../repository/answer.repository';
 import { QuestionRepository } from '../../question/repository/question.repository';
 import { Answer } from '../entity/answer';
 import { memberFixture } from '../../member/fixture/member.fixture';
-import { questionFixture } from '../../question/util/question.util';
+import { questionFixture } from '../../question/fixture/question.fixture';
 import { CreateAnswerRequest } from '../dto/createAnswerRequest';
 import { AnswerResponse } from '../dto/answerResponse';
 import { QuestionNotFoundException } from '../../question/exception/question.exception';
