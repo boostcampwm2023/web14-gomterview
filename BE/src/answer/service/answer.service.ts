@@ -27,7 +27,7 @@ export class AnswerService {
 
     const answer = await this.saveAnswerAndQuestion(
       createAnswerRequest,
-      this.getOriginalQuestion(question),
+      await this.getOriginalQuestion(question),
       member,
     );
     return AnswerResponse.from(answer, member);
@@ -42,7 +42,9 @@ export class AnswerService {
     return await this.answerRepository.save(answer);
   }
 
-  private getOriginalQuestion(question: Question) {
-    return isEmpty(question.origin) ? question : question.origin;
+  private async getOriginalQuestion(question: Question) {
+    return isEmpty(question.origin)
+      ? question
+      : this.questionRepository.findById(question.origin.id);
   }
 }
