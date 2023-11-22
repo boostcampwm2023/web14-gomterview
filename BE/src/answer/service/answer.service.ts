@@ -42,7 +42,7 @@ export class AnswerService {
     defaultAnswerRequest: DefaultAnswerRequest,
     member: Member,
   ) {
-    const question = await this.findQuestionById(
+    const question = await this.questionRepository.findById(
       defaultAnswerRequest.questionId,
     );
     if (isEmpty(question)) {
@@ -82,9 +82,5 @@ export class AnswerService {
     return isEmpty(question.origin)
       ? question
       : this.questionRepository.findById(question.origin.id);
-  }
-
-  private async findQuestionById(questionId: number) {
-    return await this.questionRepository.findById(questionId);
   }
 }
