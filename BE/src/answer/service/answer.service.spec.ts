@@ -25,6 +25,7 @@ import {
   createAnswerRequestFixture,
   defaultAnswerRequestFixture,
 } from '../fixture/answer.fixture';
+import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
 
 describe('AnswerService 단위 테스트', () => {
   let service: AnswerService;
@@ -258,6 +259,32 @@ describe('AnswerService 통합테스트', () => {
         originalQuestion.id,
       );
       expect(answerResponse).toEqual(AnswerResponse.from(answer, member));
+    });
+  });
+
+  describe('대표답변 설정', () => {
+    it('Member와 알맞은 Questin이 온다면, 정상적으로 대표 답변을 설정해준다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(categoryFixtureWithId, member),
+      );
+      const question = await questionRepository.save(
+        Question.copyOf(questionFixture, category),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+
+      //when
+      await answerService.setDefaultAnswer(
+        new DefaultAnswerRequest(question.id, answer.id),
+        member,
+      );
+      const updatedQuestion = await questionRepository.findById(question.id);
+
+      //then
+      expect(updatedQuestion.defaultAnswer.id).toEqual(answer.id);
     });
   });
 });
