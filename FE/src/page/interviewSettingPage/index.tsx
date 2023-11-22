@@ -11,6 +11,7 @@ import {
 } from '@/atoms/interviewSetting';
 import { useRecoilValue } from 'recoil';
 import QuestionSettingPage from './QuestionSettingPage';
+import { css } from '@emotion/react';
 
 const InterviewSettingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -68,15 +69,28 @@ const InterviewSettingPage: React.FC = () => {
 
   return (
     <InterviewSettingPageLayout>
-      <ProgressStepBar>
-        {pageInfo.map((item) => (
-          <ProgressStepBar.Item
-            key={item.name}
-            name={item.name}
-            isCompleted={item.state.isSuccess || currentPage === item.path}
-          ></ProgressStepBar.Item>
-        ))}
-      </ProgressStepBar>
+      <div
+        css={css`
+          position: sticky;
+          top: 0;
+          padding: 1rem 0;
+          width: 46.875rem;
+          background-color: rgba(255, 255, 255, 0.5);
+          backdrop-filter: blur(10px); /* 10px 블러 효과 */
+
+          z-index: 10;
+        `}
+      >
+        <ProgressStepBar>
+          {pageInfo.map((item) => (
+            <ProgressStepBar.Item
+              key={item.name}
+              name={item.name}
+              isCompleted={item.state.isSuccess || currentPage === item.path}
+            ></ProgressStepBar.Item>
+          ))}
+        </ProgressStepBar>
+      </div>
       <StepPage page={currentPage}>
         {pageInfo.map((item) => (
           <StepPage.step key={item.path} path={item.path} page={currentPage}>
