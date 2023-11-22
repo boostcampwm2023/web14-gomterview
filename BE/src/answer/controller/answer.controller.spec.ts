@@ -10,6 +10,7 @@ import {
 import {
   answerFixture,
   createAnswerRequestFixture,
+  defaultAnswerRequestFixture,
 } from '../fixture/answer.fixture';
 import { INestApplication } from '@nestjs/common';
 import { CategoryRepository } from '../../category/repository/category.repository';
@@ -41,6 +42,7 @@ describe('AnswerController 단위테스트', () => {
 
   const mockAnswerService = {
     addAnswer: jest.fn(),
+    setDefaultAnswer: jest.fn(),
   };
 
   beforeAll(async () => {
@@ -75,6 +77,23 @@ describe('AnswerController 단위테스트', () => {
           mockReqWithMemberFixture,
         ),
       ).resolves.toEqual(AnswerResponse.from(answerFixture, memberFixture));
+    });
+  });
+
+  describe('대표답변 변경', () => {
+    it('각 질문에 대한 대표 답변을 설정할 수 있다.', async () => {
+      //given
+      mockAnswerService.setDefaultAnswer.mockResolvedValue(undefined);
+
+      //when
+
+      //then
+      await expect(
+        controller.updateDefaultAnswer(
+          defaultAnswerRequestFixture,
+          mockReqWithMemberFixture,
+        ),
+      ).resolves.toBeUndefined();
     });
   });
 });
