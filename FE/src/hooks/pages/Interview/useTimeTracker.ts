@@ -41,7 +41,13 @@ const useTimeTracker = () => {
       .padStart(2, '0')}`;
   };
 
-  return { startTimer, stopTimer, calculateDuration, isTimeOver };
+  return {
+    startTimer,
+    stopTimer,
+    calculateDuration,
+    isTimeOver,
+    setIsTimeOver,
+  };
 };
 
 export default useTimeTracker;
