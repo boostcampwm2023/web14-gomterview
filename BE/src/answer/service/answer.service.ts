@@ -12,6 +12,7 @@ import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
 import { CategoryRepository } from '../../category/repository/category.repository';
 import { AnswerNotFoundException } from '../exception/answer.exception';
 import { CategoryForbiddenException } from '../../category/exception/category.exception';
+import { validateQuestion } from '../../question/util/question.util';
 
 @Injectable()
 export class AnswerService {
@@ -45,9 +46,7 @@ export class AnswerService {
     const question = await this.questionRepository.findById(
       defaultAnswerRequest.questionId,
     );
-    if (isEmpty(question)) {
-      throw new QuestionNotFoundException();
-    }
+    validateQuestion(question);
 
     const category = await this.categoryRepository.findByCategoryId(
       question.category.id,
@@ -74,9 +73,7 @@ export class AnswerService {
     const originalQuestion =
       await this.questionRepository.findWithOriginById(questionId);
 
-    if (isEmpty(originalQuestion)) {
-      throw new QuestionNotFoundException();
-    }
+    validateQuestion(originalQuestion);
 
     const answers = (
       await this.answerRepository.findAllByQuestionId(originalQuestion.id)
