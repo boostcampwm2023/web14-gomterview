@@ -106,7 +106,7 @@ export class VideoService {
 
     await this.videoRepository.toggleVideoStatus(videoId); // TODO: 좀 더 효율적인 Patch 로직이 있나 확인
 
-    const hash = video.isPublic ? null : this.getEncryptedurl(video.url); // 현재가 public이었으면 토글 후 private이 되기에 null로 지정
+    const hash = video.isPublic ? null : this.getHashedUrl(video.url); // 현재가 public이었으면 토글 후 private이 되기에 null로 지정
     return new VideoHashResponse(hash);
   }
 
@@ -128,6 +128,10 @@ export class VideoService {
   private async getQuestionContent(questionId: number) {
     const question = await this.questionRepository.findById(questionId);
     return question ? question.content : '삭제된 질문';
+  }
+
+  private getHashedUrl(url: string) {
+    return crypto.createHash('md5').update(url).digest('hex');
   }
 
   private getEncryptedurl(url: string) {
