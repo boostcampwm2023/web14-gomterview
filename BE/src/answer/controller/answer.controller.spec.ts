@@ -34,6 +34,7 @@ import { QuestionRepository } from '../../question/repository/question.repositor
 import { CreateAnswerRequest } from '../dto/createAnswerRequest';
 import { Token } from '../../token/entity/token';
 import { AnswerRepository } from '../repository/answer.repository';
+import { MemberRepository } from '../../member/repository/member.repository';
 
 describe('AnswerController 단위테스트', () => {
   let controller: AnswerController;
@@ -84,6 +85,7 @@ describe('AnswerController 통합테스트', () => {
   let authService: AuthService;
   let questionRepository: QuestionRepository;
   let answerRepository: AnswerRepository;
+  let memberRepository: MemberRepository;
 
   beforeAll(async () => {
     const modules = [
@@ -107,6 +109,7 @@ describe('AnswerController 통합테스트', () => {
     questionRepository =
       moduleFixture.get<QuestionRepository>(QuestionRepository);
     answerRepository = moduleFixture.get<AnswerRepository>(AnswerRepository);
+    memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
   });
 
   beforeEach(async () => {
@@ -138,8 +141,11 @@ describe('AnswerController 통합테스트', () => {
 
     it('쿠키를 가지고 복사된 질문에 답변 생성을 요청하면 원본에 대한 답변으로 저장하고 201코드와 생성된 질문의 Response가 반환된다.', async () => {
       //given
+      const member = await memberRepository.save(memberFixture);
       const token = await authService.login(memberFixturesOAuthRequest);
-      const category = await categoryRepository.save(categoryFixtureWithId);
+      const category = await categoryRepository.save(
+        Category.from(categoryFixtureWithId, member),
+      );
       const question = await questionRepository.save(
         Question.of(category, null, 'testQuestion'),
       );
@@ -154,12 +160,15 @@ describe('AnswerController 통합테스트', () => {
         .set('Cookie', [`accessToken=${token}`])
         .send(new CreateAnswerRequest(copyQuestion.id, 'testContent'))
         .expect(201)
-        .then(() => {});
+        .then();
     });
 
     it('쿠키가 존재하지 않으면 401에러를 반환한다.', async () => {
       //given
-      const category = await categoryRepository.save(categoryFixtureWithId);
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(categoryFixtureWithId, member),
+      );
       const question = await questionRepository.save(
         Question.of(category, null, 'testQuestion'),
       );
@@ -190,10 +199,13 @@ describe('AnswerController 통합테스트', () => {
         .then(() => {});
     });
 
-    it('content가 존재하지 않으면 404코드를 반환한다.', async () => {
+    it('content가 존재하지 않으면 400코드를 반환한다.', async () => {
       //given
+      const member = await memberRepository.save(memberFixture);
       const token = await authService.login(memberFixturesOAuthRequest);
-      const category = await categoryRepository.save(categoryFixtureWithId);
+      const category = await categoryRepository.save(
+        Category.from(categoryFixtureWithId, member),
+      );
       const question = await questionRepository.save(
         Question.of(category, null, 'testQuestion'),
       );
@@ -204,7 +216,7 @@ describe('AnswerController 통합테스트', () => {
         .post('/api/answer')
         .set('Cookie', [`accessToken=${token}`])
         .send(new CreateAnswerRequest(question.id, ''))
-        .expect(404)
+        .expect(400)
         .then(() => {});
     });
   });
