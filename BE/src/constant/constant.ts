@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 export const companies = [
   '네이버',
   '카카오',
@@ -12,3 +14,5 @@ export const companies = [
   'Amazon',
   'Meta',
 ];
+
+export const DEFAULT_THUMBNAIL = process.env.DEFAULT_THUMBNAIL;

@@ -28,8 +28,24 @@ export const videoListExample = [
 ];
 
 export const videoListFixtureForTest = [
-  new Video(1, 1, '루이뷔통통튀기네', 'https://test.com', true),
-  new Video(1, 4, '루이뷔통통튀기네', 'https://foo.com', false),
+  new Video(
+    1,
+    1,
+    '루이뷔통통튀기네',
+    'https://test.com',
+    'https://thumbnail-test.com',
+    '03:29',
+    true,
+  ),
+  new Video(
+    1,
+    4,
+    '루이뷔통통튀기네',
+    'https://foo.com',
+    'https://bar-test.com',
+    '02:12',
+    false,
+  ),
 ];
 
 export const videoFixtureForTest = new Video(
@@ -37,5 +53,7 @@ export const videoFixtureForTest = new Video(
   1,
   '루이뷔통통튀기네',
   'https://test.com',
+  'https://thumbnail-test.com',
+  '03:29',
   true,
 );
