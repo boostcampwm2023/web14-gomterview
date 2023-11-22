@@ -27,7 +27,7 @@ const MyPagesTabs: React.FC = () => {
         <Tabs.TabList
           name="my-page"
           gap="1rem"
-          onChange={(_, v) => setValue(v)}
+          onTabChange={(_, v) => setValue(v)}
         >
           <Tabs.Tab value="1">
             <SelectionBox
