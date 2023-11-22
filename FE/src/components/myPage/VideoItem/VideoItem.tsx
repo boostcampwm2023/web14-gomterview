@@ -2,27 +2,30 @@ import Typography from '@foundation/Typography/Typography';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
 import React from 'react';
-import { HTMLElementTypes } from '@/types/utils';
+import { Link } from 'react-router-dom';
 
 type VideoItemProps = {
   children?: React.ReactNode;
   videoName: string;
   date: string;
-} & HTMLElementTypes<HTMLDivElement>;
+  path: string;
+};
 
 const VideoItem: React.FC<VideoItemProps> = ({
   children,
   videoName,
   date,
-  ...args
+  path,
 }) => {
   return (
-    <div
+    <Link
+      to={path}
       css={css`
         display: flex;
         flex-direction: column;
+        text-decoration: none;
+        color: ${theme.colors.text.default};
       `}
-      {...args}
     >
       {children}
       <div
@@ -30,7 +33,8 @@ const VideoItem: React.FC<VideoItemProps> = ({
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          padding: 1rem;
+          row-gap: 0.5rem;
+          padding: 1rem 0.5rem;
           height: 100%;
           cursor: pointer;
         `}
@@ -58,7 +62,7 @@ const VideoItem: React.FC<VideoItemProps> = ({
           </Typography>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
