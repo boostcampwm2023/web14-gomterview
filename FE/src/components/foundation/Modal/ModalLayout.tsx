@@ -14,13 +14,14 @@ const ModalLayout: React.FC<ModalLayoutProps> = ({
   isOpen,
   closeModal,
 }) => {
+  document.body.style.overflow = isOpen ? 'hidden' : 'unset';
   return (
     <div
       css={css`
+        position: fixed;
         display: ${isOpen ? 'flex' : 'none'};
         justify-content: center;
         align-items: center;
-        position: absolute;
         top: 0;
         left: 0;
         z-index: 100;
