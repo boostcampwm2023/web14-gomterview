@@ -1,36 +1,49 @@
-name: backend CI
+name: backend-CI
+
 on:
   pull_request:
     branches: [ dev ]
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 18.x
-      - name: move to BE
+
+      - name: Check BE directory
+        run: ls BE
+
+      - name: Move to BE directory
         run: cd BE
-      - name: Install dependencies
+
+      - name: Check BE package.json
+        run: ls package.json
+
+      - name: Install BE dependencies
         run: npm install
+
       - name: Run tests
         run: npm test
+
   deploy:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 18.x
-      - name: move to BE
+
+      - name: Check BE directory
+        run: ls BE
+
+      - name: Move to BE directory
         run: cd BE
-      - name: Install dependencies
+
+      - name: Check BE package.json
+        run: ls package.json
+
+      - name: Install BE dependencies
         run: npm install
+
       - name: Start the NestJS server
         run: npm run start
