@@ -1,37 +1,29 @@
-name: backend CI
+name: BE CI
 on:
   pull_request:
-    branches: [ dev ]
-
-defaults:
-  run:
-    working-directory: ./BE
-
+    branches: [main, dev]
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v2
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 18.x
-      - name: Install dependencies
+          node-version: 20.x
+      - name: Install Dependencies
         run: npm install
-      - name: Run tests
+      - name: Make .env
+        run: |
+          cd BE
+          touch ./.env
+          echo "${{ secrets.BE_ENV }}" > ./.env
+      - name: Make Cors Config
+        run: |
+          cd src/config
+          touch ./cors.secure.ts
+          echo "${{ secrets.BE_CONFIG }}" > ./cors.secure.ts
+        shell: sh
+      - name: Run Tests
         run: npm test
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 18.x
-      - name: Install dependencies
-        run: npm install
-      - name: Start the NestJS server
-        run: npm run start
