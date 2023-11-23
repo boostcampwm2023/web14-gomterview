@@ -67,6 +67,8 @@ export class AnswerService {
   async deleteAnswer(id: number, member: Member) {
     const answer = await this.answerRepository.findById(id);
 
+    validateAnswer(answer);
+
     if (answer.isOwnedBy(member)) {
       await this.answerRepository.remove(answer);
       return;
