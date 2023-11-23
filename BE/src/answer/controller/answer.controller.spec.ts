@@ -419,8 +419,7 @@ describe('AnswerController 통합테스트', () => {
       await agent
         .get(`/api/answer/${question.id}`)
         .set('Cookie', [`accessToken=${token}`])
-        .expect(200)
-        .then((response) => console.log(response.body));
+        .expect(200);
     });
 
     it('존재하지 않는 질문의 id를 조회하면 404에러를 반환한다. ', async () => {

@@ -20,13 +20,13 @@ import {
   VideoNotFoundException,
   VideoOfWithdrawnMemberException,
 } from '../exception/video.exception';
-import { VideoListResponse } from '../dto/videoListResponse';
 import {
   videoFixtureForTest,
   videoListFixtureForTest,
 } from '../fixture/video.fixture';
 import { VideoDetailResponse } from '../dto/videoDetailResponse';
 import { VideoHashResponse } from '../dto/videoHashResponse';
+import { SingleVideoResponse } from '../dto/singleVideoResponse';
 
 describe('VideoController 단위 테스트', () => {
   let controller: VideoController;
@@ -153,7 +153,7 @@ describe('VideoController 단위 테스트', () => {
       const videoList = videoListFixtureForTest;
 
       //when
-      const mockVideoListResponse = VideoListResponse.from(videoList);
+      const mockVideoListResponse = videoList.map(SingleVideoResponse.from);
       mockVideoService.getAllVideosByMemberId.mockResolvedValue(
         mockVideoListResponse,
       );
@@ -161,15 +161,13 @@ describe('VideoController 단위 테스트', () => {
       //then
       const result = await controller.getAllVideo(mockReqWithMemberFixture);
 
-      expect(result).toBeInstanceOf(VideoListResponse);
+      expect(result).toBeInstanceOf(Array);
       expect(result).toBe(mockVideoListResponse);
-      expect(result.videoList).toBe(mockVideoListResponse.videoList);
     });
 
     it('비디오 전체 조회 시 회원이 저장한 비디오가 없으면 빈 배열을 반환한다.', async () => {
       //given
-      const emptyVideoList = [];
-      const mockVideoListResponse = VideoListResponse.from(emptyVideoList);
+      const mockVideoListResponse = [];
 
       //when
       mockVideoService.getAllVideosByMemberId.mockResolvedValue(
@@ -179,8 +177,8 @@ describe('VideoController 단위 테스트', () => {
       //then
       const result = await controller.getAllVideo(mockReqWithMemberFixture);
 
-      expect(result).toBeInstanceOf(VideoListResponse);
-      expect(result.videoList).toStrictEqual(emptyVideoList);
+      expect(result).toBeInstanceOf(Array);
+      expect(result).toStrictEqual(mockVideoListResponse);
     });
 
     it('비디오 전체 조회 시 회원 객체가 없으면 ManipulatedTokenNotFilteredException을 반환한다.', async () => {
