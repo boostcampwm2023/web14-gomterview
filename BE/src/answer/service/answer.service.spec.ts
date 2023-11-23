@@ -27,6 +27,7 @@ import {
 } from '../fixture/answer.fixture';
 import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
 import { CategoryForbiddenException } from '../../category/exception/category.exception';
+import { AnswerForbiddenException } from '../exception/answer.exception';
 
 describe('AnswerService 단위 테스트', () => {
   let service: AnswerService;
@@ -349,6 +350,65 @@ describe('AnswerService 통합테스트', () => {
       //then
       const list = await answerService.getAnswerList(question.id);
       expect(list[0].content).toEqual('defaultAnswer');
+    });
+  });
+
+  describe('답변 삭제', () => {
+    it('답변을 삭제할 때 대표답변이라면 답변을 삭제하고 게시물의 대표답변은 null이 된다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(categoryFixtureWithId, member),
+      );
+      const question = await questionRepository.save(
+        Question.of(category, null, 'test'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of(`defaultAnswer`, member, question),
+      );
+      question.setDefaultAnswer(answer);
+      await questionRepository.save(question);
+
+      //when
+
+      //then
+      await answerService.deleteAnswer(answer.id, member);
+      const afterDeleteQuestion = await questionRepository.findById(
+        question.id,
+      );
+      expect(afterDeleteQuestion.defaultAnswer).toBeNull();
+    });
+
+    it('답변을 삭제할 때 다른 사람의 답변을 삭제하면 AnswerForbiddenException을 반환한다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const member1 = await memberRepository.save(
+        new Member(
+          100,
+          'janghee@janghee.com',
+          'janghee',
+          'https://jangsarchive.tistory.com',
+          new Date(),
+        ),
+      );
+      const category = await categoryRepository.save(
+        Category.from(categoryFixtureWithId, member),
+      );
+      const question = await questionRepository.save(
+        Question.of(category, null, 'test'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of(`defaultAnswer`, member, question),
+      );
+      question.setDefaultAnswer(answer);
+      await questionRepository.save(question);
+
+      //when
+
+      //then
+      await expect(
+        answerService.deleteAnswer(answer.id, member1),
+      ).rejects.toThrow(new AnswerForbiddenException());
     });
   });
 });
