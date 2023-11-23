@@ -12,6 +12,7 @@ import { CategoryRepository } from '../../category/repository/category.repositor
 import { CategoryForbiddenException } from '../../category/exception/category.exception';
 import { validateAnswer } from '../util/answer.util';
 import { validateQuestion } from '../../question/util/question.util';
+import { AnswerForbiddenException } from '../exception/answer.exception';
 
 @Injectable()
 export class AnswerService {
@@ -61,6 +62,17 @@ export class AnswerService {
 
     question.setDefaultAnswer(answer);
     await this.questionRepository.save(question);
+  }
+
+  async deleteAnswer(id: number, member: Member) {
+    const answer = await this.answerRepository.findById(id);
+
+    if (answer.isOwnedBy(member)) {
+      await this.answerRepository.remove(answer);
+      return;
+    }
+
+    throw new AnswerForbiddenException();
   }
 
   async getAnswerList(questionId: number) {
