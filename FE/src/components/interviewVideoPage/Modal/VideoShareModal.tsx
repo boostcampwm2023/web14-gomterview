@@ -23,9 +23,7 @@ const VideoShareModal: React.FC<VideoShareModalProps> = ({
   const { mutate, data, isPending } = useToggleVideoPublicMutation(videoId);
 
   const handleVideoShareToggleClick = () => {
-    if (!isPublic) {
-      mutate();
-    }
+    mutate();
   };
 
   return (
@@ -49,7 +47,6 @@ const VideoShareModal: React.FC<VideoShareModalProps> = ({
             onClick={handleVideoShareToggleClick}
           />
         )}
-
         <VideoShareModalFooter hashUrl={data?.hash} closeModal={closeModal} />
       </div>
     </Modal>
