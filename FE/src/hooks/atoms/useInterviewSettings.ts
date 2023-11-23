@@ -5,7 +5,7 @@ import {
   recordSetting,
 } from '@atoms/interviewSetting';
 
-function useSettings() {
+function useInterviewSettings() {
   const [{ isSuccess: questionSuccess }, setQuestion] =
     useRecoilState(questionSetting);
   const [{ isSuccess: videoSuccess }, setVideo] = useRecoilState(videoSetting);
@@ -26,4 +26,4 @@ function useSettings() {
   };
 }
 
-export default useSettings;
+export default useInterviewSettings;
