@@ -28,4 +28,18 @@ export class AnswerRepository {
       question: { id: questionId },
     });
   }
+
+  async findAllByQuestionId(questionId: number) {
+    return this.repository
+      .createQueryBuilder('answer')
+      .leftJoinAndSelect('answer.member', 'member')
+      .leftJoinAndSelect('answer.question', 'question')
+      .where('question.id = :questionId', { questionId })
+      .orderBy('answer.createdAt', 'DESC')
+      .getMany();
+  }
+
+  async remove(answer: Answer) {
+    await this.repository.remove(answer);
+  }
 }

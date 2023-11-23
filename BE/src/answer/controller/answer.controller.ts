@@ -1,4 +1,14 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBody,
   ApiCookieAuth,
@@ -8,12 +18,13 @@ import {
 } from '@nestjs/swagger';
 import { AnswerService } from '../service/answer.service';
 import { CreateAnswerRequest } from '../dto/createAnswerRequest';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { createApiResponseOption } from '../../util/swagger.util';
 import { Member } from '../../member/entity/member';
 import { AnswerResponse } from '../dto/answerResponse';
 import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
+import { AnswerListResponse } from '../dto/answerListResponse';
 
 @ApiTags('answer')
 @Controller('/api/answer')
@@ -54,5 +65,37 @@ export class AnswerController {
       defaultAnswerRequest,
       req.user as Member,
     );
+  }
+
+  @Get(':questionId')
+  @ApiOperation({
+    summary: '질문의 답변 리스트 반환',
+  })
+  @ApiResponse(
+    createApiResponseOption(
+      200,
+      '답변 리스트 캡슐화해 반환',
+      AnswerListResponse,
+    ),
+  )
+  async getQuestionAnswers(@Param('questionId') questionId: number) {
+    const answerList = await this.answerService.getAnswerList(questionId);
+    return AnswerListResponse.of(answerList);
+  }
+
+  @Delete(':answerId')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiCookieAuth()
+  @ApiOperation({
+    summary: '답변 삭제',
+  })
+  @ApiResponse(createApiResponseOption(204, '답변 삭제 완료', null))
+  async deleteAnswer(
+    @Param('answerId') answerId: number,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    await this.answerService.deleteAnswer(answerId, req.user as Member);
+    res.status(204).send();
   }
 }

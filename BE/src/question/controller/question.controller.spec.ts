@@ -6,7 +6,7 @@ import { QuestionResponse } from '../dto/questionResponse';
 import {
   createQuestionRequestFixture,
   questionFixture,
-} from '../util/question.util';
+} from '../fixture/question.fixture';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { TokenModule } from '../../token/token.module';
 import { Member } from '../../member/entity/member';

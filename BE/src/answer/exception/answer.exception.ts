@@ -6,4 +6,10 @@ class AnswerNotFoundException extends HttpException {
   }
 }
 
-export { AnswerNotFoundException };
+class AnswerForbiddenException extends HttpException {
+  constructor() {
+    super('답변에 대한 권한이 없습니다', 403);
+  }
+}
+
+export { AnswerNotFoundException, AnswerForbiddenException };

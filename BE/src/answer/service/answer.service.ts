@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AnswerRepository } from '../repository/answer.repository';
 import { QuestionRepository } from '../../question/repository/question.repository';
-import { QuestionNotFoundException } from '../../question/exception/question.exception';
 import { isEmpty } from 'class-validator';
 import { CreateAnswerRequest } from '../dto/createAnswerRequest';
 import { Member } from '../../member/entity/member';
@@ -10,8 +9,10 @@ import { Answer } from '../entity/answer';
 import { AnswerResponse } from '../dto/answerResponse';
 import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
 import { CategoryRepository } from '../../category/repository/category.repository';
-import { AnswerNotFoundException } from '../exception/answer.exception';
 import { CategoryForbiddenException } from '../../category/exception/category.exception';
+import { validateAnswer } from '../util/answer.util';
+import { validateQuestion } from '../../question/util/question.util';
+import { AnswerForbiddenException } from '../exception/answer.exception';
 
 @Injectable()
 export class AnswerService {
@@ -26,9 +27,7 @@ export class AnswerService {
       createAnswerRequest.questionId,
     );
 
-    if (isEmpty(question)) {
-      throw new QuestionNotFoundException();
-    }
+    validateQuestion(question);
 
     const answer = await this.saveAnswerAndQuestion(
       createAnswerRequest,
@@ -45,9 +44,7 @@ export class AnswerService {
     const question = await this.questionRepository.findById(
       defaultAnswerRequest.questionId,
     );
-    if (isEmpty(question)) {
-      throw new QuestionNotFoundException();
-    }
+    validateQuestion(question);
 
     const category = await this.categoryRepository.findByCategoryId(
       question.category.id,
@@ -61,12 +58,43 @@ export class AnswerService {
       defaultAnswerRequest.answerId,
     );
 
-    if (isEmpty(answer)) {
-      throw new AnswerNotFoundException();
-    }
+    validateAnswer(answer);
 
     question.setDefaultAnswer(answer);
     await this.questionRepository.save(question);
+  }
+
+  async deleteAnswer(id: number, member: Member) {
+    const answer = await this.answerRepository.findById(id);
+
+    validateAnswer(answer);
+
+    if (answer.isOwnedBy(member)) {
+      await this.answerRepository.remove(answer);
+      return;
+    }
+
+    throw new AnswerForbiddenException();
+  }
+
+  async getAnswerList(questionId: number) {
+    const question = await this.questionRepository.findById(questionId);
+    const originalQuestion =
+      await this.questionRepository.findWithOriginById(questionId);
+
+    validateQuestion(originalQuestion);
+
+    const answers = (
+      await this.answerRepository.findAllByQuestionId(originalQuestion.id)
+    ).map((answer) => AnswerResponse.from(answer, answer.member));
+
+    if (question.defaultAnswer) {
+      answers.unshift(
+        AnswerResponse.from(question.defaultAnswer, question.category.member),
+      );
+    }
+
+    return answers;
   }
 
   private async saveAnswerAndQuestion(

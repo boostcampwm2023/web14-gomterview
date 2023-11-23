@@ -362,4 +362,183 @@ describe('AnswerController 통합테스트', () => {
         .expect(404);
     });
   });
+
+  describe('질문의 답변 조회', () => {
+    it('질문을 조회할 때 회원 정보가 없으면 모든 답변이 최신순으로 정렬된다. ', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(beCategoryFixture, member),
+      );
+
+      const question = await questionRepository.save(
+        Question.of(category, null, 'question'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+      for (let index = 1; index <= 10; index++) {
+        await answerRepository.save(
+          Answer.of(`test${index}`, member, question),
+        );
+      }
+
+      //when&then
+      const token = await authService.login(memberFixturesOAuthRequest);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .get(`/api/answer/${question.id}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(200);
+    });
+
+    it('질문을 조회할 때 회원 정보가 있으면 모든 등록한 DefaultAnswer부터 정렬된다. ', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(beCategoryFixture, member),
+      );
+
+      const question = await questionRepository.save(
+        Question.of(category, null, 'question'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+      question.setDefaultAnswer(answer);
+      await questionRepository.save(question);
+      for (let index = 1; index <= 10; index++) {
+        await answerRepository.save(
+          Answer.of(`test${index}`, member, question),
+        );
+      }
+
+      //when&then
+      const token = await authService.login(memberFixturesOAuthRequest);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .get(`/api/answer/${question.id}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(200)
+        .then((response) => console.log(response.body));
+    });
+
+    it('존재하지 않는 질문의 id를 조회하면 404에러를 반환한다. ', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(beCategoryFixture, member),
+      );
+
+      const question = await questionRepository.save(
+        Question.of(category, null, 'question'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+      for (let index = 1; index <= 10; index++) {
+        await answerRepository.save(
+          Answer.of(`test${index}`, member, question),
+        );
+      }
+
+      //when&then
+      const token = await authService.login(memberFixturesOAuthRequest);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .get(`/api/answer/130998`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(404);
+    });
+  });
+
+  describe('답변 삭제', () => {
+    it('답변을 삭제할 때 자신의 댓글을 삭제하려고 하면 204코드와 함께 성공한다. ', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(beCategoryFixture, member),
+      );
+
+      const question = await questionRepository.save(
+        Question.of(category, null, 'question'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+
+      //when&then
+      const token = await authService.login(memberFixturesOAuthRequest);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .delete(`/api/answer/${answer.id}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(204);
+    });
+
+    it('쿠키가 없으면 401에러를 반환한다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(beCategoryFixture, member),
+      );
+
+      const question = await questionRepository.save(
+        Question.of(category, null, 'question'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+
+      //when&then
+      const agent = request.agent(app.getHttpServer());
+      await agent.delete(`/api/answer/${answer.id}`).expect(401);
+    });
+
+    it('다른 사람의 답변을 삭제하면 403에러를 반환한다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(beCategoryFixture, member),
+      );
+
+      const question = await questionRepository.save(
+        Question.of(category, null, 'question'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+
+      //when&then
+      const token = await authService.login(oauthRequestFixture);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .delete(`/api/answer/${answer.id}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(403);
+    });
+
+    it('답변이 없으면 404에러를 반환한다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(beCategoryFixture, member),
+      );
+
+      const question = await questionRepository.save(
+        Question.of(category, null, 'question'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+
+      //when&then
+      const token = await authService.login(oauthRequestFixture);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .delete(`/api/answer/${100000}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(404);
+    });
+  });
 });

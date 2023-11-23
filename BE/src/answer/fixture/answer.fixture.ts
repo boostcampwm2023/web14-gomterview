@@ -1,6 +1,6 @@
 import { Answer } from '../entity/answer';
 import { memberFixture } from '../../member/fixture/member.fixture';
-import { questionFixture } from '../../question/util/question.util';
+import { questionFixture } from '../../question/fixture/question.fixture';
 import { CreateAnswerRequest } from '../dto/createAnswerRequest';
 import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
 

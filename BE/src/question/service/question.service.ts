@@ -3,16 +3,13 @@ import { QuestionRepository } from '../repository/question.repository';
 import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 import { CategoryRepository } from '../../category/repository/category.repository';
 import { isEmpty } from 'class-validator';
-import { CategoryNotFoundException } from '../../category/exception/category.exception';
 import { Question } from '../entity/question';
-import { Category } from '../../category/entity/category';
 import { QuestionResponse } from '../dto/questionResponse';
 import { Member } from '../../member/entity/member';
-import {
-  NeedToFindByCategoryIdException,
-  QuestionNotFoundException,
-} from '../exception/question.exception';
+import { NeedToFindByCategoryIdException } from '../exception/question.exception';
 import { validateManipulatedToken } from '../../util/token.util';
+import { validateQuestion } from '../util/question.util';
+import { validateCategory } from '../../category/util/category.util';
 
 @Injectable()
 export class QuestionService {
@@ -29,7 +26,7 @@ export class QuestionService {
       createQuestionRequest.categoryId,
     );
 
-    this.validateCategory(category);
+    validateCategory(category);
 
     if (!category.isOwnedBy(member)) {
       throw new UnauthorizedException();
@@ -57,9 +54,7 @@ export class QuestionService {
 
     const question = await this.questionRepository.findById(questionId);
 
-    if (isEmpty(question)) {
-      throw new QuestionNotFoundException();
-    }
+    validateQuestion(question);
 
     await this.validateMembersCategoryById(question.category.id, member);
 
@@ -72,16 +67,10 @@ export class QuestionService {
   ) {
     const category = await this.categoryRepository.findByCategoryId(categoryId);
 
-    this.validateCategory(category);
+    validateCategory(category);
 
     if (!category.isOwnedBy(member)) {
       throw new UnauthorizedException();
-    }
-  }
-
-  private validateCategory(category: Category) {
-    if (isEmpty(category)) {
-      throw new CategoryNotFoundException();
     }
   }
 }

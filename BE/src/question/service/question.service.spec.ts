@@ -4,7 +4,7 @@ import { QuestionRepository } from '../repository/question.repository';
 import {
   createQuestionRequestFixture,
   questionFixture,
-} from '../util/question.util';
+} from '../fixture/question.fixture';
 import { QuestionResponse } from '../dto/questionResponse';
 import { CategoryRepository } from '../../category/repository/category.repository';
 import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
