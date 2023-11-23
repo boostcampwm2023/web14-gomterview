@@ -47,6 +47,7 @@ const SelectionBox: React.FC<SelectionButtonProps> = ({
           display: inline-block;
           position: relative;
           padding: 0 2rem;
+          width: 100%;
           color: ${theme.colors.text.subStrong};
         `}
         {...args}
