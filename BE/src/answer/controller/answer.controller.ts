@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -16,7 +18,7 @@ import {
 } from '@nestjs/swagger';
 import { AnswerService } from '../service/answer.service';
 import { CreateAnswerRequest } from '../dto/createAnswerRequest';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { createApiResponseOption } from '../../util/swagger.util';
 import { Member } from '../../member/entity/member';
@@ -79,5 +81,21 @@ export class AnswerController {
   async getQuestionAnswers(@Param('questionId') questionId: number) {
     const answerList = await this.answerService.getAnswerList(questionId);
     return AnswerListResponse.of(answerList);
+  }
+
+  @Delete(':answerId')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiCookieAuth()
+  @ApiOperation({
+    summary: '답변 삭제',
+  })
+  @ApiResponse(createApiResponseOption(204, '답변 삭제 완료', null))
+  async deleteAnswer(
+    @Param('answerId') answerId: number,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    await this.answerService.deleteAnswer(answerId, req.user as Member);
+    res.status(204).send();
   }
 }
