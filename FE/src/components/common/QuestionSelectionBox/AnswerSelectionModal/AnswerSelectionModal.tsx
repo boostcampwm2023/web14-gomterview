@@ -44,7 +44,7 @@ const AnswerSelectionModal: React.FC<AnswerSelectionModalProps> = ({
           `}
         >
           <AnswerForm
-            question={question.answerContent}
+            question={question.questionContent}
             questionId={question.questionId}
           />
           <div
