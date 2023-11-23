@@ -1,15 +1,15 @@
-import { QuestionAnswerSelectionModal } from '@/atoms/modal';
+import { QuestionAnswerSelectionModal } from '@atoms/modal';
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-} from '@/components/foundation/Accordion';
-import Icon from '@/components/foundation/Icon/Icon';
-import { LeadingDot } from '@/components/foundation/LeadingDot/LeadingDot';
-import Typography from '@/components/foundation/Typography/Typography';
-import { QUERY_KEY } from '@/constants/queryKey';
-import useSelectQuestions from '@/hooks/atoms/useSelectQuestions';
-import { theme } from '@/styles/theme';
+} from '@foundation/Accordion';
+import Icon from '@foundation/Icon/Icon';
+import { LeadingDot } from '@foundation/LeadingDot/LeadingDot';
+import Typography from '@foundation/Typography/Typography';
+import { QUERY_KEY } from '@constants/queryKey';
+import useSelectQuestions from '@hooks/atoms/useSelectQuestions';
+import { theme } from '@styles/theme';
 import { Question } from '@/types/question';
 import { User } from '@/types/user';
 import { css } from '@emotion/react';

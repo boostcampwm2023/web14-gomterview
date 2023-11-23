@@ -1,16 +1,16 @@
-import Box from '@/components/foundation/Box/Box';
-import { theme } from '@/styles/theme';
+import Box from '@foundation/Box/Box';
+import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
-import Typography from '@/components/foundation/Typography/Typography';
+import Typography from '@foundation/Typography/Typography';
 
-import Tabs from '@/components/foundation/Tabs';
+import Tabs from '@foundation/Tabs';
 import { useState } from 'react';
-import SelectionBox from '@/components/foundation/SelectionBox/SelectionBox';
+import SelectionBox from '@foundation/SelectionBox/SelectionBox';
 import TabPanelItem from './QuestionTabPanelItem';
-import useCategoryQuery from '@/hooks/queries/useCategoryQuery';
-import AnswerSelectionModal from '../AnswerSelectionModal/AnswerSelectionModal';
+import useCategoryQuery from '@hooks/queries/useCategoryQuery';
+import AnswerSelectionModal from '@common/QuestionSelectionBox/AnswerSelectionModal/AnswerSelectionModal';
 import { useRecoilState } from 'recoil';
-import { QuestionAnswerSelectionModal } from '@/atoms/modal';
+import { QuestionAnswerSelectionModal } from '@atoms/modal';
 
 const QuestionSelectionBox = () => {
   const [selectedTabIndex, setSelectedTabIndex] = useState('0');

@@ -5,6 +5,7 @@ import { css } from '@emotion/react';
 import Box from '@foundation/Box/Box';
 import Typography from '@foundation/Typography/Typography';
 import VideoListTabPanel from '@components/myPage/TabPanel/VideoListTabPanel';
+import QuestionSelectTabPanel from '@components/myPage/TabPanel/QuestionSelectTabPanel';
 
 const MyPagesTabs: React.FC = () => {
   const [value, setValue] = useState('2');
@@ -58,13 +59,7 @@ const MyPagesTabs: React.FC = () => {
         </Tabs.TabList>
       </Box>
       <Tabs.TabPanel value="1">
-        <Box
-          css={css`
-            padding: 3rem;
-          `}
-        >
-          질문 추가 모달
-        </Box>
+        <QuestionSelectTabPanel />
       </Tabs.TabPanel>
       <Tabs.TabPanel value="2">
         <VideoListTabPanel />

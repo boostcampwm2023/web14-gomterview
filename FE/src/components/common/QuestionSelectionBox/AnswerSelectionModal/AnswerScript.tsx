@@ -1,7 +1,7 @@
-import Avatar from '@/components/foundation/Avatar/Avatar';
-import Box from '@/components/foundation/Box/Box';
-import Typography from '@/components/foundation/Typography/Typography';
-import { theme } from '@/styles/theme';
+import Avatar from '@foundation/Avatar/Avatar';
+import Box from '@foundation/Box/Box';
+import Typography from '@foundation/Typography/Typography';
+import { theme } from '@styles/theme';
 import { Answer } from '@/types/answer';
 import { css } from '@emotion/react';
 

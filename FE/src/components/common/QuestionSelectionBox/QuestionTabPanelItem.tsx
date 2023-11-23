@@ -1,14 +1,14 @@
-import { questionSetting } from '@/atoms/interviewSetting';
-import Tabs from '@/components/foundation/Tabs';
-import Typography from '@/components/foundation/Typography/Typography';
-import { theme } from '@/styles/theme';
+import { questionSetting } from '@atoms/interviewSetting';
+import Tabs from '@foundation/Tabs';
+import Typography from '@foundation/Typography/Typography';
+import { theme } from '@styles/theme';
 import { Category } from '@/types/category';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import QuestionAccordion from './QuestionAccordion';
-import useQuestionCategoryQuery from '@/hooks/queries/useQuestionCategoryQuery';
-import Toggle from '@/components/foundation/Toggle/Toggle';
+import useQuestionCategoryQuery from '@hooks/queries/useQuestionCategoryQuery';
+import Toggle from '@foundation/Toggle/Toggle';
 import QuestionAddForm from './QuestionAddForm';
 
 type TabPanelItemProps = {

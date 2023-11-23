@@ -1,11 +1,11 @@
-import Modal from '../../../foundation/Modal';
+import Modal from '@foundation/Modal';
 import { css } from '@emotion/react';
-import { theme } from '@/styles/theme';
-import Typography from '../../../foundation/Typography/Typography';
-import useQuestionAnswerQuery from '@/hooks/queries/useQuestionAnswerQuery';
+import { theme } from '@styles/theme';
+import Typography from '@foundation/Typography/Typography';
+import useQuestionAnswerQuery from '@hooks/queries/useQuestionAnswerQuery';
 import AnswerScript from './AnswerScript';
 import AnswerForm from './AnswerForm';
-import useAnswerDefaultMutation from '@/hooks/mutations/useAnswerDefaultMutation';
+import useAnswerDefaultMutation from '@hooks/mutations/useAnswerDefaultMutation';
 import { Question } from '@/types/question';
 
 type AnswerSelectionModalProps = {

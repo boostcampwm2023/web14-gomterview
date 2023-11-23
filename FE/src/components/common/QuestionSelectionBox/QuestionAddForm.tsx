@@ -1,7 +1,7 @@
-import Button from '@/components/foundation/Button/Button';
-import InputArea from '@/components/foundation/InputArea/InputArea';
-import useInput from '@/hooks/useInput';
-import useQuestionAdd from '@/hooks/useQuestionAdd';
+import Button from '@foundation/Button/Button';
+import InputArea from '@foundation/InputArea/InputArea';
+import useInput from '@hooks/useInput';
+import useQuestionAdd from '@hooks/useQuestionAdd';
 import { css } from '@emotion/react';
 
 type QuestionAddFormProps = {

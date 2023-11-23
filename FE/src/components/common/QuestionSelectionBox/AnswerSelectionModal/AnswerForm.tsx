@@ -1,9 +1,9 @@
-import Box from '@/components/foundation/Box/Box';
-import Button from '@/components/foundation/Button/Button';
-import InputArea from '@/components/foundation/InputArea/InputArea';
-import Typography from '@/components/foundation/Typography/Typography';
-import useQuestionAnswerMutation from '@/hooks/mutations/useQuestionAnswerMutation';
-import useInput from '@/hooks/useInput';
+import Box from '@foundation/Box/Box';
+import Button from '@foundation/Button/Button';
+import InputArea from '@foundation/InputArea/InputArea';
+import Typography from '@foundation/Typography/Typography';
+import useQuestionAnswerMutation from '@hooks/mutations/useQuestionAnswerMutation';
+import useInput from '@hooks/useInput';
 import { css } from '@emotion/react';
 
 type AnswerFormProps = {
