@@ -5,11 +5,9 @@ import Typography from '@foundation/Typography/Typography';
 import Button from '@foundation/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '@constants/path';
-import { useQueryClient } from '@tanstack/react-query';
-import { QUERY_KEY } from '@constants/queryKey';
 import Confetti from 'react-confetti';
 import useWindowSize from '@hooks/pages/Interview/useWindowSize';
-import useInterviewSettings from '@/hooks/atoms/useInterviewSettings';
+import useUserInfo from '@hooks/useUserInfo';
 
 type InterviewFinishModalProps = {
   isOpen: boolean;
@@ -19,9 +17,9 @@ const InterviewFinishModal: React.FC<InterviewFinishModalProps> = ({
   isOpen,
 }) => {
   const navigate = useNavigate();
-  const isLogin = useQueryClient().getQueryState(QUERY_KEY.MEMBER);
+  const isLogin = useUserInfo();
   const windowSize = useWindowSize();
-  const { resetAllSettings } = useInterviewSettings();
+  //TOOD 인터뷰 끝났을 때 전역 상태 날리는 로직 추가하기
 
   return (
     <>
@@ -64,7 +62,6 @@ const InterviewFinishModal: React.FC<InterviewFinishModalProps> = ({
             >
               <Button
                 onClick={() => {
-                  resetAllSettings();
                   if (isLogin) navigate(PATH.MYPAGE);
                   else navigate(PATH.ROOT);
                 }}

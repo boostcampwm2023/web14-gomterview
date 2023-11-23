@@ -11,6 +11,7 @@ import { PATH } from '@constants/path';
 import { Navigate } from 'react-router-dom';
 
 import useInterview from '@/hooks/pages/Interview/useInterview';
+
 const InterviewPage: React.FC = () => {
   const {
     isAllSuccess,
@@ -38,7 +39,7 @@ const InterviewPage: React.FC = () => {
   } else
     return (
       <InterviewPageLayout>
-        <InterviewHeader isRecording={isRecording} intervieweeName="면접자" />
+        <InterviewHeader isRecording={isRecording} />
         <InterviewMain
           mirrorVideoRef={videoRef}
           isScriptInView={isScriptInView}

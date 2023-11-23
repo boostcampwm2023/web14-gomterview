@@ -7,6 +7,7 @@ export const API = {
   LOGIN: '/auth/login',
   LOGOUT: '/auth/logout',
   MEMBER: '/member',
+  MEMBER_NAME: '/member/name',
   VIDEO: '/video',
   VIDEO_PRE_SIGNED: '/video/pre-signed',
   VIDEO_ALL: '/video/all',

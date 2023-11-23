@@ -3,7 +3,7 @@ export type VideoEntity = {
   memberId: number;
   questionId: number;
   videoName: string;
-  thumbnail: string;
+  thumbnail: string | null;
   videoLength: string;
   url: string;
   hash: string | null;
@@ -35,7 +35,7 @@ export type VideoItemResDto = Pick<
  */
 export type VideoAddReqDto = Pick<
   VideoEntity,
-  'questionId' | 'videoName' | 'url'
+  'questionId' | 'videoName' | 'url' | 'thumbnail' | 'videoLength'
 >;
 
 /**
