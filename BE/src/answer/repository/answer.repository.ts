@@ -38,4 +38,8 @@ export class AnswerRepository {
       .orderBy('answer.createdAt', 'DESC')
       .getMany();
   }
+
+  async remove(answer: Answer) {
+    await this.repository.remove(answer);
+  }
 }

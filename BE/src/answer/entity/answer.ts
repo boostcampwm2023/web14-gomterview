@@ -8,7 +8,7 @@ export class Answer extends DefaultEntity {
   @Column()
   content: string;
 
-  @ManyToOne(() => Member, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Member, { onDelete: 'CASCADE', eager: true })
   @JoinColumn()
   member: Member;
 
