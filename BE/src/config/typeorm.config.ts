@@ -9,4 +9,5 @@ export const MYSQL_OPTION: TypeOrmModuleOptions = {
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE,
   autoLoadEntities: true,
+  synchronize: true,
 };

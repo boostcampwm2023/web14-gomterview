@@ -39,34 +39,38 @@ export class AuthService {
   }
 
   private async createMember(oauthRequest: OAuthRequest) {
-    const member = new Member(
+    let member = new Member(
       undefined,
       oauthRequest.email,
       oauthRequest.name,
       oauthRequest.img,
       new Date(),
     );
-    return await this.memberRepository.save(member);
+    member = await this.memberRepository.save(member);
+    await this.createCopy(member);
+    return member;
   }
 
   private async createCopy(member) {
-    await this.categoryRepository.save(Category.of('나만의 질문', member));
-
-    (await this.categoryRepository.findAllByMemberId(member.id)).forEach(
+    (await this.categoryRepository.findAllByMemberId(null)).forEach(
       async (category) => {
-        await this.categoryRepository.save(Category.from(category, member));
-        await this.createCopyQuestion(category);
+        const newCategory = await this.categoryRepository.save(
+          Category.from(category, member),
+        );
+        await this.createCopyQuestion(category, newCategory);
       },
     );
   }
 
-  private async createCopyQuestion(category: Category) {
+  private async createCopyQuestion(category: Category, newCategory: Category) {
     const questions = await this.questionRepository.findByCategoryId(
       category.id,
     );
 
     questions.forEach(async (question) => {
-      await this.questionRepository.save(Question.copyOf(question, category));
+      await this.questionRepository.save(
+        Question.copyOf(question, newCategory),
+      );
     });
   }
 }

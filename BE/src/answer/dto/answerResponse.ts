@@ -2,6 +2,7 @@ import { Answer } from '../entity/answer';
 import { Member } from '../../member/entity/member';
 import { ApiProperty } from '@nestjs/swagger';
 import { createPropertyOption } from '../../util/swagger.util';
+import { isEmpty } from 'class-validator';
 
 export class AnswerResponse {
   @ApiProperty(createPropertyOption(1, '답변 ID', Number))
@@ -40,6 +41,15 @@ export class AnswerResponse {
   }
 
   static from(answer: Answer, member: Member) {
+    if (isEmpty(member)) {
+      return new AnswerResponse(
+        answer.id,
+        answer.content.toString(),
+        null,
+        null,
+        null,
+      );
+    }
     return new AnswerResponse(
       answer.id,
       answer.content.toString(),

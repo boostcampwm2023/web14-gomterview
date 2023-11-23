@@ -115,6 +115,7 @@ export class AppService {
   }
 
   async saveDummy() {
+    await this.categoryRepository.save(Category.of('나만의 질문', null));
     await this.saveFE();
     await this.saveBE();
     await this.saveAnd();
