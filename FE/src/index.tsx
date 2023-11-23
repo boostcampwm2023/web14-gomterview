@@ -21,10 +21,7 @@ Sentry.init({
   integrations: [
     new Sentry.BrowserTracing({
       // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
-      tracePropagationTargets: [
-        'localhost',
-        process.env.REACT_APP_SENTRY_BASE_URL!,
-      ],
+      tracePropagationTargets: [process.env.REACT_APP_SENTRY_BASE_URL!],
     }),
     new Sentry.Replay(),
   ],
