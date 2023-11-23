@@ -4,3 +4,5 @@ export type User = {
   nickname: string;
   profileImg: string;
 };
+
+export type UserNameResDto = Pick<User, 'nickname'>;
