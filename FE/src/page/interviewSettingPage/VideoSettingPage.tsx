@@ -11,16 +11,31 @@ import { useRecoilState } from 'recoil';
 type VideoSettingPageProps = {
   onNextClick?: () => void;
   onPrevClick?: () => void;
+  isCurrentPage: boolean;
 };
 
 const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
   onNextClick,
   onPrevClick,
+  isCurrentPage,
 }) => {
   const [videoSettingState, setVideoSettingState] =
     useRecoilState(videoSetting);
 
-  const { videoRef: mirrorVideoRef, connectStatus } = useMedia();
+  const {
+    videoRef: mirrorVideoRef,
+    connectStatus,
+    startMedia,
+    stopMedia,
+  } = useMedia();
+
+  useEffect(() => {
+    if (isCurrentPage) void startMedia();
+
+    return () => {
+      stopMedia();
+    };
+  }, [isCurrentPage]);
 
   useEffect(() => {
     if (connectStatus === 'connect') {
@@ -35,11 +50,7 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
   }, [connectStatus, setVideoSettingState]);
 
   return (
-    <div
-      css={css`
-        padding-top: 3rem;
-      `}
-    >
+    <>
       <Description title="문제 선택">
         - 면접 시작 전, 사용하시는 장치의 화면 및 소리가 정상적으로 연결되어
         있는지 확인해 주세요.
@@ -111,7 +122,7 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
           다음
         </Button>
       </div>
-    </div>
+    </>
   );
 };
 
