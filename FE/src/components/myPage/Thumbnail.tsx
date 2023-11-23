@@ -35,6 +35,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
         css={css`
           position: relative;
           display: inline-block;
+          width: 100%;
 
           &::after {
             content: '${videoLength}';
@@ -73,7 +74,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
             aspect-ratio: 3 / 2;
             width: 100%;
             height: auto;
-            object-fit: cover;
+            object-fit: contain;
             border-radius: 1rem;
           `}
         />
