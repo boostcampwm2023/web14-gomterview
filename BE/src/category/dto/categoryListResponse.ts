@@ -21,14 +21,14 @@ export class CategoryListResponse {
       CategoryResponse,
     ]),
   )
-  categoryList: CategoryResponse[];
+  categories: CategoryResponse[];
 
   constructor(
     customCategory: CategoryResponse,
     categoryList: CategoryResponse[],
   ) {
     this.customCategory = customCategory;
-    this.categoryList = categoryList;
+    this.categories = categoryList;
   }
 
   static of(categoryList: CategoryResponse[]) {

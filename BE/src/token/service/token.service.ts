@@ -99,7 +99,7 @@ export class TokenService {
       case 'NO_USER':
         throw new InvalidTokenException();
 
-      case 'EXPIRED_TOKEN':
+      case 'jwt expired':
         throw new TokenExpiredException();
 
       default:

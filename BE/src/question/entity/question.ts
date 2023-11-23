@@ -21,7 +21,7 @@ export class Question extends DefaultEntity {
     onDelete: 'SET NULL',
     eager: true,
   })
-  @JoinColumn({ name: 'defaultQuestion' })
+  @JoinColumn({ name: 'defaultAnswer' })
   defaultAnswer: Answer;
 
   constructor(

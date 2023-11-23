@@ -1,0 +1,23 @@
+name: BE MAIN CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: Stop Server
+        run: sudo docker stop ${{secrets.BE_DOCKER_CONTAINER}}
+      - name: Delete Old Docker Container
+        run: sudo docker rm ${{secrets.BE_DOCKER_CONTAINER}}
+      - name: Pull Docker Image
+        run: sudo docker pull ${{secrets.BE_DOCKER_USERNAME}}/${{secrets.BE_DOCKER_REPO}}:${{secrets.DOCKER_MAIN_TAG}}
+      - name: Build and Push Docker Image
+        run: |
+          sudo docker build -t ${{secrets.BE_DOCKER_USERNAME}}/${{secrets.BE_DOCKER_REPO}}:${{secrets.DOCKER_MAIN_TAG}} --platform linux/amd64 .
+          sudo docker push ${{secrets.BE_DOCKER_USERNAME}}/${{secrets.BE_DOCKER_REPO}}:${{secrets.DOCKER_MAIN_TAG}}
+      - name: Run Docker Container
+        run: sudo docker run -d -p 8080:8080 -e TZ=Asia/Seoul --name ${{secrets.BE_DOCKER_CONTAINER}} ${{secrets.BE_DOCKER_USERNAME}}/${{secrets.BE_DOCKER_REPO}}:${{secrets.DOCKER_MAIN_TAG}}
