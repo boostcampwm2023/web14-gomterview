@@ -8,7 +8,6 @@ const ProgressStepBar = ({ children }: PropsWithChildren) => {
       css={css`
         display: flex;
         gap: 0.5rem;
-        overflow-x: auto;
       `}
     >
       {children}
