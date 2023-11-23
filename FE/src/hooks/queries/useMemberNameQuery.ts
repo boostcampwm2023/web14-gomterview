@@ -4,7 +4,7 @@ import { getMemberName } from '@/apis/member';
 
 const useMemberNameQuery = () => {
   return useQuery({
-    queryKey: QUERY_KEY.MEMBER,
+    queryKey: QUERY_KEY.MEMBER_NICKNAME,
     queryFn: getMemberName,
   });
 };

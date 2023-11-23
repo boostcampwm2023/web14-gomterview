@@ -3,6 +3,7 @@ export const QUERY_KEY = {
   QUESTION_CATEGORY: (categoryId: number) => ['questions', categoryId],
   CATEGORY: ['categories'],
   MEMBER: ['member'],
+  MEMBER_NICKNAME: ['member', 'nickname'],
   VIDEO: ['video'],
   VIDEO_ID: (videoId: number) => ['video', videoId],
   VIDEO_HASH: (videoHash: string) => ['video', videoHash],
