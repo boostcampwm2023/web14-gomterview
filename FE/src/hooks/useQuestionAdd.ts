@@ -34,10 +34,10 @@ const useQuestionAdd = (
     if (userInfo) {
       mutate({ content: value, categoryId: categoryId });
     } else {
-      queryClient.setQueryData<Question[]>(
+      queryClient.setQueryData<Question[] | []>(
         QUERY_KEY.QUESTION_CATEGORY(categoryId),
         (prev) => {
-          if (!prev) return [createNewQuestion(value)];
+          if (prev?.length === 0 || !prev) return [createNewQuestion(value)];
           return [createNewQuestion(value, prev[0].questionId), ...prev];
         }
       );
