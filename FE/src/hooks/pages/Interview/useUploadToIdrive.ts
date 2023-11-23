@@ -1,6 +1,7 @@
 import { SelectedQuestion } from '@/atoms/interviewSetting';
 import useGetPreSignedUrlMutation from '@/hooks/mutations/video/useGetPreSignedUrlMutation';
 import axios from 'axios';
+import { putVideoToIdrive } from '@/apis/idrive';
 
 type UploadParams = {
   blob: Blob;
@@ -19,10 +20,10 @@ export const useUploadToIDrive = () => {
         questionId: currentQuestion.questionId,
       });
       // response를 받습니다
-      console.log(preSignedResponse);
-      console.log(blob);
-      await axios.put(preSignedResponse?.preSignedUrl, blob, {
-        headers: { 'Content-Type': 'video/webm; codecs=vp8' },
+
+      await putVideoToIdrive({
+        url: preSignedResponse?.preSignedUrl,
+        blob: blob,
       });
 
       // 추가적인 로직은 아직 구현되지 않았습니다.
