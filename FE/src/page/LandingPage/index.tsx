@@ -4,13 +4,8 @@ import WelcomeBlurb from '@components/landingPage/WelcomeBlurb';
 import LandingImage from '@components/landingPage/LandingImage';
 import GoogleLoginButton from '@components/landingPage/GoogleLoginButton';
 import { css } from '@emotion/react';
-import { API, BASE_URL } from '@constants/api';
 
 const LandingPage: React.FC = () => {
-  const handleGoogleLogin = () => {
-    window.location.href = `${BASE_URL}${API.LOGIN}`;
-  };
-
   return (
     <LandingPageLayout>
       <WelcomeBlurb />
@@ -22,7 +17,7 @@ const LandingPage: React.FC = () => {
         `}
       >
         <StartButton />
-        <GoogleLoginButton onClick={handleGoogleLogin} />
+        <GoogleLoginButton />
       </div>
       <LandingImage />
     </LandingPageLayout>
