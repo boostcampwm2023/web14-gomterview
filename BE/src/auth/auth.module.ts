@@ -7,6 +7,7 @@ import { Member } from 'src/member/entity/member';
 import { GoogleStrategy } from './strategy/google.strategy';
 import { Token } from '../token/entity/token';
 import { TokenModule } from '../token/token.module';
+
 @Module({
   imports: [TypeOrmModule.forFeature([Member, Token]), TokenModule],
   providers: [AuthService, MemberRepository, GoogleStrategy],
