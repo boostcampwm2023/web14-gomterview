@@ -451,4 +451,71 @@ describe('AnswerController 통합테스트', () => {
         .expect(404);
     });
   });
+
+  describe('답변 삭제', () => {
+    it('답변을 삭제할 때 자신의 댓글을 삭제하려고 하면 204코드와 함께 성공한다. ', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(beCategoryFixture, member),
+      );
+
+      const question = await questionRepository.save(
+        Question.of(category, null, 'question'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+
+      //when&then
+      const token = await authService.login(memberFixturesOAuthRequest);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .delete(`/api/answer/${answer.id}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(204);
+    });
+
+    it('쿠키가 없으면 401에러를 반환한다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(beCategoryFixture, member),
+      );
+
+      const question = await questionRepository.save(
+        Question.of(category, null, 'question'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+
+      //when&then
+      const agent = request.agent(app.getHttpServer());
+      await agent.delete(`/api/answer/${answer.id}`).expect(401);
+    });
+
+    it('쿠키가 없으면 401에러를 반환한다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(beCategoryFixture, member),
+      );
+
+      const question = await questionRepository.save(
+        Question.of(category, null, 'question'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+
+      //when&then
+      const token = await authService.login(oauthRequestFixture);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .delete(`/api/answer/${answer.id}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(403);
+    });
+  });
 });
