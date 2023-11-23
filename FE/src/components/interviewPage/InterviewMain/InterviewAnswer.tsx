@@ -3,7 +3,7 @@ import { theme } from '@styles/theme';
 type InterviewAnswerType = {
   answer: string;
 };
-
+import Typography from '@/components/foundation/Typography/Typography';
 const InterviewAnswer: React.FC<InterviewAnswerType> = ({ answer }) => {
   return (
     <div
@@ -41,7 +41,7 @@ const InterviewAnswer: React.FC<InterviewAnswerType> = ({ answer }) => {
           overflow-y: scroll;
         `}
       >
-        {answer}
+        <Typography>{answer}</Typography>
       </div>
     </div>
   );
