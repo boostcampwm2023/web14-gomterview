@@ -11,9 +11,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { QuestionRepository } from 'src/question/repository/question.repository';
 import {
-  DecryptionException,
-  EncryptionException,
   IDriveException,
+  Md5HashException,
   VideoAccessForbiddenException,
   VideoNotFoundException,
   VideoOfWithdrawnMemberException,
@@ -27,10 +26,11 @@ import * as crypto from 'crypto';
 import 'dotenv/config';
 import { VideoHashResponse } from '../dto/videoHashResponse';
 import { MemberRepository } from 'src/member/repository/member.repository';
-
-const algorithm = 'aes-256-cbc';
-const key = process.env.URL_ENCRYPT_KEY;
-const iv = crypto.randomBytes(16);
+import {
+  deleteFromRedis,
+  getValueFromRedis,
+  saveToRedis,
+} from 'src/util/redis.util';
 
 @Injectable()
 export class VideoService {
@@ -73,13 +73,13 @@ export class VideoService {
     const video = await this.videoRepository.findById(videoId);
     this.validateVideoOwnership(video, memberId);
 
-    const hash = video.isPublic ? this.getEncryptedurl(video.url) : null;
+    const hash = video.isPublic ? this.getHashedUrl(video.url) : null;
     return VideoDetailResponse.from(video, member.nickname, hash);
   }
 
   async getVideoDetailByHash(hash: string) {
-    const decryptedUrl = this.getDecryptedUrl(hash);
-    const video = await this.videoRepository.findByUrl(decryptedUrl);
+    const originUrl = await getValueFromRedis(hash);
+    const video = await this.videoRepository.findByUrl(originUrl);
     if (!video.isPublic) throw new VideoAccessForbiddenException();
 
     const videoOwner = await this.memberRepository.findById(video.memberId);
@@ -94,7 +94,6 @@ export class VideoService {
       member.id,
     );
 
-    // TODO: 비디오의 썸네일과 길이에 대한 처리도 필요
     return VideoListResponse.from(videoList);
   }
 
@@ -105,9 +104,7 @@ export class VideoService {
     this.validateVideoOwnership(video, memberId);
 
     await this.videoRepository.toggleVideoStatus(videoId); // TODO: 좀 더 효율적인 Patch 로직이 있나 확인
-
-    const hash = video.isPublic ? null : this.getEncryptedurl(video.url); // 현재가 public이었으면 토글 후 private이 되기에 null로 지정
-    return new VideoHashResponse(hash);
+    return this.updateVideoHashInRedis(video);
   }
 
   async deleteVideo(videoId: number, member: Member) {
@@ -130,25 +127,24 @@ export class VideoService {
     return question ? question.content : '삭제된 질문';
   }
 
-  private getEncryptedurl(url: string) {
+  private getHashedUrl(url: string): string {
     try {
-      const cipher = crypto.createCipheriv(algorithm, Buffer.from(key), iv);
-      let encrypted = cipher.update(url, 'utf-8', 'hex');
-      encrypted += cipher.final('hex');
-      return encrypted;
+      const hash = crypto.createHash('md5').update(url).digest('hex');
+      return hash;
     } catch (error) {
-      throw new EncryptionException();
+      throw new Md5HashException();
     }
   }
+  private async updateVideoHashInRedis(video: Video) {
+    const hash = this.getHashedUrl(video.url);
 
-  private getDecryptedUrl(encryptedUrl: string) {
-    try {
-      const decipher = crypto.createDecipheriv(algorithm, Buffer.from(key), iv);
-      let decrypted = decipher.update(encryptedUrl, 'hex', 'utf-8');
-      decrypted += decipher.final('utf-8');
-      return decrypted;
-    } catch (error) {
-      throw new DecryptionException();
+    if (video.isPublic) {
+      // 현재가 public이었으면 토글 후 private이 되기에 redis에서 해시값 삭제 후 null 반환
+      await deleteFromRedis(hash);
+      return new VideoHashResponse(null);
     }
+
+    await saveToRedis(hash, video.url);
+    return new VideoHashResponse(hash);
   }
 }
