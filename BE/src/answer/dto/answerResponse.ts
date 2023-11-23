@@ -42,7 +42,7 @@ export class AnswerResponse {
   static from(answer: Answer, member: Member) {
     return new AnswerResponse(
       answer.id,
-      answer.content,
+      answer.content.toString(),
       member.id,
       member.nickname,
       member.profileImg,
