@@ -7,7 +7,11 @@ export class AppController {
 
   @Get()
   async getHello() {
-    await this.appService.saveDummy();
     return this.appService.getHello();
+  }
+
+  @Get('/initializeDummy')
+  async saveDummy() {
+    await this.appService.saveDummy();
   }
 }
