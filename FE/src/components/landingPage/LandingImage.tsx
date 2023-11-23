@@ -10,6 +10,7 @@ const LandingImage: React.FC = () => {
         align-items: center;
         justify-self: end;
         align-self: end;
+        z-index: -1;
       `}
     >
       <img
