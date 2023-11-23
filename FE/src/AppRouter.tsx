@@ -42,7 +42,7 @@ const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
           element: <InterviewVideoPage />,
         },
         {
-          path: PATH.INTERVIEW_VIDEO_PUBLIC,
+          path: PATH.INTERVIEW_VIDEO_PUBLIC(),
           element: <InterviewVideoPublicPage />,
           loader: ({ params }) =>
             InterviewVideoPublicLoader({

@@ -2,6 +2,8 @@ import Button from '@foundation/Button/Button';
 import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
 import LightButton from '@common/LightButton/LightButton';
+import { BASE_URL } from '@constants/api';
+import { PATH } from '@constants/path';
 
 type VideoShareModalFooterProps = {
   hashUrl?: string | null;
@@ -15,7 +17,9 @@ const VideoShareModalFooter: React.FC<VideoShareModalFooterProps> = ({
   const handleCopyLink = async () => {
     if (hashUrl) {
       try {
-        await navigator.clipboard.writeText(hashUrl);
+        await navigator.clipboard.writeText(
+          `${BASE_URL}${PATH.INTERVIEW_VIDEO_PUBLIC(hashUrl)}`
+        );
         alert('링크 복사됨'); //TODO 현재는 alert이지만 추후에 Toast로 변경 예정
       } catch (e) {
         alert('복사 실패');
