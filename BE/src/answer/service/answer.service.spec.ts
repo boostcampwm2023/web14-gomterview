@@ -26,7 +26,7 @@ import {
   defaultAnswerRequestFixture,
 } from '../fixture/answer.fixture';
 import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
-import { ForbiddenException } from '../../token/exception/token.exception';
+import { CategoryForbiddenException } from '../../category/exception/category.exception';
 
 describe('AnswerService 단위 테스트', () => {
   let service: AnswerService;
@@ -158,7 +158,7 @@ describe('AnswerService 단위 테스트', () => {
       //then
       await expect(
         service.setDefaultAnswer(defaultAnswerRequestFixture, memberFixture),
-      ).rejects.toThrow(new ForbiddenException());
+      ).rejects.toThrow(new CategoryForbiddenException());
     });
   });
 });
