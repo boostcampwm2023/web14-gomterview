@@ -5,6 +5,7 @@ import Typography from '@foundation/Typography/Typography';
 import Button from '@foundation/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '@constants/path';
+import useInterviewSettings from '@/hooks/atoms/useInterviewSettings';
 
 type InterviewExitModalProps = {
   isOpen: boolean;
@@ -16,6 +17,7 @@ const InterviewExitModal: React.FC<InterviewExitModalProps> = ({
   closeModal,
 }) => {
   const navigate = useNavigate();
+  const { resetAllSettings } = useInterviewSettings();
 
   return (
     <Modal isOpen={isOpen} closeModal={closeModal}>
@@ -35,7 +37,14 @@ const InterviewExitModal: React.FC<InterviewExitModalProps> = ({
               margin-top: 1.25rem;
             `}
           >
-            <Button onClick={() => navigate(PATH.ROOT)}>종료</Button>
+            <Button
+              onClick={() => {
+                resetAllSettings();
+                navigate(PATH.ROOT);
+              }}
+            >
+              종료
+            </Button>
           </div>
         </div>
       </Modal.content>

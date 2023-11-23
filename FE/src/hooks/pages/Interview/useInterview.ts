@@ -6,7 +6,7 @@ import { localDownload, startRecording, stopRecording } from '@/utils/record';
 import { useUploadToIDrive } from '@/hooks/pages/Interview/useUploadToIdrive';
 import useTimeTracker from '@/hooks/pages/Interview/useTimeTracker';
 import useInterviewFlow from '@hooks/pages/Interview/useInterviewFlow';
-import useIsAllSuccess from '@/hooks/pages/Interview/useIsAllSuccess';
+import useInterviewSettings from '@/hooks/atoms/useInterviewSettings';
 
 const useInterview = () => {
   const {
@@ -16,7 +16,7 @@ const useInterview = () => {
     isTimeOver,
     setIsTimeOver,
   } = useTimeTracker();
-  const isAllSuccess = useIsAllSuccess();
+  const { isAllSuccess } = useInterviewSettings();
   const { method } = useRecoilValue(recordSetting);
   const uploadToDrive = useUploadToIDrive();
   const { currentQuestion, getNextQuestion, isLastQuestion } =
