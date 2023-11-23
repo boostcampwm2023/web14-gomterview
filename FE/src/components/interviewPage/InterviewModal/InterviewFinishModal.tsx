@@ -9,6 +9,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEY } from '@constants/queryKey';
 import Confetti from 'react-confetti';
 import useWindowSize from '@hooks/pages/Interview/useWindowSize';
+import useInterviewSettings from '@/hooks/atoms/useInterviewSettings';
 
 type InterviewFinishModalProps = {
   isOpen: boolean;
@@ -20,6 +21,7 @@ const InterviewFinishModal: React.FC<InterviewFinishModalProps> = ({
   const navigate = useNavigate();
   const isLogin = useQueryClient().getQueryState(QUERY_KEY.MEMBER);
   const windowSize = useWindowSize();
+  const { resetAllSettings } = useInterviewSettings();
 
   return (
     <>
@@ -62,6 +64,7 @@ const InterviewFinishModal: React.FC<InterviewFinishModalProps> = ({
             >
               <Button
                 onClick={() => {
+                  resetAllSettings();
                   if (isLogin) navigate(PATH.MYPAGE);
                   else navigate(PATH.ROOT);
                 }}
