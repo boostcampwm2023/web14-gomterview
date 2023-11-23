@@ -1,14 +1,11 @@
 import Typography from '@foundation/Typography/Typography';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
+import useMemberNameQuery from '@hooks/queries/useMemberNameQuery';
 
-type IntervieweeNameType = {
-  intervieweeName: string;
-};
+const IntervieweeName: React.FC = () => {
+  const { data } = useMemberNameQuery();
 
-const IntervieweeName: React.FC<IntervieweeNameType> = ({
-  intervieweeName,
-}) => {
   return (
     <div
       css={css`
@@ -28,7 +25,7 @@ const IntervieweeName: React.FC<IntervieweeNameType> = ({
         variant={'title4'}
         color={theme.colors.text.white}
       >
-        {intervieweeName}
+        {data?.nickname || '면접자'}
       </Typography>
     </div>
   );

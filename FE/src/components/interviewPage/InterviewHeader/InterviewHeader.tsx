@@ -6,13 +6,9 @@ import { theme } from '@styles/theme';
 
 type InterviewHeaderProps = {
   isRecording: boolean;
-  intervieweeName: string;
 };
 
-const InterviewHeader: React.FC<InterviewHeaderProps> = ({
-  isRecording,
-  intervieweeName,
-}) => {
+const InterviewHeader: React.FC<InterviewHeaderProps> = ({ isRecording }) => {
   return (
     <div
       css={css`
@@ -27,7 +23,7 @@ const InterviewHeader: React.FC<InterviewHeaderProps> = ({
       `}
     >
       <RecordStatus isRecording={isRecording} />
-      <IntervieweeName intervieweeName={intervieweeName} />
+      <IntervieweeName />
       <RecordTimer isRecording={isRecording} />
     </div>
   );
