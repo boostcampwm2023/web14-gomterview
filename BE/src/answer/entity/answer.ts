@@ -5,10 +5,10 @@ import { Question } from '../../question/entity/question';
 
 @Entity({ name: 'Answer' })
 export class Answer extends DefaultEntity {
-  @Column()
+  @Column({ type: 'blob' })
   content: string;
 
-  @ManyToOne(() => Member, { onDelete: 'CASCADE', eager: true })
+  @ManyToOne(() => Member, { onDelete: 'CASCADE', eager: true, nullable: true })
   @JoinColumn()
   member: Member;
 
