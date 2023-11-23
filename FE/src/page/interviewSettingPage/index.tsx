@@ -93,7 +93,8 @@ const InterviewSettingPage: React.FC = () => {
           position: sticky;
           top: 0;
           padding: 1rem 0;
-          width: 46.875rem;
+          width: 100%;
+          max-width: 46.875rem;
           background-color: rgba(255, 255, 255, 0.5);
           backdrop-filter: blur(10px); /* 10px 블러 효과 */
 
