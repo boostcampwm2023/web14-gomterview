@@ -7,9 +7,28 @@ import { Member } from 'src/member/entity/member';
 import { GoogleStrategy } from './strategy/google.strategy';
 import { Token } from '../token/entity/token';
 import { TokenModule } from '../token/token.module';
+import { Category } from '../category/entity/category';
+import { Question } from '../question/entity/question';
+import { Answer } from '../answer/entity/answer';
+import { CategoryRepository } from '../category/repository/category.repository';
+import { QuestionRepository } from '../question/repository/question.repository';
+import { CategoryModule } from '../category/category.module';
+import { QuestionModule } from '../question/question.module';
+
 @Module({
-  imports: [TypeOrmModule.forFeature([Member, Token]), TokenModule],
-  providers: [AuthService, MemberRepository, GoogleStrategy],
+  imports: [
+    TypeOrmModule.forFeature([Member, Token, Category, Question, Answer]),
+    TokenModule,
+    CategoryModule,
+    QuestionModule,
+  ],
+  providers: [
+    AuthService,
+    MemberRepository,
+    GoogleStrategy,
+    CategoryRepository,
+    QuestionRepository,
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}

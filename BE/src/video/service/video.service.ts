@@ -17,7 +17,6 @@ import {
   VideoNotFoundException,
   VideoOfWithdrawnMemberException,
 } from '../exception/video.exception';
-import { VideoListResponse } from '../dto/videoListResponse';
 import { CreateVideoRequest } from '../dto/createVideoRequest';
 import { validateManipulatedToken } from 'src/util/token.util';
 import { isEmpty, notEquals } from 'class-validator';
@@ -31,6 +30,7 @@ import {
   getValueFromRedis,
   saveToRedis,
 } from 'src/util/redis.util';
+import { SingleVideoResponse } from '../dto/singleVideoResponse';
 
 @Injectable()
 export class VideoService {
@@ -39,6 +39,7 @@ export class VideoService {
     private questionRepository: QuestionRepository,
     private memberRepository: MemberRepository,
   ) {}
+
   async createVideo(member: Member, createVideoRequest: CreateVideoRequest) {
     validateManipulatedToken(member);
 
@@ -94,7 +95,7 @@ export class VideoService {
       member.id,
     );
 
-    return VideoListResponse.from(videoList);
+    return videoList.map(SingleVideoResponse.from);
   }
 
   async toggleVideoStatus(videoId: number, member: Member) {
@@ -135,6 +136,7 @@ export class VideoService {
       throw new Md5HashException();
     }
   }
+
   private async updateVideoHashInRedis(video: Video) {
     const hash = this.getHashedUrl(video.url);
 

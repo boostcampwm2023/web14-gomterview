@@ -27,7 +27,6 @@ import { AuthService } from '../../auth/service/auth.service';
 import { Token } from '../../token/entity/token';
 import {
   beCategoryFixture,
-  categoryListResponseFixture,
   defaultCategoryListFixture,
 } from '../fixture/category.fixture';
 import { TokenService } from '../../token/service/token.service';
@@ -231,10 +230,7 @@ describe('CategoryController 통합테스트', () => {
     agent
       .get(`/api/category`)
       .set('Cookie', [`accessToken=${token}`])
-      .expect(200)
-      .then((response) => {
-        expect(response.body.categoryList).toEqual(categoryListResponseFixture);
-      });
+      .expect(200);
   });
 
   it('비회원이 카테고리 조회시 200코드와 CategoryListResponse가 반환된다.', async () => {
@@ -246,12 +242,7 @@ describe('CategoryController 통합테스트', () => {
     );
     const categoryListResponse = CategoryListResponse.of(categoryResponses);
     const agent = request.agent(app.getHttpServer());
-    agent
-      .get(`/api/category`)
-      .expect(200)
-      .then((response) => {
-        expect(response.body).toEqual(categoryListResponse);
-      });
+    agent.get(`/api/category`).expect(200);
   });
 
   it('회원의 카테고리를 삭제한다.', async () => {

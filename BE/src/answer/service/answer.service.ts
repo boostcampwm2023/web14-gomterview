@@ -89,9 +89,16 @@ export class AnswerService {
     ).map((answer) => AnswerResponse.from(answer, answer.member));
 
     if (question.defaultAnswer) {
-      answers.unshift(
-        AnswerResponse.from(question.defaultAnswer, question.category.member),
+      const defaultAnswerResponse = AnswerResponse.from(
+        question.defaultAnswer,
+        question.defaultAnswer.member,
       );
+
+      const resultList = answers.filter(
+        (response) => response.answerId != defaultAnswerResponse.answerId,
+      );
+      resultList.unshift(defaultAnswerResponse);
+      return resultList;
     }
 
     return answers;

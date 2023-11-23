@@ -10,10 +10,19 @@ import { QuestionModule } from './question/question.module';
 import { VideoModule } from './video/video.module';
 import { CategoryModule } from './category/category.module';
 import { AnswerModule } from './answer/answer.module';
+import { CategoryRepository } from './category/repository/category.repository';
+import { QuestionRepository } from './question/repository/question.repository';
+import { AnswerRepository } from './answer/repository/answer.repository';
+import { Category } from './category/entity/category';
+import { Member } from './member/entity/member';
+import { Question } from './question/entity/question';
+import { Answer } from './answer/entity/answer';
+import { Token } from './token/entity/token';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(MYSQL_OPTION),
+    TypeOrmModule.forFeature([Category, Member, Question, Answer, Token]),
     MemberModule,
     AuthModule,
     TokenModule,
@@ -23,6 +32,11 @@ import { AnswerModule } from './answer/answer.module';
     AnswerModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    CategoryRepository,
+    QuestionRepository,
+    AnswerRepository,
+  ],
 })
 export class AppModule {}

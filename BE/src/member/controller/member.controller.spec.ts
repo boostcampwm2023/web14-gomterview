@@ -19,6 +19,7 @@ import { MemberModule } from '../member.module';
 import { Member } from '../entity/member';
 import { Token } from '../../token/entity/token';
 import { createIntegrationTestModule } from '../../util/test.util';
+import { Category } from '../../category/entity/category';
 
 describe('MemberController', () => {
   let memberController: MemberController;
@@ -71,7 +72,7 @@ describe('MemberController (E2E Test)', () => {
 
   beforeAll(async () => {
     const modules = [AuthModule, TokenModule, MemberModule];
-    const entities = [Member, Token];
+    const entities = [Member, Token, Category];
 
     const moduleFixture: TestingModule = await createIntegrationTestModule(
       modules,
@@ -85,22 +86,19 @@ describe('MemberController (E2E Test)', () => {
   });
 
   it('GET /api/member (회원 정보 반환 성공)', (done) => {
-    authService
-      .login(oauthRequestFixture)
-      .then((validToken) => {
-        const agent = request.agent(app.getHttpServer());
-        agent
-          .get('/api/member')
-          .set('Cookie', [`accessToken=${validToken}`])
-          .expect(200)
-          .then((response) => {
-            expect(response.body.email).toBe(oauthRequestFixture.email);
-            expect(response.body.nickname).toBe(oauthRequestFixture.name);
-            expect(response.body.profileImg).toBe(oauthRequestFixture.img);
-            return;
-          });
-      })
-      .then(() => done());
+    authService.login(oauthRequestFixture).then((validToken) => {
+      const agent = request.agent(app.getHttpServer());
+      agent
+        .get('/api/member')
+        .set('Cookie', [`accessToken=${validToken}`])
+        .expect(200)
+        .then((response) => {
+          expect(response.body.email).toBe(oauthRequestFixture.email);
+          expect(response.body.nickname).toBe(oauthRequestFixture.name);
+          expect(response.body.profileImg).toBe(oauthRequestFixture.img);
+          done();
+        });
+    });
   });
 
   it('GET /api/member (유효하지 않은 토큰 사용으로 인한 회원 정보 반환 실패)', (done) => {

@@ -34,7 +34,6 @@ export class CategoryService {
     const categories = await this.categoryRepository.findAllByMemberId(
       isEmpty(member) ? null : member.id,
     );
-    console.log(categories);
 
     return categories.map(CategoryResponse.from);
   }

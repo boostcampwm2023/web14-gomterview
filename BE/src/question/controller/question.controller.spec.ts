@@ -30,7 +30,6 @@ import { Question } from '../entity/question';
 import { Category } from '../../category/entity/category';
 import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 import * as cookieParser from 'cookie-parser';
-import { QuestionResponseList } from '../dto/questionResponseList';
 import { QuestionRepository } from '../repository/question.repository';
 import { Answer } from '../../answer/entity/answer';
 
@@ -85,9 +84,9 @@ describe('QuestionController', () => {
       QuestionResponse.from(questionFixture),
     ]);
     //then
-    await expect(controller.findCategoryQuestions(1)).resolves.toEqual(
-      QuestionResponseList.of([QuestionResponse.from(questionFixture)]),
-    );
+    await expect(controller.findCategoryQuestions(1)).resolves.toEqual([
+      QuestionResponse.from(questionFixture),
+    ]);
   });
 
   it('질문 삭제시 undefined를 반환한다.', async () => {
