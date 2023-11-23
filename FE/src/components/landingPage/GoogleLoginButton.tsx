@@ -3,18 +3,29 @@ import { theme } from '@styles/theme';
 import Typography from '@foundation/Typography/Typography';
 import Icon from '@foundation/Icon/Icon';
 import { HTMLElementTypes } from '@/types/utils';
-import { useQueryClient } from '@tanstack/react-query';
-import { QUERY_KEY } from '@constants/queryKey';
+import useUserInfo from '@hooks/useUserInfo';
+import { API, BASE_URL } from '@constants/api';
+import { useNavigate } from 'react-router-dom';
+import { PATH } from '@constants/path';
 
 type GoogleLoginButtonProps = HTMLElementTypes<HTMLButtonElement>;
 
 const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ ...args }) => {
-  const queryState = useQueryClient().getQueryState(QUERY_KEY.MEMBER);
+  const userInfo = useUserInfo();
+  const navigate = useNavigate();
 
-  if (queryState?.data) return null;
+  const handleGoogleLogin = () => {
+    if (userInfo) {
+      navigate(PATH.MYPAGE);
+      return;
+    }
+
+    window.location.href = `${BASE_URL}${API.LOGIN}`;
+  };
 
   return (
     <button
+      onClick={handleGoogleLogin}
       css={css`
         display: flex;
         align-items: center;
@@ -31,9 +42,9 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ ...args }) => {
       `}
       {...args}
     >
-      <Icon id="google-logo" width="1.25rem" height="1.25rem" />
+      {!userInfo && <Icon id="google-logo" width="1.25rem" height="1.25rem" />}
       <Typography variant="title3" color={theme.colors.text.default}>
-        Google로 시작하기
+        {userInfo ? '마이페이지로 이동하기' : 'Google로 시작하기'}
       </Typography>
     </button>
   );
