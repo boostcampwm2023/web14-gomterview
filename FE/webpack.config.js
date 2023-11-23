@@ -22,6 +22,12 @@ module.exports = (env) => {
       port: 3000,
       hot: true,
       static: path.resolve(__dirname, 'dist'),
+      proxy: {
+        '/api': {
+          target: 'https://api.gomterview.com',
+          changeOrigin: true,
+        },
+      },
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.json'],
