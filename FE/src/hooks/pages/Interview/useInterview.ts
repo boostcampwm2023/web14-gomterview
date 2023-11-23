@@ -21,7 +21,16 @@ const useInterview = () => {
   const uploadToDrive = useUploadToIDrive();
   const { currentQuestion, getNextQuestion, isLastQuestion } =
     useInterviewFlow();
-  const { media, videoRef, connectStatus, selectedMimeType } = useMedia();
+
+  const {
+    media,
+    videoRef,
+    connectStatus,
+    selectedMimeType,
+    startMedia,
+    stopMedia,
+  } = useMedia();
+
   const [isRecording, setIsRecording] = useState(false);
   const [isScriptInView, setIsScriptInView] = useState(true);
   const [recordedBlobs, setRecordedBlobs] = useState<Blob[]>([]);
@@ -67,6 +76,11 @@ const useInterview = () => {
     uploadToDrive,
     currentQuestion,
   ]);
+
+  useEffect(() => {
+    if (!media) void startMedia();
+    return () => stopMedia();
+  }, [media]);
 
   useEffect(() => {
     if (isTimeOver) {
