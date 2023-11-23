@@ -2,6 +2,11 @@ name: BE CI
 on:
   pull_request:
     branches: [main, dev]
+
+defaults:
+  run:
+    working-directory: ./BE
+
 jobs:
   test:
     runs-on: ubuntu-latest
