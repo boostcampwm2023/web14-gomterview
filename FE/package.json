@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "cp .env.production .env & npx webpack build --mode production --env production=true",
-    "start": "cp .env.development .env &  webpack --mode development --env production=false",
-    "dev": "cp .env.development .env & webpack serve --mode development --open --hot --env production=false"
+    "build": "npx webpack build --mode production --env production=true",
+    "start": "webpack --mode development --env production=false",
+    "dev": "webpack serve --mode development --open --hot --env production=false"
   },
   "author": "",
   "license": "ISC",

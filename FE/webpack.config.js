@@ -5,8 +5,8 @@ const CopyPlugin = require('copy-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
 module.exports = (env) => {
-  const envPath = '.env';
-
+  const envPath =
+    env.production === 'true' ? '.env.production' : '.env.development';
   return {
     mode: process.env.production === 'true' ? 'production' : 'development',
     devtool: process.env.production === 'true' ? 'hidden-source-map' : 'eval',
