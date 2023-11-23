@@ -23,7 +23,6 @@ import {
 import { createApiResponseOption } from '../../util/swagger.util';
 import { QuestionResponse } from '../dto/questionResponse';
 import { Member } from '../../member/entity/member';
-import { QuestionResponseList } from '../dto/questionResponseList';
 
 @ApiTags('question')
 @Controller('/api/question')
@@ -55,16 +54,10 @@ export class QuestionController {
     summary: '카테고리별 질문 리스트 조회',
   })
   @ApiResponse(
-    createApiResponseOption(
-      200,
-      'QuestionResponse 리스트',
-      QuestionResponseList,
-    ),
+    createApiResponseOption(200, 'QuestionResponse 리스트', [QuestionResponse]),
   )
   async findCategoryQuestions(@Query('category') categoryId: number) {
-    const questionResponses =
-      await this.questionService.findAllByCategory(categoryId);
-    return QuestionResponseList.of(questionResponses);
+    return await this.questionService.findAllByCategory(categoryId);
   }
 
   @Delete()
