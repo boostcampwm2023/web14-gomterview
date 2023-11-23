@@ -1,4 +1,4 @@
-name: BE CD
+name: BE DEV CD
 
 on:
   push:
