@@ -495,7 +495,7 @@ describe('AnswerController 통합테스트', () => {
       await agent.delete(`/api/answer/${answer.id}`).expect(401);
     });
 
-    it('쿠키가 없으면 401에러를 반환한다.', async () => {
+    it('다른 사람의 답변을 삭제하면 403에러를 반환한다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
       const category = await categoryRepository.save(
@@ -516,6 +516,29 @@ describe('AnswerController 통합테스트', () => {
         .delete(`/api/answer/${answer.id}`)
         .set('Cookie', [`accessToken=${token}`])
         .expect(403);
+    });
+
+    it('답변이 없으면 404에러를 반환한다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(
+        Category.from(beCategoryFixture, member),
+      );
+
+      const question = await questionRepository.save(
+        Question.of(category, null, 'question'),
+      );
+      const answer = await answerRepository.save(
+        Answer.of('test', member, question),
+      );
+
+      //when&then
+      const token = await authService.login(oauthRequestFixture);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .delete(`/api/answer/${100000}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(404);
     });
   });
 });
