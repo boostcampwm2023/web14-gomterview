@@ -2,15 +2,12 @@ import { css } from '@emotion/react';
 import Box from '@foundation/Box/Box';
 import Avatar from '@foundation/Avatar/Avatar';
 import Typography from '../foundation/Typography/Typography';
-import { QUERY_KEY } from '@constants/queryKey';
-import { useQueryClient } from '@tanstack/react-query';
-import { User } from '@/types/user';
 import { Navigate } from 'react-router-dom';
 import { PATH } from '@constants/path';
+import useUserInfo from '@hooks/useUserInfo';
 
 const Profile: React.FC = () => {
-  const queryClient = useQueryClient();
-  const userInfo = queryClient.getQueryData<User>(QUERY_KEY.MEMBER);
+  const userInfo = useUserInfo();
 
   if (!userInfo) return <Navigate to={PATH.ROOT} />;
 
