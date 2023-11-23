@@ -1,13 +1,8 @@
-import React, {
-  Children,
-  cloneElement,
-  isValidElement,
-  ReactNode,
-  SyntheticEvent,
-} from 'react';
+import React, { ReactNode, SyntheticEvent } from 'react';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
 import { HTMLElementTypes } from '@/types/utils';
+import addChildElementProps from '@/utils/addChildElementProps';
 
 type AccordionProps = {
   children: ReactNode[];
@@ -21,11 +16,6 @@ export const Accordion: React.FC<AccordionProps> = ({
   onChange,
   ...args
 }) => {
-  const childrenArray = Children.toArray(children).map(
-    (child) =>
-      isValidElement(child) && cloneElement(child, { ...child.props, expanded })
-  );
-
   return (
     <div
       onClick={(e) => onChange(e, !!expanded)}
@@ -45,7 +35,7 @@ export const Accordion: React.FC<AccordionProps> = ({
       `}
       {...args}
     >
-      {childrenArray}
+      {addChildElementProps({ children, newProps: { expanded: expanded } })}
     </div>
   );
 };

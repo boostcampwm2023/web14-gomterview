@@ -30,6 +30,8 @@ const Typography: React.FC<Props> = ({
           position: relative;
           text-align: left;
           color: ${color};
+          line-height: 1.6;
+          white-space: pre-wrap;
           ${noWrap &&
           `
             overflow: hidden;

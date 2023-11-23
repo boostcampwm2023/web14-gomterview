@@ -37,11 +37,14 @@ const AnswerSelectionModal: React.FC<AnswerSelectionModalProps> = ({
       <Modal.content>
         <div
           css={css`
-            max-width: 60rem;
+            max-width: 40rem;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
           `}
         >
           <AnswerForm
-            question={question.answerContent}
+            question={question.questionContent}
             questionId={question.questionId}
           />
           <div

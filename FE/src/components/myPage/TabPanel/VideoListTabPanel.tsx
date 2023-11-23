@@ -50,7 +50,7 @@ const VideoListTabPanel: React.FC = () => {
           path={`${PATH.INTERVIEW_VIDEO(video.id)}`}
         >
           <Thumbnail
-            image={video.thumbnail}
+            image={video.thumbnail ?? ''}
             videoName={video.videoName}
             videoLength={video.videoLength}
             onDeleteIconClick={() => handleDeleteIconClick(video.id)}

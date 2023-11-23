@@ -6,6 +6,7 @@ type Hash = string;
 export const API = {
   LOGIN: '/auth/login',
   LOGOUT: '/auth/logout',
+  REISSUE: '/auth/reissue',
   MEMBER: '/member',
   MEMBER_NAME: '/member/name',
   VIDEO: '/video',
