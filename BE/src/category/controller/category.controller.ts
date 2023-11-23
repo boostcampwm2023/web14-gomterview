@@ -53,7 +53,7 @@ export class CategoryController {
 
   @Get()
   @ApiOperation({
-    summary: '카테고리를 추가한다.',
+    summary: '전체 카테고리를 조회한다.',
   })
   @ApiResponse(
     createApiResponseOption(

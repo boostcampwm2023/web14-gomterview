@@ -28,6 +28,7 @@ import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
 import { VideoListResponse } from '../dto/videoListResponse';
 import { VideoDetailResponse } from '../dto/videoDetailResponse';
 import { VideoHashResponse } from '../dto/videoHashResponse';
+import {SingleVideoResponse} from "../dto/singleVideoResponse";
 
 @Controller('/api/video')
 @ApiTags('video')
@@ -80,7 +81,7 @@ export class VideoController {
     summary: '자신의 모든 비디오 정보를 반환',
   })
   @ApiResponse(
-    createApiResponseOption(200, '모든 비디오 조회 완료', VideoListResponse),
+    createApiResponseOption(200, '모든 비디오 조회 완료', SingleVideoResponse[]),
   )
   async getAllVideo(@Req() req: Request) {
     return await this.videoService.getAllVideosByMemberId(req.user as Member);

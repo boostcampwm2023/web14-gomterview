@@ -38,7 +38,7 @@ export class QuestionResponse {
       question.id,
       question.content,
       answer.id,
-      answer.content,
+      answer.content.toString(),
     );
   }
 }
