@@ -39,7 +39,7 @@ const InterviewVideoPage: React.FC = () => {
           <VideoShareModal
             videoId={Number(data.id)}
             videoName={data.videoName}
-            isPublic={!!data?.hash}
+            hash={data.hash}
             isOpen={isOpen}
             closeModal={() => setIsOpen(false)}
           />

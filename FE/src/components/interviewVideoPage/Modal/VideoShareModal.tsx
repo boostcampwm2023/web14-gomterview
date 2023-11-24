@@ -9,14 +9,14 @@ import { truncateText } from '@/utils/textUtils';
 type VideoShareModalProps = {
   videoId: number;
   videoName: string;
-  isPublic: boolean;
+  hash: string | null;
   isOpen: boolean;
   closeModal: () => void;
 };
 const VideoShareModal: React.FC<VideoShareModalProps> = ({
   videoId,
   videoName,
-  isPublic,
+  hash,
   isOpen,
   closeModal,
 }) => {
@@ -43,11 +43,11 @@ const VideoShareModal: React.FC<VideoShareModalProps> = ({
           '로딩중' //TODO 디자인은 임시입니다.
         ) : (
           <ShareRangeSetting
-            isPublic={isPublic}
+            isPublic={!!hash}
             onClick={handleVideoShareToggleClick}
           />
         )}
-        <VideoShareModalFooter hashUrl={data?.hash} closeModal={closeModal} />
+        <VideoShareModalFooter hash={hash} closeModal={closeModal} />
       </div>
     </Modal>
   );
