@@ -5,7 +5,6 @@ import {
   memberFixture,
   mockReqWithMemberFixture,
 } from 'src/member/fixture/member.fixture';
-import { CreateVideoRequest } from '../dto/createVideoRequest';
 import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
 import { Request, Response } from 'express';
 import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
@@ -21,6 +20,7 @@ import {
   VideoOfWithdrawnMemberException,
 } from '../exception/video.exception';
 import {
+  createVideoRequestFixture,
   videoFixture,
   videoListFixtureForTest,
 } from '../fixture/video.fixture';
@@ -59,13 +59,7 @@ describe('VideoController 단위 테스트', () => {
   });
 
   describe('createVideo', () => {
-    const createVideoRequest = new CreateVideoRequest(
-      1,
-      'test.webm',
-      'https://test.com',
-      'https://thumbnail-test.com',
-      '01:12',
-    );
+    const createVideoRequest = createVideoRequestFixture;
 
     it('비디오 저장 성공 시 undefined를 반환한다.', async () => {
       //given
