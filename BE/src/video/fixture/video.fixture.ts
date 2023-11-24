@@ -1,3 +1,4 @@
+import { CreateVideoRequest } from '../dto/createVideoRequest';
 import { Video } from '../entity/video';
 
 export const videoListExample = [
@@ -48,7 +49,7 @@ export const videoListFixtureForTest = [
   ),
 ];
 
-export const videoFixtureForTest = new Video(
+export const videoFixture = new Video(
   1,
   1,
   '루이뷔통통튀기네',
@@ -56,4 +57,12 @@ export const videoFixtureForTest = new Video(
   'https://thumbnail-test.com',
   '03:29',
   true,
+);
+
+export const createVideoRequestFixture = new CreateVideoRequest(
+  1,
+  'foobar.webm',
+  'https://foo.com',
+  'https://bar.com',
+  '03:29',
 );

@@ -21,7 +21,7 @@ import {
   VideoOfWithdrawnMemberException,
 } from '../exception/video.exception';
 import {
-  videoFixtureForTest,
+  videoFixture,
   videoListFixtureForTest,
 } from '../fixture/video.fixture';
 import { VideoDetailResponse } from '../dto/videoDetailResponse';
@@ -204,7 +204,7 @@ describe('VideoController 단위 테스트', () => {
 
     it('해시로 비디오 조회 성공 시 VideoDetailResponse 객체 형태로 응답된다.', async () => {
       // given
-      const video = videoFixtureForTest;
+      const video = videoFixture;
 
       // when
       const mockVideoDetailWithHash = VideoDetailResponse.from(
@@ -284,7 +284,7 @@ describe('VideoController 단위 테스트', () => {
     const mockReq = mockReqWithMemberFixture;
     const nickname = memberFixture.nickname;
     const hash = 'fakeHash';
-    const video = videoFixtureForTest;
+    const video = videoFixture;
 
     it('비디오 상세 정보 조회 성공 시 VideoDetailResponse 객체 형태로 응답된다.', async () => {
       // given
