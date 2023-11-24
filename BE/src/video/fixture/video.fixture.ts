@@ -29,7 +29,7 @@ export const videoListExample = [
   },
 ];
 
-export const videoListFixtureForTest = [
+export const videoListFixture = [
   new Video(
     1,
     1,
@@ -58,6 +58,26 @@ export const videoFixture = new Video(
   'https://thumbnail-test.com',
   '03:29',
   true,
+);
+
+export const privateVideoFixture = new Video(
+  1,
+  1,
+  '루이뷔통통튀기네',
+  'https://test.com',
+  'https://thumbnail-test.com',
+  '03:29',
+  false,
+);
+
+export const videoOfOtherFixture = new Video(
+  999,
+  1,
+  '루이뷔통통튀기네',
+  'https://test.com',
+  'https://thumbnail-test.com',
+  '03:29',
+  false,
 );
 
 export const createVideoRequestFixture = new CreateVideoRequest(

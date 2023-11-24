@@ -22,7 +22,7 @@ import {
   createPreSignedUrlRequestFixture,
   createVideoRequestFixture,
   videoFixture,
-  videoListFixtureForTest,
+  videoListFixture,
 } from '../fixture/video.fixture';
 import { VideoDetailResponse } from '../dto/videoDetailResponse';
 import { VideoHashResponse } from '../dto/videoHashResponse';
@@ -145,7 +145,7 @@ describe('VideoController 단위 테스트', () => {
   describe('getAllVideo', () => {
     it('비디오 전체 조회 성공 시 VideoListResponse 객체 형태로 응답된다.', async () => {
       //given
-      const videoList = videoListFixtureForTest;
+      const videoList = videoListFixture;
 
       //when
       const mockVideoListResponse = videoList.map(SingleVideoResponse.from);
