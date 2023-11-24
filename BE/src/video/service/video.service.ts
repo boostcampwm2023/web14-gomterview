@@ -52,6 +52,8 @@ export class VideoService {
     member: Member,
     createPreSignedUrlRequest: CreatePreSignedUrlRequest,
   ) {
+    validateManipulatedToken(member);
+
     const content = await this.getQuestionContent(
       createPreSignedUrlRequest.questionId,
     );
