@@ -4,8 +4,12 @@ import { VideoRepository } from '../repository/video.repository';
 import { memberFixture } from 'src/member/fixture/member.fixture';
 import { QuestionRepository } from 'src/question/repository/question.repository';
 import { MemberRepository } from 'src/member/repository/member.repository';
-import { createVideoRequestFixture } from '../fixture/video.fixture';
+import {
+  createPreSignedUrlRequestFixture,
+  createVideoRequestFixture,
+} from '../fixture/video.fixture';
 import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
+import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 
 describe('VideoService', () => {
   let videoService: VideoService;
@@ -17,6 +21,10 @@ describe('VideoService', () => {
     findAllVideosByMemberId: jest.fn(),
     toggleVideoStatus: jest.fn(),
     remove: jest.fn(),
+  };
+
+  const mockQuestionRepository = {
+    findById: jest.fn(),
   };
 
   beforeAll(async () => {
@@ -33,7 +41,7 @@ describe('VideoService', () => {
       .overrideProvider(MemberRepository)
       .useValue({})
       .overrideProvider(QuestionRepository)
-      .useValue({})
+      .useValue(mockQuestionRepository)
       .compile();
 
     videoService = module.get<VideoService>(VideoService);
@@ -69,6 +77,22 @@ describe('VideoService', () => {
       expect(videoService.createVideo(member, request)).rejects.toThrow(
         ManipulatedTokenNotFiltered,
       );
+    });
+  });
+
+  describe('getPreSignedUrl', () => {
+    it('preSigned URL 얻기 성공시 PreSignedUrlResponse 형식으로 반환된다.', async () => {
+      // given
+      const member = memberFixture;
+      const request = createPreSignedUrlRequestFixture;
+
+      // when
+      const response = await videoService.getPreSignedUrl(member, request);
+      console.log(response);
+      // then
+      expect(response).toBeInstanceOf(PreSignedUrlResponse);
+      expect(response.key.endsWith('.webm')).toBeTruthy(); // 파일명은 반드시 webm이어야 함
+      expect(response.preSignedUrl.startsWith('https://videos')).toBeTruthy(); // 실제 Pre-Signed Url 구조를 따라가는지 확인하기 위함
     });
   });
 });

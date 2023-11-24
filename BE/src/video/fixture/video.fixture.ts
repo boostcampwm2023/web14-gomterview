@@ -1,3 +1,4 @@
+import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
 import { CreateVideoRequest } from '../dto/createVideoRequest';
 import { Video } from '../entity/video';
 
@@ -65,4 +66,8 @@ export const createVideoRequestFixture = new CreateVideoRequest(
   'https://foo.com',
   'https://bar.com',
   '03:29',
+);
+
+export const createPreSignedUrlRequestFixture = new CreatePreSignedUrlRequest(
+  1,
 );

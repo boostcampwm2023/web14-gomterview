@@ -7,7 +7,6 @@ import {
 } from 'src/member/fixture/member.fixture';
 import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
 import { Request, Response } from 'express';
-import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import {
   IDriveException,
@@ -20,6 +19,7 @@ import {
   VideoOfWithdrawnMemberException,
 } from '../exception/video.exception';
 import {
+  createPreSignedUrlRequestFixture,
   createVideoRequestFixture,
   videoFixture,
   videoListFixtureForTest,
@@ -90,7 +90,7 @@ describe('VideoController 단위 테스트', () => {
   });
 
   describe('getPreSignedUrl', () => {
-    const createPreSignedUrlRequest = new CreatePreSignedUrlRequest(1);
+    const createPreSignedUrlRequest = createPreSignedUrlRequestFixture;
 
     it('Pre-Signed URL 발급 완료 시 PreSignedUrlResponse 객체 형태로 응답된다.', async () => {
       //given
