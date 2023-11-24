@@ -224,4 +224,53 @@ describe('VideoService', () => {
       );
     });
   });
+
+  describe('getAllVideosByMemberId', () => {
+    const member = memberFixture;
+
+    it('비디오 전체 조회 성공 시 SingleVideoResponse의 배열의 형태로 반환된다.', async () => {
+      // give
+      const mockVideoList = videoListFixture;
+
+      // when
+      mockVideoRepository.findAllVideosByMemberId.mockResolvedValue(
+        mockVideoList,
+      );
+
+      // then
+      const result = await videoService.getAllVideosByMemberId(member);
+
+      expect(result).toHaveLength(mockVideoList.length);
+      expect(result).toEqual(mockVideoList.map(SingleVideoResponse.from));
+      result.forEach((element) => {
+        expect(element).toBeInstanceOf(SingleVideoResponse);
+      });
+    });
+
+    it('비디오 전체 조회 시 저장된 비디오가 없으면 빈 배열이 반환된다.', async () => {
+      // give
+      const emptyList = [];
+
+      // when
+      mockVideoRepository.findAllVideosByMemberId.mockResolvedValue(emptyList);
+
+      // then
+      const result = await videoService.getAllVideosByMemberId(member);
+
+      expect(result).toHaveLength(0);
+      expect(result).toEqual(emptyList);
+    });
+
+    it('비디오 전체 조회 시 member가 없으면 ManipulatedTokenNotFiltered을 반환한다.', () => {
+      // given
+      const member = undefined;
+
+      // when
+
+      // then
+      expect(videoService.getAllVideosByMemberId(member)).rejects.toThrow(
+        ManipulatedTokenNotFiltered,
+      );
+    });
+  });
 });
