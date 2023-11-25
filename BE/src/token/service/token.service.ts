@@ -69,6 +69,10 @@ export class TokenService {
     }
   }
 
+  async getDevToken() {
+    throw new Error('Method not implemented.');
+  }
+
   private async findByAccessToken(accessToken: string) {
     return await this.tokenRepository.findByAccessToken(accessToken);
   }
