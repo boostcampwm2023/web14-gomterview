@@ -70,7 +70,7 @@ export class TokenService {
   }
 
   async getDevToken() {
-    throw new Error('Method not implemented.');
+    return this.createToken(1); // 1번은 developndd 이메일로 가입한 개발자용 회원임
   }
 
   private async findByAccessToken(accessToken: string) {
