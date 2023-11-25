@@ -31,6 +31,7 @@ import {
   saveToRedis,
 } from 'src/util/redis.util';
 import { SingleVideoResponse } from '../dto/singleVideoResponse';
+import { MemberNotFoundException } from 'src/member/exception/member.exception';
 
 @Injectable()
 export class VideoService {
@@ -82,9 +83,10 @@ export class VideoService {
     const originUrl = await getValueFromRedis(hash);
     const video = await this.videoRepository.findByUrl(originUrl);
     if (!video.isPublic) throw new VideoAccessForbiddenException();
+    if (isEmpty(video.memberId)) throw new VideoOfWithdrawnMemberException();
 
     const videoOwner = await this.memberRepository.findById(video.memberId);
-    if (!videoOwner) throw new VideoOfWithdrawnMemberException();
+    if (isEmpty(videoOwner)) throw new MemberNotFoundException();
 
     return VideoDetailResponse.from(video, videoOwner.nickname, hash);
   }

@@ -27,6 +27,7 @@ import {
 import { VideoDetailResponse } from '../dto/videoDetailResponse';
 import { VideoHashResponse } from '../dto/videoHashResponse';
 import { SingleVideoResponse } from '../dto/singleVideoResponse';
+import { MemberNotFoundException } from 'src/member/exception/member.exception';
 
 describe('VideoController 단위 테스트', () => {
   let controller: VideoController;
@@ -247,6 +248,20 @@ describe('VideoController 단위 테스트', () => {
       // then
       expect(controller.getVideoDetailByHash(hash)).rejects.toThrow(
         VideoOfWithdrawnMemberException,
+      );
+    });
+
+    it('해시로 비디오 조회 시 비디오의 소유자를 찾을 수 없다면 MemberNotFoundException을 반환한다.', async () => {
+      // given
+
+      // when
+      mockVideoService.getVideoDetailByHash.mockRejectedValue(
+        new MemberNotFoundException(),
+      );
+
+      // then
+      expect(controller.getVideoDetailByHash(hash)).rejects.toThrow(
+        MemberNotFoundException,
       );
     });
 
