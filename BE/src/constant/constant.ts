@@ -1,5 +1,7 @@
 import 'dotenv/config';
 
+export const BEARER_PREFIX: string = 'Bearer ';
+
 export const companies = [
   '네이버',
   '카카오',
