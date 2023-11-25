@@ -69,6 +69,10 @@ export class TokenService {
     }
   }
 
+  async getDevToken() {
+    return this.createToken(1); // 1번은 developndd 이메일로 가입한 개발자용 회원임
+  }
+
   private async findByAccessToken(accessToken: string) {
     return await this.tokenRepository.findByAccessToken(accessToken);
   }

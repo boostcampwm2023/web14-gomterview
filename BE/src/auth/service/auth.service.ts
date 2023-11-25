@@ -8,8 +8,7 @@ import { CategoryRepository } from '../../category/repository/category.repositor
 import { QuestionRepository } from '../../question/repository/question.repository';
 import { Category } from '../../category/entity/category';
 import { Question } from '../../question/entity/question';
-
-const BEARER_PREFIX: string = 'Bearer ';
+import { BEARER_PREFIX } from 'src/constant/constant';
 
 @Injectable()
 export class AuthService {
