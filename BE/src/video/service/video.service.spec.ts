@@ -17,13 +17,16 @@ import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { S3 } from 'aws-sdk';
 import {
   IDriveException,
+  RedisRetrieveException,
   VideoAccessForbiddenException,
   VideoNotFoundException,
+  VideoOfWithdrawnMemberException,
 } from '../exception/video.exception';
 import { VideoDetailResponse } from '../dto/videoDetailResponse';
 import * as crypto from 'crypto';
 import { SingleVideoResponse } from '../dto/singleVideoResponse';
 import { getValueFromRedis } from 'src/util/redis.util';
+jest.mock('src/util/redis.util');
 
 describe('VideoService', () => {
   let videoService: VideoService;
@@ -221,6 +224,90 @@ describe('VideoService', () => {
       // then
       expect(videoService.getVideoDetail(videoId, member)).rejects.toThrow(
         VideoAccessForbiddenException,
+      );
+    });
+  });
+
+  describe('getVideoDetailByHash', () => {
+    const hash = 'fakeHash';
+    const url = 'fakeUrl';
+    const member = memberFixture;
+
+    it('해시로 비디오 상세 정보 조회 성공 시 VideoDetailResponse 형식으로 반환된다.', async () => {
+      // given
+      const video = videoFixture;
+
+      // when
+      const mockedGetValueFromRedis = // redis 비동기 처리가 종료되지 않아 이를 처리하기 위해 모킹
+        getValueFromRedis as unknown as jest.MockedFunction<
+          typeof getValueFromRedis
+        >;
+      mockedGetValueFromRedis.mockResolvedValue(url);
+
+      mockVideoRepository.findByUrl.mockResolvedValue(video);
+      mockMemberRepository.findById.mockResolvedValue(member);
+      const response = await videoService.getVideoDetailByHash(hash);
+
+      // then
+      expect(response).toBeInstanceOf(VideoDetailResponse);
+      expect(response.id).toBe(video.getId());
+      expect(response.nickname).toBe(member.nickname);
+      expect(response.url).toBe(video.url);
+      expect(response.videoName).toBe(video.name);
+      expect(response.hash).toBe(hash);
+    });
+
+    it('해시로 비디오 상세 정보 조회 시 redis에서 중 오류가 발생하면 RedisRetrieveException을 반환한다.', () => {
+      // given
+
+      // when
+      const mockedGetValueFromRedis =
+        getValueFromRedis as unknown as jest.MockedFunction<
+          typeof getValueFromRedis
+        >;
+      mockedGetValueFromRedis.mockRejectedValue(new RedisRetrieveException());
+
+      // then
+      expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
+        RedisRetrieveException,
+      );
+    });
+
+    it('해시로 비디오 상세 정보 조회 시 비디오가 공개 상태가 아니라면 VideoAccessForbiddenException을 반환한다.', () => {
+      // given
+      const video = privateVideoFixture;
+
+      // when
+      const mockedGetValueFromRedis =
+        getValueFromRedis as unknown as jest.MockedFunction<
+          typeof getValueFromRedis
+        >;
+      mockedGetValueFromRedis.mockResolvedValue(url);
+      mockVideoRepository.findByUrl.mockResolvedValue(video);
+      mockMemberRepository.findById.mockResolvedValue(member);
+
+      // then
+      expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
+        VideoAccessForbiddenException,
+      );
+    });
+
+    it('해시로 비디오 상세 정보 조회 시 비디오가 삭제된 회원의 비디오라면 VideoOfWithdrawnMemberException을 반환한다.', () => {
+      // given
+      const video = videoFixture;
+
+      // when
+      const mockedGetValueFromRedis =
+        getValueFromRedis as unknown as jest.MockedFunction<
+          typeof getValueFromRedis
+        >;
+      mockedGetValueFromRedis.mockResolvedValue(url);
+      mockVideoRepository.findByUrl.mockResolvedValue(video);
+      mockMemberRepository.findById.mockResolvedValue(undefined);
+
+      // then
+      expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
+        VideoOfWithdrawnMemberException,
       );
     });
   });
