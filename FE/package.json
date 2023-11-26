@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npx webpack build --mode production --env production=true",
+    "build": "npx webpack build --mode production --env mode=production",
     "start": "webpack --mode development --env production=false",
-    "dev": "webpack serve --mode development --open --hot --env production=false"
+    "dev": "webpack serve --mode development --open --hot --env mode=development",
+    "local": "webpack serve --mode development --open --hot --env mode=local"
   },
   "author": "",
   "license": "ISC",
