@@ -5,7 +5,6 @@ import Icon from '@foundation/Icon/Icon';
 import { HTMLElementTypes } from '@/types/utils';
 import useUserInfo from '@hooks/useUserInfo';
 import { API, BASE_URL } from '@constants/api';
-import cookieGenerator from '@/dev/cookieGenerator';
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '@constants/path';
 
@@ -17,7 +16,9 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ ...args }) => {
 
   const handleGoogleLogin = async () => {
     if (process.env.NODE_ENV === 'development') {
-      await cookieGenerator().then((_) => navigate(PATH.MYPAGE));
+      const { cookieGenerator } = await import('@/dev/cookieGenerator');
+      void (await cookieGenerator());
+      navigate(PATH.MYPAGE);
       return;
     }
 
@@ -27,7 +28,7 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ ...args }) => {
   return (
     !userInfo && (
       <button
-        onClick={() => handleGoogleLogin()}
+        onClick={() => void handleGoogleLogin()}
         css={css`
           display: flex;
           align-items: center;
