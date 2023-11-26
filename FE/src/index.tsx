@@ -8,7 +8,9 @@ async function deferRender() {
   if (process.env.NODE_ENV !== 'development') {
     return;
   }
-  return worker.start();
+  return worker.start({
+    onUnhandledRequest: 'bypass',
+  });
 }
 
 //GA 추적 태그 설정
