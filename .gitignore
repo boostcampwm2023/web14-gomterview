@@ -1,8 +1,7 @@
 node_modules
 dist
-.env
-.env.production
-.env.development
+.env.*
 *.log
 .vscode
 .idea
+src/dev/
