@@ -2,7 +2,7 @@ import Box from '@foundation/Box/Box';
 import Button from '@foundation/Button/Button';
 import InputArea from '@foundation/InputArea/InputArea';
 import Typography from '@foundation/Typography/Typography';
-import useQuestionAnswerMutation from '@hooks/mutations/useQuestionAnswerMutation';
+import useQuestionAnswerMutation from '@/hooks/apis/mutations/useQuestionAnswerMutation';
 import useInput from '@hooks/useInput';
 import { css } from '@emotion/react';
 

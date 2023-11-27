@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import useQuestionMutation from './mutations/useQuestionMutation';
+import useQuestionMutation from './apis/mutations/useQuestionMutation';
 import useUserInfo from './useUserInfo';
 import { Question } from '@/types/question';
 import { QUERY_KEY } from '@/constants/queryKey';

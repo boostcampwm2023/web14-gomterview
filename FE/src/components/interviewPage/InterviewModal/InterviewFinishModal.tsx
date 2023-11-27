@@ -6,7 +6,7 @@ import Button from '@foundation/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '@constants/path';
 import Confetti from 'react-confetti';
-import useWindowSize from '@hooks/pages/Interview/useWindowSize';
+import useWindowSize from '@/hooks/useWindowSize';
 import useUserInfo from '@hooks/useUserInfo';
 
 type InterviewFinishModalProps = {

@@ -1,6 +1,6 @@
 import InterviewVideoPageLayout from '@components/interviewVideoPage/InterviewVideoPageLayout';
 import { useParams } from 'react-router-dom';
-import useVideoItemQuery from '@hooks/queries/video/useVideoItemQuery';
+import useVideoItemQuery from '@/hooks/apis/queries/useVideoItemQuery';
 import LoadingBounce from '@common/Loading/LoadingBounce';
 import CenterLayout from '@components/layout/CenterLayout';
 import StartButton from '@common/StartButton/StartButton';

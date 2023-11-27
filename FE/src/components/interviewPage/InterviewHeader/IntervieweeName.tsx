@@ -1,7 +1,7 @@
 import Typography from '@foundation/Typography/Typography';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
-import useMemberNameQuery from '@hooks/queries/useMemberNameQuery';
+import useMemberNameQuery from '@/hooks/apis/queries/useMemberNameQuery';
 
 const IntervieweeName: React.FC = () => {
   const { data } = useMemberNameQuery();

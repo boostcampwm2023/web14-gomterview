@@ -7,7 +7,7 @@ import Tabs from '@foundation/Tabs';
 import { useState } from 'react';
 import SelectionBox from '@foundation/SelectionBox/SelectionBox';
 import TabPanelItem from './QuestionTabPanelItem';
-import useCategoryQuery from '@hooks/queries/useCategoryQuery';
+import useCategoryQuery from '@/hooks/apis/queries/useCategoryQuery';
 import AnswerSelectionModal from '@common/QuestionSelectionBox/AnswerSelectionModal/AnswerSelectionModal';
 import { useRecoilState } from 'recoil';
 import { QuestionAnswerSelectionModal } from '@atoms/modal';

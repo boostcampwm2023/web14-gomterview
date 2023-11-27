@@ -3,8 +3,8 @@ import { useRecoilValue } from 'recoil';
 import { recordSetting } from '@/atoms/interviewSetting';
 import useMedia from '@/hooks/useMedia';
 import { localDownload, startRecording, stopRecording } from '@/utils/record';
-import { useUploadToIDrive } from '@/hooks/pages/Interview/useUploadToIdrive';
-import useTimeTracker from '@/hooks/pages/Interview/useTimeTracker';
+import { useUploadToIDrive } from '@/hooks/useUploadToIdrive';
+import useTimeTracker from '@/hooks/useTimeTracker';
 import useInterviewFlow from '@hooks/pages/Interview/useInterviewFlow';
 import useInterviewSettings from '@/hooks/atoms/useInterviewSettings';
 

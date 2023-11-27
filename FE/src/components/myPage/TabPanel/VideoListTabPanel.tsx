@@ -3,10 +3,10 @@ import Box from '@foundation/Box/Box';
 import { css } from '@emotion/react';
 import VideoItem from '@components/myPage/VideoItem/VideoItem';
 import Thumbnail from '@components/myPage/Thumbnail';
-import useVideoListQuery from '@hooks/queries/video/useVideoListQuery';
+import useVideoListQuery from '@/hooks/apis/queries/useVideoListQuery';
 import { PATH } from '@constants/path';
 import { theme } from '@styles/theme';
-import useDeleteVideoMutation from '@hooks/mutations/video/useDeleteVideoMutation';
+import useDeleteVideoMutation from '@/hooks/apis/mutations/useDeleteVideoMutation';
 import DeleteCheckModal from '@components/myPage/DeleteCheckModal';
 import { useState } from 'react';
 
