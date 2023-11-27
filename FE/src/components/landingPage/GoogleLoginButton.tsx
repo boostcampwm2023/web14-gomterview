@@ -14,8 +14,10 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ ...args }) => {
   const userInfo = useUserInfo();
   const navigate = useNavigate();
 
-  const handleGoogleLogin = () => {
-    if (userInfo) {
+  const handleGoogleLogin = async () => {
+    if (process.env.NODE_ENV === 'development') {
+      const { cookieGenerator } = await import('@/dev/cookieGenerator');
+      void (await cookieGenerator());
       navigate(PATH.MYPAGE);
       return;
     }
@@ -23,9 +25,11 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ ...args }) => {
     window.location.href = `${BASE_URL}${API.LOGIN}`;
   };
 
+  if (userInfo) return null;
+
   return (
     <button
-      onClick={handleGoogleLogin}
+      onClick={() => void handleGoogleLogin()}
       css={css`
         display: flex;
         align-items: center;
@@ -43,9 +47,9 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ ...args }) => {
       `}
       {...args}
     >
-      {!userInfo && <Icon id="google-logo" width="1.25rem" height="1.25rem" />}
+      <Icon id="google-logo" width="1.25rem" height="1.25rem" />
       <Typography variant="title3" color={theme.colors.text.default}>
-        {userInfo ? '마이페이지로 이동하기' : 'Google로 시작하기'}
+        Google로 시작하기
       </Typography>
     </button>
   );
