@@ -5,6 +5,7 @@ import { memberFixture } from 'src/member/fixture/member.fixture';
 import { QuestionRepository } from 'src/question/repository/question.repository';
 import { MemberRepository } from 'src/member/repository/member.repository';
 import {
+  VideoOfWithdrawnMemberFixture,
   createPreSignedUrlRequestFixture,
   createVideoRequestFixture,
   privateVideoFixture,
@@ -26,6 +27,7 @@ import { VideoDetailResponse } from '../dto/videoDetailResponse';
 import * as crypto from 'crypto';
 import { SingleVideoResponse } from '../dto/singleVideoResponse';
 import { getValueFromRedis } from 'src/util/redis.util';
+import { MemberNotFoundException } from 'src/member/exception/member.exception';
 jest.mock('src/util/redis.util');
 
 describe('VideoService', () => {
@@ -294,6 +296,25 @@ describe('VideoService', () => {
 
     it('해시로 비디오 상세 정보 조회 시 비디오가 삭제된 회원의 비디오라면 VideoOfWithdrawnMemberException을 반환한다.', () => {
       // given
+      const video = VideoOfWithdrawnMemberFixture;
+
+      // when
+      const mockedGetValueFromRedis =
+        getValueFromRedis as unknown as jest.MockedFunction<
+          typeof getValueFromRedis
+        >;
+      mockedGetValueFromRedis.mockResolvedValue(url);
+      mockVideoRepository.findByUrl.mockResolvedValue(video);
+      mockMemberRepository.findById.mockResolvedValue(member);
+
+      // then
+      expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
+        VideoOfWithdrawnMemberException,
+      );
+    });
+
+    it('해시로 비디오 상세 정보 조회 시 비디오가 삭제된 회원의 비디오라면 MemberNotFoundException을 반환한다.', () => {
+      // given
       const video = videoFixture;
 
       // when
@@ -307,7 +328,7 @@ describe('VideoService', () => {
 
       // then
       expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
-        VideoOfWithdrawnMemberException,
+        MemberNotFoundException,
       );
     });
   });

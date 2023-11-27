@@ -80,6 +80,16 @@ export const videoOfOtherFixture = new Video(
   false,
 );
 
+export const VideoOfWithdrawnMemberFixture = new Video(
+  null,
+  1,
+  '루이뷔통통튀기네',
+  'https://test.com',
+  'https://thumbnail-test.com',
+  '03:29',
+  true,
+);
+
 export const createVideoRequestFixture = new CreateVideoRequest(
   1,
   'foobar.webm',
