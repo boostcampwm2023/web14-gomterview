@@ -29,6 +29,8 @@ import { QuestionRepository } from '../repository/question.repository';
 import { Answer } from '../../answer/entity/answer';
 import { WorkbookRepository } from '../../workbook/repository/workbook.repository';
 import { workbookFixture } from '../../workbook/fixture/workbook.fixture';
+import { WorkbookModule } from '../../workbook/workbook.module';
+import { Workbook } from '../../workbook/entity/workbook';
 
 describe('QuestionController', () => {
   let controller: QuestionController;
@@ -114,8 +116,8 @@ describe('QuestionController 통합테스트', () => {
   let questionRepository: QuestionRepository;
 
   beforeAll(async () => {
-    const modules = [QuestionModule, TokenModule, AuthModule];
-    const entities = [Member, Token, WorkbookRepository, Question, Answer];
+    const modules = [QuestionModule, TokenModule, AuthModule, WorkbookModule];
+    const entities = [Member, Token, Workbook, Question, Answer];
 
     const moduleFixture: TestingModule = await createIntegrationTestModule(
       modules,

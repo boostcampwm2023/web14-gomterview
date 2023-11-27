@@ -8,19 +8,17 @@ import { Question } from '../../question/entity/question';
 import { Answer } from '../entity/answer';
 import { AnswerResponse } from '../dto/answerResponse';
 import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
-import { CategoryRepository } from '../../category/repository/category.repository';
-import { CategoryForbiddenException } from '../../category/exception/category.exception';
 import { validateAnswer } from '../util/answer.util';
 import { validateQuestion } from '../../question/util/question.util';
 import { AnswerForbiddenException } from '../exception/answer.exception';
 import { WorkbookRepository } from '../../workbook/repository/workbook.repository';
+import { WorkbookForbiddenException } from '../../workbook/exception/workbook.exception';
 
 @Injectable()
 export class AnswerService {
   constructor(
     private answerRepository: AnswerRepository,
     private questionRepository: QuestionRepository,
-    private categoryRepository: CategoryRepository,
     private workbookRepository: WorkbookRepository,
   ) {}
 
@@ -53,7 +51,7 @@ export class AnswerService {
     );
 
     if (!workbook.isOwnedBy(member)) {
-      throw new CategoryForbiddenException();
+      throw new WorkbookForbiddenException();
     }
 
     const answer = await this.answerRepository.findById(

@@ -6,4 +6,10 @@ class WorkbookNotFoundException extends HttpException {
   }
 }
 
-export { WorkbookNotFoundException };
+class WorkbookForbiddenException extends HttpException {
+  constructor() {
+    super('문제집에 대한 권한이 없습니다.', 403);
+  }
+}
+
+export { WorkbookNotFoundException, WorkbookForbiddenException };

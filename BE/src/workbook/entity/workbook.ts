@@ -2,7 +2,7 @@ import { DefaultEntity } from '../../app.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Member } from '../../member/entity/member';
 
-@Entity()
+@Entity({ name: 'Workbook' })
 export class Workbook extends DefaultEntity {
   @Column()
   name: string;

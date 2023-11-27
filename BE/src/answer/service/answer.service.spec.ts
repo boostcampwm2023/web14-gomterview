@@ -9,16 +9,13 @@ import { CreateAnswerRequest } from '../dto/createAnswerRequest';
 import { AnswerResponse } from '../dto/answerResponse';
 import { QuestionNotFoundException } from '../../question/exception/question.exception';
 import { INestApplication } from '@nestjs/common';
-import { CategoryRepository } from '../../category/repository/category.repository';
 import { MemberRepository } from '../../member/repository/member.repository';
-import { CategoryModule } from '../../category/category.module';
 import { MemberModule } from '../../member/member.module';
 import { AnswerModule } from '../answer.module';
 import { Question } from '../../question/entity/question';
 import { Category } from '../../category/entity/category';
 import { Member } from '../../member/entity/member';
 import { createIntegrationTestModule } from '../../util/test.util';
-import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { QuestionModule } from '../../question/question.module';
 import {
   answerFixture,
@@ -31,6 +28,13 @@ import {
   AnswerForbiddenException,
   AnswerNotFoundException,
 } from '../exception/answer.exception';
+import { WorkbookRepository } from '../../workbook/repository/workbook.repository';
+import {
+  workbookFixture,
+  workbookFixtureWithId,
+} from '../../workbook/fixture/workbook.fixture';
+import { Workbook } from '../../workbook/entity/workbook';
+import { WorkbookModule } from '../../workbook/workbook.module';
 
 describe('AnswerService 단위 테스트', () => {
   let service: AnswerService;
@@ -44,8 +48,8 @@ describe('AnswerService 단위 테스트', () => {
     save: jest.fn(),
   };
 
-  const mockCategoryRepository = {
-    findByCategoryId: jest.fn(),
+  const mockWorkbookRepository = {
+    findById: jest.fn(),
   };
 
   beforeAll(async () => {
@@ -54,15 +58,15 @@ describe('AnswerService 단위 테스트', () => {
         AnswerService,
         AnswerRepository,
         QuestionRepository,
-        CategoryRepository,
+        WorkbookRepository,
       ],
     })
       .overrideProvider(AnswerRepository)
       .useValue(mockAnswerRepository)
       .overrideProvider(QuestionRepository)
       .useValue(mockQuestionRepository)
-      .overrideProvider(CategoryRepository)
-      .useValue(mockCategoryRepository)
+      .overrideProvider(WorkbookRepository)
+      .useValue(mockWorkbookRepository)
       .compile();
 
     service = module.get<AnswerService>(AnswerService);
@@ -113,9 +117,7 @@ describe('AnswerService 단위 테스트', () => {
       //when
       mockQuestionRepository.findById.mockResolvedValue(questionFixture);
       mockQuestionRepository.save.mockResolvedValue(questionFixture);
-      mockCategoryRepository.findByCategoryId.mockResolvedValue(
-        categoryFixtureWithId,
-      );
+      mockWorkbookRepository.findById.mockResolvedValue(workbookFixtureWithId);
       mockAnswerRepository.findById.mockResolvedValue(answerFixture);
 
       //then
@@ -129,9 +131,7 @@ describe('AnswerService 단위 테스트', () => {
 
       //when
       mockQuestionRepository.findById.mockResolvedValue(undefined);
-      mockCategoryRepository.findByCategoryId.mockResolvedValue(
-        categoryFixtureWithId,
-      );
+      mockWorkbookRepository.findById.mockResolvedValue(workbookFixtureWithId);
       mockAnswerRepository.findById.mockResolvedValue(answerFixture);
 
       //then
@@ -145,9 +145,11 @@ describe('AnswerService 단위 테스트', () => {
 
       //when
       mockQuestionRepository.findById.mockResolvedValue(questionFixture);
-      mockCategoryRepository.findByCategoryId.mockResolvedValue(
-        Category.from(
-          categoryFixtureWithId,
+      mockWorkbookRepository.findById.mockResolvedValue(
+        Workbook.of(
+          'FE 테스트',
+          '테스트용 FE 문제집입니다.',
+          'FE',
           new Member(
             100,
             'janghee@janghee.com',
@@ -169,7 +171,7 @@ describe('AnswerService 단위 테스트', () => {
 
 describe('AnswerService 통합테스트', () => {
   let app: INestApplication;
-  let categoryRepository: CategoryRepository;
+  let workbookRepository: WorkbookRepository;
   let questionRepository: QuestionRepository;
   let memberRepository: MemberRepository;
   let answerRepository: AnswerRepository;
@@ -177,12 +179,12 @@ describe('AnswerService 통합테스트', () => {
 
   beforeAll(async () => {
     const modules = [
-      CategoryModule,
       MemberModule,
       AnswerModule,
       QuestionModule,
+      WorkbookModule,
     ];
-    const entities = [Answer, Question, Category, Member, Answer];
+    const entities = [Answer, Question, Category, Member, Answer, Workbook];
 
     const moduleFixture = await createIntegrationTestModule(modules, entities);
     app = moduleFixture.createNestApplication();
@@ -190,29 +192,27 @@ describe('AnswerService 통합테스트', () => {
 
     answerService = moduleFixture.get<AnswerService>(AnswerService);
     answerRepository = moduleFixture.get<AnswerRepository>(AnswerRepository);
-    categoryRepository =
-      moduleFixture.get<CategoryRepository>(CategoryRepository);
+    workbookRepository =
+      moduleFixture.get<WorkbookRepository>(WorkbookRepository);
     questionRepository =
       moduleFixture.get<QuestionRepository>(QuestionRepository);
     memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
   });
 
   beforeEach(async () => {
-    await categoryRepository.query('delete from Answer');
-    await categoryRepository.query('delete from Question');
-    await categoryRepository.query('delete from Category');
-    await categoryRepository.query('delete from Member');
+    await workbookRepository.query('delete from Answer');
+    await workbookRepository.query('delete from Question');
+    await workbookRepository.query('delete from Category');
+    await workbookRepository.query('delete from Member');
   });
 
   describe('답변 추가', () => {
     it('질문에 대한 응답을 추가할 수 있다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(categoryFixtureWithId, member),
-      );
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'testQuestion'),
+        Question.of(workbook, null, 'testQuestion'),
       );
 
       //when
@@ -237,14 +237,12 @@ describe('AnswerService 통합테스트', () => {
     it('복사된 질문에 답변을 추가해도, 원본 질문에 저장된다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(categoryFixtureWithId, member),
-      );
+      const workbook = await workbookRepository.save(workbookFixture);
       const originalQuestion = await questionRepository.save(
-        Question.of(category, null, 'originalQuestion'),
+        Question.of(workbook, null, 'originalQuestion'),
       );
       const question = await questionRepository.save(
-        Question.of(category, originalQuestion, 'testQuestion'),
+        Question.of(workbook, originalQuestion, 'testQuestion'),
       );
 
       //when
@@ -271,11 +269,9 @@ describe('AnswerService 통합테스트', () => {
     it('Member와 알맞은 Questin이 온다면, 정상적으로 대표 답변을 설정해준다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(categoryFixtureWithId, member),
-      );
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'test'),
+        Question.of(workbook, null, 'test'),
       );
       const answer = await answerRepository.save(
         Answer.of('test', member, question),
@@ -306,11 +302,9 @@ describe('AnswerService 통합테스트', () => {
           new Date(),
         ),
       );
-      const category = await categoryRepository.save(
-        Category.from(categoryFixtureWithId, member),
-      );
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'test'),
+        Question.of(workbook, null, 'test'),
       );
       for (let index = 1; index <= 10; index++) {
         await answerRepository.save(
@@ -331,11 +325,9 @@ describe('AnswerService 통합테스트', () => {
     it('대표답변으로 설정하면 처음으로 온다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(categoryFixtureWithId, member),
-      );
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'test'),
+        Question.of(workbook, null, 'test'),
       );
       for (let index = 1; index <= 10; index++) {
         await answerRepository.save(
@@ -360,11 +352,9 @@ describe('AnswerService 통합테스트', () => {
     it('답변을 삭제할 때 대표답변이라면 답변을 삭제하고 게시물의 대표답변은 null이 된다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(categoryFixtureWithId, member),
-      );
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'test'),
+        Question.of(workbook, null, 'test'),
       );
       const answer = await answerRepository.save(
         Answer.of(`defaultAnswer`, member, question),
@@ -394,11 +384,9 @@ describe('AnswerService 통합테스트', () => {
           new Date(),
         ),
       );
-      const category = await categoryRepository.save(
-        Category.from(categoryFixtureWithId, member),
-      );
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'test'),
+        Question.of(workbook, null, 'test'),
       );
       const answer = await answerRepository.save(
         Answer.of(`defaultAnswer`, member, question),
@@ -426,11 +414,9 @@ describe('AnswerService 통합테스트', () => {
           new Date(),
         ),
       );
-      const category = await categoryRepository.save(
-        Category.from(categoryFixtureWithId, member),
-      );
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'test'),
+        Question.of(workbook, null, 'test'),
       );
       const answer = await answerRepository.save(
         Answer.of(`defaultAnswer`, member, question),
