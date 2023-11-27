@@ -147,7 +147,7 @@ describe('AnswerController 통합테스트', () => {
   beforeEach(async () => {
     await workbookRepository.query('delete from Answer');
     await workbookRepository.query('delete from Question');
-    await workbookRepository.query('delete from Category');
+    await workbookRepository.query('delete from Workbook');
     await workbookRepository.query('delete from Member');
   });
 
@@ -173,6 +173,7 @@ describe('AnswerController 통합테스트', () => {
 
     it('쿠키를 가지고 복사된 질문에 답변 생성을 요청하면 원본에 대한 답변으로 저장하고 201코드와 생성된 질문의 Response가 반환된다.', async () => {
       //given
+      const member = await memberRepository.save(memberFixture);
       const token = await authService.login(memberFixturesOAuthRequest);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
@@ -194,6 +195,7 @@ describe('AnswerController 통합테스트', () => {
 
     it('쿠키가 존재하지 않으면 401에러를 반환한다.', async () => {
       //given
+      const member = await memberRepository.save(memberFixture);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'testQuestion'),
@@ -227,6 +229,7 @@ describe('AnswerController 통합테스트', () => {
 
     it('content가 존재하지 않으면 400코드를 반환한다.', async () => {
       //given
+      const member = await memberRepository.save(memberFixture);
       const token = await authService.login(memberFixturesOAuthRequest);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
@@ -328,6 +331,7 @@ describe('AnswerController 통합테스트', () => {
 
     it('답변 id가 존재하지 않으면 404코드를 반환한다', async () => {
       //given
+      const member = await memberRepository.save(memberFixture);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'testQuestion'),
@@ -476,11 +480,6 @@ describe('AnswerController 통합테스트', () => {
 
     it('답변이 없으면 404에러를 반환한다.', async () => {
       //given
-      const member = await memberRepository.save(memberFixture);
-      const workbook = await workbookRepository.save(workbookFixture);
-      const question = await questionRepository.save(
-        Question.of(workbook, null, 'testQuestion'),
-      );
 
       //when&then
       const token = await authService.login(oauthRequestFixture);

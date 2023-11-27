@@ -31,6 +31,7 @@ import { WorkbookRepository } from '../../workbook/repository/workbook.repositor
 import { workbookFixture } from '../../workbook/fixture/workbook.fixture';
 import { WorkbookModule } from '../../workbook/workbook.module';
 import { Workbook } from '../../workbook/entity/workbook';
+import { MemberRepository } from '../../member/repository/member.repository';
 
 describe('QuestionController', () => {
   let controller: QuestionController;
@@ -114,6 +115,7 @@ describe('QuestionController 통합테스트', () => {
   let workbookRepository: WorkbookRepository;
   let authService: AuthService;
   let questionRepository: QuestionRepository;
+  let memberRepository: MemberRepository;
 
   beforeAll(async () => {
     const modules = [QuestionModule, TokenModule, AuthModule, WorkbookModule];
@@ -134,6 +136,7 @@ describe('QuestionController 통합테스트', () => {
     authService = moduleFixture.get<AuthService>(AuthService);
     questionRepository =
       moduleFixture.get<QuestionRepository>(QuestionRepository);
+    memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
   });
 
   it('쿠키를 가지고 질문 생성을 요청하면 201코드와 생성된 질문의 Response가 반환된다.', async () => {

@@ -1,6 +1,5 @@
 import { DefaultEntity } from '../../app.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { Category } from '../../category/entity/category';
 import { Answer } from '../../answer/entity/answer';
 import { Workbook } from '../../workbook/entity/workbook';
 
@@ -9,8 +8,8 @@ export class Question extends DefaultEntity {
   @Column({ type: 'text' })
   readonly content: string;
 
-  @ManyToOne(() => Category, { onDelete: 'CASCADE', eager: true })
-  @JoinColumn({ name: 'category' })
+  @ManyToOne(() => Workbook, { onDelete: 'CASCADE', eager: true })
+  @JoinColumn({ name: 'workbook' })
   readonly workbook: Workbook;
 
   @ManyToOne(() => Question, { nullable: true, onDelete: 'CASCADE' })
