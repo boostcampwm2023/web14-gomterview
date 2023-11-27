@@ -4,6 +4,7 @@ import { VideoService } from '../service/video.service';
 import {
   memberFixture,
   mockReqWithMemberFixture,
+  oauthRequestFixture,
 } from 'src/member/fixture/member.fixture';
 import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
 import { Request, Response } from 'express';
@@ -28,6 +29,23 @@ import { VideoDetailResponse } from '../dto/videoDetailResponse';
 import { VideoHashResponse } from '../dto/videoHashResponse';
 import { SingleVideoResponse } from '../dto/singleVideoResponse';
 import { MemberNotFoundException } from 'src/member/exception/member.exception';
+import { INestApplication } from '@nestjs/common';
+import { Video } from '../entity/video';
+import { VideoModule } from '../video.module';
+import { addAppModules, createIntegrationTestModule } from 'src/util/test.util';
+import { Member } from 'src/member/entity/member';
+import { Question } from 'src/question/entity/question';
+import { Workbook } from 'src/workbook/entity/workbook';
+import { Answer } from 'src/answer/entity/answer';
+import { AuthService } from 'src/auth/service/auth.service';
+import { AuthModule } from 'src/auth/auth.module';
+import { Token } from 'src/token/entity/token';
+import * as request from 'supertest';
+import { QuestionRepository } from 'src/question/repository/question.repository';
+import { questionFixture } from 'src/question/fixture/question.fixture';
+import { workbookFixtureWithId } from 'src/workbook/fixture/workbook.fixture';
+import { WorkbookRepository } from 'src/workbook/repository/workbook.repository';
+import 'dotenv/config';
 
 describe('VideoController 단위 테스트', () => {
   let controller: VideoController;
@@ -561,5 +579,74 @@ describe('VideoController 단위 테스트', () => {
         VideoAccessForbiddenException,
       );
     });
+  });
+});
+
+describe('VideoController 통합테스트', () => {
+  let app: INestApplication;
+  let authService: AuthService;
+  let questionRepository: QuestionRepository;
+  let workbookRepository: WorkbookRepository;
+
+  beforeAll(async () => {
+    const modules = [VideoModule, AuthModule];
+    const entities = [Video, Member, Question, Workbook, Answer, Token];
+
+    const moduleFixture: TestingModule = await createIntegrationTestModule(
+      modules,
+      entities,
+    );
+
+    app = moduleFixture.createNestApplication();
+    addAppModules(app);
+    await app.init();
+
+    authService = moduleFixture.get<AuthService>(AuthService);
+    questionRepository =
+      moduleFixture.get<QuestionRepository>(QuestionRepository);
+    workbookRepository =
+      moduleFixture.get<WorkbookRepository>(WorkbookRepository);
+  });
+
+  describe('createVideo', () => {
+    it('쿠키를 가지고 비디오 생성을 요청하면 201 상태 코드와 undefined가 반환된다.', async () => {
+      // given
+      const token = await authService.login(oauthRequestFixture);
+      await workbookRepository.save(workbookFixtureWithId);
+      await questionRepository.save(questionFixture);
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .post('/api/video')
+        .set('Cookie', [`accessToken=${token}`])
+        .send(createVideoRequestFixture)
+        .expect(201)
+        .expect((res) => {
+          expect(res.body).toStrictEqual({});
+        });
+    });
+
+    it('쿠키 없이 비디오 생성을 요청하면 Unauthorized 예외가 반환된다.', async () => {
+      // given
+      await authService.login(oauthRequestFixture);
+      await workbookRepository.save(workbookFixtureWithId);
+      await questionRepository.save(questionFixture);
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .post('/api/video')
+        .send(createVideoRequestFixture)
+        .expect(401);
+    });
+  });
+
+  afterEach(async () => {
+    await questionRepository.query('delete from token');
+    await questionRepository.query('delete from Question');
+    await questionRepository.query('delete from Member');
+    await questionRepository.query('delete from Workbook');
+    await questionRepository.query('DELETE FROM sqlite_sequence'); // Auto Increment 초기화
   });
 });
