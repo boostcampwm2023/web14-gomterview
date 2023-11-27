@@ -1,7 +1,6 @@
 import Button from '@foundation/Button/Button';
 import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
-import LightButton from '@common/LightButton/LightButton';
 import { PATH } from '@constants/path';
 
 type VideoShareModalFooterProps = {
@@ -34,7 +33,8 @@ const VideoShareModalFooter: React.FC<VideoShareModalFooterProps> = ({
         column-gap: 0.5rem;
       `}
     >
-      <LightButton
+      <Button
+        variants="secondary"
         onClick={() => void handleCopyLink()}
         disabled={!hash}
         css={css`
@@ -43,7 +43,7 @@ const VideoShareModalFooter: React.FC<VideoShareModalFooterProps> = ({
         `}
       >
         링크 복사
-      </LightButton>
+      </Button>
       <Button onClick={closeModal}>완료</Button>
     </div>
   );
