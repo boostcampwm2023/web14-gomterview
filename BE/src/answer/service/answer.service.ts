@@ -13,6 +13,7 @@ import { CategoryForbiddenException } from '../../category/exception/category.ex
 import { validateAnswer } from '../util/answer.util';
 import { validateQuestion } from '../../question/util/question.util';
 import { AnswerForbiddenException } from '../exception/answer.exception';
+import { WorkbookRepository } from '../../workbook/repository/workbook.repository';
 
 @Injectable()
 export class AnswerService {
@@ -20,6 +21,7 @@ export class AnswerService {
     private answerRepository: AnswerRepository,
     private questionRepository: QuestionRepository,
     private categoryRepository: CategoryRepository,
+    private workbookRepository: WorkbookRepository,
   ) {}
 
   async addAnswer(createAnswerRequest: CreateAnswerRequest, member: Member) {
@@ -46,11 +48,11 @@ export class AnswerService {
     );
     validateQuestion(question);
 
-    const category = await this.categoryRepository.findByCategoryId(
-      question.category.id,
+    const workbook = await this.workbookRepository.findById(
+      question.workbook.id,
     );
 
-    if (!category.isOwnedBy(member)) {
+    if (!workbook.isOwnedBy(member)) {
       throw new CategoryForbiddenException();
     }
 
