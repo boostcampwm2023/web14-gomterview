@@ -1,7 +1,6 @@
-import Typography from '@foundation/Typography/Typography';
 import { css } from '@emotion/react';
+import { Typography } from '@foundation/index';
 import { theme } from '@styles/theme';
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 type VideoItemProps = {

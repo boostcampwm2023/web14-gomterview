@@ -1,9 +1,12 @@
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
+
+import { Typography } from '@foundation/index';
+
 type InterviewAnswerType = {
   answer: string;
 };
-import Typography from '@/components/foundation/Typography/Typography';
+
 const InterviewAnswer: React.FC<InterviewAnswerType> = ({ answer }) => {
   return (
     <div

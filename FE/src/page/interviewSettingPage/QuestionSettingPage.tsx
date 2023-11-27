@@ -1,8 +1,8 @@
 import { questionSetting } from '@/atoms/interviewSetting';
-import Button from '@/components/foundation/Button/Button';
-import Description from '@/components/interviewSettingPage/Description';
-import QuestionSelectionBox from '@common/QuestionSelectionBox/QuestionSelectionBox';
+import { QuestionSelectionBox } from '@common/index';
+import Description from '@components/interviewSettingPage/Description';
 import { css } from '@emotion/react';
+import { Button } from '@foundation/index';
 import { useRecoilValue } from 'recoil';
 
 type QuestionSettingPageProps = {

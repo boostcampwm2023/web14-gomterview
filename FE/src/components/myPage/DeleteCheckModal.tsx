@@ -1,8 +1,6 @@
-import Modal from '@foundation/Modal';
-import React from 'react';
-import Typography from '@foundation/Typography/Typography';
-import Button from '@foundation/Button/Button';
 import { css } from '@emotion/react';
+import Modal from '@foundation/Modal';
+import { Typography, Button } from '@foundation/index';
 
 type DeleteCheckModalProps = {
   isOpen: boolean;

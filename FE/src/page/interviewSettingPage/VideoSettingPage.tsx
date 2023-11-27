@@ -1,10 +1,10 @@
 import { videoSetting } from '@/atoms/interviewSetting';
-import Button from '@/components/foundation/Button/Button';
-import RecordStatus from '@/components/interviewPage/InterviewHeader/RecordStatus';
-import Description from '@/components/interviewSettingPage/Description';
 import useMedia from '@/hooks/useMedia';
 import { theme } from '@/styles/theme';
+import { RecordStatus } from '@components/interviewPage/InterviewHeader';
+import { Description } from '@components/interviewSettingPage';
 import { css } from '@emotion/react';
+import { Button } from '@foundation/index';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 

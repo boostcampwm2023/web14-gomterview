@@ -1,8 +1,8 @@
-import Layout from '@/components/layout/Layout';
+import { Logo } from '@common/index';
+import Layout from '@components/layout/Layout';
 import { css } from '@emotion/react';
-import MyPageHeader from '@components/myPage/MyPageHeader';
-import Logo from '@common/Logo/Logo';
 import { theme } from '@styles/theme';
+import MyPageHeader from './MyPageHeader';
 
 type MyPageLayoutProps = {
   children: React.ReactNode;

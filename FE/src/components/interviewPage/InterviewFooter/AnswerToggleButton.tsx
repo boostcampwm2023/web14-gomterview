@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
+import { Icon, Typography } from '@foundation/index';
 import { theme } from '@styles/theme';
-import Icon from '@foundation/Icon/Icon';
-import Typography from '@foundation/Typography/Typography';
 
 type AnswerToggleButtonType = {
   handleAnswerToggle: () => void;

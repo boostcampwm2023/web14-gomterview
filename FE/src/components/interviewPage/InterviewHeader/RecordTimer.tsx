@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Typography from '@foundation/Typography/Typography';
 import { css } from '@emotion/react';
-import Icon from '@foundation/Icon/Icon';
+
 import { theme } from '@styles/theme';
+import { Icon, Typography } from '@foundation/index';
 
 interface RecordTimerProps {
   isRecording: boolean;

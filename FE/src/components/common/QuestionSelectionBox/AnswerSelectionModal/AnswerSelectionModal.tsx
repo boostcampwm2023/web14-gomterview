@@ -1,12 +1,12 @@
 import Modal from '@foundation/Modal';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
-import Typography from '@foundation/Typography/Typography';
 import useQuestionAnswerQuery from '@/hooks/apis/queries/useQuestionAnswerQuery';
 import AnswerScript from './AnswerScript';
 import AnswerForm from './AnswerForm';
 import useAnswerDefaultMutation from '@/hooks/apis/mutations/useAnswerDefaultMutation';
 import { Question } from '@/types/question';
+import { Typography } from '@foundation/index';
 
 type AnswerSelectionModalProps = {
   isOpen: boolean;

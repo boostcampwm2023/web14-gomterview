@@ -1,8 +1,7 @@
-import { css } from '@emotion/react';
-import Typography from '@foundation/Typography/Typography';
-import Button from '@foundation/Button/Button';
-import { Link } from 'react-router-dom';
 import { PATH } from '@constants/path';
+import { css } from '@emotion/react';
+import { Typography, Button } from '@foundation/index';
+import { Link } from 'react-router-dom';
 
 const MyPageHeader: React.FC = () => {
   return (

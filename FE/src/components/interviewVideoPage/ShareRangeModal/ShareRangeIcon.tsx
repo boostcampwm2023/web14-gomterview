@@ -1,5 +1,5 @@
-import Icon from '@foundation/Icon/Icon';
 import { css } from '@emotion/react';
+import { Icon } from '@foundation/index';
 import { theme } from '@styles/theme';
 
 type ShareRangeIconProps = {

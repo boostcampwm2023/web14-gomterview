@@ -1,5 +1,5 @@
+import { Logo } from '@common/index';
 import { css } from '@emotion/react';
-import Logo from '@common/Logo/Logo';
 
 const LandingPageHeader: React.FC = () => {
   return (

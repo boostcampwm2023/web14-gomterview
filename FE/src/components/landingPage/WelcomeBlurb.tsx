@@ -1,5 +1,5 @@
-import Typography from '@foundation/Typography/Typography';
 import { css, keyframes } from '@emotion/react';
+import { Typography } from '@foundation/index';
 
 const WelcomeBlurb: React.FC = () => {
   return (

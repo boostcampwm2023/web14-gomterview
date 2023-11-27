@@ -1,8 +1,6 @@
-import Modal from '@foundation/Modal';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
-import Typography from '@foundation/Typography/Typography';
-import Button from '@foundation/Button/Button';
+import { Typography, Modal, Button } from '@foundation/index';
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '@constants/path';
 import useInterviewSettings from '@/hooks/atoms/useInterviewSettings';

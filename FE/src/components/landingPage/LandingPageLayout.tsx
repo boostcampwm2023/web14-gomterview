@@ -1,7 +1,7 @@
-import { css } from '@emotion/react';
-import LandingPageHeader from '@components/landingPage/LandingPageHeader';
 import Layout from '@components/layout/Layout';
+import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
+import LandingPageHeader from './LandingPageHeader';
 
 type LandingPageLayoutProps = {
   children: React.ReactNode;

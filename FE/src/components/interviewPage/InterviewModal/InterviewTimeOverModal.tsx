@@ -1,8 +1,7 @@
-import Modal from '@foundation/Modal';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
-import Typography from '@foundation/Typography/Typography';
-import Button from '@foundation/Button/Button';
+
+import { Typography, Modal, Button } from '@foundation/index';
 
 type InterviewTimeOverModalProps = {
   isOpen: boolean;

@@ -1,13 +1,18 @@
 import { css } from '@emotion/react';
-import InterviewExitButton from './InterviewExitButton';
-import AnswerToggleButton from './AnswerToggleButton';
-import RecordControlButton from './RecordControlButton';
 import NextButton from './NextButton';
-import InterviewExitModal from '@components/interviewPage/InterviewModal/InterviewExitModal';
 import { useState } from 'react';
 import { theme } from '@styles/theme';
-import InterviewFinishModal from '@components/interviewPage/InterviewModal/InterviewFinishModal';
 
+import {
+  InterviewExitButton,
+  AnswerToggleButton,
+  RecordControlButton,
+} from './index';
+
+import {
+  InterviewExitModal,
+  InterviewFinishModal,
+} from '../InterviewModal/index';
 type InterviewFooterProps = {
   isRecording: boolean;
   recordedBlobs: Blob[];

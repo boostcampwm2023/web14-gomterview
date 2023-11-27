@@ -1,4 +1,4 @@
-import QuestionSelectionBox from '@common/QuestionSelectionBox/QuestionSelectionBox';
+import { QuestionSelectionBox } from '@common/index';
 
 const QuestionSelectTabPanel: React.FC = () => {
   return <QuestionSelectionBox />;

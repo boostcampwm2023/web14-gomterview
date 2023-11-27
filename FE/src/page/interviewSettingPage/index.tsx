@@ -1,8 +1,5 @@
-import InterviewSettingPageLayout from '@/components/interviewSettingPage/InterviewSettingPageLayout';
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { SETTING_PATH } from '@/constants/path';
-import StepPage from '@/components/foundation/StepPages';
-import ProgressStepBar from '@/components/common/ProgressStepBar/ProgressStepBar';
 import {
   questionSetting,
   recordSetting,
@@ -13,6 +10,9 @@ import QuestionSettingPage from './QuestionSettingPage';
 import { css } from '@emotion/react';
 import RecordSettingPage from './RecordSettingPage';
 import VideoSettingPage from './VideoSettingPage';
+import { ProgressStepBar } from '@common/index';
+import StepPage from '@foundation/StepPages';
+import { InterviewSettingPageLayout } from '@components/interviewSettingPage';
 
 const FIRST_PAGE_INDEX = 0;
 const PREV_PAGE_INDEX = -1;

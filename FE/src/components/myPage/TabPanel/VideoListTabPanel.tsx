@@ -1,14 +1,14 @@
-import dayjs from 'dayjs';
-import Box from '@foundation/Box/Box';
-import { css } from '@emotion/react';
-import VideoItem from '@components/myPage/VideoItem/VideoItem';
-import Thumbnail from '@components/myPage/Thumbnail';
-import useVideoListQuery from '@/hooks/apis/queries/useVideoListQuery';
 import { PATH } from '@constants/path';
+import { css } from '@emotion/react';
+import { Box } from '@foundation/index';
+import useDeleteVideoMutation from '@hooks/apis/mutations/useDeleteVideoMutation';
+import useVideoListQuery from '@hooks/apis/queries/useVideoListQuery';
 import { theme } from '@styles/theme';
-import useDeleteVideoMutation from '@/hooks/apis/mutations/useDeleteVideoMutation';
-import DeleteCheckModal from '@components/myPage/DeleteCheckModal';
+import dayjs from 'dayjs';
 import { useState } from 'react';
+import DeleteCheckModal from '../DeleteCheckModal';
+import Thumbnail from '../Thumbnail';
+import { VideoItem } from '../VideoItem';
 
 const VideoListTabPanel: React.FC = () => {
   const { data } = useVideoListQuery();

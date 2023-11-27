@@ -8,7 +8,7 @@ type LeadingDotProps = {
   size?: string;
 };
 
-export const LeadingDot: FC<LeadingDotProps> = ({
+const LeadingDot: FC<LeadingDotProps> = ({
   children,
   color = '#76d773',
   gap = '0.5rem',
@@ -39,3 +39,5 @@ export const LeadingDot: FC<LeadingDotProps> = ({
     </div>
   );
 };
+
+export default LeadingDot;

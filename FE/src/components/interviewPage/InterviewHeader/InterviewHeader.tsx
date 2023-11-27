@@ -1,9 +1,7 @@
 import { css } from '@emotion/react';
-import RecordStatus from './RecordStatus';
-import RecordTimer from './RecordTimer';
-import IntervieweeName from './IntervieweeName';
 import { theme } from '@styles/theme';
 
+import { RecordStatus, IntervieweeName, RecordTimer } from './index';
 type InterviewHeaderProps = {
   isRecording: boolean;
 };

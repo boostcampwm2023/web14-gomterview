@@ -5,7 +5,6 @@ import {
   AccordionSummary,
 } from '@foundation/Accordion';
 import Icon from '@foundation/Icon/Icon';
-import { LeadingDot } from '@foundation/LeadingDot/LeadingDot';
 import Typography from '@foundation/Typography/Typography';
 import { QUERY_KEY } from '@constants/queryKey';
 import useSelectQuestions from '@hooks/atoms/useSelectQuestions';
@@ -15,6 +14,7 @@ import { User } from '@/types/user';
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
+import { LeadingDot } from '@foundation/index';
 
 type QuestionAccordionProps = {
   question: Question;

@@ -1,8 +1,7 @@
-import Button from '@foundation/Button/Button';
-import InputArea from '@foundation/InputArea/InputArea';
 import useInput from '@hooks/useInput';
 import useQuestionAdd from '@hooks/useQuestionAdd';
 import { css } from '@emotion/react';
+import { Button, InputArea } from '@foundation/index';
 
 type QuestionAddFormProps = {
   categoryId: number;
