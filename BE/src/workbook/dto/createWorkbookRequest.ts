@@ -20,4 +20,10 @@ export class CreateWorkbookRequest {
   @IsNumber()
   @IsNotEmpty()
   categoryId: number;
+
+  constructor(name: string, content: string, categoryId: number) {
+    this.name = name;
+    this.content = content;
+    this.categoryId = categoryId;
+  }
 }
