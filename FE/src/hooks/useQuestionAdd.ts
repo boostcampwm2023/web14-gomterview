@@ -11,9 +11,7 @@ const useQuestionAdd = (
   const userInfo = useUserInfo();
   const queryClient = useQueryClient();
 
-  const { mutate } = useQuestionMutation(categoryId, {
-    onSuccess: onSuccess,
-  });
+  const { mutate } = useQuestionMutation(categoryId);
 
   const createNewQuestion = (content: string, lastId: number = 1) => {
     return {
@@ -32,7 +30,12 @@ const useQuestionAdd = (
     categoryId: number;
   }) => {
     if (userInfo) {
-      mutate({ content: value, categoryId: categoryId });
+      mutate(
+        { content: value, categoryId: categoryId },
+        {
+          onSuccess: () => onSuccess && onSuccess(),
+        }
+      );
     } else {
       queryClient.setQueryData<Question[] | []>(
         QUERY_KEY.QUESTION_CATEGORY(categoryId),

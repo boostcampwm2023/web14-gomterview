@@ -23,11 +23,7 @@ const AnswerSelectionModal: React.FC<AnswerSelectionModalProps> = ({
 }) => {
   const { data } = useQuestionAnswerQuery(question.questionId);
 
-  const { mutate: selectAnswerMutate } = useAnswerDefaultMutation(categoryId, {
-    onSuccess: () => {
-      closeModal();
-    },
-  });
+  const { mutate: selectAnswerMutate } = useAnswerDefaultMutation(categoryId);
 
   if (!data) return;
 
@@ -62,10 +58,15 @@ const AnswerSelectionModal: React.FC<AnswerSelectionModalProps> = ({
                 key={answer.answerId}
                 answer={answer}
                 onClick={() =>
-                  selectAnswerMutate({
-                    questionId: question.questionId,
-                    answerId: answer.answerId,
-                  })
+                  selectAnswerMutate(
+                    {
+                      questionId: question.questionId,
+                      answerId: answer.answerId,
+                    },
+                    {
+                      onSuccess: () => closeModal(),
+                    }
+                  )
                 }
               />
             ))}
