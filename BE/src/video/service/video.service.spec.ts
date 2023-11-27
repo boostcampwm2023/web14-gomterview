@@ -530,4 +530,60 @@ describe('VideoService', () => {
       );
     });
   });
+
+  describe('deleteVideo', () => {
+    const member = memberFixture;
+
+    it('비디오 삭제 성공 시 undefined로 반환된다.', () => {
+      // given
+      const video = videoFixture;
+
+      // when
+      mockVideoRepository.remove.mockResolvedValue(undefined);
+
+      // then
+      expect(
+        videoService.deleteVideo(video.id, member),
+      ).resolves.toBeUndefined();
+    });
+
+    it('비디오 삭제 시 member가 없으면 ManipulatedTokenNotFiltered을 반환한다.', () => {
+      // given
+      const video = videoFixture;
+      const member = undefined;
+
+      // when
+
+      // then
+      expect(videoService.deleteVideo(video.id, member)).rejects.toThrow(
+        ManipulatedTokenNotFiltered,
+      );
+    });
+
+    it('비디오 삭제 시 이미 삭제된 비디오를 삭제하려고 하면 VideoNotFoundException을 반환한다.', () => {
+      // given
+      const video = videoFixture;
+
+      // when
+      mockVideoRepository.findById.mockResolvedValue(undefined);
+
+      // then
+      expect(videoService.deleteVideo(video.id, member)).rejects.toThrow(
+        VideoNotFoundException,
+      );
+    });
+
+    it('비디오 삭제 시 자신의 것이 아닌 비디오를 삭제하려고 하면 VideoAccessForbiddenException을 반환한다.', () => {
+      // given
+      const video = videoOfOtherFixture;
+
+      // when
+      mockVideoRepository.findById.mockResolvedValue(video);
+
+      // then
+      expect(videoService.deleteVideo(video.id, member)).rejects.toThrow(
+        VideoAccessForbiddenException,
+      );
+    });
+  });
 });
