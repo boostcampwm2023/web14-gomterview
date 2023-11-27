@@ -2,7 +2,7 @@ import React, { ReactNode, SyntheticEvent } from 'react';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
 import { HTMLElementTypes } from '@/types/utils';
-import addChildElementProps from '@/utils/addChildElementProps';
+import enhanceChildElement from '@/utils/enhanceChildElement';
 
 type AccordionProps = {
   children: ReactNode[];
@@ -35,7 +35,7 @@ export const Accordion: React.FC<AccordionProps> = ({
       `}
       {...args}
     >
-      {addChildElementProps({ children, newProps: { expanded: expanded } })}
+      {enhanceChildElement({ children, newProps: { expanded: expanded } })}
     </div>
   );
 };
