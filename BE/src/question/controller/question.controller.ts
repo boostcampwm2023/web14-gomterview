@@ -57,7 +57,7 @@ export class QuestionController {
     createApiResponseOption(200, 'QuestionResponse 리스트', [QuestionResponse]),
   )
   async findCategoryQuestions(@Query('category') categoryId: number) {
-    return await this.questionService.findAllByCategory(categoryId);
+    return await this.questionService.findAllByWorkbookId(categoryId);
   }
 
   @Delete()

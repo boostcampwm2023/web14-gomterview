@@ -45,4 +45,8 @@ export class Workbook extends DefaultEntity {
   ): Workbook {
     return new Workbook(null, new Date(), name, content, category, 0, member);
   }
+
+  isOwnedBy(member: Member) {
+    return this.member.id === member.id;
+  }
 }

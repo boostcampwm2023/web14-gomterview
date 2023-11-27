@@ -6,14 +6,9 @@ import {
   questionFixture,
 } from '../fixture/question.fixture';
 import { QuestionResponse } from '../dto/questionResponse';
-import { CategoryRepository } from '../../category/repository/category.repository';
-import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
-import { CategoryNotFoundException } from '../../category/exception/category.exception';
 import { createIntegrationTestModule } from '../../util/test.util';
 import { QuestionModule } from '../question.module';
-import { CategoryModule } from '../../category/category.module';
 import { Question } from '../entity/question';
-import { Category } from '../../category/entity/category';
 import { INestApplication, UnauthorizedException } from '@nestjs/common';
 import { Member } from '../../member/entity/member';
 import { MemberModule } from '../../member/member.module';
@@ -26,29 +21,34 @@ import {
 import { ManipulatedTokenNotFiltered } from '../../token/exception/token.exception';
 import { Answer } from '../../answer/entity/answer';
 import { AnswerModule } from '../../answer/answer.module';
+import { WorkbookRepository } from '../../workbook/repository/workbook.repository';
+import { workbookFixture } from '../../workbook/fixture/workbook.fixture';
+import { WorkbookModule } from '../../workbook/workbook.module';
+import { Workbook } from '../../workbook/entity/workbook';
+import { WorkbookNotFoundException } from '../../workbook/exception/workbook.exception';
 
 describe('QuestionService', () => {
   let service: QuestionService;
 
   const mockQuestionRepository = {
     save: jest.fn(),
-    findByCategoryId: jest.fn(),
+    findByWorkbookId: jest.fn(),
     findById: jest.fn(),
     remove: jest.fn(),
   };
 
-  const mockCategoryRepository = {
-    findByCategoryId: jest.fn(),
+  const mockWorkbookRepository = {
+    findById: jest.fn(),
   };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [QuestionService, QuestionRepository, CategoryRepository],
+      providers: [QuestionService, QuestionRepository, WorkbookRepository],
     })
       .overrideProvider(QuestionRepository)
       .useValue(mockQuestionRepository)
-      .overrideProvider(CategoryRepository)
-      .useValue(mockCategoryRepository)
+      .overrideProvider(WorkbookRepository)
+      .useValue(mockWorkbookRepository)
       .compile();
 
     service = module.get<QuestionService>(QuestionService);
@@ -59,13 +59,11 @@ describe('QuestionService', () => {
   });
 
   describe('질문 추가', () => {
-    it('질문 추가시, categoryId와 content가 있다면 성공적으로 질문을 추가한다.', async () => {
+    it('질문 추가시, workbookId와 content가 있다면 성공적으로 질문을 추가한다.', async () => {
       //given
 
       //when
-      mockCategoryRepository.findByCategoryId.mockResolvedValue(
-        categoryFixtureWithId,
-      );
+      mockWorkbookRepository.findById.mockResolvedValue(workbookFixture);
       mockQuestionRepository.save.mockResolvedValue(questionFixture);
 
       //then
@@ -74,16 +72,16 @@ describe('QuestionService', () => {
       ).resolves.toEqual(QuestionResponse.from(questionFixture));
     });
 
-    it('질문 추가시, categoryId가 null이거나, 존재하지 않으면 CategoryNotFoundException을 반환한다.', async () => {
+    it('질문 추가시, workbookId가 null이거나, 존재하지 않으면 WorkbookNotFoundException을 반환한다.', async () => {
       //given
 
       //when
-      mockCategoryRepository.findByCategoryId.mockResolvedValue(undefined);
+      mockWorkbookRepository.findById.mockResolvedValue(undefined);
 
       //then
       await expect(
         service.createQuestion(createQuestionRequestFixture, memberFixture),
-      ).rejects.toThrow(new CategoryNotFoundException());
+      ).rejects.toThrow(new WorkbookNotFoundException());
     });
   });
 
@@ -92,7 +90,7 @@ describe('QuestionService', () => {
       //given
 
       //when
-      mockQuestionRepository.findByCategoryId.mockResolvedValue([
+      mockQuestionRepository.findByWorkbookId.mockResolvedValue([
         questionFixture,
       ]);
 
@@ -121,9 +119,7 @@ describe('QuestionService', () => {
       //when
       mockQuestionRepository.findById.mockResolvedValue(questionFixture);
       mockQuestionRepository.remove.mockResolvedValue(undefined);
-      mockCategoryRepository.findByCategoryId.mockResolvedValue(
-        categoryFixtureWithId,
-      );
+      mockWorkbookRepository.findById.mockResolvedValue(workbookFixture);
 
       //then
       await expect(
@@ -136,9 +132,7 @@ describe('QuestionService', () => {
       //when
       mockQuestionRepository.findById.mockResolvedValue(questionFixture);
       mockQuestionRepository.remove.mockResolvedValue(undefined);
-      mockCategoryRepository.findByCategoryId.mockResolvedValue(
-        categoryFixtureWithId,
-      );
+      mockWorkbookRepository.findById.mockResolvedValue(workbookFixture);
 
       //then
       await expect(
@@ -151,9 +145,7 @@ describe('QuestionService', () => {
       //when
       mockQuestionRepository.findById.mockResolvedValue(null);
       mockQuestionRepository.remove.mockResolvedValue(undefined);
-      mockCategoryRepository.findByCategoryId.mockResolvedValue(
-        categoryFixtureWithId,
-      );
+      mockWorkbookRepository.findById.mockResolvedValue(workbookFixture);
 
       //then
       await expect(
@@ -161,17 +153,17 @@ describe('QuestionService', () => {
       ).rejects.toThrow(new QuestionNotFoundException());
     });
 
-    it('question의 카테고리를 조회했을 때 카테고리가 존재하지 않는다면 CategoryNotFoundException을 발생시킨다.', async () => {
+    it('question의 카테고리를 조회했을 때 카테고리가 존재하지 않는다면 WorkbookNotFoundException을 발생시킨다.', async () => {
       //given
       //when
       mockQuestionRepository.findById.mockResolvedValue(questionFixture);
       mockQuestionRepository.remove.mockResolvedValue(undefined);
-      mockCategoryRepository.findByCategoryId.mockResolvedValue(undefined);
+      mockWorkbookRepository.findById.mockResolvedValue(undefined);
 
       //then
       await expect(
         service.deleteQuestionById(questionFixture.id, memberFixture),
-      ).rejects.toThrow(new CategoryNotFoundException());
+      ).rejects.toThrow(new WorkbookNotFoundException());
     });
 
     it('question의 카테고리를 조회했을 때 카테고리가 Member의 카테고리가 아니라면 권한 없음을 발생시킨다.', async () => {
@@ -179,9 +171,7 @@ describe('QuestionService', () => {
       //when
       mockQuestionRepository.findById.mockResolvedValue(questionFixture);
       mockQuestionRepository.remove.mockResolvedValue(undefined);
-      mockCategoryRepository.findByCategoryId.mockResolvedValue(
-        categoryFixtureWithId,
-      );
+      mockWorkbookRepository.findById.mockResolvedValue(workbookFixture);
 
       //then
       await expect(
@@ -203,41 +193,41 @@ describe('QuestionService', () => {
 describe('QuestionService 통합 테스트', () => {
   let app: INestApplication;
   let questionService: QuestionService;
-  let categoryRepository: CategoryRepository;
+  let workbookRepository: WorkbookRepository;
   let questionRepository: QuestionRepository;
   let memberRepository: MemberRepository;
 
   beforeAll(async () => {
     const modules = [
       QuestionModule,
-      CategoryModule,
+      WorkbookModule,
       MemberModule,
       AnswerModule,
     ];
-    const entities = [Question, Category, Member, Answer];
+    const entities = [Question, Workbook, Member, Answer];
 
     const moduleFixture = await createIntegrationTestModule(modules, entities);
     app = moduleFixture.createNestApplication();
     await app.init();
 
     questionService = moduleFixture.get<QuestionService>(QuestionService);
-    categoryRepository =
-      moduleFixture.get<CategoryRepository>(CategoryRepository);
+    workbookRepository =
+      moduleFixture.get<WorkbookRepository>(WorkbookRepository);
     questionRepository =
       moduleFixture.get<QuestionRepository>(QuestionRepository);
     memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
   });
 
   beforeEach(async () => {
-    await categoryRepository.query('delete from Question');
-    await categoryRepository.query('delete from Category');
-    await categoryRepository.query('delete from Member');
+    await workbookRepository.query('delete from Question');
+    await workbookRepository.query('delete from Workbook');
+    await workbookRepository.query('delete from Member');
   });
 
   it('새로운 질문을 저장할 때 QuestionResponse객체를 반환한다.', async () => {
     //given
     await memberRepository.save(memberFixture);
-    await categoryRepository.save(categoryFixtureWithId);
+    await workbookRepository.save(workbookFixture);
 
     //when
 
@@ -253,7 +243,7 @@ describe('QuestionService 통합 테스트', () => {
   it('카테고리의 질문을 조회하면 QuestionResponse의 배열로 반환된다.', async () => {
     //given
     const member = await memberRepository.save(memberFixture);
-    await categoryRepository.save(categoryFixtureWithId);
+    await workbookRepository.save(workbookFixture);
     const response = await questionService.createQuestion(
       createQuestionRequestFixture,
       memberFixture,
@@ -261,23 +251,23 @@ describe('QuestionService 통합 테스트', () => {
 
     //when
 
-    const category = await categoryRepository.findByNameAndMember(
-      categoryFixtureWithId.name,
+    const workbook = await workbookRepository.findByNameAndMemberId(
+      workbookFixture.name,
       member.id,
     );
 
     //then
     await expect(
-      questionService.findAllByCategory(category.id),
+      questionService.findAllByCategory(workbook.id),
     ).resolves.toEqual([response]);
   });
 
   it('id로 질문을 삭제하면 undefined를 반환한다.', async () => {
     //given
     const member = await memberRepository.save(memberFixture);
-    const category = await categoryRepository.save(categoryFixtureWithId);
+    const workbook = await workbookRepository.save(workbookFixture);
     const question = await questionRepository.save(
-      Question.of(category, null, 'tester'),
+      Question.of(workbook, null, 'tester'),
     );
     //when
 
