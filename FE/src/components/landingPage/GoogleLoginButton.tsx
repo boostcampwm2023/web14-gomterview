@@ -25,33 +25,33 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ ...args }) => {
     window.location.href = `${BASE_URL}${API.LOGIN}`;
   };
 
-  return (
-    !userInfo && (
-      <button
-        onClick={() => void handleGoogleLogin()}
-        css={css`
-          display: flex;
-          align-items: center;
-          column-gap: 0.75rem;
-          padding: 1.5rem 3rem;
-          border-radius: 3.125rem;
-          border: 0.0625rem solid ${theme.colors.border.default};
-          transition: transform 0.15s ease-in-out;
-          background-color: ${theme.colors.surface.default};
-          z-index: 1000;
+  if (userInfo) return null;
 
-          &:hover {
-            transform: translateY(-0.25rem);
-          }
-        `}
-        {...args}
-      >
-        <Icon id="google-logo" width="1.25rem" height="1.25rem" />
-        <Typography variant="title3" color={theme.colors.text.default}>
-          Google로 시작하기
-        </Typography>
-      </button>
-    )
+  return (
+    <button
+      onClick={() => void handleGoogleLogin()}
+      css={css`
+        display: flex;
+        align-items: center;
+        column-gap: 0.75rem;
+        padding: 1.5rem 3rem;
+        border-radius: 3.125rem;
+        border: 0.0625rem solid ${theme.colors.border.default};
+        transition: transform 0.15s ease-in-out;
+        background-color: ${theme.colors.surface.default};
+        z-index: 1000;
+
+        &:hover {
+          transform: translateY(-0.25rem);
+        }
+      `}
+      {...args}
+    >
+      <Icon id="google-logo" width="1.25rem" height="1.25rem" />
+      <Typography variant="title3" color={theme.colors.text.default}>
+        Google로 시작하기
+      </Typography>
+    </button>
   );
 };
 
