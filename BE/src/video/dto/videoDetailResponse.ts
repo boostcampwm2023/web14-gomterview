@@ -7,7 +7,7 @@ export class VideoDetailResponse {
   readonly id: number;
 
   @ApiProperty(createPropertyOption('foobar', '회원의 닉네임', String))
-  private nickname: string;
+  readonly nickname: string;
 
   @ApiProperty(
     createPropertyOption('https://example-video.com', '비디오의 URL', String),

@@ -5,10 +5,8 @@ import {
   memberFixture,
   mockReqWithMemberFixture,
 } from 'src/member/fixture/member.fixture';
-import { CreateVideoRequest } from '../dto/createVideoRequest';
 import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
 import { Request, Response } from 'express';
-import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import {
   IDriveException,
@@ -21,8 +19,10 @@ import {
   VideoOfWithdrawnMemberException,
 } from '../exception/video.exception';
 import {
-  videoFixtureForTest,
-  videoListFixtureForTest,
+  createPreSignedUrlRequestFixture,
+  createVideoRequestFixture,
+  videoFixture,
+  videoListFixture,
 } from '../fixture/video.fixture';
 import { VideoDetailResponse } from '../dto/videoDetailResponse';
 import { VideoHashResponse } from '../dto/videoHashResponse';
@@ -59,13 +59,7 @@ describe('VideoController 단위 테스트', () => {
   });
 
   describe('createVideo', () => {
-    const createVideoRequest = new CreateVideoRequest(
-      1,
-      'test.webm',
-      'https://test.com',
-      'https://thumbnail-test.com',
-      '01:12',
-    );
+    const createVideoRequest = createVideoRequestFixture;
 
     it('비디오 저장 성공 시 undefined를 반환한다.', async () => {
       //given
@@ -96,7 +90,7 @@ describe('VideoController 단위 테스트', () => {
   });
 
   describe('getPreSignedUrl', () => {
-    const createPreSignedUrlRequest = new CreatePreSignedUrlRequest(1);
+    const createPreSignedUrlRequest = createPreSignedUrlRequestFixture;
 
     it('Pre-Signed URL 발급 완료 시 PreSignedUrlResponse 객체 형태로 응답된다.', async () => {
       //given
@@ -151,7 +145,7 @@ describe('VideoController 단위 테스트', () => {
   describe('getAllVideo', () => {
     it('비디오 전체 조회 성공 시 VideoListResponse 객체 형태로 응답된다.', async () => {
       //given
-      const videoList = videoListFixtureForTest;
+      const videoList = videoListFixture;
 
       //when
       const mockVideoListResponse = videoList.map(SingleVideoResponse.from);
@@ -204,7 +198,7 @@ describe('VideoController 단위 테스트', () => {
 
     it('해시로 비디오 조회 성공 시 VideoDetailResponse 객체 형태로 응답된다.', async () => {
       // given
-      const video = videoFixtureForTest;
+      const video = videoFixture;
 
       // when
       const mockVideoDetailWithHash = VideoDetailResponse.from(
@@ -284,7 +278,7 @@ describe('VideoController 단위 테스트', () => {
     const mockReq = mockReqWithMemberFixture;
     const nickname = memberFixture.nickname;
     const hash = 'fakeHash';
-    const video = videoFixtureForTest;
+    const video = videoFixture;
 
     it('비디오 상세 정보 조회 성공 시 VideoDetailResponse 객체 형태로 응답된다.', async () => {
       // given

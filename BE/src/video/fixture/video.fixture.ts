@@ -1,3 +1,5 @@
+import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
+import { CreateVideoRequest } from '../dto/createVideoRequest';
 import { Video } from '../entity/video';
 
 export const videoListExample = [
@@ -27,7 +29,7 @@ export const videoListExample = [
   },
 ];
 
-export const videoListFixtureForTest = [
+export const videoListFixture = [
   new Video(
     1,
     1,
@@ -48,7 +50,7 @@ export const videoListFixtureForTest = [
   ),
 ];
 
-export const videoFixtureForTest = new Video(
+export const videoFixture = new Video(
   1,
   1,
   '루이뷔통통튀기네',
@@ -56,4 +58,46 @@ export const videoFixtureForTest = new Video(
   'https://thumbnail-test.com',
   '03:29',
   true,
+);
+
+export const privateVideoFixture = new Video(
+  1,
+  1,
+  '루이뷔통통튀기네',
+  'https://test.com',
+  'https://thumbnail-test.com',
+  '03:29',
+  false,
+);
+
+export const videoOfOtherFixture = new Video(
+  999,
+  1,
+  '루이뷔통통튀기네',
+  'https://test.com',
+  'https://thumbnail-test.com',
+  '03:29',
+  false,
+);
+
+export const VideoOfWithdrawnMemberFixture = new Video(
+  null,
+  1,
+  '루이뷔통통튀기네',
+  'https://test.com',
+  'https://thumbnail-test.com',
+  '03:29',
+  true,
+);
+
+export const createVideoRequestFixture = new CreateVideoRequest(
+  1,
+  'foobar.webm',
+  'https://foo.com',
+  'https://bar.com',
+  '03:29',
+);
+
+export const createPreSignedUrlRequestFixture = new CreatePreSignedUrlRequest(
+  1,
 );
