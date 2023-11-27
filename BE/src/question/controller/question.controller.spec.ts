@@ -13,31 +13,28 @@ import { Member } from '../../member/entity/member';
 import { Token } from '../../token/entity/token';
 import { createIntegrationTestModule } from '../../util/test.util';
 import { QuestionModule } from '../question.module';
-import { CategoryRepository } from '../../category/repository/category.repository';
-import { MemberRepository } from '../../member/repository/member.repository';
 import { AuthModule } from '../../auth/auth.module';
 import { AuthService } from '../../auth/service/auth.service';
 import { Response } from 'express';
 import {
-  memberFixture,
   memberFixturesOAuthRequest,
   mockReqWithMemberFixture,
   oauthRequestFixture,
 } from '../../member/fixture/member.fixture';
 import * as request from 'supertest';
-import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { Question } from '../entity/question';
-import { Category } from '../../category/entity/category';
 import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 import * as cookieParser from 'cookie-parser';
 import { QuestionRepository } from '../repository/question.repository';
 import { Answer } from '../../answer/entity/answer';
+import { WorkbookRepository } from '../../workbook/repository/workbook.repository';
+import { workbookFixture } from '../../workbook/fixture/workbook.fixture';
 
 describe('QuestionController', () => {
   let controller: QuestionController;
   const mockQuestionService = {
     createQuestion: jest.fn(),
-    findAllByCategory: jest.fn(),
+    findAllByWorkbookId: jest.fn(),
     deleteQuestionById: jest.fn(),
   };
   const mockTokenService = {};
@@ -80,11 +77,11 @@ describe('QuestionController', () => {
     //given
 
     //when
-    mockQuestionService.findAllByCategory.mockResolvedValue([
+    mockQuestionService.findAllByWorkbookId.mockResolvedValue([
       QuestionResponse.from(questionFixture),
     ]);
     //then
-    await expect(controller.findCategoryQuestions(1)).resolves.toEqual([
+    await expect(controller.findWorkbookQuestions(1)).resolves.toEqual([
       QuestionResponse.from(questionFixture),
     ]);
   });
@@ -112,14 +109,13 @@ describe('QuestionController', () => {
 
 describe('QuestionController 통합테스트', () => {
   let app: INestApplication;
-  let categoryRepository: CategoryRepository;
-  let memberRepository: MemberRepository;
+  let workbookRepository: WorkbookRepository;
   let authService: AuthService;
   let questionRepository: QuestionRepository;
 
   beforeAll(async () => {
     const modules = [QuestionModule, TokenModule, AuthModule];
-    const entities = [Member, Token, Category, Question, Answer];
+    const entities = [Member, Token, WorkbookRepository, Question, Answer];
 
     const moduleFixture: TestingModule = await createIntegrationTestModule(
       modules,
@@ -131,9 +127,8 @@ describe('QuestionController 통합테스트', () => {
     app.useGlobalPipes(new ValidationPipe());
     await app.init();
 
-    categoryRepository =
-      moduleFixture.get<CategoryRepository>(CategoryRepository);
-    memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
+    workbookRepository =
+      moduleFixture.get<WorkbookRepository>(WorkbookRepository);
     authService = moduleFixture.get<AuthService>(AuthService);
     questionRepository =
       moduleFixture.get<QuestionRepository>(QuestionRepository);
@@ -142,7 +137,7 @@ describe('QuestionController 통합테스트', () => {
   it('쿠키를 가지고 질문 생성을 요청하면 201코드와 생성된 질문의 Response가 반환된다.', async () => {
     //given
     const token = await authService.login(oauthRequestFixture);
-    await categoryRepository.save(categoryFixtureWithId);
+    await workbookRepository.save(workbookFixture);
 
     //when
     const agent = request.agent(app.getHttpServer());
@@ -157,18 +152,15 @@ describe('QuestionController 통합테스트', () => {
 
   it('content가 isEmpty면 예외처리한다.', async () => {
     //given
-    const member = await memberRepository.save(memberFixture);
     const token = await authService.login(memberFixturesOAuthRequest);
-    const category = await categoryRepository.save(
-      Category.from(categoryFixtureWithId, member),
-    );
+    const workbook = await workbookRepository.save(workbookFixture);
 
     //when
     const agent = request.agent(app.getHttpServer());
     await agent
       .post('/api/question')
       .set('Cookie', [`accessToken=${token}`])
-      .send(new CreateQuestionRequest(category.id, null))
+      .send(new CreateQuestionRequest(workbook.id, null))
       .expect(400)
       .then(() => {});
     //then
@@ -177,12 +169,9 @@ describe('QuestionController 통합테스트', () => {
   describe('질문 삭제', () => {
     it('Member객체와 questionId를 입력했을 때 정상적으로 질문을 삭제한다.', async () => {
       //given
-      const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(categoryFixtureWithId, member),
-      );
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'tester'),
+        Question.of(workbook, null, 'tester'),
       );
 
       //when & then
@@ -196,12 +185,9 @@ describe('QuestionController 통합테스트', () => {
 
     it('토큰이 없으면 UnauthorizedException을 발생시킨다.', async () => {
       //given
-      const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(categoryFixtureWithId, member),
-      );
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'tester'),
+        Question.of(workbook, null, 'tester'),
       );
 
       //when & then
@@ -223,12 +209,9 @@ describe('QuestionController 통합테스트', () => {
 
     it('question의 카테고리를 조회했을 때 카테고리가 Member의 카테고리가 아니라면 권한 없음을 발생시킨다.', async () => {
       //given
-      const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(categoryFixtureWithId, member),
-      );
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'tester'),
+        Question.of(workbook, null, 'tester'),
       );
 
       //when & then
@@ -242,9 +225,9 @@ describe('QuestionController 통합테스트', () => {
   });
 
   afterEach(async () => {
-    await categoryRepository.query('delete from token');
-    await categoryRepository.query('delete from Question');
-    await categoryRepository.query('delete from Category');
-    await categoryRepository.query('delete from Member');
+    await workbookRepository.query('delete from token');
+    await workbookRepository.query('delete from Question');
+    await workbookRepository.query('delete from Workbook');
+    await workbookRepository.query('delete from Member');
   });
 });

@@ -15,7 +15,7 @@ import { MemberModule } from '../../member/member.module';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { memberFixture } from '../../member/fixture/member.fixture';
 import {
-  NeedToFindByCategoryIdException,
+  NeedToFindByWorkbookIdException,
   QuestionNotFoundException,
 } from '../exception/question.exception';
 import { ManipulatedTokenNotFiltered } from '../../token/exception/token.exception';
@@ -95,7 +95,7 @@ describe('QuestionService', () => {
       ]);
 
       //then
-      await expect(service.findAllByCategory(1)).resolves.toEqual([
+      await expect(service.findAllByWorkbookId(1)).resolves.toEqual([
         QuestionResponse.from(questionFixture),
       ]);
     });
@@ -106,8 +106,8 @@ describe('QuestionService', () => {
       //when
 
       //then
-      await expect(service.findAllByCategory(null)).rejects.toThrow(
-        new NeedToFindByCategoryIdException(),
+      await expect(service.findAllByWorkbookId(null)).rejects.toThrow(
+        new NeedToFindByWorkbookIdException(),
       );
     });
   });
@@ -258,7 +258,7 @@ describe('QuestionService 통합 테스트', () => {
 
     //then
     await expect(
-      questionService.findAllByCategory(workbook.id),
+      questionService.findAllByWorkbookId(workbook.id),
     ).resolves.toEqual([response]);
   });
 

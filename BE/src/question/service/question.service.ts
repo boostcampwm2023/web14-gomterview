@@ -26,7 +26,7 @@ export class QuestionService {
     member: Member,
   ) {
     const workbook = await this.workbookRepository.findById(
-      createQuestionRequest.categoryId,
+      createQuestionRequest.workbookId,
     );
 
     validateWorkbook(workbook);
