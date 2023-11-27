@@ -13,8 +13,8 @@ export class QuestionRepository {
     return await this.repository.save(question);
   }
 
-  async findByCategoryId(categoryId: number) {
-    return await this.repository.findBy({ category: { id: categoryId } });
+  async findByWorkbookId(workbookId: number) {
+    return await this.repository.findBy({ workbook: { id: workbookId } });
   }
 
   async findById(questionId: number) {

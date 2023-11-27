@@ -3,18 +3,18 @@ import { ApiProperty } from '@nestjs/swagger';
 import { createPropertyOption } from '../../util/swagger.util';
 
 export class CreateQuestionRequest {
-  @ApiProperty(createPropertyOption('1', '카테고리 id', Number))
+  @ApiProperty(createPropertyOption('1', '문제집 id', Number))
   @IsNotEmpty()
   @IsNumber()
-  categoryId: number;
+  workbookId: number;
 
   @ApiProperty(createPropertyOption('이장희는 누구일까요', '질문 내용', String))
   @IsNotEmpty()
   @IsString()
   content: string;
 
-  constructor(categoryId: number, content: string) {
-    this.categoryId = categoryId;
+  constructor(workbookId: number, content: string) {
+    this.workbookId = workbookId;
     this.content = content;
   }
 }

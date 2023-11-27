@@ -18,6 +18,7 @@ import { Member } from './member/entity/member';
 import { Question } from './question/entity/question';
 import { Answer } from './answer/entity/answer';
 import { Token } from './token/entity/token';
+import { WorkbookModule } from './workbook/workbook.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { Token } from './token/entity/token';
     VideoModule,
     CategoryModule,
     AnswerModule,
+    WorkbookModule,
   ],
   controllers: [AppController],
   providers: [

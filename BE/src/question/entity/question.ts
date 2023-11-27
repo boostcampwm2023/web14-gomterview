@@ -1,16 +1,16 @@
 import { DefaultEntity } from '../../app.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { Category } from '../../category/entity/category';
 import { Answer } from '../../answer/entity/answer';
+import { Workbook } from '../../workbook/entity/workbook';
 
 @Entity({ name: 'Question' })
 export class Question extends DefaultEntity {
   @Column({ type: 'text' })
   readonly content: string;
 
-  @ManyToOne(() => Category, { onDelete: 'CASCADE', eager: true })
-  @JoinColumn({ name: 'category' })
-  readonly category: Category;
+  @ManyToOne(() => Workbook, { onDelete: 'CASCADE', eager: true })
+  @JoinColumn({ name: 'workbook' })
+  readonly workbook: Workbook;
 
   @ManyToOne(() => Question, { nullable: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'origin' })
@@ -27,27 +27,27 @@ export class Question extends DefaultEntity {
   constructor(
     id: number,
     content: string,
-    category: Category,
+    workbook: Workbook,
     origin: Question,
     createdAt: Date,
     defaultAnswer: Answer,
   ) {
     super(id, createdAt);
     this.content = content;
-    this.category = category;
+    this.workbook = workbook;
     this.origin = origin;
     this.defaultAnswer = defaultAnswer;
   }
 
-  static of(category: Category, origin: Question, content: string) {
-    return new Question(null, content, category, origin, new Date(), null);
+  static of(workbook: Workbook, origin: Question, content: string) {
+    return new Question(null, content, workbook, origin, new Date(), null);
   }
 
-  static copyOf(question: Question, category: Category) {
+  static copyOf(question: Question, workbook: Workbook) {
     return new Question(
       null,
       question.content,
-      category,
+      workbook,
       question,
       new Date(),
       question.defaultAnswer,

@@ -2,22 +2,22 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Question } from './entity/question';
 import { TokenModule } from 'src/token/token.module';
-import { Category } from '../category/entity/category';
 import { QuestionService } from './service/question.service';
 import { QuestionController } from './controller/question.controller';
 import { QuestionRepository } from './repository/question.repository';
-import { CategoryModule } from '../category/category.module';
-import { CategoryRepository } from '../category/repository/category.repository';
 import { Member } from '../member/entity/member';
 import { Answer } from '../answer/entity/answer';
+import { Workbook } from '../workbook/entity/workbook';
+import { WorkbookModule } from '../workbook/workbook.module';
+import { WorkbookRepository } from '../workbook/repository/workbook.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Question, Category, Member, Answer]),
+    TypeOrmModule.forFeature([Question, Workbook, Member, Answer]),
     TokenModule,
-    CategoryModule,
+    WorkbookModule,
   ],
-  providers: [QuestionService, QuestionRepository, CategoryRepository],
+  providers: [QuestionService, QuestionRepository, WorkbookRepository],
   controllers: [QuestionController],
 })
 export class QuestionModule {}

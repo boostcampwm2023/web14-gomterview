@@ -14,7 +14,6 @@ import {
   defaultAnswerRequestFixture,
 } from '../fixture/answer.fixture';
 import { INestApplication } from '@nestjs/common';
-import { CategoryRepository } from '../../category/repository/category.repository';
 import { CategoryModule } from '../../category/category.module';
 import { MemberModule } from '../../member/member.module';
 import { AnswerModule } from '../answer.module';
@@ -27,10 +26,6 @@ import {
   addAppModules,
   createIntegrationTestModule,
 } from '../../util/test.util';
-import {
-  beCategoryFixture,
-  categoryFixtureWithId,
-} from '../../category/fixture/category.fixture';
 import * as request from 'supertest';
 import { AuthService } from '../../auth/service/auth.service';
 import { AuthModule } from '../../auth/auth.module';
@@ -41,6 +36,10 @@ import { Token } from '../../token/entity/token';
 import { AnswerRepository } from '../repository/answer.repository';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
+import { workbookFixture } from '../../workbook/fixture/workbook.fixture';
+import { WorkbookRepository } from '../../workbook/repository/workbook.repository';
+import { WorkbookModule } from '../../workbook/workbook.module';
+import { Workbook } from '../../workbook/entity/workbook';
 
 describe('AnswerController 단위테스트', () => {
   let controller: AnswerController;
@@ -105,7 +104,7 @@ describe('AnswerController 단위테스트', () => {
 
 describe('AnswerController 통합테스트', () => {
   let app: INestApplication;
-  let categoryRepository: CategoryRepository;
+  let workbookRepository: WorkbookRepository;
   let authService: AuthService;
   let questionRepository: QuestionRepository;
   let answerRepository: AnswerRepository;
@@ -119,8 +118,17 @@ describe('AnswerController 통합테스트', () => {
       QuestionModule,
       AuthModule,
       TokenModule,
+      WorkbookModule,
     ];
-    const entities = [Answer, Question, Category, Member, Answer, Token];
+    const entities = [
+      Answer,
+      Question,
+      Category,
+      Member,
+      Answer,
+      Token,
+      Workbook,
+    ];
 
     const moduleFixture = await createIntegrationTestModule(modules, entities);
     app = moduleFixture.createNestApplication();
@@ -128,8 +136,8 @@ describe('AnswerController 통합테스트', () => {
     await app.init();
 
     authService = moduleFixture.get<AuthService>(AuthService);
-    categoryRepository =
-      moduleFixture.get<CategoryRepository>(CategoryRepository);
+    workbookRepository =
+      moduleFixture.get<WorkbookRepository>(WorkbookRepository);
     questionRepository =
       moduleFixture.get<QuestionRepository>(QuestionRepository);
     answerRepository = moduleFixture.get<AnswerRepository>(AnswerRepository);
@@ -137,19 +145,19 @@ describe('AnswerController 통합테스트', () => {
   });
 
   beforeEach(async () => {
-    await categoryRepository.query('delete from Answer');
-    await categoryRepository.query('delete from Question');
-    await categoryRepository.query('delete from Category');
-    await categoryRepository.query('delete from Member');
+    await workbookRepository.query('delete from Answer');
+    await workbookRepository.query('delete from Question');
+    await workbookRepository.query('delete from Workbook');
+    await workbookRepository.query('delete from Member');
   });
 
   describe('질문 추가', () => {
     it('쿠키를 가지고 원본 질문에 답변 생성을 요청하면 201코드와 생성된 질문의 Response가 반환된다.', async () => {
       //given
       const token = await authService.login(memberFixturesOAuthRequest);
-      const category = await categoryRepository.save(categoryFixtureWithId);
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'testQuestion'),
+        Question.of(workbook, null, 'testQuestion'),
       );
 
       //when
@@ -167,14 +175,12 @@ describe('AnswerController 통합테스트', () => {
       //given
       const member = await memberRepository.save(memberFixture);
       const token = await authService.login(memberFixturesOAuthRequest);
-      const category = await categoryRepository.save(
-        Category.from(categoryFixtureWithId, member),
-      );
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'testQuestion'),
+        Question.of(workbook, null, 'testQuestion'),
       );
       const copyQuestion = await questionRepository.save(
-        Question.copyOf(question, category),
+        Question.copyOf(question, workbook),
       );
 
       //when&then
@@ -190,14 +196,12 @@ describe('AnswerController 통합테스트', () => {
     it('쿠키가 존재하지 않으면 401에러를 반환한다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(categoryFixtureWithId, member),
-      );
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'testQuestion'),
+        Question.of(workbook, null, 'testQuestion'),
       );
       const copyQuestion = await questionRepository.save(
-        Question.copyOf(question, category),
+        Question.copyOf(question, workbook),
       );
 
       //when&then
@@ -227,11 +231,9 @@ describe('AnswerController 통합테스트', () => {
       //given
       const member = await memberRepository.save(memberFixture);
       const token = await authService.login(memberFixturesOAuthRequest);
-      const category = await categoryRepository.save(
-        Category.from(categoryFixtureWithId, member),
-      );
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'testQuestion'),
+        Question.of(workbook, null, 'testQuestion'),
       );
 
       //when&then
@@ -249,11 +251,9 @@ describe('AnswerController 통합테스트', () => {
     it('토큰을 가지고 존재하는 질문에 대해 존재하는 답변으로 대표답변 설정을 요청하면 성공적으로 변경해준다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(beCategoryFixture, member),
-      );
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'question'),
+        Question.of(workbook, null, 'testQuestion'),
       );
       const answer = await answerRepository.save(
         Answer.of('test', member, question),
@@ -271,12 +271,9 @@ describe('AnswerController 통합테스트', () => {
     it('토큰이 없으면 권한없음 처리한다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(beCategoryFixture, member),
-      );
-
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'question'),
+        Question.of(workbook, null, 'testQuestion'),
       );
       const answer = await answerRepository.save(
         Answer.of('test', member, question),
@@ -293,12 +290,9 @@ describe('AnswerController 통합테스트', () => {
     it('다른 사람의 질문 id로 대표답변을 수정하려하면 403코드를 반환한다', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(beCategoryFixture, member),
-      );
-
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'question'),
+        Question.of(workbook, null, 'testQuestion'),
       );
       const answer = await answerRepository.save(
         Answer.of('test', member, question),
@@ -317,12 +311,9 @@ describe('AnswerController 통합테스트', () => {
     it('질문 id가 존재하지 않으면 404코드를 반환한다', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(beCategoryFixture, member),
-      );
-
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'question'),
+        Question.of(workbook, null, 'testQuestion'),
       );
       const answer = await answerRepository.save(
         Answer.of('test', member, question),
@@ -341,15 +332,9 @@ describe('AnswerController 통합테스트', () => {
     it('답변 id가 존재하지 않으면 404코드를 반환한다', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(beCategoryFixture, member),
-      );
-
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'question'),
-      );
-      const answer = await answerRepository.save(
-        Answer.of('test', member, question),
+        Question.of(workbook, null, 'testQuestion'),
       );
 
       //when&then
@@ -367,15 +352,9 @@ describe('AnswerController 통합테스트', () => {
     it('질문을 조회할 때 회원 정보가 없으면 모든 답변이 최신순으로 정렬된다. ', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(beCategoryFixture, member),
-      );
-
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'question'),
-      );
-      const answer = await answerRepository.save(
-        Answer.of('test', member, question),
+        Question.of(workbook, null, 'testQuestion'),
       );
       for (let index = 1; index <= 10; index++) {
         await answerRepository.save(
@@ -395,12 +374,9 @@ describe('AnswerController 통합테스트', () => {
     it('질문을 조회할 때 회원 정보가 있으면 모든 등록한 DefaultAnswer부터 정렬된다. ', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(beCategoryFixture, member),
-      );
-
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'question'),
+        Question.of(workbook, null, 'testQuestion'),
       );
       const answer = await answerRepository.save(
         Answer.of('test', member, question),
@@ -425,15 +401,9 @@ describe('AnswerController 통합테스트', () => {
     it('존재하지 않는 질문의 id를 조회하면 404에러를 반환한다. ', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(beCategoryFixture, member),
-      );
-
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'question'),
-      );
-      const answer = await answerRepository.save(
-        Answer.of('test', member, question),
+        Question.of(workbook, null, 'testQuestion'),
       );
       for (let index = 1; index <= 10; index++) {
         await answerRepository.save(
@@ -455,12 +425,9 @@ describe('AnswerController 통합테스트', () => {
     it('답변을 삭제할 때 자신의 댓글을 삭제하려고 하면 204코드와 함께 성공한다. ', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(beCategoryFixture, member),
-      );
-
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'question'),
+        Question.of(workbook, null, 'testQuestion'),
       );
       const answer = await answerRepository.save(
         Answer.of('test', member, question),
@@ -478,12 +445,9 @@ describe('AnswerController 통합테스트', () => {
     it('쿠키가 없으면 401에러를 반환한다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(beCategoryFixture, member),
-      );
-
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'question'),
+        Question.of(workbook, null, 'testQuestion'),
       );
       const answer = await answerRepository.save(
         Answer.of('test', member, question),
@@ -497,12 +461,9 @@ describe('AnswerController 통합테스트', () => {
     it('다른 사람의 답변을 삭제하면 403에러를 반환한다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(beCategoryFixture, member),
-      );
-
+      const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
-        Question.of(category, null, 'question'),
+        Question.of(workbook, null, 'testQuestion'),
       );
       const answer = await answerRepository.save(
         Answer.of('test', member, question),
@@ -519,17 +480,6 @@ describe('AnswerController 통합테스트', () => {
 
     it('답변이 없으면 404에러를 반환한다.', async () => {
       //given
-      const member = await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(
-        Category.from(beCategoryFixture, member),
-      );
-
-      const question = await questionRepository.save(
-        Question.of(category, null, 'question'),
-      );
-      const answer = await answerRepository.save(
-        Answer.of('test', member, question),
-      );
 
       //when&then
       const token = await authService.login(oauthRequestFixture);

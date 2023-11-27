@@ -2,9 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { CategoryRepository } from './category/repository/category.repository';
 import { QuestionRepository } from './question/repository/question.repository';
 import { AnswerRepository } from './answer/repository/answer.repository';
-import { Category } from './category/entity/category';
-import { Question } from './question/entity/question';
-import { Answer } from './answer/entity/answer';
 
 const feQuestions = [
   '브라우저 렌더링 과정에 대해서 설명해주세요\n',
@@ -112,99 +109,5 @@ export class AppService {
 
   getHello(): string {
     return 'Hello World!';
-  }
-
-  async saveDummy() {
-    await this.categoryRepository.save(Category.of('나만의 질문', null));
-    await this.saveFE();
-    await this.saveBE();
-    await this.saveAnd();
-    await this.saveIOS();
-    await this.saveCS();
-  }
-
-  async saveFE() {
-    // FE
-    const category = await this.categoryRepository.save(
-      new Category(null, 'FE', null, new Date()),
-    );
-    for (let index = 0; index < feQuestions.length; index++) {
-      const question = await this.questionRepository.save(
-        Question.of(category, null, feQuestions[index]),
-      );
-      const answer = await this.answerRepository.save(
-        Answer.of(feAnswers[index], null, question),
-      );
-      question.setDefaultAnswer(answer);
-      await this.questionRepository.save(question);
-    }
-  }
-
-  async saveBE() {
-    // BE
-    const category = await this.categoryRepository.save(
-      new Category(null, 'BE', null, new Date()),
-    );
-    for (let index = 0; index < beQuestions.length; index++) {
-      const question = await this.questionRepository.save(
-        Question.of(category, null, beQuestions[index]),
-      );
-      const answer = await this.answerRepository.save(
-        Answer.of(beAnswers[index], null, question),
-      );
-      question.setDefaultAnswer(answer);
-      await this.questionRepository.save(question);
-    }
-  }
-
-  async saveIOS() {
-    // iOS
-    const category = await this.categoryRepository.save(
-      new Category(null, 'iOS', null, new Date()),
-    );
-    for (let index = 0; index < iOSQustions.length; index++) {
-      const question = await this.questionRepository.save(
-        Question.of(category, null, iOSQustions[index]),
-      );
-      const answer = await this.answerRepository.save(
-        Answer.of(iOSAnswers[index], null, question),
-      );
-      question.setDefaultAnswer(answer);
-      await this.questionRepository.save(question);
-    }
-  }
-
-  async saveAnd() {
-    // And
-    const category = await this.categoryRepository.save(
-      new Category(null, 'Android', null, new Date()),
-    );
-    for (let index = 0; index < androidQuestions.length; index++) {
-      const question = await this.questionRepository.save(
-        Question.of(category, null, androidQuestions[index]),
-      );
-      const answer = await this.answerRepository.save(
-        Answer.of(androidAnswers[index], null, question),
-      );
-      question.setDefaultAnswer(answer);
-      await this.questionRepository.save(question);
-    }
-  }
-
-  async saveCS() {
-    // CS
-    const category = await this.categoryRepository.save(
-      new Category(null, 'CS', null, new Date()),
-    );
-    for (let index = 0; index < csQuestions.length; index++) {
-      const question = await this.questionRepository.save(
-        Question.of(category, null, csQuestions[index]),
-      );
-      const answer = await this.answerRepository.save(
-        Answer.of(csAnswers[index], null, question),
-      );
-      question.setDefaultAnswer(answer);
-      await this.questionRepository.save(question);
-    }
   }
 }

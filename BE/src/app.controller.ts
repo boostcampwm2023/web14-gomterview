@@ -11,10 +11,4 @@ export class AppController {
   async getHello() {
     return this.appService.getHello();
   }
-
-  @Get('/initializeDummy')
-  @ApiExcludeEndpoint()
-  async saveDummy() {
-    await this.appService.saveDummy();
-  }
 }
