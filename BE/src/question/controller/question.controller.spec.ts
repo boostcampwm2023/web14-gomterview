@@ -17,6 +17,7 @@ import { AuthModule } from '../../auth/auth.module';
 import { AuthService } from '../../auth/service/auth.service';
 import { Response } from 'express';
 import {
+  memberFixture,
   memberFixturesOAuthRequest,
   mockReqWithMemberFixture,
   oauthRequestFixture,
@@ -157,6 +158,7 @@ describe('QuestionController 통합테스트', () => {
 
   it('content가 isEmpty면 예외처리한다.', async () => {
     //given
+    await memberRepository.save(memberFixture);
     const token = await authService.login(memberFixturesOAuthRequest);
     const workbook = await workbookRepository.save(workbookFixture);
 
@@ -174,6 +176,7 @@ describe('QuestionController 통합테스트', () => {
   describe('질문 삭제', () => {
     it('Member객체와 questionId를 입력했을 때 정상적으로 질문을 삭제한다.', async () => {
       //given
+      await memberRepository.save(memberFixture);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'tester'),
@@ -190,6 +193,7 @@ describe('QuestionController 통합테스트', () => {
 
     it('토큰이 없으면 UnauthorizedException을 발생시킨다.', async () => {
       //given
+      await memberRepository.save(memberFixture);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'tester'),
@@ -204,6 +208,7 @@ describe('QuestionController 통합테스트', () => {
       //given
 
       //when & then
+      await memberRepository.save(memberFixture);
       const token = await authService.login(memberFixturesOAuthRequest);
       const agent = request.agent(app.getHttpServer());
       await agent
@@ -214,6 +219,7 @@ describe('QuestionController 통합테스트', () => {
 
     it('question의 카테고리를 조회했을 때 카테고리가 Member의 카테고리가 아니라면 권한 없음을 발생시킨다.', async () => {
       //given
+      await memberRepository.save(memberFixture);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'tester'),
