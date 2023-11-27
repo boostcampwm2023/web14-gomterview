@@ -33,6 +33,10 @@ import { workbookFixture } from '../../workbook/fixture/workbook.fixture';
 import { WorkbookModule } from '../../workbook/workbook.module';
 import { Workbook } from '../../workbook/entity/workbook';
 import { MemberRepository } from '../../member/repository/member.repository';
+import { CategoryRepository } from '../../category/repository/category.repository';
+import { CategoryModule } from '../../category/category.module';
+import { Category } from '../../category/entity/category';
+import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 
 describe('QuestionController', () => {
   let controller: QuestionController;
@@ -117,10 +121,17 @@ describe('QuestionController 통합테스트', () => {
   let authService: AuthService;
   let questionRepository: QuestionRepository;
   let memberRepository: MemberRepository;
+  let categoryRepository: CategoryRepository;
 
   beforeAll(async () => {
-    const modules = [QuestionModule, TokenModule, AuthModule, WorkbookModule];
-    const entities = [Member, Token, Workbook, Question, Answer];
+    const modules = [
+      QuestionModule,
+      TokenModule,
+      AuthModule,
+      WorkbookModule,
+      CategoryModule,
+    ];
+    const entities = [Member, Token, Workbook, Question, Answer, Category];
 
     const moduleFixture: TestingModule = await createIntegrationTestModule(
       modules,
@@ -138,11 +149,14 @@ describe('QuestionController 통합테스트', () => {
     questionRepository =
       moduleFixture.get<QuestionRepository>(QuestionRepository);
     memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
+    categoryRepository =
+      moduleFixture.get<CategoryRepository>(CategoryRepository);
   });
 
   it('쿠키를 가지고 질문 생성을 요청하면 201코드와 생성된 질문의 Response가 반환된다.', async () => {
     //given
     const token = await authService.login(oauthRequestFixture);
+    await categoryRepository.save(categoryFixtureWithId);
     await workbookRepository.save(workbookFixture);
 
     //when
@@ -160,6 +174,7 @@ describe('QuestionController 통합테스트', () => {
     //given
     await memberRepository.save(memberFixture);
     const token = await authService.login(memberFixturesOAuthRequest);
+    await categoryRepository.save(categoryFixtureWithId);
     const workbook = await workbookRepository.save(workbookFixture);
 
     //when
@@ -177,6 +192,7 @@ describe('QuestionController 통합테스트', () => {
     it('Member객체와 questionId를 입력했을 때 정상적으로 질문을 삭제한다.', async () => {
       //given
       await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'tester'),
@@ -194,6 +210,7 @@ describe('QuestionController 통합테스트', () => {
     it('토큰이 없으면 UnauthorizedException을 발생시킨다.', async () => {
       //given
       await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'tester'),
@@ -209,6 +226,7 @@ describe('QuestionController 통합테스트', () => {
 
       //when & then
       await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const token = await authService.login(memberFixturesOAuthRequest);
       const agent = request.agent(app.getHttpServer());
       await agent

@@ -11,7 +11,8 @@ export class Workbook extends DefaultEntity {
   @Column({ type: 'blob' })
   content: string;
 
-  @Column()
+  @ManyToOne(() => Category)
+  @JoinColumn({ name: 'category' })
   category: Category;
 
   @Column()

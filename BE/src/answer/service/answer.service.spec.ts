@@ -34,6 +34,10 @@ import {
 import { Workbook } from '../../workbook/entity/workbook';
 import { WorkbookModule } from '../../workbook/workbook.module';
 import { WorkbookForbiddenException } from '../../workbook/exception/workbook.exception';
+import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
+import { CategoryRepository } from '../../category/repository/category.repository';
+import { CategoryModule } from '../../category/category.module';
+import { Category } from '../../category/entity/category';
 
 describe('AnswerService 단위 테스트', () => {
   let service: AnswerService;
@@ -148,7 +152,7 @@ describe('AnswerService 단위 테스트', () => {
         Workbook.of(
           'FE 테스트',
           '테스트용 FE 문제집입니다.',
-          'FE',
+          categoryFixtureWithId,
           new Member(
             100,
             'janghee@janghee.com',
@@ -175,6 +179,7 @@ describe('AnswerService 통합테스트', () => {
   let memberRepository: MemberRepository;
   let answerRepository: AnswerRepository;
   let answerService: AnswerService;
+  let categoryRepository: CategoryRepository;
 
   beforeAll(async () => {
     const modules = [
@@ -182,8 +187,9 @@ describe('AnswerService 통합테스트', () => {
       AnswerModule,
       QuestionModule,
       WorkbookModule,
+      CategoryModule,
     ];
-    const entities = [Answer, Question, Member, Answer, Workbook];
+    const entities = [Answer, Question, Member, Answer, Workbook, Category];
 
     const moduleFixture = await createIntegrationTestModule(modules, entities);
     app = moduleFixture.createNestApplication();
@@ -196,6 +202,8 @@ describe('AnswerService 통합테스트', () => {
     questionRepository =
       moduleFixture.get<QuestionRepository>(QuestionRepository);
     memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
+    categoryRepository =
+      moduleFixture.get<CategoryRepository>(CategoryRepository);
   });
 
   beforeEach(async () => {
@@ -209,33 +217,36 @@ describe('AnswerService 통합테스트', () => {
     it('질문에 대한 응답을 추가할 수 있다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
+      await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'testQuestion'),
       );
-      //
-      // //when
-      // const createAnswerRequest = new CreateAnswerRequest(
-      //   question.id,
-      //   'testAnswer',
-      // );
-      // const answerResponse = await answerService.addAnswer(
-      //   createAnswerRequest,
-      //   member,
-      // );
-      //
-      // //then
-      // const answer = await answerRepository.findByContentMemberIdAndQuestionId(
-      //   'testAnswer',
-      //   member.id,
-      //   question.id,
-      // );
-      // expect(answerResponse).toEqual(AnswerResponse.from(answer, member));
+
+      //when
+      const createAnswerRequest = new CreateAnswerRequest(
+        question.id,
+        'testAnswer',
+      );
+      const answerResponse = await answerService.addAnswer(
+        createAnswerRequest,
+        member,
+      );
+
+      //then
+      const answer = await answerRepository.findByContentMemberIdAndQuestionId(
+        'testAnswer',
+        member.id,
+        question.id,
+      );
+      expect(answerResponse).toEqual(AnswerResponse.from(answer, member));
     });
 
     it('복사된 질문에 답변을 추가해도, 원본 질문에 저장된다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const originalQuestion = await questionRepository.save(
         Question.of(workbook, null, 'originalQuestion'),
@@ -268,6 +279,7 @@ describe('AnswerService 통합테스트', () => {
     it('Member와 알맞은 Questin이 온다면, 정상적으로 대표 답변을 설정해준다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'test'),
@@ -301,6 +313,7 @@ describe('AnswerService 통합테스트', () => {
           new Date(),
         ),
       );
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'test'),
@@ -324,6 +337,7 @@ describe('AnswerService 통합테스트', () => {
     it('대표답변으로 설정하면 처음으로 온다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'test'),
@@ -351,6 +365,7 @@ describe('AnswerService 통합테스트', () => {
     it('답변을 삭제할 때 대표답변이라면 답변을 삭제하고 게시물의 대표답변은 null이 된다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'test'),
@@ -383,6 +398,7 @@ describe('AnswerService 통합테스트', () => {
           new Date(),
         ),
       );
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'test'),
@@ -413,6 +429,7 @@ describe('AnswerService 통합테스트', () => {
           new Date(),
         ),
       );
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'test'),
