@@ -17,4 +17,6 @@ export const companies = [
   'Meta',
 ];
 
+export const CATEGORIES = ['ALL', 'FE', 'BE', 'CS', 'Android', 'iOS', 'ETC.'];
+
 export const DEFAULT_THUMBNAIL = process.env.DEFAULT_THUMBNAIL;
