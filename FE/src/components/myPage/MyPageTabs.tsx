@@ -1,13 +1,11 @@
-import { SyntheticEvent, useState } from 'react';
-import Tabs from '@foundation/Tabs';
-import SelectionBox from '@foundation/SelectionBox/SelectionBox';
 import { css } from '@emotion/react';
-import Box from '@foundation/Box/Box';
-import Typography from '@foundation/Typography/Typography';
-import VideoListTabPanel from '@components/myPage/TabPanel/VideoListTabPanel';
-import QuestionSelectTabPanel from '@components/myPage/TabPanel/QuestionSelectTabPanel';
+import Tabs from '@foundation/Tabs';
+import { Box, SelectionBox, Typography } from '@foundation/index';
+import { useState, SyntheticEvent } from 'react';
+import QuestionSelectTabPanel from './TabPanel/QuestionSelectTabPanel';
+import VideoListTabPanel from './TabPanel/VideoListTabPanel';
 
-const MyPagesTabs: React.FC = () => {
+const MyPageTabs: React.FC = () => {
   const [value, setValue] = useState('2');
 
   const handleTabChange = (_: SyntheticEvent, v: string) => {
@@ -68,4 +66,4 @@ const MyPagesTabs: React.FC = () => {
   );
 };
 
-export default MyPagesTabs;
+export default MyPageTabs;

@@ -1,6 +1,5 @@
 import { VideoItemResDto } from '@/types/video';
-import VideoPlayerFrame from '@common/VideoPlayer/VideoPlayerFrame';
-import VideoPlayer from '@common/VideoPlayer/VideoPlayer';
+import { VideoPlayer, VideoPlayerFrame } from '@common/VideoPlayer';
 
 type PrivateVideoPlayerProps = Omit<VideoItemResDto, 'hash'>;
 const PrivateVideoPlayer: React.FC<PrivateVideoPlayerProps> = ({

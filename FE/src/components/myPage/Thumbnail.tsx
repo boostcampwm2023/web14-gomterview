@@ -1,8 +1,7 @@
-import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
-import Icon from '@foundation/Icon/Icon';
-import React, { MouseEventHandler } from 'react';
-import CardCover from '@foundation/CardCover/CardCover';
+import { CardCover, Icon } from '@foundation/index';
+import { theme } from '@styles/theme';
+import { MouseEventHandler } from 'react';
 
 type ThumbnailProps = {
   image: string;

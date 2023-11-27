@@ -1,8 +1,10 @@
-import LandingPageLayout from '@/components/landingPage/LandingPageLayout';
-import StartButton from '@common/StartButton/StartButton';
-import WelcomeBlurb from '@components/landingPage/WelcomeBlurb';
-import LandingImage from '@components/landingPage/LandingImage';
-import GoogleLoginButton from '@components/landingPage/GoogleLoginButton';
+import { StartButton } from '@common/index';
+import {
+  GoogleLoginButton,
+  LandingImage,
+  LandingPageLayout,
+  WelcomeBlurb,
+} from '@components/landingPage';
 import { css } from '@emotion/react';
 
 const LandingPage: React.FC = () => {

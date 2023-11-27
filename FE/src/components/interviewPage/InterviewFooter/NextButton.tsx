@@ -1,8 +1,7 @@
 import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
 
-import Icon from '@foundation/Icon/Icon';
-import Typography from '@foundation/Typography/Typography';
+import { Icon, Typography } from '@foundation/index';
 
 type NextButtonType = {
   handleNext: () => void;

@@ -1,12 +1,11 @@
-import { css } from '@emotion/react';
-import { theme } from '@styles/theme';
-import Typography from '@foundation/Typography/Typography';
-import Icon from '@foundation/Icon/Icon';
 import { HTMLElementTypes } from '@/types/utils';
-import useUserInfo from '@hooks/useUserInfo';
-import { API, BASE_URL } from '@constants/api';
-import { useNavigate } from 'react-router-dom';
+import { BASE_URL, API } from '@constants/api';
 import { PATH } from '@constants/path';
+import { css } from '@emotion/react';
+import { Icon, Typography } from '@foundation/index';
+import useUserInfo from '@hooks/useUserInfo';
+import { theme } from '@styles/theme';
+import { useNavigate } from 'react-router-dom';
 
 type GoogleLoginButtonProps = HTMLElementTypes<HTMLButtonElement>;
 

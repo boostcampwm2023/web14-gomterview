@@ -1,10 +1,8 @@
-import { css } from '@emotion/react';
-import Box from '@foundation/Box/Box';
-import Avatar from '@foundation/Avatar/Avatar';
-import Typography from '../foundation/Typography/Typography';
-import { Navigate } from 'react-router-dom';
 import { PATH } from '@constants/path';
+import { css } from '@emotion/react';
+import { Box, Avatar, Typography } from '@foundation/index';
 import useUserInfo from '@hooks/useUserInfo';
+import { Navigate } from 'react-router-dom';
 
 const Profile: React.FC = () => {
   const userInfo = useUserInfo();

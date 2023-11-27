@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import { css, Interpolation, Theme } from '@emotion/react';
 import { HTMLElementTypes } from '@/types/utils';
 

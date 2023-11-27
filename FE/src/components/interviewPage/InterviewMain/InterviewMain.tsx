@@ -1,9 +1,8 @@
 import { css } from '@emotion/react';
 import { RefObject } from 'react';
-import InterviewQuestion from './InterviewQuestion';
-import InterviewAnswer from './InterviewAnswer';
 import Mirror from './Mirror';
 import { theme } from '@styles/theme';
+import { InterviewQuestion, InterviewAnswer } from './index';
 
 type InterviewMainProps = {
   mirrorVideoRef: RefObject<HTMLVideoElement>;

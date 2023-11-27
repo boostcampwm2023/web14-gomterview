@@ -1,5 +1,5 @@
-import Layout from '@/components/layout/Layout';
-import Logo from '@common/Logo/Logo';
+import { Logo } from '@common/index';
+import Layout from '@components/layout/Layout';
 import { css } from '@emotion/react';
 
 type InterviewVideoPageLayoutProps = {

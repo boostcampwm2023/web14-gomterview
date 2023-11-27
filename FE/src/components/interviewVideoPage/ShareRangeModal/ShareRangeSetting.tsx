@@ -1,8 +1,8 @@
-import Typography from '@foundation/Typography/Typography';
-import ShareRangeIcon from '@components/interviewVideoPage/Modal/ShareRangeIcon';
 import { css } from '@emotion/react';
-import { theme } from '@styles/theme';
 import Toggle from '@foundation/Toggle/Toggle';
+import { Typography } from '@foundation/index';
+import { theme } from '@styles/theme';
+import ShareRangeIcon from './ShareRangeIcon';
 
 type ShareRangeSettingProps = {
   isPublic: boolean;

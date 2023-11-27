@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import Typography from '../foundation/Typography/Typography';
+import { Typography } from '@foundation/index';
 
 type DescriptionProps = {
   title: string;

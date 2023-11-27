@@ -1,12 +1,12 @@
 import Modal from '@foundation/Modal';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
-import Typography from '@foundation/Typography/Typography';
-import useQuestionAnswerQuery from '@hooks/queries/useQuestionAnswerQuery';
+import useQuestionAnswerQuery from '@/hooks/apis/queries/useQuestionAnswerQuery';
 import AnswerScript from './AnswerScript';
 import AnswerForm from './AnswerForm';
-import useAnswerDefaultMutation from '@hooks/mutations/useAnswerDefaultMutation';
+import useAnswerDefaultMutation from '@/hooks/apis/mutations/useAnswerDefaultMutation';
 import { Question } from '@/types/question';
+import { Typography } from '@foundation/index';
 
 type AnswerSelectionModalProps = {
   isOpen: boolean;
@@ -23,11 +23,7 @@ const AnswerSelectionModal: React.FC<AnswerSelectionModalProps> = ({
 }) => {
   const { data } = useQuestionAnswerQuery(question.questionId);
 
-  const { mutate: selectAnswerMutate } = useAnswerDefaultMutation(categoryId, {
-    onSuccess: () => {
-      closeModal();
-    },
-  });
+  const { mutate: selectAnswerMutate } = useAnswerDefaultMutation(categoryId);
 
   if (!data) return;
 
@@ -62,10 +58,15 @@ const AnswerSelectionModal: React.FC<AnswerSelectionModalProps> = ({
                 key={answer.answerId}
                 answer={answer}
                 onClick={() =>
-                  selectAnswerMutate({
-                    questionId: question.questionId,
-                    answerId: answer.answerId,
-                  })
+                  selectAnswerMutate(
+                    {
+                      questionId: question.questionId,
+                      answerId: answer.answerId,
+                    },
+                    {
+                      onSuccess: () => closeModal(),
+                    }
+                  )
                 }
               />
             ))}

@@ -1,4 +1,4 @@
-import Typography from '@foundation/Typography/Typography';
+import { Typography } from '@foundation/index';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
 type InterviewQuestionType = {

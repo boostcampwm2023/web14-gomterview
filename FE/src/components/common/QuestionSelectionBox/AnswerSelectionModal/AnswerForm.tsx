@@ -1,10 +1,7 @@
-import Box from '@foundation/Box/Box';
-import Button from '@foundation/Button/Button';
-import InputArea from '@foundation/InputArea/InputArea';
-import Typography from '@foundation/Typography/Typography';
-import useQuestionAnswerMutation from '@hooks/mutations/useQuestionAnswerMutation';
+import useQuestionAnswerMutation from '@/hooks/apis/mutations/useQuestionAnswerMutation';
 import useInput from '@hooks/useInput';
 import { css } from '@emotion/react';
+import { Box, Button, InputArea, Typography } from '@foundation/index';
 
 type AnswerFormProps = {
   questionId: number;
@@ -18,19 +15,20 @@ const AnswerForm: React.FC<AnswerFormProps> = ({ questionId, question }) => {
     isEmpty: isCustomAnswerEmpty,
     clearInput: clearCustomAnswer,
   } = useInput<HTMLTextAreaElement>('');
-  const { mutate } = useQuestionAnswerMutation(questionId, {
-    onSuccess: () => {
-      void clearCustomAnswer();
-    },
-  });
+  const { mutate } = useQuestionAnswerMutation(questionId);
 
   const handleCustomAnswerSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isCustomAnswerEmpty()) return;
-    mutate({
-      questionId,
-      content: customAnswer,
-    });
+    mutate(
+      {
+        questionId,
+        content: customAnswer,
+      },
+      {
+        onSuccess: () => clearCustomAnswer(),
+      }
+    );
   };
 
   return (

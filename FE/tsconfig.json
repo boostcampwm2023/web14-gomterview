@@ -10,17 +10,17 @@
     "noImplicitAny": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@components/*": ["./src/components/*"],
       "@common/*": ["./src/components/common/*"],
       "@foundation/*": ["./src/components/foundation/*"],
+      "@components/*": ["./src/components/*"],
       "@page/*": ["./src/page/*"],
       "@constants/*": ["./src/constants/*"],
       "@styles/*": ["./src/styles/*"],
       "@assets/*": ["./src/assets/*"],
       "@atoms/*": ["./src/atoms/*"],
       "@hooks/*": ["./src/hooks/*"],
-      "@routes/*": ["./src/routes/*"]
+      "@routes/*": ["./src/routes/*"],
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src"]

@@ -1,10 +1,9 @@
 import { RecordMethod, recordSetting } from '@/atoms/interviewSetting';
-import Description from '@/components/interviewSettingPage/Description';
-import RecordRadio from '@/components/interviewSettingPage/RecordPage/RecordRadio';
 import { QUERY_KEY } from '@/constants/queryKey';
 import { User } from '@/types/user';
+import { Description, RecordRadio } from '@components/interviewSettingPage';
 import { css } from '@emotion/react';
-import Button from '@foundation/Button/Button';
+import { Button } from '@foundation/index';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRecoilState } from 'recoil';
 

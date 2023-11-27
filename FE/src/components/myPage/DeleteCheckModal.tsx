@@ -1,9 +1,6 @@
-import Modal from '@foundation/Modal';
-import React from 'react';
-import Typography from '@foundation/Typography/Typography';
-import Button from '@foundation/Button/Button';
-import LightButton from '@common/LightButton/LightButton';
 import { css } from '@emotion/react';
+import Modal from '@foundation/Modal';
+import { Typography, Button } from '@foundation/index';
 
 type DeleteCheckModalProps = {
   isOpen: boolean;
@@ -30,7 +27,9 @@ const DeleteCheckModal: React.FC<DeleteCheckModalProps> = ({
             column-gap: 0.5rem;
           `}
         >
-          <LightButton onClick={closeModal}>취소</LightButton>
+          <Button variants="secondary" onClick={closeModal}>
+            취소
+          </Button>
           <Button onClick={confirmModal}>확인</Button>
         </div>
       </Modal.footer>

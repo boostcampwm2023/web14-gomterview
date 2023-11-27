@@ -1,6 +1,4 @@
-import MyPageLayout from '@/components/myPage/MyPageLayout';
-import Profile from '@/components/myPage/Profile';
-import MyPagesTabs from '@components/myPage/MyPagesTabs';
+import { MyPageLayout, Profile, MyPageTabs } from '@components/myPage';
 import useInterviewSettings from '@hooks/atoms/useInterviewSettings';
 import { useEffect } from 'react';
 
@@ -17,7 +15,7 @@ const MyPage: React.FC = () => {
   return (
     <MyPageLayout>
       <Profile />
-      <MyPagesTabs />
+      <MyPageTabs />
     </MyPageLayout>
   );
 };

@@ -1,21 +1,15 @@
-import Box from '@foundation/Box/Box';
 import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
-import Typography from '@foundation/Typography/Typography';
-
-import Tabs from '@foundation/Tabs';
 import { useState } from 'react';
-import SelectionBox from '@foundation/SelectionBox/SelectionBox';
 import TabPanelItem from './QuestionTabPanelItem';
-import useCategoryQuery from '@hooks/queries/useCategoryQuery';
-import AnswerSelectionModal from '@common/QuestionSelectionBox/AnswerSelectionModal/AnswerSelectionModal';
+import useCategoryQuery from '@/hooks/apis/queries/useCategoryQuery';
 import { useRecoilState } from 'recoil';
 import { QuestionAnswerSelectionModal } from '@atoms/modal';
+import AnswerSelectionModal from './AnswerSelectionModal/AnswerSelectionModal';
+import { Box, SelectionBox, Tabs, Typography } from '@foundation/index';
 
 const QuestionSelectionBox = () => {
   const [selectedTabIndex, setSelectedTabIndex] = useState('0');
-  //TODO: 현재 선택된 값은 임의 값임 Tabs를 변경한다면 가장 먼저 수정해야 할 사안.
-  // HOW: 해당 state는 몇번째 Tab을 클릭했는지 저장하는 state이다. 따라서 Index값을 가지고 있고 이를 바탕으로 questionAPI 데이터를 가져와야 한다.
 
   const { data: categoriesAPIData } = useCategoryQuery();
 

@@ -1,13 +1,12 @@
-import Modal from '@foundation/Modal';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
-import Typography from '@foundation/Typography/Typography';
-import Button from '@foundation/Button/Button';
+
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '@constants/path';
 import Confetti from 'react-confetti';
-import useWindowSize from '@hooks/pages/Interview/useWindowSize';
+import useWindowSize from '@/hooks/useWindowSize';
 import useUserInfo from '@hooks/useUserInfo';
+import { Typography, Modal, Button } from '@foundation/index';
 
 type InterviewFinishModalProps = {
   isOpen: boolean;

@@ -7,7 +7,7 @@
   },
   "ignorePatterns": ["webpack.config.js"],
   "parserOptions": {
-    "project": ["./FE/tsconfig.json"]
+    "project": ["./tsconfig.json"]
   },
   "plugins": ["@typescript-eslint", "prettier", "unused-imports"],
   "extends": [

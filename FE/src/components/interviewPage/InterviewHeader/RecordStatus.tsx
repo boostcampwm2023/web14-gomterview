@@ -1,6 +1,5 @@
 import { theme } from '@styles/theme';
-import { LeadingDot } from '@foundation/LeadingDot/LeadingDot';
-import Typography from '@foundation/Typography/Typography';
+import { Typography, LeadingDot } from '@foundation/index';
 type RecordStatusType = {
   isRecording: boolean;
 };

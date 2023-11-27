@@ -1,14 +1,15 @@
-import InterviewVideoPageLayout from '@components/interviewVideoPage/InterviewVideoPageLayout';
-import { useParams } from 'react-router-dom';
-import useVideoItemQuery from '@hooks/queries/video/useVideoItemQuery';
-import LoadingBounce from '@common/Loading/LoadingBounce';
-import CenterLayout from '@components/layout/CenterLayout';
-import StartButton from '@common/StartButton/StartButton';
-import { useState } from 'react';
-import IconButton from '@common/VideoPlayer/IconButton';
+import { IconButton } from '@common/VideoPlayer';
+import { LoadingBounce, StartButton } from '@common/index';
+import {
+  InterviewVideoPageLayout,
+  PrivateVideoPlayer,
+} from '@components/interviewVideoPage';
+import { VideoShareModal } from '@components/interviewVideoPage/ShareRangeModal';
+import { CenterLayout } from '@components/layout';
 import { css } from '@emotion/react';
-import PrivateVideoPlayer from '@components/interviewVideoPage/PrivateVideoPlayer';
-import VideoShareModal from '@components/interviewVideoPage/Modal/VideoShareModal';
+import useVideoItemQuery from '@hooks/apis/queries/useVideoItemQuery';
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 const InterviewVideoPage: React.FC = () => {
   const { videoId } = useParams();

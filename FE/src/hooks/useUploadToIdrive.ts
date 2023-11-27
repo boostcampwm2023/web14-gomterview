@@ -1,7 +1,7 @@
 import { SelectedQuestion } from '@/atoms/interviewSetting';
-import useGetPreSignedUrlMutation from '@/hooks/mutations/video/useGetPreSignedUrlMutation';
+import useGetPreSignedUrlMutation from '@/hooks/apis/mutations/useGetPreSignedUrlMutation';
 import { putVideoToIdrive } from '@/apis/idrive';
-import useAddVideoMutation from '@hooks/mutations/video/useAddVideoMutation';
+import useAddVideoMutation from '@/hooks/apis/mutations/useAddVideoMutation';
 
 type UploadParams = {
   blob: Blob;
