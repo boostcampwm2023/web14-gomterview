@@ -1,6 +1,7 @@
 import { DefaultEntity } from '../../app.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Member } from '../../member/entity/member';
+import { Category } from '../../category/entity/category';
 
 @Entity({ name: 'Workbook' })
 export class Workbook extends DefaultEntity {
@@ -11,7 +12,7 @@ export class Workbook extends DefaultEntity {
   content: string;
 
   @Column()
-  category: string;
+  category: Category;
 
   @Column()
   copyCount: number;
@@ -25,7 +26,7 @@ export class Workbook extends DefaultEntity {
     createdAt: Date,
     name: string,
     content: string,
-    category: string,
+    category: Category,
     copyCount: number,
     member: Member,
   ) {
@@ -40,7 +41,7 @@ export class Workbook extends DefaultEntity {
   static of(
     name: string,
     content: string,
-    category: string,
+    category: Category,
     member: Member,
   ): Workbook {
     return new Workbook(null, new Date(), name, content, category, 0, member);

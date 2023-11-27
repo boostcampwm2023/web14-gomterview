@@ -1,6 +1,5 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { DefaultEntity } from '../../app.entity';
-import { Member } from '../../member/entity/member';
 import { CreateCategoryRequest } from '../dto/createCategoryRequest';
 
 @Entity({ name: 'Category' })
@@ -8,29 +7,16 @@ export class Category extends DefaultEntity {
   @Column()
   name: string;
 
-  @ManyToOne(() => Member, { nullable: true, onDelete: 'CASCADE', eager: true })
-  @JoinColumn({ name: 'member' })
-  member: Member;
-
-  constructor(id: number, name: string, member: Member, createdAt: Date) {
+  constructor(id: number, name: string, createdAt: Date) {
     super(id, createdAt);
-    this.member = member;
     this.name = name;
   }
 
-  static from(inputObj: CreateCategoryRequest | Category, member: Member) {
-    return new Category(null, inputObj.name, member, new Date());
+  static from(inputObj: CreateCategoryRequest | Category) {
+    return new Category(null, inputObj.name, new Date());
   }
 
-  static of(name: string, member: Member) {
-    return new Category(null, name, member, new Date());
-  }
-
-  isOwnedBy(member: Member) {
-    return this.member.id === member.id;
-  }
-
-  getName() {
-    return this.name;
+  static of(name: string) {
+    return new Category(null, name, new Date());
   }
 }
