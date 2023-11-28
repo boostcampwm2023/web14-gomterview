@@ -9,6 +9,7 @@ import { validateManipulatedToken } from '../../util/token.util';
 import { WorkbookResponse } from '../dto/workbookResponse';
 import { isEmpty } from 'class-validator';
 import { validateWorkbook } from '../util/workbook.util';
+import { WorkbookTitleResponse } from '../dto/workbookTitleResponse';
 
 @Injectable()
 export class WorkbookService {
@@ -60,15 +61,16 @@ export class WorkbookService {
   }
 
   async findWorkbookTitles(member: Member) {
+    const workbooks = await this.findWorkbookByMember(member);
+    return workbooks.map(WorkbookTitleResponse.of);
+  }
+
+  private async findWorkbookByMember(member: Member) {
     if (isEmpty(member)) {
-      return (await this.workbookRepository.findTop5Workbooks()).map(
-        WorkbookResponse.of,
-      );
+      return await this.workbookRepository.findTop5Workbooks();
     }
 
-    return (await this.workbookRepository.findMembersWorkbooks(member.id)).map(
-      WorkbookResponse.of,
-    );
+    return await this.workbookRepository.findMembersWorkbooks(member.id);
   }
 
   async findSingleWorkbook(workbookId: number) {

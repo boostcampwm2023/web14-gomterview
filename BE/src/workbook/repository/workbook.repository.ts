@@ -58,7 +58,7 @@ export class WorkbookRepository {
     return await this.repository
       .createQueryBuilder('Workbook')
       .leftJoinAndSelect('Workbook.member', 'member')
-      .where('member.id = :id', { memberId })
+      .where('member.id = :memberId', { memberId })
       .getMany();
   }
 }
