@@ -35,9 +35,25 @@ import {
 } from 'src/util/redis.util';
 import { MemberNotFoundException } from 'src/member/exception/member.exception';
 import { VideoHashResponse } from '../dto/videoHashResponse';
+import { VideoModule } from '../video.module';
+import { Video } from '../entity/video';
+import { Member } from 'src/member/entity/member';
+import { Question } from 'src/question/entity/question';
+import { Workbook } from 'src/workbook/entity/workbook';
+import { Token } from 'src/token/entity/token';
+import { Category } from 'src/category/entity/category';
+import { addAppModules, createIntegrationTestModule } from 'src/util/test.util';
+import { INestApplication } from '@nestjs/common';
+import { Answer } from 'src/answer/entity/answer';
+import { CategoryRepository } from 'src/category/repository/category.repository';
+import { WorkbookRepository } from 'src/workbook/repository/workbook.repository';
+import { categoryFixtureWithId } from 'src/category/fixture/category.fixture';
+import { workbookFixtureWithId } from 'src/workbook/fixture/workbook.fixture';
+import { questionFixture } from 'src/question/fixture/question.fixture';
+import { QuestionModule } from 'src/question/question.module';
 jest.mock('src/util/redis.util');
 
-describe('VideoService', () => {
+describe('VideoService 단위 테스트', () => {
   let videoService: VideoService;
 
   const mockVideoRepository = {
@@ -97,7 +113,7 @@ describe('VideoService', () => {
       ).resolves.toBeUndefined();
     });
 
-    it('비디오 저장 시 member가 없으면 ManipulatedTokenNotFiltered을 반환한다.', () => {
+    it('비디오 저장 시 member가 없으면 ManipulatedTokenNotFiltered를 반환한다.', () => {
       // given
       const member = undefined;
 
@@ -144,7 +160,7 @@ describe('VideoService', () => {
       );
     });
 
-    it('preSigned URL 얻기 시 IDrive Client가 Pre-Signed URL 발급에 실패하면 IDriveException을 반환한다.', () => {
+    it('preSigned URL 얻기 시 IDrive Client가 Pre-Signed URL 발급에 실패하면 IDriveException을 반환한다.', async () => {
       // given
       const member = memberFixture;
 
@@ -154,9 +170,11 @@ describe('VideoService', () => {
       getSignedUrlMock.mockRejectedValue(new IDriveException());
 
       // then
-      expect(videoService.getPreSignedUrl(member, request)).rejects.toThrow(
-        IDriveException,
-      );
+      await expect(
+        videoService.getPreSignedUrl(member, request),
+      ).rejects.toThrow(IDriveException);
+
+      getSignedUrlMock.mockRestore();
     });
   });
 
@@ -585,5 +603,88 @@ describe('VideoService', () => {
         VideoAccessForbiddenException,
       );
     });
+  });
+});
+
+describe('VideoService 통합 테스트', () => {
+  let app: INestApplication;
+  let videoService: VideoService;
+  let categoryRepository: CategoryRepository;
+  let memberRepository: MemberRepository;
+  let questionRepository: QuestionRepository;
+  let workbookRepository: WorkbookRepository;
+  let videoRepository: VideoRepository;
+
+  beforeAll(async () => {
+    const modules = [VideoModule, QuestionModule];
+    const entities = [
+      Video,
+      Member,
+      Question,
+      Answer,
+      Workbook,
+      Token,
+      Category,
+    ];
+
+    const moduleFixture: TestingModule = await createIntegrationTestModule(
+      modules,
+      entities,
+    );
+
+    app = moduleFixture.createNestApplication();
+    addAppModules(app);
+    await app.init();
+
+    videoService = moduleFixture.get<VideoService>(VideoService);
+    categoryRepository =
+      moduleFixture.get<CategoryRepository>(CategoryRepository);
+    memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
+    questionRepository =
+      moduleFixture.get<QuestionRepository>(QuestionRepository);
+    workbookRepository =
+      moduleFixture.get<WorkbookRepository>(WorkbookRepository);
+    videoRepository = moduleFixture.get<VideoRepository>(VideoRepository);
+  });
+
+  beforeEach(async () => {
+    await memberRepository.save(memberFixture);
+    await categoryRepository.save(categoryFixtureWithId);
+    await workbookRepository.save(workbookFixtureWithId);
+    await questionRepository.save(questionFixture);
+  });
+
+  describe('createVideo', () => {
+    it('새로운 비디오 저장에 성공하면 undefined를 반환한다.', async () => {
+      //given
+
+      //when
+
+      //then
+      await expect(
+        videoService.createVideo(memberFixture, createVideoRequestFixture),
+      ).resolves.toBeUndefined();
+    });
+
+    it('새로운 비디오 저장 시 member가 없으면 ManipulatedTokenNotFiltered를 반환한다.', async () => {
+      //given
+      const memberFixture = null;
+
+      //when
+
+      //then
+      expect(
+        videoService.createVideo(memberFixture, createVideoRequestFixture),
+      ).rejects.toThrow(ManipulatedTokenNotFiltered);
+    });
+  });
+
+  afterEach(async () => {
+    await questionRepository.query('delete from Member');
+    await questionRepository.query('delete from Category');
+    await questionRepository.query('delete from Workbook');
+    await questionRepository.query('delete from Question');
+    await questionRepository.query('delete from Video');
+    await questionRepository.query('DELETE FROM sqlite_sequence'); // Auto Increment 초기화
   });
 });
