@@ -39,9 +39,9 @@ export class WorkbookRepository {
   async findAllByCategoryId(categoryId: number) {
     return await this.repository
       .createQueryBuilder('Workbook')
-      .leftJoinAndSelect('Workbook.category', 'category')
       .leftJoinAndSelect('Workbook.member', 'member')
-      .where('category.id = :id', { categoryId })
+      .leftJoinAndSelect('Workbook.category', 'category')
+      .where('category.id = :categoryId', { categoryId })
       .getMany();
   }
 

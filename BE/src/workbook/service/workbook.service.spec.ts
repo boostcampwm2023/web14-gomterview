@@ -295,8 +295,10 @@ describe('WorkbookService 통합테스트', () => {
   it('카테고리를 입력받으면 해당 카테고리의 문제집을 조회한다.', async () => {
     ///given
     const member = await memberRepository.save(memberFixture);
+    let categoryId = 0;
     for (const each of categoryListFixture) {
       const category = await categoryRepository.save(each);
+      categoryId = category.id;
       for (let index = 1; index <= 3; index++) {
         await workbookRepository.save(
           Workbook.of(
@@ -310,10 +312,10 @@ describe('WorkbookService 통합테스트', () => {
     }
 
     //when
-    const result = await workbookService.findWorkbooks(1);
+    const result = await workbookService.findWorkbooks(categoryId);
 
     //then
-    expect(result.length).toBe(categoryListFixture.length);
+    expect(result.length).toBe(3);
     expect(result[0]).toBeInstanceOf(WorkbookResponse);
   });
 
@@ -428,5 +430,11 @@ describe('WorkbookService 통합테스트', () => {
     expect(workbook.title).toEqual('test title');
     expect(workbook.content).toEqual('test content');
     expect(workbook.member.id).toEqual(member.id);
+  });
+
+  afterEach(async () => {
+    await workbookRepository.query('delete from Workbook');
+    await workbookRepository.query('delete from Member');
+    await workbookRepository.query('delete from Category');
   });
 });
