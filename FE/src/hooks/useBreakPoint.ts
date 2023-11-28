@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useLayoutEffect } from 'react';
 import useWindowSize from './useWindowSize';
 import { breakpoints } from '@styles/_breakpoints';
 
@@ -8,7 +8,7 @@ const useBreakpoint = () => {
   const { width } = useWindowSize();
   const [breakpoint, setBreakpoint] = useState('');
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     switch (true) {
       case width < parseBreakpoint(breakpoints.mobileS):
         setBreakpoint('mobileXS');
