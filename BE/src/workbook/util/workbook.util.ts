@@ -1,8 +1,8 @@
-import { Workbook } from './entity/workbook';
+import { Workbook } from '../entity/workbook';
 import { isEmpty } from 'class-validator';
-import { WorkbookNotFoundException } from './exception/workbook.exception';
+import { WorkbookNotFoundException } from '../exception/workbook.exception';
 import { UnauthorizedException } from '@nestjs/common';
-import { Member } from '../member/entity/member';
+import { Member } from '../../member/entity/member';
 
 export const validateWorkbook = (workbook: Workbook) => {
   if (isEmpty(workbook)) throw new WorkbookNotFoundException();

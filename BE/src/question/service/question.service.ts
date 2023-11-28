@@ -12,7 +12,7 @@ import { WorkbookRepository } from '../../workbook/repository/workbook.repositor
 import {
   validateWorkbook,
   validateWorkbookOwner,
-} from '../../workbook/workbook.util';
+} from '../../workbook/util/workbook.util';
 
 @Injectable()
 export class QuestionService {

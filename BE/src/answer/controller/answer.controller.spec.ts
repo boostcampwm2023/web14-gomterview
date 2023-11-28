@@ -40,6 +40,8 @@ import { workbookFixture } from '../../workbook/fixture/workbook.fixture';
 import { WorkbookRepository } from '../../workbook/repository/workbook.repository';
 import { WorkbookModule } from '../../workbook/workbook.module';
 import { Workbook } from '../../workbook/entity/workbook';
+import { CategoryRepository } from '../../category/repository/category.repository';
+import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 
 describe('AnswerController 단위테스트', () => {
   let controller: AnswerController;
@@ -109,6 +111,7 @@ describe('AnswerController 통합테스트', () => {
   let questionRepository: QuestionRepository;
   let answerRepository: AnswerRepository;
   let memberRepository: MemberRepository;
+  let categoryRepository: CategoryRepository;
 
   beforeAll(async () => {
     const modules = [
@@ -142,6 +145,8 @@ describe('AnswerController 통합테스트', () => {
       moduleFixture.get<QuestionRepository>(QuestionRepository);
     answerRepository = moduleFixture.get<AnswerRepository>(AnswerRepository);
     memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
+    categoryRepository =
+      moduleFixture.get<CategoryRepository>(CategoryRepository);
   });
 
   beforeEach(async () => {
@@ -155,6 +160,7 @@ describe('AnswerController 통합테스트', () => {
     it('쿠키를 가지고 원본 질문에 답변 생성을 요청하면 201코드와 생성된 질문의 Response가 반환된다.', async () => {
       //given
       const token = await authService.login(memberFixturesOAuthRequest);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'testQuestion'),
@@ -173,8 +179,9 @@ describe('AnswerController 통합테스트', () => {
 
     it('쿠키를 가지고 복사된 질문에 답변 생성을 요청하면 원본에 대한 답변으로 저장하고 201코드와 생성된 질문의 Response가 반환된다.', async () => {
       //given
-      const member = await memberRepository.save(memberFixture);
+      await memberRepository.save(memberFixture);
       const token = await authService.login(memberFixturesOAuthRequest);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'testQuestion'),
@@ -195,7 +202,8 @@ describe('AnswerController 통합테스트', () => {
 
     it('쿠키가 존재하지 않으면 401에러를 반환한다.', async () => {
       //given
-      const member = await memberRepository.save(memberFixture);
+      await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'testQuestion'),
@@ -229,8 +237,9 @@ describe('AnswerController 통합테스트', () => {
 
     it('content가 존재하지 않으면 400코드를 반환한다.', async () => {
       //given
-      const member = await memberRepository.save(memberFixture);
+      await memberRepository.save(memberFixture);
       const token = await authService.login(memberFixturesOAuthRequest);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'testQuestion'),
@@ -251,6 +260,7 @@ describe('AnswerController 통합테스트', () => {
     it('토큰을 가지고 존재하는 질문에 대해 존재하는 답변으로 대표답변 설정을 요청하면 성공적으로 변경해준다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'testQuestion'),
@@ -271,6 +281,7 @@ describe('AnswerController 통합테스트', () => {
     it('토큰이 없으면 권한없음 처리한다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'testQuestion'),
@@ -290,6 +301,7 @@ describe('AnswerController 통합테스트', () => {
     it('다른 사람의 질문 id로 대표답변을 수정하려하면 403코드를 반환한다', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'testQuestion'),
@@ -311,6 +323,7 @@ describe('AnswerController 통합테스트', () => {
     it('질문 id가 존재하지 않으면 404코드를 반환한다', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'testQuestion'),
@@ -331,7 +344,8 @@ describe('AnswerController 통합테스트', () => {
 
     it('답변 id가 존재하지 않으면 404코드를 반환한다', async () => {
       //given
-      const member = await memberRepository.save(memberFixture);
+      await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'testQuestion'),
@@ -352,6 +366,7 @@ describe('AnswerController 통합테스트', () => {
     it('질문을 조회할 때 회원 정보가 없으면 모든 답변이 최신순으로 정렬된다. ', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'testQuestion'),
@@ -374,6 +389,7 @@ describe('AnswerController 통합테스트', () => {
     it('질문을 조회할 때 회원 정보가 있으면 모든 등록한 DefaultAnswer부터 정렬된다. ', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'testQuestion'),
@@ -401,6 +417,7 @@ describe('AnswerController 통합테스트', () => {
     it('존재하지 않는 질문의 id를 조회하면 404에러를 반환한다. ', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'testQuestion'),
@@ -425,6 +442,7 @@ describe('AnswerController 통합테스트', () => {
     it('답변을 삭제할 때 자신의 댓글을 삭제하려고 하면 204코드와 함께 성공한다. ', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'testQuestion'),
@@ -445,6 +463,7 @@ describe('AnswerController 통합테스트', () => {
     it('쿠키가 없으면 401에러를 반환한다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'testQuestion'),
@@ -461,6 +480,7 @@ describe('AnswerController 통합테스트', () => {
     it('다른 사람의 답변을 삭제하면 403에러를 반환한다.', async () => {
       //given
       const member = await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
       const workbook = await workbookRepository.save(workbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'testQuestion'),

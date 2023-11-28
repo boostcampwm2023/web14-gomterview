@@ -21,9 +21,9 @@ export class WorkbookRepository {
     return await this.repository.save(workbook);
   }
 
-  async findByNameAndMemberId(name: string, memberId: number) {
+  async findByNameAndMemberId(title: string, memberId: number) {
     return await this.repository.findOneBy({
-      name: name,
+      title: title,
       member: { id: memberId },
     });
   }
