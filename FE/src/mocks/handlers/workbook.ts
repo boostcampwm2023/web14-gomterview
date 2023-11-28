@@ -37,7 +37,7 @@ const workbookHandlers = [
       { status: 200 }
     );
   }),
-  http.get(API.WORKBOOK_MY, () => {
+  http.get(API.WORKBOOK_TITLE, () => {
     return HttpResponse.json(
       [
         {

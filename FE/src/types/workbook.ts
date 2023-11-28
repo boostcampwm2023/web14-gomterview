@@ -30,10 +30,13 @@ export type WorkbookAddResDto = Pick<WorkbookEntity, 'workbookId'>;
 export type WorkbookListResDto = Omit<WorkbookEntity, 'categoryId'>;
 
 /**
- * GET workbook/my
- * 나의 문제집을 조회했을 때 응답 객체 타입
+ * GET workbook/title
+ * 문제집 제목 리스트를 조회했을 때 응답 객체 타입
  */
-export type WorkbookMyResDto = Pick<WorkbookEntity, 'workbookId' | 'title'>[];
+export type WorkbookTitleListResDto = Pick<
+  WorkbookEntity,
+  'workbookId' | 'title'
+>[];
 
 /**
  * GET workbook/${workbookId}
