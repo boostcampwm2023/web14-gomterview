@@ -4,7 +4,7 @@ import { theme } from '@styles/theme';
 import MenuItem from './MenuItem';
 import { PATH } from '@constants/path';
 import useUserInfo from '@hooks/useUserInfo';
-import handleGoogleLogin from '@/utils/handleGoogleLogin';
+import redirectToGoogleLogin from '@/utils/redirectToGoogleLogin';
 
 const MenuList: React.FC = () => {
   const isLogin = useUserInfo();
@@ -27,7 +27,7 @@ const MenuList: React.FC = () => {
               background-color: ${theme.colors.surface.weak};
             }
           `}
-          onClick={() => void handleGoogleLogin()}
+          onClick={() => void redirectToGoogleLogin()}
         >
           <Typography variant="body1" color={theme.colors.text.subStrong}>
             로그인

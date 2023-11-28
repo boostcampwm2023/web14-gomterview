@@ -1,5 +1,5 @@
 import { HTMLElementTypes } from '@/types/utils';
-import handleGoogleLogin from '@/utils/handleGoogleLogin';
+import redirectToGoogleLogin from '@/utils/redirectToGoogleLogin';
 import { css } from '@emotion/react';
 import { Icon, Typography } from '@foundation/index';
 import useUserInfo from '@hooks/useUserInfo';
@@ -14,7 +14,7 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ ...args }) => {
 
   return (
     <button
-      onClick={() => void handleGoogleLogin()}
+      onClick={() => void redirectToGoogleLogin()}
       css={css`
         display: flex;
         align-items: center;

@@ -1,7 +1,7 @@
 import { API, BASE_URL } from '@constants/api';
 import { PATH } from '@constants/path';
 
-const handleGoogleLogin = async () => {
+const redirectToGoogleLogin = async () => {
   if (process.env.NODE_ENV === 'development') {
     const { cookieGenerator } = await import('@/dev/cookieGenerator');
     void (await cookieGenerator());
@@ -12,4 +12,4 @@ const handleGoogleLogin = async () => {
   window.location.href = `${BASE_URL}${API.LOGIN}`;
 };
 
-export default handleGoogleLogin;
+export default redirectToGoogleLogin;
