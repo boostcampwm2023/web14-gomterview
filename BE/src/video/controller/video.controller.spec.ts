@@ -53,6 +53,9 @@ import 'dotenv/config';
 import { VideoRepository } from '../repository/video.repository';
 import * as crypto from 'crypto';
 import { MemberRepository } from 'src/member/repository/member.repository';
+import { Category } from 'src/category/entity/category';
+import { CategoryRepository } from 'src/category/repository/category.repository';
+import { categoryFixtureWithId } from 'src/category/fixture/category.fixture';
 
 describe('VideoController 단위 테스트', () => {
   let controller: VideoController;
@@ -592,14 +595,24 @@ describe('VideoController 단위 테스트', () => {
 describe('VideoController 통합테스트', () => {
   let app: INestApplication;
   let authService: AuthService;
+  let categoryRepository: CategoryRepository;
   let memberRepository: MemberRepository;
   let questionRepository: QuestionRepository;
   let workbookRepository: WorkbookRepository;
   let videoRepository: VideoRepository;
+  let token: string;
 
   beforeAll(async () => {
     const modules = [VideoModule, AuthModule];
-    const entities = [Video, Member, Question, Workbook, Answer, Token];
+    const entities = [
+      Video,
+      Member,
+      Question,
+      Workbook,
+      Answer,
+      Token,
+      Category,
+    ];
 
     const moduleFixture: TestingModule = await createIntegrationTestModule(
       modules,
@@ -611,6 +624,8 @@ describe('VideoController 통합테스트', () => {
     await app.init();
 
     authService = moduleFixture.get<AuthService>(AuthService);
+    categoryRepository =
+      moduleFixture.get<CategoryRepository>(CategoryRepository);
     memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
     questionRepository =
       moduleFixture.get<QuestionRepository>(QuestionRepository);
@@ -619,12 +634,16 @@ describe('VideoController 통합테스트', () => {
     videoRepository = moduleFixture.get<VideoRepository>(VideoRepository);
   });
 
+  beforeEach(async () => {
+    token = await authService.login(oauthRequestFixture);
+    await categoryRepository.save(categoryFixtureWithId);
+    await workbookRepository.save(workbookFixtureWithId);
+    await questionRepository.save(questionFixture);
+  });
+
   describe('createVideo', () => {
     it('쿠키를 가지고 비디오 생성을 요청하면 201 상태 코드와 undefined가 반환된다.', async () => {
       // given
-      const token = await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
 
       // when & then
       const agent = request.agent(app.getHttpServer());
@@ -638,11 +657,8 @@ describe('VideoController 통합테스트', () => {
         });
     });
 
-    it('쿠키 없이 비디오 생성을 요청하면 Unauthorized 예외가 반환된다.', async () => {
+    it('쿠키 없이 비디오 생성을 요청하면 401 상태코드가 반환된다.', async () => {
       // given
-      await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
 
       // when & then
       const agent = request.agent(app.getHttpServer());
@@ -656,9 +672,6 @@ describe('VideoController 통합테스트', () => {
   describe('getPreSignedUrl', () => {
     it('쿠키를 가지고 Pre-Signed URL 생성을 요청하면 201 상태 코드가 반환된다.', async () => {
       // given
-      const token = await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
 
       // when & then
       const agent = request.agent(app.getHttpServer());
@@ -671,9 +684,6 @@ describe('VideoController 통합테스트', () => {
 
     it('쿠키 없이 Pre-Signed URL 생성을 요청하면 401 상태 코드가 반환된다.', async () => {
       // given
-      await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
 
       // when & then
       const agent = request.agent(app.getHttpServer());
@@ -687,9 +697,6 @@ describe('VideoController 통합테스트', () => {
   describe('getAllVideo', () => {
     it('쿠키를 가지고 전체 비디오 조회를 요청하면 200 상태 코드와 현재 저장 되어 있던 비디오가 반환된다.', async () => {
       // given
-      const token = await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
       await videoRepository.save(videoFixture);
 
       // when & then
@@ -705,9 +712,6 @@ describe('VideoController 통합테스트', () => {
 
     it('쿠키를 가지고 전체 비디오 조회를 요청 시 저장된 비디오가 없다면 200 상태 코드와 빈 배열이 반환된다.', async () => {
       // given
-      const token = await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
 
       // when & then
       const agent = request.agent(app.getHttpServer());
@@ -721,8 +725,6 @@ describe('VideoController 통합테스트', () => {
     it('쿠키 없이 전체 비디오 조회를 요청하면 401 상태 코드가 반환된다.', async () => {
       // given
       await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
 
       // when & then
       const agent = request.agent(app.getHttpServer());
@@ -733,9 +735,6 @@ describe('VideoController 통합테스트', () => {
   describe('getVideoDetailByHash', () => {
     it('쿠키를 가지고 해시로 비디오 조회를 요청하면 200 상태 코드와 비디오 정보가 반환된다.', async () => {
       // given
-      const token = await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
       await videoRepository.save(videoFixture);
       const hash = crypto
         .createHash('md5')
@@ -761,9 +760,6 @@ describe('VideoController 통합테스트', () => {
 
     it('쿠키 없이 해시로 비디오 조회를 요청하더라도 200 상태 코드와 비디오 정보가 반환된다.', async () => {
       // given
-      await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
       await videoRepository.save(videoFixture);
       const hash = crypto
         .createHash('md5')
@@ -788,9 +784,6 @@ describe('VideoController 통합테스트', () => {
 
     it('해시로 private인 비디오 조회를 요청하면 403 상태 코드가 반환된다.', async () => {
       // given
-      await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
       await videoRepository.save(privateVideoFixture);
       const hash = crypto
         .createHash('md5')
@@ -804,9 +797,6 @@ describe('VideoController 통합테스트', () => {
 
     it('해시로 탈퇴한 회원의 비디오 조회를 요청하면 404 상태 코드가 반환된다.', async () => {
       // give
-      await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
       await videoRepository.save(videoOfWithdrawnMemberFixture);
       const hash = crypto
         .createHash('md5')
@@ -822,9 +812,6 @@ describe('VideoController 통합테스트', () => {
   describe('getVideoDetail', () => {
     it('쿠키를 가지고 비디오 조회를 요청하면 200 상태 코드와 비디오 정보가 반환된다.', async () => {
       // given
-      const token = await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
       const video = await videoRepository.save(videoFixture);
       const hash = crypto.createHash('md5').update(video.url).digest('hex');
 
@@ -847,9 +834,6 @@ describe('VideoController 통합테스트', () => {
 
     it('private 상태인 비디오 조회를 요청하면 200 상태 코드와 hash가 null인 상태로 비디어 정보가 반환된다.', async () => {
       // given
-      const token = await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
       const video = await videoRepository.save(privateVideoFixture);
 
       // when & then
@@ -871,9 +855,6 @@ describe('VideoController 통합테스트', () => {
 
     it('쿠키 없이 해시로 비디오 조회를 요청하면 401 상태 코드가 반환된다.', async () => {
       // given
-      await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
       const video = await videoRepository.save(videoFixture);
 
       // when & then
@@ -883,9 +864,6 @@ describe('VideoController 통합테스트', () => {
 
     it('다른 사람의 비디오 조회를 요청하면 403 상태 코드가 반환된다.', async () => {
       // give
-      const token = await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
       await memberRepository.save(otherMemberFixture);
       const video = await videoRepository.save(videoOfOtherFixture);
 
@@ -899,9 +877,6 @@ describe('VideoController 통합테스트', () => {
 
     it('존재하지 않는 비디오 조회를 요청하면 404 상태 코드가 반환된다.', async () => {
       // give
-      const token = await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
       const video = await videoRepository.save(videoFixture);
 
       // when & then
@@ -916,9 +891,6 @@ describe('VideoController 통합테스트', () => {
   describe('toggleVideoStatus', () => {
     it('쿠키를 가지고 비디오 상태 토글을 요청하면 200 상태 코드와 해시값 null이 반환된다.', async () => {
       // give
-      const token = await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
       const video = await videoRepository.save(videoFixture);
 
       // when & then
@@ -932,9 +904,6 @@ describe('VideoController 통합테스트', () => {
 
     it('쿠키를 가지고 private 비디오의 상태 토글을 요청하면 200 상태 코드와 url 해시값이 반환된다.', async () => {
       // give
-      const token = await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
       const video = await videoRepository.save(privateVideoFixture);
       const hash = crypto.createHash('md5').update(video.url).digest('hex');
 
@@ -949,9 +918,6 @@ describe('VideoController 통합테스트', () => {
 
     it('쿠키 없이 비디오 상태 토글을 요청하면 401 상태 코드가 반환된다.', async () => {
       // given
-      await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
       const video = await videoRepository.save(videoFixture);
 
       // when & then
@@ -961,9 +927,6 @@ describe('VideoController 통합테스트', () => {
 
     it('다른 사람의 비디오 상태 토글을 요청하면 403 상태 코드가 반환된다.', async () => {
       // give
-      const token = await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
       await memberRepository.save(otherMemberFixture);
       const video = await videoRepository.save(videoOfOtherFixture);
 
@@ -977,9 +940,6 @@ describe('VideoController 통합테스트', () => {
 
     it('존재하지 않는 비디오 상태 토글을 요청하면 404 상태 코드가 반환된다.', async () => {
       // give
-      const token = await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
       const video = await videoRepository.save(videoFixture);
 
       // when & then
@@ -994,9 +954,6 @@ describe('VideoController 통합테스트', () => {
   describe('deleteVideo', () => {
     it('쿠키를 가지고 비디오의 삭제를 요청하면 204 상태 코드가 반환된다.', async () => {
       // give
-      const token = await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
       const video = await videoRepository.save(videoFixture);
 
       // when & then
@@ -1010,9 +967,6 @@ describe('VideoController 통합테스트', () => {
 
     it('쿠키 없이 비디오의 삭제를 요청하면 401 상태 코드가 반환된다.', async () => {
       // given
-      await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
       const video = await videoRepository.save(videoFixture);
 
       // when & then
@@ -1022,9 +976,6 @@ describe('VideoController 통합테스트', () => {
 
     it('다른 사람의 비디오의 삭제를 요청하면 403 상태 코드가 반환된다.', async () => {
       // give
-      const token = await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
       await memberRepository.save(otherMemberFixture);
       const video = await videoRepository.save(videoOfOtherFixture);
 
@@ -1038,9 +989,6 @@ describe('VideoController 통합테스트', () => {
 
     it('존재하지 않는 비디오의 삭제를 요청하면 404 상태 코드가 반환된다.', async () => {
       // give
-      const token = await authService.login(oauthRequestFixture);
-      await workbookRepository.save(workbookFixtureWithId);
-      await questionRepository.save(questionFixture);
       const video = await videoRepository.save(videoFixture);
 
       // when & then
@@ -1054,9 +1002,7 @@ describe('VideoController 통합테스트', () => {
 
   afterEach(async () => {
     await questionRepository.query('delete from token');
-    await questionRepository.query('delete from Question');
     await questionRepository.query('delete from Member');
-    await questionRepository.query('delete from Workbook');
     await questionRepository.query('delete from Video');
     await questionRepository.query('DELETE FROM sqlite_sequence'); // Auto Increment 초기화
   });
