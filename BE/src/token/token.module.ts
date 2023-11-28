@@ -11,6 +11,7 @@ import { JwtModule } from '@nestjs/jwt';
 import 'dotenv/config';
 import { AccessTokenStrategy } from './strategy/access.token.strategy';
 import { TokenController } from './token.controller';
+import { TokenSoftGuard } from './guard/token.soft.guard';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { TokenController } from './token.controller';
     TokenRepository,
     MemberRepository,
     AccessTokenStrategy,
+    TokenSoftGuard,
   ],
   exports: [TokenService],
   controllers: [TokenController],
