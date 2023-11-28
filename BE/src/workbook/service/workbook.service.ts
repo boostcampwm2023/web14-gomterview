@@ -26,7 +26,7 @@ export class WorkbookService {
 
     return await this.workbookRepository.save(
       Workbook.of(
-        createWorkbookRequest.name,
+        createWorkbookRequest.title,
         createWorkbookRequest.content,
         category,
         member,

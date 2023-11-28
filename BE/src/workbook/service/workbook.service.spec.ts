@@ -127,7 +127,7 @@ describe('WorkbookService 통합테스트', () => {
 
     //when
     const createWorkbookRequest = new CreateWorkbookRequest(
-      'test name',
+      'test title',
       'test content',
       category.id,
     );
@@ -137,7 +137,7 @@ describe('WorkbookService 통합테스트', () => {
     );
 
     //then
-    expect(workbook.name).toEqual('test name');
+    expect(workbook.title).toEqual('test title');
     expect(workbook.content).toEqual('test content');
     expect(workbook.member.id).toEqual(member.id);
   });

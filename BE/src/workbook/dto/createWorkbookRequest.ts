@@ -7,7 +7,7 @@ export class CreateWorkbookRequest {
   @ApiProperty(createPropertyOption('장희문제집', '문제집 이름', String))
   @IsNumber()
   @IsNotEmpty()
-  name: string;
+  title: string;
 
   @ApiProperty(
     createPropertyOption('나만볼꺼다요 메롱', '문제집에 대한 설명', String),
@@ -21,8 +21,8 @@ export class CreateWorkbookRequest {
   @IsNotEmpty()
   categoryId: number;
 
-  constructor(name: string, content: string, categoryId: number) {
-    this.name = name;
+  constructor(title: string, content: string, categoryId: number) {
+    this.title = title;
     this.content = content;
     this.categoryId = categoryId;
   }
