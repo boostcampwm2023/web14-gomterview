@@ -99,8 +99,8 @@ describe('WorkbookController 단위테스트', () => {
       const result = await controller.findWorkbooks(null);
       expect(result.length).toBe(3);
       expect(result[0]).toBeInstanceOf(WorkbookResponse);
-      expect(result[0].title).toBeInstanceOf(workbookFixture.title);
-      expect(result[0].content).toBeInstanceOf(workbookFixture.content);
+      expect(result[0].title).toBe(workbookFixture.title);
+      expect(result[0].content).toBe(workbookFixture.content);
     });
 
     it('카테고리가 존재하지 않으면 CategoryNotFoundException을 반환한다', async () => {
@@ -133,8 +133,8 @@ describe('WorkbookController 단위테스트', () => {
       //then
       expect(response).toBeInstanceOf(Array);
       expect(response[0]).toBeInstanceOf(WorkbookTitleResponse);
-      expect(response[0].workbookId).toBeInstanceOf(workbookFixture.id);
-      expect(response[0].title).toBeInstanceOf(workbookFixture.title);
+      expect(response[0].workbookId).toBe(workbookFixture.id);
+      expect(response[0].title).toBe(workbookFixture.title);
     });
 
     it('비회원은 복사횟수 Top5의 문제집들을 보여준다.', async () => {
@@ -149,8 +149,8 @@ describe('WorkbookController 단위테스트', () => {
       //then
       expect(response).toBeInstanceOf(Array);
       expect(response[0]).toBeInstanceOf(WorkbookTitleResponse);
-      expect(response[0].workbookId).toBeInstanceOf(workbookFixture.id);
-      expect(response[0].title).toBeInstanceOf(workbookFixture.title);
+      expect(response[0].workbookId).toBe(workbookFixture.id);
+      expect(response[0].title).toBe(workbookFixture.title);
     });
   });
 
@@ -166,8 +166,8 @@ describe('WorkbookController 단위테스트', () => {
       //then
       const result = await controller.findSingleWorkbook(1);
       expect(result).toBeInstanceOf(WorkbookResponse);
-      expect(result.title).toBeInstanceOf(workbookFixture.title);
-      expect(result.content).toBeInstanceOf(workbookFixture.content);
+      expect(result.title).toBe(workbookFixture.title);
+      expect(result.content).toBe(workbookFixture.content);
     });
 
     it('문제집이 없다면 WorkbookNotFoundException을 반환한다.', async () => {
@@ -472,7 +472,6 @@ describe('WorkbookController 통합테스트', () => {
         .get('/api/workbook/title')
         .expect(200)
         .then((response) => {
-          console.log(response.body);
           expect(response.body.length).toBe(categoryListFixture.length + 1);
           expect(response.body[4].title).toBe('title_BE');
           expect(response.body[3].title).toBe('title_CS');
