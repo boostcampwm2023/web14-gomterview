@@ -10,7 +10,12 @@ export class WorkbookRepository {
   ) {}
 
   async findById(id: number) {
-    return await this.repository.findOneBy({ id: id });
+    return await this.repository
+      .createQueryBuilder('Workbook')
+      .leftJoinAndSelect('Workbook.member', 'member')
+      .leftJoinAndSelect('Workbook.category', 'category')
+      .where('Workbook.id = :id', { id })
+      .getOne();
   }
 
   async query(query: string) {
