@@ -262,7 +262,7 @@ describe('QuestionService 통합 테스트', () => {
     //when
 
     const workbook = await workbookRepository.findByNameAndMemberId(
-      workbookFixture.name,
+      workbookFixture.title,
       member.id,
     );
 
