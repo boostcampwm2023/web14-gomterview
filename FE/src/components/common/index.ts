@@ -5,4 +5,3 @@ export { default as ProgressStepBarItem } from './ProgressStepBar/ProgressStepBa
 export { default as StartButton } from './StartButton/StartButton';
 export { VideoPlayer } from './VideoPlayer';
 export { default as QuestionSelectionBox } from './QuestionSelectionBox/QuestionSelectionBox';
-export { default as WorkbookCard } from './WorkbookCard/WorkbookCard';

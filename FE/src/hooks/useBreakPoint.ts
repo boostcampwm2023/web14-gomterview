@@ -1,4 +1,3 @@
-import { useLayoutEffect } from 'react';
 import useWindowSize from './useWindowSize';
 import { breakpoints } from '@styles/_breakpoints';
 
