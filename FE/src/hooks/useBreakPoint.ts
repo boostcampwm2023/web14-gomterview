@@ -1,40 +1,27 @@
-import { useState, useLayoutEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import useWindowSize from './useWindowSize';
 import { breakpoints } from '@styles/_breakpoints';
+
+type Breakpoints = {
+  mobileXS: string;
+  mobileS: string;
+  mobileM: string;
+  mobileL: string;
+  tablet: string;
+  laptop: string;
+  laptopL: string;
+};
 
 const parseBreakpoint = (value: string) => parseInt(value, 10);
 
 const useBreakpoint = () => {
   const { width } = useWindowSize();
-  const [breakpoint, setBreakpoint] = useState('');
 
-  useLayoutEffect(() => {
-    switch (true) {
-      case width < parseBreakpoint(breakpoints.mobileS):
-        setBreakpoint('mobileXS');
-        break;
-      case width < parseBreakpoint(breakpoints.mobileM):
-        setBreakpoint('mobileS');
-        break;
-      case width < parseBreakpoint(breakpoints.mobileL):
-        setBreakpoint('mobileM');
-        break;
-      case width < parseBreakpoint(breakpoints.tablet):
-        setBreakpoint('mobileL');
-        break;
-      case width < parseBreakpoint(breakpoints.laptop):
-        setBreakpoint('tablet');
-        break;
-      case width < parseBreakpoint(breakpoints.laptopL):
-        setBreakpoint('laptop');
-        break;
-      default:
-        setBreakpoint('laptopL');
-        break;
-    }
-  }, [width]);
+  const isDeviceBreakpoint = (breakpoint: keyof Breakpoints) => {
+    return width < parseBreakpoint(breakpoints[breakpoint]);
+  };
 
-  return breakpoint;
+  return isDeviceBreakpoint;
 };
 
 export default useBreakpoint;

@@ -2,20 +2,9 @@ import { css } from '@emotion/react';
 import MenuList from './MenuList';
 import useBreakpoint from '@hooks/useBreakPoint';
 import SideMenu from './SideMenu';
-import { useCallback } from 'react';
 
 const Menu = () => {
-  const breakPoint = useBreakpoint();
-
-  const isSideMenuOpen = useCallback(() => {
-    return (
-      breakPoint === 'mobileXS' ||
-      breakPoint === 'mobileS' ||
-      breakPoint === 'mobileM' ||
-      breakPoint === 'mobileL' ||
-      breakPoint === 'tablet'
-    );
-  }, [breakPoint]);
+  const isDeviceBreakpoint = useBreakpoint();
 
   return (
     <div
@@ -24,7 +13,7 @@ const Menu = () => {
         gap: 1rem;
       `}
     >
-      {isSideMenuOpen() ? (
+      {isDeviceBreakpoint('tablet') ? (
         <SideMenu>
           <MenuList />
         </SideMenu>
