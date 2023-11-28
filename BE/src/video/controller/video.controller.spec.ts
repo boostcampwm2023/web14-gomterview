@@ -991,7 +991,7 @@ describe('VideoController 통합테스트', () => {
     });
   });
 
-  describe('toggleVideoStatus', () => {
+  describe('deleteVideo', () => {
     it('쿠키를 가지고 비디오의 삭제를 요청하면 204 상태 코드가 반환된다.', async () => {
       // give
       const token = await authService.login(oauthRequestFixture);
