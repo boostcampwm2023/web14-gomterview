@@ -303,9 +303,11 @@ describe('VideoService 단위 테스트', () => {
       expect(response.url).toBe(video.url);
       expect(response.videoName).toBe(video.name);
       expect(response.hash).toBe(hash);
+
+      mockedGetValueFromRedis.mockRestore();
     });
 
-    it('해시로 비디오 상세 정보 조회 시 redis에서 오류가 발생하면 RedisRetrieveException을 반환한다.', () => {
+    it('해시로 비디오 상세 정보 조회 시 redis에서 오류가 발생하면 RedisRetrieveException을 반환한다.', async () => {
       // given
 
       // when
@@ -316,12 +318,13 @@ describe('VideoService 단위 테스트', () => {
       mockedGetValueFromRedis.mockRejectedValue(new RedisRetrieveException());
 
       // then
-      expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
+      await expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
         RedisRetrieveException,
       );
+      mockedGetValueFromRedis.mockRestore();
     });
 
-    it('해시로 비디오 상세 정보 조회 시 비디오가 공개 상태가 아니라면 VideoAccessForbiddenException을 반환한다.', () => {
+    it('해시로 비디오 상세 정보 조회 시 비디오가 공개 상태가 아니라면 VideoAccessForbiddenException을 반환한다.', async () => {
       // given
       const video = privateVideoFixture;
 
@@ -335,12 +338,13 @@ describe('VideoService 단위 테스트', () => {
       mockMemberRepository.findById.mockResolvedValue(member);
 
       // then
-      expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
+      await expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
         VideoAccessForbiddenException,
       );
+      mockedGetValueFromRedis.mockRestore();
     });
 
-    it('해시로 비디오 상세 정보 조회 시 비디오가 삭제된 회원의 비디오라면 VideoOfWithdrawnMemberException을 반환한다.', () => {
+    it('해시로 비디오 상세 정보 조회 시 비디오가 삭제된 회원의 비디오라면 VideoOfWithdrawnMemberException을 반환한다.', async () => {
       // given
       const video = videoOfWithdrawnMemberFixture;
 
@@ -354,12 +358,13 @@ describe('VideoService 단위 테스트', () => {
       mockMemberRepository.findById.mockResolvedValue(member);
 
       // then
-      expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
+      await expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
         VideoOfWithdrawnMemberException,
       );
+      mockedGetValueFromRedis.mockRestore();
     });
 
-    it('해시로 비디오 상세 정보 조회 시 비디오가 삭제된 회원의 비디오라면 MemberNotFoundException을 반환한다.', () => {
+    it('해시로 비디오 상세 정보 조회 시 비디오가 삭제된 회원의 비디오라면 MemberNotFoundException을 반환한다.', async () => {
       // given
       const video = videoFixture;
 
@@ -373,9 +378,10 @@ describe('VideoService 단위 테스트', () => {
       mockMemberRepository.findById.mockResolvedValue(undefined);
 
       // then
-      expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
+      await expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
         MemberNotFoundException,
       );
+      mockedGetValueFromRedis.mockRestore();
     });
   });
 
@@ -518,38 +524,41 @@ describe('VideoService 단위 테스트', () => {
       );
     });
 
-    it('비디오 상태 토글 시 redis에서 값을 삭제하던 중 오류가 발생하면 RedisDeleteException을 반환한다.', () => {
+    it('비디오 상태 토글 시 redis에서 값을 삭제하던 중 오류가 발생하면 RedisDeleteException을 반환한다.', async () => {
       // given
       const video = videoFixture;
 
       // when
-      const mockedGetValueFromRedis =
+      const mockedDeleteFromRedis =
         deleteFromRedis as unknown as jest.MockedFunction<
           typeof deleteFromRedis
         >;
-      mockedGetValueFromRedis.mockRejectedValue(new RedisDeleteException());
+      mockedDeleteFromRedis.mockRejectedValue(new RedisDeleteException());
       mockVideoRepository.findById.mockResolvedValue(video);
 
       // then
-      expect(videoService.toggleVideoStatus(video.id, member)).rejects.toThrow(
-        RedisDeleteException,
-      );
+      await expect(
+        videoService.toggleVideoStatus(video.id, member),
+      ).rejects.toThrow(RedisDeleteException);
+      mockedDeleteFromRedis.mockRestore();
     });
 
-    it('비디오 상태 토글 시 redis에서 값을 얻어오던 중 오류가 발생하면 RedisRetrieveException을 반환한다.', () => {
+    it('비디오 상태 토글 시 redis에서 값을 얻어오던 중 오류가 발생하면 RedisRetrieveException을 반환한다.', async () => {
       // given
       const video = privateVideoFixture;
 
       // when
-      const mockedGetValueFromRedis =
-        saveToRedis as unknown as jest.MockedFunction<typeof saveToRedis>;
-      mockedGetValueFromRedis.mockRejectedValue(new RedisRetrieveException());
+      const mockedSaveToRedis = saveToRedis as unknown as jest.MockedFunction<
+        typeof saveToRedis
+      >;
+      mockedSaveToRedis.mockRejectedValue(new RedisRetrieveException());
       mockVideoRepository.findById.mockResolvedValue(video);
 
       // then
-      expect(videoService.toggleVideoStatus(video.id, member)).rejects.toThrow(
-        RedisRetrieveException,
-      );
+      await expect(
+        videoService.toggleVideoStatus(video.id, member),
+      ).rejects.toThrow(RedisRetrieveException);
+      mockedSaveToRedis.mockRestore();
     });
   });
 
@@ -734,7 +743,7 @@ describe('VideoService 통합 테스트', () => {
       );
     });
 
-    it('비디오 세부 정보 조회 성공 시 비디오가 private이라면 hash로 null을 반환한다.', async () => {
+    it('비디오 세부 정보 조회 성공 시 비디오가 private이라면 해시로 null을 반환한다.', async () => {
       //given
       const member = memberFixture;
       const video = await videoRepository.save(privateVideoFixture);
@@ -787,6 +796,55 @@ describe('VideoService 통합 테스트', () => {
       //then
       expect(videoService.getVideoDetail(video.id, member)).rejects.toThrow(
         VideoAccessForbiddenException,
+      );
+    });
+  });
+
+  describe('getVideoDetailByHash', () => {
+    it('해시로 비디오 세부 정보 조회 성공 시 VideoDetailResponse 형식으로 반환된다.', async () => {
+      //given
+      const video = await videoRepository.save(videoFixture);
+      const member = await memberRepository.findById(video.memberId);
+      const hash = crypto.createHash('md5').update(video.url).digest('hex');
+
+      //when
+      const result = await videoService.getVideoDetailByHash(hash);
+
+      //then
+      expect(result).toBeInstanceOf(VideoDetailResponse);
+      expect(result.nickname).toBe(member.nickname);
+      expect(result.url).toBe(video.url);
+      expect(result.videoName).toBe(video.name);
+      expect(result.hash).toBe(
+        crypto.createHash('md5').update(video.url).digest('hex'),
+      );
+    });
+
+    it('해시로 비디오 세부 정보 조회 시 private인 비디오를 조회하려 하면 VideoAccessForbiddenException을 반환한다.', async () => {
+      //given
+      const video = await videoRepository.save(privateVideoFixture);
+      const hash = crypto.createHash('md5').update(video.url).digest('hex');
+      await saveToRedis(hash, video.url);
+
+      //when
+
+      //then
+      await expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
+        VideoAccessForbiddenException,
+      );
+      await deleteFromRedis(hash);
+    });
+
+    it('해시로 비디오 세부 정보 조회 시 탈퇴한 회원의 비디오를 조회하려 하면 VideoOfWithdrawnMemberException을 반환한다.', async () => {
+      //given
+      const video = await videoRepository.save(videoOfWithdrawnMemberFixture);
+      const hash = crypto.createHash('md5').update(video.url).digest('hex');
+
+      //when
+
+      //then
+      expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
+        VideoOfWithdrawnMemberException,
       );
     });
   });
