@@ -14,6 +14,7 @@ import {
 import {
   differentMemberFixture,
   memberFixture,
+  otherMemberFixture,
 } from '../../member/fixture/member.fixture';
 import { CategoryNotFoundException } from '../../category/exception/category.exception';
 import { ManipulatedTokenNotFiltered } from '../../token/exception/token.exception';
@@ -29,8 +30,12 @@ import * as cookieParser from 'cookie-parser';
 import { Category } from '../../category/entity/category';
 import { CreateWorkbookRequest } from '../dto/createWorkbookRequest';
 import { WorkbookResponse } from '../dto/workbookResponse';
-import { WorkbookNotFoundException } from '../exception/workbook.exception';
+import {
+  WorkbookForbiddenException,
+  WorkbookNotFoundException,
+} from '../exception/workbook.exception';
 import { WorkbookTitleResponse } from '../dto/workbookTitleResponse';
+import { UpdateWorkbookRequest } from '../dto/updateWorkbookRequest';
 
 describe('WorkbookService 단위테스트', () => {
   let service: WorkbookService;
@@ -45,6 +50,7 @@ describe('WorkbookService 단위테스트', () => {
     findTop5Workbooks: jest.fn(),
     findMembersWorkbooks: jest.fn(),
     findSingleWorkbook: jest.fn(),
+    update: jest.fn(),
   };
 
   beforeAll(async () => {
@@ -216,6 +222,60 @@ describe('WorkbookService 단위테스트', () => {
       await expect(service.findSingleWorkbook(135)).rejects.toThrow(
         new WorkbookNotFoundException(),
       );
+    });
+  });
+
+  describe('문제집 수정', () => {
+    it('문제집을 수정할 때 Member가 있고, 권한이 있다면 정상적으로 수정한다.', async () => {
+      //given
+
+      //when
+      mockCategoryRepository.findByCategoryId.mockResolvedValue(
+        categoryFixtureWithId,
+      );
+      mockWorkbookRepository.findById.mockResolvedValue(workbookFixture);
+      const workbookUpdateRequest = new UpdateWorkbookRequest(
+        workbookFixture.id,
+        'newT',
+        'newC',
+        categoryFixtureWithId.id,
+      );
+      //then
+      const result = await service.updateWorkbook(
+        workbookUpdateRequest,
+        memberFixture,
+      );
+      expect(result.title).toBe('newT');
+      expect(result.content).toBe('newC');
+      expect(result.nickname).toBe(memberFixture.nickname);
+      expect(result.categoryId).toBe(categoryFixtureWithId.id);
+    });
+
+    it('문제집을 수정할 때 Member가 없거나, 권한이 없다면 Forbidden예외처리한다.', async () => {
+      //given
+
+      //when
+      mockCategoryRepository.findByCategoryId.mockResolvedValue(
+        categoryFixtureWithId,
+      );
+      mockWorkbookRepository.findById.mockResolvedValue(workbookFixture);
+      const workbookUpdateRequest = new UpdateWorkbookRequest(
+        workbookFixture.id,
+        'newT',
+        'newC',
+        categoryFixtureWithId.id,
+      );
+      //then
+      const cases = [otherMemberFixture, null];
+      const result = [
+        new WorkbookForbiddenException(),
+        new ManipulatedTokenNotFiltered(),
+      ];
+      for (let index = 0; index < cases.length; index++) {
+        await expect(
+          service.updateWorkbook(workbookUpdateRequest, cases[index]),
+        ).rejects.toThrow(result[index]);
+      }
     });
   });
 });
