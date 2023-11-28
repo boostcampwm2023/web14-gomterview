@@ -20,5 +20,10 @@ export const API = {
   ANSWER_DEFAULT: '/answer/default',
   ANSWER_ID: (id?: Id) => `/answer/${id ?? ':id'}`,
   CATEGORY: '/category',
+  CATEGORY_V2: '/category/v2',
   CATEGORY_ID: (id?: Id) => `/category/${id ?? ':id'}`,
+  WORKBOOK: '/workbook',
+  WORKBOOK_ID: (id?: Id) => `/workbook/${id ?? ':id'}`,
+  WORKBOOK_CATEGORY_ID: (id?: Id) => `/workbook?category=${id ?? ':id'}`,
+  WORKBOOK_MY: '/workbook/my',
 } as const;
