@@ -30,7 +30,6 @@ const LandingPageLayout: React.FC<LandingPageLayoutProps> = ({ children }) => {
             gap: 2rem;
             padding: 2rem;
             margin: auto 0;
-
             > *:nth-child(3) {
               grid-area: 1 / 2 / 3 / 3;
             }
