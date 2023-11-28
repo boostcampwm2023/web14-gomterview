@@ -849,6 +849,53 @@ describe('VideoService 통합 테스트', () => {
     });
   });
 
+  describe('getAllVideosByMemberId', () => {
+    it('비디오 세부 정보 조회 성공 시 SingleVideoResponse의 배열 형식으로 반환된다.', async () => {
+      //given
+      const member = memberFixture;
+      const video = await videoRepository.save(videoFixture);
+
+      //when
+      const result = await videoService.getAllVideosByMemberId(member);
+
+      //then
+      expect(result).toHaveLength(1);
+      expect(result[0]).toBeInstanceOf(SingleVideoResponse);
+      expect(result[0].thumbnail).toBe(video.thumbnail);
+      expect(result[0].videoName).toBe(video.name);
+      expect(result[0].videoLength).toBe(video.videoLength);
+      expect(result[0].isPublic).toBe(video.isPublic);
+    });
+
+    it('비디오 세부 정보 조회 성공 시 비디오가 없다면 빈 배열을 반환한다.', async () => {
+      //given
+      const member = memberFixture;
+
+      //when
+      const result = await videoService.getAllVideosByMemberId(member);
+
+      //then
+      expect(result).toEqual([]);
+    });
+
+    it('비디오 전체 조회 시 member가 없으면 ManipulatedTokenNotFiltered를 반환한다.', async () => {
+      //given
+      const member = null;
+      await videoRepository.save(videoFixture);
+
+      //when
+
+      //then
+      expect(videoService.getAllVideosByMemberId(member)).rejects.toThrow(
+        ManipulatedTokenNotFiltered,
+      );
+    });
+  });
+
+  describe('toggleVideoStatus', () => {});
+
+  describe('deleteVideo', () => {});
+
   afterEach(async () => {
     await questionRepository.query('delete from Member');
     await questionRepository.query('delete from Category');
