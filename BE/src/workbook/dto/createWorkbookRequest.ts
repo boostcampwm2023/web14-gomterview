@@ -5,7 +5,7 @@ import { IsNumber } from 'class-validator';
 
 export class CreateWorkbookRequest {
   @ApiProperty(createPropertyOption('장희문제집', '문제집 이름', String))
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
   title: string;
 
