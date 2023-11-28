@@ -12,3 +12,4 @@ export { default as StepPages } from './StepPages';
 export { default as Tabs } from './Tabs';
 export { default as Typography } from './Typography/Typography';
 export { default as Toggle } from './Toggle/Toggle';
+export { default as CheckBox } from './CheckBox/CheckBox';
