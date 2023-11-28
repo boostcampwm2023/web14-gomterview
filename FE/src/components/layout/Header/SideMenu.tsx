@@ -45,7 +45,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ children }) => {
           }
         `}
       >
-        {!isOpen && <Icon id="menu" width="40px" height="40px" />}
+        <Icon id="menu" width="40px" height="40px" />
       </div>
       {isOpen && (
         <>
