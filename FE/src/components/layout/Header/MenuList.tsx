@@ -29,7 +29,7 @@ const MenuList: React.FC = () => {
           `}
           onClick={() => void handleGoogleLogin()}
         >
-          <Typography variant="body1" color={theme.colors.text.sub}>
+          <Typography variant="body1" color={theme.colors.text.subStrong}>
             로그인
           </Typography>
         </div>
