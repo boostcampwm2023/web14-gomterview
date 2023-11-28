@@ -3,11 +3,11 @@ import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import QuestionAccordion from './QuestionAccordion';
 import useQuestionCategoryQuery from '@/hooks/apis/queries/useQuestionCategoryQuery';
 import { Typography, Toggle, Tabs } from '@foundation/index';
 import { WorkbookTitleListResDto } from '@/types/workbook';
 import { ExcludeArray } from '@/types/utils';
+import QuestionSelectionBoxAccordion from './QuestionSelectionBoxAccordion';
 
 type TabPanelItemProps = {
   selectedTabIndex: string;
@@ -73,9 +73,9 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
           `}
         >
           {questionData.map((question) => (
-            <QuestionAccordion
-              question={question}
+            <QuestionSelectionBoxAccordion
               key={question.questionId}
+              question={question}
               workbookId={workbook.workbookId}
             />
           ))}
