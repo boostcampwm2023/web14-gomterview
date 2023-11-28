@@ -8,8 +8,9 @@ import { Member } from '../../member/entity/member';
 import { validateManipulatedToken } from '../../util/token.util';
 import { WorkbookResponse } from '../dto/workbookResponse';
 import { isEmpty } from 'class-validator';
-import { validateWorkbook } from '../util/workbook.util';
+import { validateWorkbook, validateWorkbookOwner } from '../util/workbook.util';
 import { WorkbookTitleResponse } from '../dto/workbookTitleResponse';
+import { UpdateWorkbookRequest } from '../dto/updateWorkbookRequest';
 
 @Injectable()
 export class WorkbookService {
@@ -77,6 +78,28 @@ export class WorkbookService {
     const workbook = await this.workbookRepository.findById(workbookId);
     validateWorkbook(workbook);
 
+    return WorkbookResponse.of(workbook);
+  }
+
+  async updateWorkbook(
+    updateWorkbookRequest: UpdateWorkbookRequest,
+    member: Member,
+  ) {
+    const category = await this.categoryRepository.findByCategoryId(
+      updateWorkbookRequest.categoryId,
+    );
+    validateManipulatedToken(member);
+    validateCategory(category);
+
+    const workbook = await this.workbookRepository.findById(
+      updateWorkbookRequest.workbookId,
+    );
+
+    validateWorkbook(workbook);
+    validateWorkbookOwner(workbook, member);
+
+    workbook.updateInfo(updateWorkbookRequest, category);
+    await this.workbookRepository.update(workbook);
     return WorkbookResponse.of(workbook);
   }
 }
