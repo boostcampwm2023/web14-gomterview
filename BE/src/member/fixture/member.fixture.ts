@@ -10,6 +10,14 @@ export const memberFixture = new Member(
   new Date(),
 );
 
+export const otherMemberFixture = new Member(
+  999,
+  'other@example.com',
+  'other',
+  'https://other.com',
+  new Date(),
+);
+
 export const memberFixturesOAuthRequest = {
   email: 'test@example.com',
   name: 'TestUser',
