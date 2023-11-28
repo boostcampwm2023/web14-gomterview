@@ -2,11 +2,12 @@ import { css } from '@emotion/react';
 import MenuList from './MenuList';
 import useBreakpoint from '@hooks/useBreakPoint';
 import SideMenu from './SideMenu';
+import { useCallback } from 'react';
 
 const Menu = () => {
   const breakPoint = useBreakpoint();
 
-  const isSideMenuOpen = () => {
+  const isSideMenuOpen = useCallback(() => {
     return (
       breakPoint === 'mobileXS' ||
       breakPoint === 'mobileS' ||
@@ -14,7 +15,8 @@ const Menu = () => {
       breakPoint === 'mobileL' ||
       breakPoint === 'tablet'
     );
-  };
+  }, [breakPoint]);
+
   return (
     <div
       css={css`
