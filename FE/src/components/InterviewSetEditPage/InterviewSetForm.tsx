@@ -1,6 +1,6 @@
 import { Avatar, Box, Input, InputArea, Typography } from '@foundation/index';
 import { css } from '@emotion/react';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import LabelBox from '@components/InterviewSetEditPage/LabelBox';
 import InterviewSetCategory from '@components/InterviewSetEditPage/InterviewSetCategory';
 import useUserInfo from '@hooks/useUserInfo';
@@ -35,7 +35,7 @@ const InterviewSetForm: React.FC<InterviewSetFormProps> = ({ workbookId }) => {
   });
   const debouncedMutate = useDebounce(mutate, 1000);
 
-  useEffect(() => {
+  const runDebouncedMutation = useCallback(() => {
     debouncedMutate({
       workbookId,
       body: {
@@ -45,7 +45,20 @@ const InterviewSetForm: React.FC<InterviewSetFormProps> = ({ workbookId }) => {
         categoryId: selectedCategory,
       },
     });
-  }, [workbookTitle, workbookContent, selectedCategory]);
+  }, [
+    debouncedMutate,
+    selectedCategory,
+    workbookContent,
+    workbookId,
+    workbookTitle,
+  ]);
+
+  useEffect(() => {
+    runDebouncedMutation();
+    return () => {
+      runDebouncedMutation();
+    };
+  }, [runDebouncedMutation]);
 
   //TODO 추후 Suspense와 스켈레톤 UI 도입 예정
   if (!workbookInfo) return '로딩중';
