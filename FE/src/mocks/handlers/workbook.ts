@@ -26,7 +26,7 @@ const workbookHandlers = [
           content: '당근마켓 가려면 이정도는 껌이라구~~',
         },
         {
-          workbookId: 2,
+          workbookId: 3,
           nickname: 'toss',
           profileImg: 'https://avatars.githubusercontent.com/u/66554167?v=6',
           copyCount: 9999,
