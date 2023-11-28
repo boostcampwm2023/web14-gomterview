@@ -1,4 +1,13 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { WorkbookService } from '../service/workbook.service';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -13,6 +22,11 @@ import { Request } from 'express';
 import { CreateWorkbookRequest } from '../dto/createWorkbookRequest';
 import { Member } from '../../member/entity/member';
 import { WorkbookIdResponse } from '../dto/workbookIdResponse';
+import { WorkbookResponse } from '../dto/workbookResponse';
+import { WorkbookTitleResponse } from '../dto/workbookTitleResponse';
+import { OptionalGuard } from '../../util/decorator.util';
+import { TokenSoftGuard } from '../../token/guard/token.soft.guard';
+import { isEmpty } from 'class-validator';
 
 @ApiTags('workbook')
 @Controller('/api/workbook')
@@ -39,5 +53,45 @@ export class WorkbookController {
     );
 
     return WorkbookIdResponse.of(workbook);
+  }
+
+  @Get()
+  @ApiOperation({
+    summary: '카테고리별(null이면 전체) 문제집 조회',
+  })
+  @ApiResponse(
+    createApiResponseOption(200, '카테고리별(null이면 전체) 문제집 조회', [
+      WorkbookResponse,
+    ]),
+  )
+  async findWorkbooks(@Query('categoryId') categoryId: number) {
+    return await this.workbookService.findWorkbooks(categoryId);
+  }
+
+  @Get('/title')
+  @OptionalGuard()
+  @UseGuards(TokenSoftGuard)
+  @ApiOperation({
+    summary: '회원의(null이면 Top5) 문제집 조회',
+  })
+  @ApiResponse(
+    createApiResponseOption(200, '회원의(null이면 Top5) 문제집 조회', [
+      WorkbookTitleResponse,
+    ]),
+  )
+  async findMembersWorkbook(@Req() req: Request) {
+    const member = isEmpty(req) ? null : (req.user as Member);
+    return await this.workbookService.findWorkbookTitles(member);
+  }
+
+  @Get('/:workbookId')
+  @ApiOperation({
+    summary: '문제집 단건 조회',
+  })
+  @ApiResponse(
+    createApiResponseOption(200, '문제집 단건 조회', WorkbookResponse),
+  )
+  async findSingleWorkbook(@Param('workbookId') workbookId: number) {
+    return await this.workbookService.findSingleWorkbook(workbookId);
   }
 }

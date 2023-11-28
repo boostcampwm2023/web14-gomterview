@@ -6,6 +6,10 @@ import { validateCategory } from '../../category/util/category.util';
 import { Workbook } from '../entity/workbook';
 import { Member } from '../../member/entity/member';
 import { validateManipulatedToken } from '../../util/token.util';
+import { WorkbookResponse } from '../dto/workbookResponse';
+import { isEmpty } from 'class-validator';
+import { validateWorkbook } from '../util/workbook.util';
+import { WorkbookTitleResponse } from '../dto/workbookTitleResponse';
 
 @Injectable()
 export class WorkbookService {
@@ -32,5 +36,47 @@ export class WorkbookService {
         member,
       ),
     );
+  }
+
+  async findWorkbooks(categoryId: number) {
+    if (isEmpty(categoryId)) {
+      return await this.findAllWorkbook();
+    }
+
+    return this.findAllByCategory(categoryId);
+  }
+
+  private async findAllWorkbook() {
+    const workbooks = await this.workbookRepository.findAll();
+    return workbooks.map(WorkbookResponse.of);
+  }
+
+  private async findAllByCategory(categoryId: number) {
+    const category = await this.categoryRepository.findByCategoryId(categoryId);
+    validateCategory(category);
+
+    const workbooks =
+      await this.workbookRepository.findAllByCategoryId(categoryId);
+    return workbooks.map(WorkbookResponse.of);
+  }
+
+  async findWorkbookTitles(member: Member) {
+    const workbooks = await this.findWorkbookByMember(member);
+    return workbooks.map(WorkbookTitleResponse.of);
+  }
+
+  private async findWorkbookByMember(member: Member) {
+    if (isEmpty(member)) {
+      return await this.workbookRepository.findTop5Workbooks();
+    }
+
+    return await this.workbookRepository.findMembersWorkbooks(member.id);
+  }
+
+  async findSingleWorkbook(workbookId: number) {
+    const workbook = await this.workbookRepository.findById(workbookId);
+    validateWorkbook(workbook);
+
+    return WorkbookResponse.of(workbook);
   }
 }

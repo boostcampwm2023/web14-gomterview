@@ -2,12 +2,19 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { WorkbookService } from './workbook.service';
 import { CategoryRepository } from '../../category/repository/category.repository';
 import { WorkbookRepository } from '../repository/workbook.repository';
-import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
+import {
+  categoryFixtureWithId,
+  categoryListFixture,
+} from '../../category/fixture/category.fixture';
 import {
   createWorkbookRequestFixture,
+  workbookFixture,
   workbookFixtureWithId,
 } from '../fixture/workbook.fixture';
-import { memberFixture } from '../../member/fixture/member.fixture';
+import {
+  differentMemberFixture,
+  memberFixture,
+} from '../../member/fixture/member.fixture';
 import { CategoryNotFoundException } from '../../category/exception/category.exception';
 import { ManipulatedTokenNotFiltered } from '../../token/exception/token.exception';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
@@ -21,6 +28,9 @@ import { createIntegrationTestModule } from '../../util/test.util';
 import * as cookieParser from 'cookie-parser';
 import { Category } from '../../category/entity/category';
 import { CreateWorkbookRequest } from '../dto/createWorkbookRequest';
+import { WorkbookResponse } from '../dto/workbookResponse';
+import { WorkbookNotFoundException } from '../exception/workbook.exception';
+import { WorkbookTitleResponse } from '../dto/workbookTitleResponse';
 
 describe('WorkbookService 단위테스트', () => {
   let service: WorkbookService;
@@ -29,6 +39,12 @@ describe('WorkbookService 단위테스트', () => {
   };
   const mockWorkbookRepository = {
     save: jest.fn(),
+    findById: jest.fn(),
+    findAll: jest.fn(),
+    findAllByCategoryId: jest.fn(),
+    findTop5Workbooks: jest.fn(),
+    findMembersWorkbooks: jest.fn(),
+    findSingleWorkbook: jest.fn(),
   };
 
   beforeAll(async () => {
@@ -92,6 +108,116 @@ describe('WorkbookService 단위테스트', () => {
       ).rejects.toThrow(new ManipulatedTokenNotFiltered());
     });
   });
+
+  describe('카테고리를 통한 문제집 조회', () => {
+    it('파라미터 없이 조회한다면 문제집 전체를 조회한다.', async () => {
+      //given
+
+      //when
+      mockWorkbookRepository.findAll.mockResolvedValue([workbookFixture]);
+      const workbooks = await service.findWorkbooks(null);
+      //then
+      expect(workbooks.length).toBe(1);
+      expect(workbooks).toBeInstanceOf(Array);
+      expect(workbooks[0].title).toEqual(workbookFixture.title);
+      expect(workbooks[0].content).toEqual(workbookFixture.content);
+    });
+
+    it('파라미터를 가지고 조회한다면 해당 카테고리의 전체를 조회한다.', async () => {
+      //given
+
+      //when
+      mockCategoryRepository.findByCategoryId.mockResolvedValue(
+        categoryFixtureWithId,
+      );
+      mockWorkbookRepository.findAllByCategoryId.mockResolvedValue([
+        workbookFixture,
+      ]);
+      const workbooks = await service.findWorkbooks(1);
+      //then
+      expect(workbooks.length).toBe(1);
+      expect(workbooks).toBeInstanceOf(Array);
+      expect(workbooks[0].title).toEqual(workbookFixture.title);
+      expect(workbooks[0].content).toEqual(workbookFixture.content);
+    });
+
+    it('카테고리가 없다면 CategoryNotFoundException을 반환한다.', async () => {
+      //given
+
+      //when
+      mockCategoryRepository.findByCategoryId.mockResolvedValue(null);
+      mockWorkbookRepository.findAllByCategoryId.mockResolvedValue([
+        workbookFixture,
+      ]);
+      //then
+      await expect(service.findWorkbooks(1234)).rejects.toThrow(
+        new CategoryNotFoundException(),
+      );
+    });
+  });
+
+  describe('회원을 통한 문제집 조회', () => {
+    it('회원 정보가 null인 상태로 제목리스트를 조회하면 copyCount가 많은 순으로 5개의 문제집만이 조회된다.', async () => {
+      //given
+
+      //when
+      mockWorkbookRepository.findTop5Workbooks.mockResolvedValue([
+        workbookFixture,
+        workbookFixture,
+      ]);
+      mockWorkbookRepository.findMembersWorkbooks.mockResolvedValue([
+        workbookFixture,
+      ]);
+
+      //then
+      const workbooks = await service.findWorkbookTitles(null);
+      expect(workbooks.length).toBe(2);
+    });
+
+    it('member가 null이 아니라면 회원의 문제집만이 조회된다.', async () => {
+      //given
+
+      //when
+      mockWorkbookRepository.findTop5Workbooks.mockResolvedValue([
+        workbookFixture,
+        workbookFixture,
+      ]);
+      mockWorkbookRepository.findMembersWorkbooks.mockResolvedValue([
+        workbookFixture,
+      ]);
+
+      //then
+      const workbooks = await service.findWorkbookTitles(memberFixture);
+      expect(workbooks.length).toBe(1);
+    });
+  });
+
+  describe('문제집 id로 문제집 조회', () => {
+    it('문제집 id로 조회를 성공하면 WorkbookResponse로 반환된다.', async () => {
+      //given
+
+      //when
+      mockWorkbookRepository.findById.mockResolvedValue(workbookFixtureWithId);
+
+      //then
+      const result = await service.findSingleWorkbook(workbookFixtureWithId.id);
+      expect(result).toBeInstanceOf(WorkbookResponse);
+      expect(result.title).toBe(workbookFixtureWithId.title);
+      expect(result.content).toBe(workbookFixtureWithId.content);
+    });
+
+    it('존재하지 않는 id라면 WorkbookNotFoundExceoption을 반환한다.', async () => {
+      //given
+
+      //when
+      mockWorkbookRepository.findById.mockResolvedValue(null);
+
+      //then
+      await expect(service.findSingleWorkbook(135)).rejects.toThrow(
+        new WorkbookNotFoundException(),
+      );
+    });
+  });
 });
 
 describe('WorkbookService 통합테스트', () => {
@@ -99,6 +225,7 @@ describe('WorkbookService 통합테스트', () => {
   let categoryRepository: CategoryRepository;
   let memberRepository: MemberRepository;
   let workbookService: WorkbookService;
+  let workbookRepository: WorkbookRepository;
 
   beforeAll(async () => {
     const modules = [AuthModule, WorkbookModule, CategoryModule];
@@ -118,6 +245,8 @@ describe('WorkbookService 통합테스트', () => {
     categoryRepository =
       moduleFixture.get<CategoryRepository>(CategoryRepository);
     workbookService = moduleFixture.get<WorkbookService>(WorkbookService);
+    workbookRepository =
+      moduleFixture.get<WorkbookRepository>(WorkbookRepository);
   });
 
   it('회원의 문제집을 생성한다.', async () => {
@@ -140,5 +269,175 @@ describe('WorkbookService 통합테스트', () => {
     expect(workbook.title).toEqual('test title');
     expect(workbook.content).toEqual('test content');
     expect(workbook.member.id).toEqual(member.id);
+  });
+
+  it('카테고리를 입력받지 않으면 전체 문제집을 조회한다.', async () => {
+    //given
+    const member = await memberRepository.save(memberFixture);
+    for (const each of categoryListFixture) {
+      const category = await categoryRepository.save(each);
+      for (let index = 1; index <= 3; index++) {
+        await workbookRepository.save(
+          Workbook.of(
+            `${each.name}_${index}`,
+            `${each.name}_${index}`,
+            category,
+            member,
+          ),
+        );
+      }
+    }
+
+    //when
+    const result = await workbookService.findWorkbooks(null);
+
+    //then
+    expect(result.length).toBe(categoryListFixture.length * 3);
+    expect(result[0]).toBeInstanceOf(WorkbookResponse);
+  });
+
+  it('카테고리를 입력받으면 해당 카테고리의 문제집을 조회한다.', async () => {
+    ///given
+    const member = await memberRepository.save(memberFixture);
+    let categoryId = 0;
+    for (const each of categoryListFixture) {
+      const category = await categoryRepository.save(each);
+      categoryId = category.id;
+      for (let index = 1; index <= 3; index++) {
+        await workbookRepository.save(
+          Workbook.of(
+            `${each.name}_${index}`,
+            `${each.name}_${index}`,
+            category,
+            member,
+          ),
+        );
+      }
+    }
+
+    //when
+    const result = await workbookService.findWorkbooks(categoryId);
+
+    //then
+    expect(result.length).toBe(3);
+    expect(result[0]).toBeInstanceOf(WorkbookResponse);
+  });
+
+  it('입력받은 카테고리id가 존재하지 않으면 CategoryNotFound예외처리한다.', async () => {
+    //given
+    const member = await memberRepository.save(memberFixture);
+    for (const each of categoryListFixture) {
+      const category = await categoryRepository.save(each);
+      for (let index = 1; index <= 3; index++) {
+        await workbookRepository.save(
+          Workbook.of(
+            `${each.name}_${index}`,
+            `${each.name}_${index}`,
+            category,
+            member,
+          ),
+        );
+      }
+    }
+
+    //when
+
+    //then
+    await expect(workbookService.findWorkbooks(135341)).rejects.toThrow(
+      new CategoryNotFoundException(),
+    );
+  });
+
+  it('회원 객체 없이 회원의 문제집을 조회하면 복사된 횟수 Top5의 문제집을 반환한다.', async () => {
+    //given
+    const member = await memberRepository.save(memberFixture);
+    for (const each of categoryListFixture) {
+      const category = await categoryRepository.save(each);
+      for (let index = 1; index <= 3; index++) {
+        await workbookRepository.save(
+          Workbook.of(
+            `${each.name}_${index}`,
+            `${each.name}_${index}`,
+            category,
+            member,
+          ),
+        );
+      }
+    }
+
+    //when
+    const result = await workbookService.findWorkbookTitles(null);
+
+    //then
+    expect(result.length).toBe(5);
+    expect(result[0]).toBeInstanceOf(WorkbookTitleResponse);
+  });
+
+  it('회원객체를 가지고 문제집 제목들을 조회하면 회원의 문제집을 반환한다', async () => {
+    //given
+    const member = await memberRepository.save(memberFixture);
+    const other = await memberRepository.save(differentMemberFixture);
+    for (const each of categoryListFixture) {
+      const category = await categoryRepository.save(each);
+      for (let index = 1; index <= 3; index++) {
+        await workbookRepository.save(
+          Workbook.of(
+            `${each.name}_${index}`,
+            `${each.name}_${index}`,
+            category,
+            member,
+          ),
+        );
+      }
+    }
+
+    //when
+    const result = await workbookService.findWorkbookTitles(member);
+    const otherResult = await workbookService.findWorkbookTitles(other);
+    //then
+    expect(result.length).toBe(categoryListFixture.length * 3);
+    expect(result[0]).toBeInstanceOf(WorkbookTitleResponse);
+    expect(otherResult.length).toBe(0);
+  });
+
+  it('문제집 id로 문제집을 조회하면 단건을 반환한다', async () => {
+    //given
+    const member = await memberRepository.save(memberFixture);
+    const category = await categoryRepository.save(categoryFixtureWithId);
+
+    //when
+    const createWorkbookRequest = new CreateWorkbookRequest(
+      'test title',
+      'test content',
+      category.id,
+    );
+    const workbook = await workbookService.createWorkbook(
+      createWorkbookRequest,
+      member,
+    );
+
+    //then
+    const result = await workbookService.findSingleWorkbook(workbook.id);
+    expect(result).toBeInstanceOf(WorkbookResponse);
+    expect(result.title).toBe(workbook.title);
+    expect(result.content).toBe(workbook.content);
+    expect(result.workbookId).toBe(workbook.id);
+  });
+
+  it('문제집 id가 존재하지 않으면 WorkbookNotFound예외처리한다.', async () => {
+    //given
+
+    //when
+
+    //then
+    await expect(workbookService.findSingleWorkbook(12345)).rejects.toThrow(
+      new WorkbookNotFoundException(),
+    );
+  });
+
+  afterEach(async () => {
+    await workbookRepository.query('delete from Workbook');
+    await workbookRepository.query('delete from Member');
+    await workbookRepository.query('delete from Category');
   });
 });

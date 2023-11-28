@@ -10,6 +10,14 @@ export const memberFixture = new Member(
   new Date(),
 );
 
+export const differentMemberFixture = new Member(
+  2,
+  'jang@jang.com',
+  'jang',
+  'https://jangsarchive.tistory.com',
+  new Date()
+);
+
 export const otherMemberFixture = new Member(
   999,
   'other@example.com',
