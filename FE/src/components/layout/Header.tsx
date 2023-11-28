@@ -13,6 +13,7 @@ const Header: React.FC = () => {
         justify-content: space-between;
         align-items: center;
         padding: 2rem;
+        z-index: 999;
       `}
     >
       <Logo />
