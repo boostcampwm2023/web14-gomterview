@@ -27,4 +27,38 @@ export class WorkbookRepository {
       member: { id: memberId },
     });
   }
+
+  async findAll() {
+    return await this.repository
+      .createQueryBuilder('Workbook')
+      .leftJoinAndSelect('Workbook.category', 'category')
+      .leftJoinAndSelect('Workbook.member', 'member')
+      .getMany();
+  }
+
+  async findAllByCategoryId(categoryId: number) {
+    return await this.repository
+      .createQueryBuilder('Workbook')
+      .leftJoinAndSelect('Workbook.category', 'category')
+      .leftJoinAndSelect('Workbook.member', 'member')
+      .where('category.id = :id', { categoryId })
+      .getMany();
+  }
+
+  async findTop5Workbooks() {
+    return await this.repository
+      .createQueryBuilder('Workbook')
+      .select()
+      .orderBy('Workbook.copyCount', 'DESC')
+      .limit(5)
+      .getMany();
+  }
+
+  async findMembersWorkbooks(memberId: number) {
+    return await this.repository
+      .createQueryBuilder('Workbook')
+      .leftJoinAndSelect('Workbook.member', 'member')
+      .where('member.id = :id', { memberId })
+      .getMany();
+  }
 }
