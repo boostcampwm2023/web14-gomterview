@@ -7,6 +7,7 @@ import {
   workbookFixture,
 } from '../fixture/workbook.fixture';
 import {
+  differentMemberFixture,
   memberFixture,
   memberFixturesOAuthRequest,
   mockReqWithMemberFixture,
@@ -390,14 +391,95 @@ describe('WorkbookController 통합테스트', () => {
   describe('회원의 문제집을 조회한다', () => {
     it('쿠키가 있을 경우 회원의 문제집을 조회한다.', async () => {
       //given
-      //when
-      //then
+      const member = await memberRepository.save(memberFixture);
+      for (const eachCategory of categoryListFixture) {
+        const category = await categoryRepository.save(eachCategory);
+        await workbookRepository.save(
+          Workbook.of(
+            `title_${category.name}`,
+            `content_${category.name}`,
+            category,
+            member,
+          ),
+        );
+      }
+
+      const other = await memberRepository.save(differentMemberFixture);
+      const category = await categoryRepository.findByCategoryId(1);
+      await workbookRepository.save(
+        Workbook.of(
+          `other${category.name}`,
+          `other${category.name}`,
+          category,
+          other,
+        ),
+      );
+
+      //when & then
+      const token = await authService.login(memberFixturesOAuthRequest);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .get('/api/workbook/title')
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(200)
+        .then((response) => {
+          expect(response.body.length).toBe(categoryListFixture.length);
+          expect(response.body[0].title).toBe('title_BE');
+          expect(response.body[1].title).toBe('title_CS');
+          expect(response.body[2].title).toBe('title_FE');
+          expect(response.body[3].title).toBe('title_나만의 질문');
+        });
     });
 
     it('쿠키가 없을 경우 복사횟수 Top5의 문제집을 조회한다.', async () => {
       //given
-      //when
-      //then
+      const member = await memberRepository.save(memberFixture);
+      for (const eachCategory of categoryListFixture) {
+        const category = await categoryRepository.save(eachCategory);
+        const workbook = Workbook.of(
+          `title_${category.name}`,
+          `content_${category.name}`,
+          category,
+          member,
+        );
+        for (
+          let index = 0;
+          index < categoryListFixture.indexOf(eachCategory);
+          index++
+        ) {
+          workbook.increaseCopyCount();
+        }
+
+        await workbookRepository.save(workbook);
+      }
+
+      const other = await memberRepository.save(differentMemberFixture);
+      const category = await categoryRepository.findByCategoryId(1);
+      const workbook = Workbook.of(
+        `other${category.name}`,
+        `other${category.name}`,
+        category,
+        other,
+      );
+      for (let index = 0; index < 10; index++) {
+        workbook.increaseCopyCount();
+      }
+      await workbookRepository.save(workbook);
+
+      //when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .get('/api/workbook/title')
+        .expect(200)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.length).toBe(categoryListFixture.length + 1);
+          expect(response.body[4].title).toBe('title_BE');
+          expect(response.body[3].title).toBe('title_CS');
+          expect(response.body[2].title).toBe('title_FE');
+          expect(response.body[1].title).toBe('title_나만의 질문');
+          expect(response.body[0].title).toBe(`other${category.name}`);
+        });
     });
   });
 

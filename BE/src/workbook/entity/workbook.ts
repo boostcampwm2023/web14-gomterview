@@ -51,4 +51,8 @@ export class Workbook extends DefaultEntity {
   isOwnedBy(member: Member) {
     return this.member.id === member.id;
   }
+
+  increaseCopyCount() {
+    this.copyCount++;
+  }
 }
