@@ -5,6 +5,7 @@ import {
   memberFixture,
   mockReqWithMemberFixture,
   oauthRequestFixture,
+  otherMemberFixture,
 } from 'src/member/fixture/member.fixture';
 import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
 import { Request, Response } from 'express';
@@ -20,12 +21,13 @@ import {
   VideoOfWithdrawnMemberException,
 } from '../exception/video.exception';
 import {
-  VideoOfWithdrawnMemberFixture,
+  videoOfWithdrawnMemberFixture,
   createPreSignedUrlRequestFixture,
   createVideoRequestFixture,
   privateVideoFixture,
   videoFixture,
   videoListFixture,
+  videoOfOtherFixture,
 } from '../fixture/video.fixture';
 import { VideoDetailResponse } from '../dto/videoDetailResponse';
 import { VideoHashResponse } from '../dto/videoHashResponse';
@@ -50,6 +52,7 @@ import { WorkbookRepository } from 'src/workbook/repository/workbook.repository'
 import 'dotenv/config';
 import { VideoRepository } from '../repository/video.repository';
 import * as crypto from 'crypto';
+import { MemberRepository } from 'src/member/repository/member.repository';
 
 describe('VideoController 단위 테스트', () => {
   let controller: VideoController;
@@ -589,6 +592,7 @@ describe('VideoController 단위 테스트', () => {
 describe('VideoController 통합테스트', () => {
   let app: INestApplication;
   let authService: AuthService;
+  let memberRepository: MemberRepository;
   let questionRepository: QuestionRepository;
   let workbookRepository: WorkbookRepository;
   let videoRepository: VideoRepository;
@@ -607,6 +611,7 @@ describe('VideoController 통합테스트', () => {
     await app.init();
 
     authService = moduleFixture.get<AuthService>(AuthService);
+    memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
     questionRepository =
       moduleFixture.get<QuestionRepository>(QuestionRepository);
     workbookRepository =
@@ -802,7 +807,7 @@ describe('VideoController 통합테스트', () => {
       await authService.login(oauthRequestFixture);
       await workbookRepository.save(workbookFixtureWithId);
       await questionRepository.save(questionFixture);
-      await videoRepository.save(VideoOfWithdrawnMemberFixture);
+      await videoRepository.save(videoOfWithdrawnMemberFixture);
       const hash = crypto
         .createHash('md5')
         .update(videoFixture.url)
@@ -811,6 +816,100 @@ describe('VideoController 통합테스트', () => {
       // when & then
       const agent = request.agent(app.getHttpServer());
       await agent.get(`/api/video/hash/${hash}`).expect(404);
+    });
+  });
+
+  describe('getVideoDetail', () => {
+    it('쿠키를 가지고 비디오 조회를 요청하면 200 상태 코드와 비디오 정보가 반환된다.', async () => {
+      // given
+      const token = await authService.login(oauthRequestFixture);
+      await workbookRepository.save(workbookFixtureWithId);
+      await questionRepository.save(questionFixture);
+      const video = await videoRepository.save(videoFixture);
+      const hash = crypto.createHash('md5').update(video.url).digest('hex');
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .get(`/api/video/${video.id}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(200)
+        .expect((res) =>
+          expect(res.body).toMatchObject(
+            VideoDetailResponse.from(
+              videoFixture,
+              oauthRequestFixture.name,
+              hash,
+            ),
+          ),
+        );
+    });
+
+    it('private 상태인 비디오 조회를 요청하면 200 상태 코드와 hash가 null인 상태로 비디어 정보가 반환된다.', async () => {
+      // given
+      const token = await authService.login(oauthRequestFixture);
+      await workbookRepository.save(workbookFixtureWithId);
+      await questionRepository.save(questionFixture);
+      const video = await videoRepository.save(privateVideoFixture);
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .get(`/api/video/${video.id}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toMatchObject(
+            VideoDetailResponse.from(
+              privateVideoFixture,
+              oauthRequestFixture.name,
+              null,
+            ),
+          );
+        });
+    });
+
+    it('쿠키 없이 해시로 비디오 조회를 요청하면 401 상태 코드가 반환된다.', async () => {
+      // given
+      await authService.login(oauthRequestFixture);
+      await workbookRepository.save(workbookFixtureWithId);
+      await questionRepository.save(questionFixture);
+      const video = await videoRepository.save(videoFixture);
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent.get(`/api/video/${video.id}`).expect(401);
+    });
+
+    it('다른 사람의 비디오 조회를 요청하면 403 상태 코드가 반환된다.', async () => {
+      // give
+      const token = await authService.login(oauthRequestFixture);
+      await workbookRepository.save(workbookFixtureWithId);
+      await questionRepository.save(questionFixture);
+      memberRepository.save(otherMemberFixture);
+      const video = await videoRepository.save(videoOfOtherFixture);
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .get(`/api/video/${video.id}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(403);
+    });
+
+    it('존재하지 않는 비디오 조회를 요청하면 404 상태 코드가 반환된다.', async () => {
+      // give
+      const token = await authService.login(oauthRequestFixture);
+      await workbookRepository.save(workbookFixtureWithId);
+      await questionRepository.save(questionFixture);
+      const video = await videoRepository.save(videoFixture);
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .get(`/api/video/${video.id + 1000}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(404);
     });
   });
 

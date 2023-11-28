@@ -80,7 +80,7 @@ export const videoOfOtherFixture = new Video(
   false,
 );
 
-export const VideoOfWithdrawnMemberFixture = new Video(
+export const videoOfWithdrawnMemberFixture = new Video(
   null,
   1,
   '루이뷔통통튀기네',
