@@ -146,6 +146,42 @@ describe('WorkbookService 단위테스트', () => {
       );
     });
   });
+
+  describe('회원을 통한 문제집 조회', () => {
+    it('회원 정보가 null인 상태로 제목리스트를 조회하면 copyCount가 많은 순으로 5개의 문제집만이 조회된다.', async () => {
+      //given
+
+      //when
+      mockWorkbookRepository.findTop5Workbooks.mockResolvedValue([
+        workbookFixture,
+        workbookFixture,
+      ]);
+      mockWorkbookRepository.findMembersWorkbooks.mockResolvedValue([
+        workbookFixture,
+      ]);
+
+      //then
+      const workbooks = await service.findWorkbookTitles(null);
+      expect(workbooks.length).toBe(2);
+    });
+
+    it('member가 null이 아니라면 회원의 문제집만이 조회된다.', async () => {
+      //given
+
+      //when
+      mockWorkbookRepository.findTop5Workbooks.mockResolvedValue([
+        workbookFixture,
+        workbookFixture,
+      ]);
+      mockWorkbookRepository.findMembersWorkbooks.mockResolvedValue([
+        workbookFixture,
+      ]);
+
+      //then
+      const workbooks = await service.findWorkbookTitles(memberFixture);
+      expect(workbooks.length).toBe(1);
+    });
+  });
 });
 
 describe('WorkbookService 통합테스트', () => {
