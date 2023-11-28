@@ -11,7 +11,10 @@ import {
   workbookFixture,
   workbookFixtureWithId,
 } from '../fixture/workbook.fixture';
-import { memberFixture } from '../../member/fixture/member.fixture';
+import {
+  differentMemberFixture,
+  memberFixture,
+} from '../../member/fixture/member.fixture';
 import { CategoryNotFoundException } from '../../category/exception/category.exception';
 import { ManipulatedTokenNotFiltered } from '../../token/exception/token.exception';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
@@ -27,6 +30,7 @@ import { Category } from '../../category/entity/category';
 import { CreateWorkbookRequest } from '../dto/createWorkbookRequest';
 import { WorkbookResponse } from '../dto/workbookResponse';
 import { WorkbookNotFoundException } from '../exception/workbook.exception';
+import { WorkbookTitleResponse } from '../dto/workbookTitleResponse';
 
 describe('WorkbookService 단위테스트', () => {
   let service: WorkbookService;
@@ -347,45 +351,53 @@ describe('WorkbookService 통합테스트', () => {
   it('회원 객체 없이 회원의 문제집을 조회하면 복사된 횟수 Top5의 문제집을 반환한다.', async () => {
     //given
     const member = await memberRepository.save(memberFixture);
-    const category = await categoryRepository.save(categoryFixtureWithId);
+    for (const each of categoryListFixture) {
+      const category = await categoryRepository.save(each);
+      for (let index = 1; index <= 3; index++) {
+        await workbookRepository.save(
+          Workbook.of(
+            `${each.name}_${index}`,
+            `${each.name}_${index}`,
+            category,
+            member,
+          ),
+        );
+      }
+    }
 
     //when
-    const createWorkbookRequest = new CreateWorkbookRequest(
-      'test title',
-      'test content',
-      category.id,
-    );
-    const workbook = await workbookService.createWorkbook(
-      createWorkbookRequest,
-      member,
-    );
+    const result = await workbookService.findWorkbookTitles(null);
 
     //then
-    expect(workbook.title).toEqual('test title');
-    expect(workbook.content).toEqual('test content');
-    expect(workbook.member.id).toEqual(member.id);
+    expect(result.length).toBe(5);
+    expect(result[0]).toBeInstanceOf(WorkbookTitleResponse);
   });
 
   it('회원객체를 가지고 문제집 제목들을 조회하면 회원의 문제집을 반환한다', async () => {
     //given
     const member = await memberRepository.save(memberFixture);
-    const category = await categoryRepository.save(categoryFixtureWithId);
+    const other = await memberRepository.save(differentMemberFixture);
+    for (const each of categoryListFixture) {
+      const category = await categoryRepository.save(each);
+      for (let index = 1; index <= 3; index++) {
+        await workbookRepository.save(
+          Workbook.of(
+            `${each.name}_${index}`,
+            `${each.name}_${index}`,
+            category,
+            member,
+          ),
+        );
+      }
+    }
 
     //when
-    const createWorkbookRequest = new CreateWorkbookRequest(
-      'test title',
-      'test content',
-      category.id,
-    );
-    const workbook = await workbookService.createWorkbook(
-      createWorkbookRequest,
-      member,
-    );
-
+    const result = await workbookService.findWorkbookTitles(member);
+    const otherResult = await workbookService.findWorkbookTitles(other);
     //then
-    expect(workbook.title).toEqual('test title');
-    expect(workbook.content).toEqual('test content');
-    expect(workbook.member.id).toEqual(member.id);
+    expect(result.length).toBe(categoryListFixture.length * 3);
+    expect(result[0]).toBeInstanceOf(WorkbookTitleResponse);
+    expect(otherResult.length).toBe(0);
   });
 
   it('문제집 id로 문제집을 조회하면 단건을 반환한다', async () => {
