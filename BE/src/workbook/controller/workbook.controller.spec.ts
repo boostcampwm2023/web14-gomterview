@@ -486,14 +486,33 @@ describe('WorkbookController 통합테스트', () => {
   describe('단건의 문제집을 조회한다', () => {
     it('존재하는 경우 단건을 반환한다.', async () => {
       //given
-      //when
-      //then
+      const other = await memberRepository.save(differentMemberFixture);
+      const category = await categoryRepository.save(categoryFixtureWithId);
+      const workbook = Workbook.of(
+        `other${category.name}`,
+        `other${category.name}`,
+        category,
+        other,
+      );
+      await workbookRepository.save(workbook);
+
+      //when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .get(`/api/workbook/${workbook.id}`)
+        .expect(200)
+        .then((response) => {
+          expect(response.body.title).toBe(workbook.title);
+          expect(response.body.content).toBe(workbook.content);
+        });
     });
 
     it('존재하지 않는 문제집의 id일 경우 404에러를 반환한다.', async () => {
       //given
-      //when
-      //then
+
+      //when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent.get(`/api/workbook/1252143`).expect(404);
     });
   });
 
