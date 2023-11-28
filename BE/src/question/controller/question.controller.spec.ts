@@ -249,7 +249,7 @@ describe('QuestionController 통합테스트', () => {
       await agent
         .delete(`/api/question?questionId=${question.id}`)
         .set('Cookie', [`accessToken=${token}`])
-        .expect(401);
+        .expect(403);
     });
   });
 

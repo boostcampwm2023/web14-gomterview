@@ -11,7 +11,7 @@ export class VideoRepository {
   ) {}
 
   async save(video: Video) {
-    await this.videoRepository.save(video);
+    return await this.videoRepository.save(video);
   }
 
   async findAllVideosByMemberId(memberId: number) {

@@ -5,7 +5,7 @@ import { memberFixture } from 'src/member/fixture/member.fixture';
 import { QuestionRepository } from 'src/question/repository/question.repository';
 import { MemberRepository } from 'src/member/repository/member.repository';
 import {
-  VideoOfWithdrawnMemberFixture,
+  videoOfWithdrawnMemberFixture,
   createPreSignedUrlRequestFixture,
   createVideoRequestFixture,
   privateVideoFixture,
@@ -320,7 +320,7 @@ describe('VideoService', () => {
 
     it('해시로 비디오 상세 정보 조회 시 비디오가 삭제된 회원의 비디오라면 VideoOfWithdrawnMemberException을 반환한다.', () => {
       // given
-      const video = VideoOfWithdrawnMemberFixture;
+      const video = videoOfWithdrawnMemberFixture;
 
       // when
       const mockedGetValueFromRedis =
