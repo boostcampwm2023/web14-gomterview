@@ -1,9 +1,17 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import { patchWorkbookById } from '@/apis/workbook';
+import { WorkbookPatchReqDto } from '@/types/workbook';
 
-const useWorkbookPatchMutation = () => {
+const useWorkbookPatchMutation = (
+  options?: UseMutationOptions<
+    null,
+    Error,
+    { body: WorkbookPatchReqDto; workbookId: number }
+  >
+) => {
   return useMutation({
     mutationFn: patchWorkbookById,
+    ...options,
   });
 };
 
