@@ -1,12 +1,58 @@
 import { Avatar, Box, Input, InputArea, Typography } from '@foundation/index';
 import { css } from '@emotion/react';
-import React from 'react';
+import React, { useState } from 'react';
 import LabelBox from '@components/InterviewSetEditPage/LabelBox';
 import InterviewSetCategory from '@components/InterviewSetEditPage/InterviewSetCategory';
+import useUserInfo from '@hooks/useUserInfo';
+import useWorkbookQuery from '@hooks/apis/queries/useWorkbookQuery';
+import useWorkbookPatchMutation from '@hooks/apis/mutations/useWorkbookPatchMutation';
 
-const InterviewSetForm: React.FC = () => {
-  const avatarImage = 'https://avatars.githubusercontent.com/u/66554167?v=4';
-  const userName = 'milk717';
+type InterviewSetFormProps = {
+  workbookId: number;
+};
+const InterviewSetForm: React.FC<InterviewSetFormProps> = ({ workbookId }) => {
+  const userInfo = useUserInfo();
+  const { data: workbookInfo } = useWorkbookQuery(workbookId);
+  const [selectedCategory, setSelectedCategory] = useState(
+    workbookInfo?.categoryId || 1
+  );
+
+  //TODO 오른쪽 위에서 각 상태에 따라 UI 표시해주는것 구현해야함
+  const { mutate } = useWorkbookPatchMutation({
+    onMutate: () => {
+      console.log('저장중');
+    },
+    onError: () => {
+      console.log('에러 발생');
+    },
+    onSuccess: () => {
+      console.log('성공');
+    },
+  });
+
+  //TODO 추후 Suspense와 스켈레톤 UI 도입 예정
+  if (!workbookInfo) return '로딩중';
+
+  //TODO 유저 정보가 없다면 이 페이지 진입 못하도록 로더에서 처리해야함
+  if (!userInfo) return null;
+
+  const mutateUpdatedData = () => {
+    mutate({
+      workbookId,
+      body: {
+        workbookId: workbookId,
+        title: workbookInfo.title,
+        content: workbookInfo.content,
+        categoryId: selectedCategory,
+      },
+    });
+  };
+
+  const handleCategoryClick = (id: number) => {
+    setSelectedCategory(id);
+    mutateUpdatedData();
+  };
+
   return (
     <Box
       css={css`
@@ -23,14 +69,17 @@ const InterviewSetForm: React.FC = () => {
           column-gap: 0.5rem;
         `}
       >
-        <Avatar width="1.5rem" height="1.5rem" src={avatarImage} />
-        <Typography variant="body3">{userName}</Typography>
+        <Avatar width="1.5rem" height="1.5rem" src={userInfo.profileImg} />
+        <Typography variant="body3">{userInfo.nickname}</Typography>
       </div>
       <LabelBox labelName="제목">
         <Input />
       </LabelBox>
       <LabelBox labelName="카테고리">
-        <InterviewSetCategory />
+        <InterviewSetCategory
+          selectedId={selectedCategory || workbookInfo.categoryId}
+          onClick={handleCategoryClick}
+        />
       </LabelBox>
       <LabelBox labelName="설명">
         <InputArea />
