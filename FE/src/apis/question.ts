@@ -1,5 +1,9 @@
 import { API } from '@/constants/api';
-import { Question } from '@/types/question';
+import {
+  Question,
+  QuestionCopyReqDto,
+  QuestionCopyResDto,
+} from '@/types/question';
 import getAPIResponseData from '@/utils/getAPIResponseData';
 
 export const getQuestion = async (id: number) => {
@@ -24,5 +28,13 @@ export const postQuestion = async ({
       categoryId: categoryId,
       content: content,
     },
+  });
+};
+
+export const postQuestionCopy = async (body: QuestionCopyReqDto) => {
+  return await getAPIResponseData<QuestionCopyResDto, QuestionCopyReqDto>({
+    method: 'post',
+    url: API.QUESTION_COPY,
+    data: body,
   });
 };
