@@ -66,4 +66,8 @@ export class WorkbookRepository {
       .where('member.id = :memberId', { memberId })
       .getMany();
   }
+
+  async update(workbook: Workbook) {
+    return await this.repository.update({ id: workbook.id }, workbook);
+  }
 }
