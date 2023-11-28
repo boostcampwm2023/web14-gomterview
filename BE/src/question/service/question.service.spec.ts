@@ -9,7 +9,7 @@ import { QuestionResponse } from '../dto/questionResponse';
 import { createIntegrationTestModule } from '../../util/test.util';
 import { QuestionModule } from '../question.module';
 import { Question } from '../entity/question';
-import { INestApplication, UnauthorizedException } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { Member } from '../../member/entity/member';
 import { MemberModule } from '../../member/member.module';
 import { MemberRepository } from '../../member/repository/member.repository';
@@ -25,7 +25,10 @@ import { WorkbookRepository } from '../../workbook/repository/workbook.repositor
 import { workbookFixture } from '../../workbook/fixture/workbook.fixture';
 import { WorkbookModule } from '../../workbook/workbook.module';
 import { Workbook } from '../../workbook/entity/workbook';
-import { WorkbookNotFoundException } from '../../workbook/exception/workbook.exception';
+import {
+  WorkbookForbiddenException,
+  WorkbookNotFoundException,
+} from '../../workbook/exception/workbook.exception';
 import { CategoryRepository } from '../../category/repository/category.repository';
 import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { CategoryModule } from '../../category/category.module';
@@ -189,7 +192,7 @@ describe('QuestionService', () => {
             new Date(),
           ),
         ),
-      ).rejects.toThrow(new UnauthorizedException());
+      ).rejects.toThrow(new WorkbookForbiddenException());
     });
   });
 });

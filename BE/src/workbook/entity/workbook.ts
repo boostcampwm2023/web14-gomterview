@@ -2,6 +2,7 @@ import { DefaultEntity } from '../../app.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Member } from '../../member/entity/member';
 import { Category } from '../../category/entity/category';
+import { UpdateWorkbookRequest } from '../dto/updateWorkbookRequest';
 
 @Entity({ name: 'Workbook' })
 export class Workbook extends DefaultEntity {
@@ -50,5 +51,15 @@ export class Workbook extends DefaultEntity {
 
   isOwnedBy(member: Member) {
     return this.member.id === member.id;
+  }
+
+  increaseCopyCount() {
+    this.copyCount++;
+  }
+
+  updateInfo(updateWorkbookRequest: UpdateWorkbookRequest, category: Category) {
+    this.title = updateWorkbookRequest.title;
+    this.content = updateWorkbookRequest.content;
+    this.category = category;
   }
 }
