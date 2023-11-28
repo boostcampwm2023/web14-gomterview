@@ -23,6 +23,7 @@ import * as cookieParser from 'cookie-parser';
 import { Category } from '../../category/entity/category';
 import { CreateWorkbookRequest } from '../dto/createWorkbookRequest';
 import { WorkbookResponse } from '../dto/workbookResponse';
+import { WorkbookNotFoundException } from '../exception/workbook.exception';
 
 describe('WorkbookService 단위테스트', () => {
   let service: WorkbookService;
@@ -31,6 +32,7 @@ describe('WorkbookService 단위테스트', () => {
   };
   const mockWorkbookRepository = {
     save: jest.fn(),
+    findById: jest.fn(),
     findAll: jest.fn(),
     findAllByCategoryId: jest.fn(),
     findTop5Workbooks: jest.fn(),
@@ -109,7 +111,7 @@ describe('WorkbookService 단위테스트', () => {
       const workbooks = await service.findWorkbooks(null);
       //then
       expect(workbooks.length).toBe(1);
-      expect(workbooks).toBeInstanceOf([WorkbookResponse]);
+      expect(workbooks).toBeInstanceOf(Array);
       expect(workbooks[0].title).toEqual(workbookFixture.title);
       expect(workbooks[0].content).toEqual(workbookFixture.content);
     });
@@ -127,7 +129,7 @@ describe('WorkbookService 단위테스트', () => {
       const workbooks = await service.findWorkbooks(1);
       //then
       expect(workbooks.length).toBe(1);
-      expect(workbooks).toBeInstanceOf([WorkbookResponse]);
+      expect(workbooks).toBeInstanceOf(Array);
       expect(workbooks[0].title).toEqual(workbookFixture.title);
       expect(workbooks[0].content).toEqual(workbookFixture.content);
     });
@@ -180,6 +182,33 @@ describe('WorkbookService 단위테스트', () => {
       //then
       const workbooks = await service.findWorkbookTitles(memberFixture);
       expect(workbooks.length).toBe(1);
+    });
+  });
+
+  describe('문제집 id로 문제집 조회', () => {
+    it('문제집 id로 조회를 성공하면 WorkbookResponse로 반환된다.', async () => {
+      //given
+
+      //when
+      mockWorkbookRepository.findById.mockResolvedValue(workbookFixtureWithId);
+
+      //then
+      const result = await service.findSingleWorkbook(workbookFixtureWithId.id);
+      expect(result).toBeInstanceOf(WorkbookResponse);
+      expect(result.title).toBe(workbookFixtureWithId.title);
+      expect(result.content).toBe(workbookFixtureWithId.content);
+    });
+
+    it('존재하지 않는 id라면 WorkbookNotFoundExceoption을 반환한다.', async () => {
+      //given
+
+      //when
+      mockWorkbookRepository.findById.mockResolvedValue(null);
+
+      //then
+      await expect(service.findSingleWorkbook(135)).rejects.toThrow(
+        new WorkbookNotFoundException(),
+      );
     });
   });
 });
