@@ -28,7 +28,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ path, text }) => {
           text-decoration: none;
         `}
       >
-        <Typography variant="body1" color={theme.colors.text.sub}>
+        <Typography variant="body1" color={theme.colors.text.subStrong}>
           {text}
         </Typography>
       </Link>
