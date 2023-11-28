@@ -73,6 +73,14 @@ const questionHandlers = [
   http.delete(API.QUESTION_ID(), () => {
     return HttpResponse.json({}, { status: 200 });
   }),
+  http.post(API.QUESTION_COPY, ({ request }) => {
+    return HttpResponse.json(
+      {
+        workbookId: 1,
+      },
+      { status: 201 }
+    );
+  }),
 ];
 
 export default questionHandlers;
