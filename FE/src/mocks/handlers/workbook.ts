@@ -61,7 +61,7 @@ const workbookHandlers = [
         content:
           '취업하고싶어요! 돈벌고싶어요! 클라이밍, 피아노, 플라잉요가.... 하고싶은게 너무 많아요\n에버랜드, 스키장, 온천 가고싶어요.\n어디 놀러간 적이 100만년 전...',
       },
-      { status: 201 }
+      { status: 200 }
     );
   }),
   http.patch(API.WORKBOOK_ID(), ({ request }) => {
