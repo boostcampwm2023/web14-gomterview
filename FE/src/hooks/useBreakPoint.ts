@@ -2,28 +2,30 @@ import { useState, useEffect } from 'react';
 import useWindowSize from './useWindowSize';
 import { breakpoints } from '@styles/_breakpoints';
 
+const parseBreakpoint = (value) => parseInt(value, 10);
+
 const useBreakpoint = () => {
   const { width } = useWindowSize();
   const [breakpoint, setBreakpoint] = useState('');
 
   useEffect(() => {
     switch (true) {
-      case width < Number(breakpoints.mobileS):
+      case width < parseBreakpoint(breakpoints.mobileS):
         setBreakpoint('mobileXS');
         break;
-      case width < Number(breakpoints.mobileM):
+      case width < parseBreakpoint(breakpoints.mobileM):
         setBreakpoint('mobileS');
         break;
-      case width < Number(breakpoints.mobileL):
+      case width < parseBreakpoint(breakpoints.mobileL):
         setBreakpoint('mobileM');
         break;
-      case width < Number(breakpoints.tablet):
+      case width < parseBreakpoint(breakpoints.tablet):
         setBreakpoint('mobileL');
         break;
-      case width < Number(breakpoints.laptop):
+      case width < parseBreakpoint(breakpoints.laptop):
         setBreakpoint('tablet');
         break;
-      case width < Number(breakpoints.laptopL):
+      case width < parseBreakpoint(breakpoints.laptopL):
         setBreakpoint('laptop');
         break;
       default:
