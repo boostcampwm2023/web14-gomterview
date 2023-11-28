@@ -642,6 +642,37 @@ describe('VideoController 통합테스트', () => {
     });
   });
 
+  describe('getPreSignedUrl', () => {
+    it('쿠키를 가지고 Pre-Signed URL 생성을 요청하면 201 상태 코드가 반환된다.', async () => {
+      // given
+      const token = await authService.login(oauthRequestFixture);
+      await workbookRepository.save(workbookFixtureWithId);
+      await questionRepository.save(questionFixture);
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .post('/api/video/pre-signed')
+        .set('Cookie', [`accessToken=${token}`])
+        .send(createPreSignedUrlRequestFixture)
+        .expect(201);
+    });
+
+    it('쿠키 없이 Pre-Signed URL 생성을 요청하면 401 상태 코드가 반환된다.', async () => {
+      // given
+      await authService.login(oauthRequestFixture);
+      await workbookRepository.save(workbookFixtureWithId);
+      await questionRepository.save(questionFixture);
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .post('/api/video/pre-signed')
+        .send(createPreSignedUrlRequestFixture)
+        .expect(401);
+    });
+  });
+
   afterEach(async () => {
     await questionRepository.query('delete from token');
     await questionRepository.query('delete from Question');
