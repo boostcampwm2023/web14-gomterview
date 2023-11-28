@@ -2,7 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { WorkbookService } from './workbook.service';
 import { CategoryRepository } from '../../category/repository/category.repository';
 import { WorkbookRepository } from '../repository/workbook.repository';
-import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
+import {
+  categoryFixtureWithId,
+  categoryListFixture,
+} from '../../category/fixture/category.fixture';
 import {
   createWorkbookRequestFixture,
   workbookFixture,
@@ -218,6 +221,7 @@ describe('WorkbookService 통합테스트', () => {
   let categoryRepository: CategoryRepository;
   let memberRepository: MemberRepository;
   let workbookService: WorkbookService;
+  let workbookRepository: WorkbookRepository;
 
   beforeAll(async () => {
     const modules = [AuthModule, WorkbookModule, CategoryModule];
@@ -237,9 +241,174 @@ describe('WorkbookService 통합테스트', () => {
     categoryRepository =
       moduleFixture.get<CategoryRepository>(CategoryRepository);
     workbookService = moduleFixture.get<WorkbookService>(WorkbookService);
+    workbookRepository =
+      moduleFixture.get<WorkbookRepository>(WorkbookRepository);
   });
 
   it('회원의 문제집을 생성한다.', async () => {
+    //given
+    const member = await memberRepository.save(memberFixture);
+    const category = await categoryRepository.save(categoryFixtureWithId);
+
+    //when
+    const createWorkbookRequest = new CreateWorkbookRequest(
+      'test title',
+      'test content',
+      category.id,
+    );
+    const workbook = await workbookService.createWorkbook(
+      createWorkbookRequest,
+      member,
+    );
+
+    //then
+    expect(workbook.title).toEqual('test title');
+    expect(workbook.content).toEqual('test content');
+    expect(workbook.member.id).toEqual(member.id);
+  });
+
+  it('카테고리를 입력받지 않으면 전체 문제집을 조회한다.', async () => {
+    //given
+    const member = await memberRepository.save(memberFixture);
+    for (const each of categoryListFixture) {
+      const category = await categoryRepository.save(each);
+      for (let index = 1; index <= 3; index++) {
+        await workbookRepository.save(
+          Workbook.of(
+            `${each.name}_${index}`,
+            `${each.name}_${index}`,
+            category,
+            member,
+          ),
+        );
+      }
+    }
+
+    //when
+    const result = await workbookService.findWorkbooks(null);
+
+    //then
+    expect(result.length).toBe(categoryListFixture.length * 3);
+    expect(result[0]).toBeInstanceOf(WorkbookResponse);
+  });
+
+  it('카테고리를 입력받으면 해당 카테고리의 문제집을 조회한다.', async () => {
+    ///given
+    const member = await memberRepository.save(memberFixture);
+    for (const each of categoryListFixture) {
+      const category = await categoryRepository.save(each);
+      for (let index = 1; index <= 3; index++) {
+        await workbookRepository.save(
+          Workbook.of(
+            `${each.name}_${index}`,
+            `${each.name}_${index}`,
+            category,
+            member,
+          ),
+        );
+      }
+    }
+
+    //when
+    const result = await workbookService.findWorkbooks(1);
+
+    //then
+    expect(result.length).toBe(categoryListFixture.length);
+    expect(result[0]).toBeInstanceOf(WorkbookResponse);
+  });
+
+  it('입력받은 카테고리id가 존재하지 않으면 CategoryNotFound예외처리한다.', async () => {
+    //given
+    const member = await memberRepository.save(memberFixture);
+    for (const each of categoryListFixture) {
+      const category = await categoryRepository.save(each);
+      for (let index = 1; index <= 3; index++) {
+        await workbookRepository.save(
+          Workbook.of(
+            `${each.name}_${index}`,
+            `${each.name}_${index}`,
+            category,
+            member,
+          ),
+        );
+      }
+    }
+
+    //when
+
+    //then
+    await expect(workbookService.findWorkbooks(135341)).rejects.toThrow(
+      new CategoryNotFoundException(),
+    );
+  });
+
+  it('회원 객체 없이 회원의 문제집을 조회하면 복사된 횟수 Top5의 문제집을 반환한다.', async () => {
+    //given
+    const member = await memberRepository.save(memberFixture);
+    const category = await categoryRepository.save(categoryFixtureWithId);
+
+    //when
+    const createWorkbookRequest = new CreateWorkbookRequest(
+      'test title',
+      'test content',
+      category.id,
+    );
+    const workbook = await workbookService.createWorkbook(
+      createWorkbookRequest,
+      member,
+    );
+
+    //then
+    expect(workbook.title).toEqual('test title');
+    expect(workbook.content).toEqual('test content');
+    expect(workbook.member.id).toEqual(member.id);
+  });
+
+  it('회원객체를 가지고 문제집 제목들을 조회하면 회원의 문제집을 반환한다', async () => {
+    //given
+    const member = await memberRepository.save(memberFixture);
+    const category = await categoryRepository.save(categoryFixtureWithId);
+
+    //when
+    const createWorkbookRequest = new CreateWorkbookRequest(
+      'test title',
+      'test content',
+      category.id,
+    );
+    const workbook = await workbookService.createWorkbook(
+      createWorkbookRequest,
+      member,
+    );
+
+    //then
+    expect(workbook.title).toEqual('test title');
+    expect(workbook.content).toEqual('test content');
+    expect(workbook.member.id).toEqual(member.id);
+  });
+
+  it('문제집 id로 문제집을 조회하면 단건을 반환한다', async () => {
+    //given
+    const member = await memberRepository.save(memberFixture);
+    const category = await categoryRepository.save(categoryFixtureWithId);
+
+    //when
+    const createWorkbookRequest = new CreateWorkbookRequest(
+      'test title',
+      'test content',
+      category.id,
+    );
+    const workbook = await workbookService.createWorkbook(
+      createWorkbookRequest,
+      member,
+    );
+
+    //then
+    expect(workbook.title).toEqual('test title');
+    expect(workbook.content).toEqual('test content');
+    expect(workbook.member.id).toEqual(member.id);
+  });
+
+  it('문제집 id가 존재하지 않으면 WorkbookNotFound예외처리한다.', async () => {
     //given
     const member = await memberRepository.save(memberFixture);
     const category = await categoryRepository.save(categoryFixtureWithId);
