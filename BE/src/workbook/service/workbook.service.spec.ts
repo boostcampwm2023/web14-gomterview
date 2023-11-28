@@ -8,6 +8,7 @@ import {
 } from '../../category/fixture/category.fixture';
 import {
   createWorkbookRequestFixture,
+  updateWorkbookRequestFixture,
   workbookFixture,
   workbookFixtureWithId,
 } from '../fixture/workbook.fixture';
@@ -234,15 +235,10 @@ describe('WorkbookService 단위테스트', () => {
         categoryFixtureWithId,
       );
       mockWorkbookRepository.findById.mockResolvedValue(workbookFixture);
-      const workbookUpdateRequest = new UpdateWorkbookRequest(
-        workbookFixture.id,
-        'newT',
-        'newC',
-        categoryFixtureWithId.id,
-      );
+
       //then
       const result = await service.updateWorkbook(
-        workbookUpdateRequest,
+        updateWorkbookRequestFixture,
         memberFixture,
       );
       expect(result.title).toBe('newT');
@@ -309,190 +305,269 @@ describe('WorkbookService 통합테스트', () => {
       moduleFixture.get<WorkbookRepository>(WorkbookRepository);
   });
 
-  it('회원의 문제집을 생성한다.', async () => {
-    //given
-    const member = await memberRepository.save(memberFixture);
-    const category = await categoryRepository.save(categoryFixtureWithId);
+  describe('문제집 생성', () => {
+    it('회원의 문제집을 생성한다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(categoryFixtureWithId);
 
-    //when
-    const createWorkbookRequest = new CreateWorkbookRequest(
-      'test title',
-      'test content',
-      category.id,
-    );
-    const workbook = await workbookService.createWorkbook(
-      createWorkbookRequest,
-      member,
-    );
+      //when
+      const createWorkbookRequest = new CreateWorkbookRequest(
+        'test title',
+        'test content',
+        category.id,
+      );
+      const workbook = await workbookService.createWorkbook(
+        createWorkbookRequest,
+        member,
+      );
 
-    //then
-    expect(workbook.title).toEqual('test title');
-    expect(workbook.content).toEqual('test content');
-    expect(workbook.member.id).toEqual(member.id);
+      //then
+      expect(workbook.title).toEqual('test title');
+      expect(workbook.content).toEqual('test content');
+      expect(workbook.member.id).toEqual(member.id);
+    });
   });
 
-  it('카테고리를 입력받지 않으면 전체 문제집을 조회한다.', async () => {
-    //given
-    const member = await memberRepository.save(memberFixture);
-    for (const each of categoryListFixture) {
-      const category = await categoryRepository.save(each);
-      for (let index = 1; index <= 3; index++) {
-        await workbookRepository.save(
-          Workbook.of(
-            `${each.name}_${index}`,
-            `${each.name}_${index}`,
-            category,
-            member,
-          ),
-        );
+  describe('카테고리별 문제집 조회', () => {
+    it('카테고리를 입력받지 않으면 전체 문제집을 조회한다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      for (const each of categoryListFixture) {
+        const category = await categoryRepository.save(each);
+        for (let index = 1; index <= 3; index++) {
+          await workbookRepository.save(
+            Workbook.of(
+              `${each.name}_${index}`,
+              `${each.name}_${index}`,
+              category,
+              member,
+            ),
+          );
+        }
       }
-    }
 
-    //when
-    const result = await workbookService.findWorkbooks(null);
+      //when
+      const result = await workbookService.findWorkbooks(null);
 
-    //then
-    expect(result.length).toBe(categoryListFixture.length * 3);
-    expect(result[0]).toBeInstanceOf(WorkbookResponse);
-  });
+      //then
+      expect(result.length).toBe(categoryListFixture.length * 3);
+      expect(result[0]).toBeInstanceOf(WorkbookResponse);
+    });
 
-  it('카테고리를 입력받으면 해당 카테고리의 문제집을 조회한다.', async () => {
-    ///given
-    const member = await memberRepository.save(memberFixture);
-    let categoryId = 0;
-    for (const each of categoryListFixture) {
-      const category = await categoryRepository.save(each);
-      categoryId = category.id;
-      for (let index = 1; index <= 3; index++) {
-        await workbookRepository.save(
-          Workbook.of(
-            `${each.name}_${index}`,
-            `${each.name}_${index}`,
-            category,
-            member,
-          ),
-        );
+    it('카테고리를 입력받으면 해당 카테고리의 문제집을 조회한다.', async () => {
+      ///given
+      const member = await memberRepository.save(memberFixture);
+      let categoryId = 0;
+      for (const each of categoryListFixture) {
+        const category = await categoryRepository.save(each);
+        categoryId = category.id;
+        for (let index = 1; index <= 3; index++) {
+          await workbookRepository.save(
+            Workbook.of(
+              `${each.name}_${index}`,
+              `${each.name}_${index}`,
+              category,
+              member,
+            ),
+          );
+        }
       }
-    }
 
-    //when
-    const result = await workbookService.findWorkbooks(categoryId);
+      //when
+      const result = await workbookService.findWorkbooks(categoryId);
 
-    //then
-    expect(result.length).toBe(3);
-    expect(result[0]).toBeInstanceOf(WorkbookResponse);
-  });
+      //then
+      expect(result.length).toBe(3);
+      expect(result[0]).toBeInstanceOf(WorkbookResponse);
+    });
 
-  it('입력받은 카테고리id가 존재하지 않으면 CategoryNotFound예외처리한다.', async () => {
-    //given
-    const member = await memberRepository.save(memberFixture);
-    for (const each of categoryListFixture) {
-      const category = await categoryRepository.save(each);
-      for (let index = 1; index <= 3; index++) {
-        await workbookRepository.save(
-          Workbook.of(
-            `${each.name}_${index}`,
-            `${each.name}_${index}`,
-            category,
-            member,
-          ),
-        );
+    it('입력받은 카테고리id가 존재하지 않으면 CategoryNotFound예외처리한다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      for (const each of categoryListFixture) {
+        const category = await categoryRepository.save(each);
+        for (let index = 1; index <= 3; index++) {
+          await workbookRepository.save(
+            Workbook.of(
+              `${each.name}_${index}`,
+              `${each.name}_${index}`,
+              category,
+              member,
+            ),
+          );
+        }
       }
-    }
 
-    //when
+      //when
 
-    //then
-    await expect(workbookService.findWorkbooks(135341)).rejects.toThrow(
-      new CategoryNotFoundException(),
-    );
+      //then
+      await expect(workbookService.findWorkbooks(135341)).rejects.toThrow(
+        new CategoryNotFoundException(),
+      );
+    });
   });
 
-  it('회원 객체 없이 회원의 문제집을 조회하면 복사된 횟수 Top5의 문제집을 반환한다.', async () => {
-    //given
-    const member = await memberRepository.save(memberFixture);
-    for (const each of categoryListFixture) {
-      const category = await categoryRepository.save(each);
-      for (let index = 1; index <= 3; index++) {
-        await workbookRepository.save(
-          Workbook.of(
-            `${each.name}_${index}`,
-            `${each.name}_${index}`,
-            category,
-            member,
-          ),
-        );
+  describe('회원/비회원의 내 문제집 조회', () => {
+    it('회원 객체 없이 회원의 문제집을 조회하면 복사된 횟수 Top5의 문제집을 반환한다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      for (const each of categoryListFixture) {
+        const category = await categoryRepository.save(each);
+        for (let index = 1; index <= 3; index++) {
+          await workbookRepository.save(
+            Workbook.of(
+              `${each.name}_${index}`,
+              `${each.name}_${index}`,
+              category,
+              member,
+            ),
+          );
+        }
       }
-    }
 
-    //when
-    const result = await workbookService.findWorkbookTitles(null);
+      //when
+      const result = await workbookService.findWorkbookTitles(null);
 
-    //then
-    expect(result.length).toBe(5);
-    expect(result[0]).toBeInstanceOf(WorkbookTitleResponse);
-  });
+      //then
+      expect(result.length).toBe(5);
+      expect(result[0]).toBeInstanceOf(WorkbookTitleResponse);
+    });
 
-  it('회원객체를 가지고 문제집 제목들을 조회하면 회원의 문제집을 반환한다', async () => {
-    //given
-    const member = await memberRepository.save(memberFixture);
-    const other = await memberRepository.save(differentMemberFixture);
-    for (const each of categoryListFixture) {
-      const category = await categoryRepository.save(each);
-      for (let index = 1; index <= 3; index++) {
-        await workbookRepository.save(
-          Workbook.of(
-            `${each.name}_${index}`,
-            `${each.name}_${index}`,
-            category,
-            member,
-          ),
-        );
+    it('회원객체를 가지고 문제집 제목들을 조회하면 회원의 문제집을 반환한다', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const other = await memberRepository.save(differentMemberFixture);
+      for (const each of categoryListFixture) {
+        const category = await categoryRepository.save(each);
+        for (let index = 1; index <= 3; index++) {
+          await workbookRepository.save(
+            Workbook.of(
+              `${each.name}_${index}`,
+              `${each.name}_${index}`,
+              category,
+              member,
+            ),
+          );
+        }
       }
-    }
 
-    //when
-    const result = await workbookService.findWorkbookTitles(member);
-    const otherResult = await workbookService.findWorkbookTitles(other);
-    //then
-    expect(result.length).toBe(categoryListFixture.length * 3);
-    expect(result[0]).toBeInstanceOf(WorkbookTitleResponse);
-    expect(otherResult.length).toBe(0);
+      //when
+      const result = await workbookService.findWorkbookTitles(member);
+      const otherResult = await workbookService.findWorkbookTitles(other);
+      //then
+      expect(result.length).toBe(categoryListFixture.length * 3);
+      expect(result[0]).toBeInstanceOf(WorkbookTitleResponse);
+      expect(otherResult.length).toBe(0);
+    });
   });
 
-  it('문제집 id로 문제집을 조회하면 단건을 반환한다', async () => {
-    //given
-    const member = await memberRepository.save(memberFixture);
-    const category = await categoryRepository.save(categoryFixtureWithId);
+  describe('문제집 단건 조회', () => {
+    it('문제집 id로 문제집을 조회하면 단건을 반환한다', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(categoryFixtureWithId);
 
-    //when
-    const createWorkbookRequest = new CreateWorkbookRequest(
-      'test title',
-      'test content',
-      category.id,
-    );
-    const workbook = await workbookService.createWorkbook(
-      createWorkbookRequest,
-      member,
-    );
+      //when
+      const createWorkbookRequest = new CreateWorkbookRequest(
+        'test title',
+        'test content',
+        category.id,
+      );
+      const workbook = await workbookService.createWorkbook(
+        createWorkbookRequest,
+        member,
+      );
 
-    //then
-    const result = await workbookService.findSingleWorkbook(workbook.id);
-    expect(result).toBeInstanceOf(WorkbookResponse);
-    expect(result.title).toBe(workbook.title);
-    expect(result.content).toBe(workbook.content);
-    expect(result.workbookId).toBe(workbook.id);
+      //then
+      const result = await workbookService.findSingleWorkbook(workbook.id);
+      expect(result).toBeInstanceOf(WorkbookResponse);
+      expect(result.title).toBe(workbook.title);
+      expect(result.content).toBe(workbook.content);
+      expect(result.workbookId).toBe(workbook.id);
+    });
+
+    it('문제집 id가 존재하지 않으면 WorkbookNotFound예외처리한다.', async () => {
+      //given
+
+      //when
+
+      //then
+      await expect(workbookService.findSingleWorkbook(12345)).rejects.toThrow(
+        new WorkbookNotFoundException(),
+      );
+    });
   });
 
-  it('문제집 id가 존재하지 않으면 WorkbookNotFound예외처리한다.', async () => {
-    //given
+  describe('문제집 수정', () => {
+    it('문제집을 수정할 때 정상적으로 요청을 하면 성공한다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
+      await workbookRepository.save(workbookFixtureWithId);
 
-    //when
+      //when
+      const result = await workbookService.updateWorkbook(
+        updateWorkbookRequestFixture,
+        member,
+      );
 
-    //then
-    await expect(workbookService.findSingleWorkbook(12345)).rejects.toThrow(
-      new WorkbookNotFoundException(),
-    );
+      //then
+      expect(result.title).toBe(updateWorkbookRequestFixture.title);
+      expect(result.content).toBe(updateWorkbookRequestFixture.content);
+      expect(result.categoryId).toBe(updateWorkbookRequestFixture.categoryId);
+    });
+
+    it('문제집을 수정할 때 존재하지 않는 카테고리id를 요청하면 CategoryNotFoundException처리한다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
+      await workbookRepository.save(workbookFixture);
+
+      //when
+
+      //then
+      await expect(
+        workbookService.updateWorkbook(
+          new UpdateWorkbookRequest(workbookFixture.id, 'newT', 'newC', 12345),
+          member,
+        ),
+      ).rejects.toThrow(new CategoryNotFoundException());
+    });
+
+    it('문제집을 수정할 때 존재하지 않는 문제집id를 요청하면 WorkbookNotFound처리한다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(categoryFixtureWithId);
+      await workbookRepository.save(workbookFixture);
+
+      //when
+
+      //then
+      await expect(
+        workbookService.updateWorkbook(
+          new UpdateWorkbookRequest(123142, 'newT', 'newC', category.id),
+          member,
+        ),
+      ).rejects.toThrow(new WorkbookNotFoundException());
+    });
+
+    it('문제집을 수정할 때 다른 회원의 문제집을 요청하면 WorkbookForbiddenException처리한다.', async () => {
+      //given
+      await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
+      await workbookRepository.save(workbookFixtureWithId);
+
+      //when
+
+      //then
+      await expect(
+        workbookService.updateWorkbook(
+          updateWorkbookRequestFixture,
+          otherMemberFixture,
+        ),
+      ).rejects.toThrow(new WorkbookForbiddenException());
+    });
   });
 
   afterEach(async () => {
