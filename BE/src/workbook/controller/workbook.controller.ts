@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Query,
   Req,
@@ -27,6 +28,7 @@ import { WorkbookTitleResponse } from '../dto/workbookTitleResponse';
 import { OptionalGuard } from '../../util/decorator.util';
 import { TokenSoftGuard } from '../../token/guard/token.soft.guard';
 import { isEmpty } from 'class-validator';
+import { UpdateWorkbookRequest } from '../dto/updateWorkbookRequest';
 
 @ApiTags('workbook')
 @Controller('/api/workbook')
@@ -93,5 +95,25 @@ export class WorkbookController {
   )
   async findSingleWorkbook(@Param('workbookId') workbookId: number) {
     return await this.workbookService.findSingleWorkbook(workbookId);
+  }
+
+  @Patch()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiCookieAuth()
+  @ApiBody({ type: UpdateWorkbookRequest })
+  @ApiOperation({
+    summary: '문제집 수정',
+  })
+  @ApiResponse(
+    createApiResponseOption(200, '문제집 수정 완료', WorkbookResponse),
+  )
+  async updateAnswer(
+    @Body() updateWorkbookRequest: UpdateWorkbookRequest,
+    @Req() req: Request,
+  ) {
+    return await this.workbookService.updateWorkbook(
+      updateWorkbookRequest,
+      req.user as Member,
+    );
   }
 }
