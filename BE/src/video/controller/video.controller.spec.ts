@@ -46,6 +46,7 @@ import { questionFixture } from 'src/question/fixture/question.fixture';
 import { workbookFixtureWithId } from 'src/workbook/fixture/workbook.fixture';
 import { WorkbookRepository } from 'src/workbook/repository/workbook.repository';
 import 'dotenv/config';
+import { VideoRepository } from '../repository/video.repository';
 
 describe('VideoController 단위 테스트', () => {
   let controller: VideoController;
@@ -587,6 +588,7 @@ describe('VideoController 통합테스트', () => {
   let authService: AuthService;
   let questionRepository: QuestionRepository;
   let workbookRepository: WorkbookRepository;
+  let videoRepository: VideoRepository;
 
   beforeAll(async () => {
     const modules = [VideoModule, AuthModule];
@@ -606,6 +608,7 @@ describe('VideoController 통합테스트', () => {
       moduleFixture.get<QuestionRepository>(QuestionRepository);
     workbookRepository =
       moduleFixture.get<WorkbookRepository>(WorkbookRepository);
+    videoRepository = moduleFixture.get<VideoRepository>(VideoRepository);
   });
 
   describe('createVideo', () => {
@@ -670,6 +673,50 @@ describe('VideoController 통합테스트', () => {
         .post('/api/video/pre-signed')
         .send(createPreSignedUrlRequestFixture)
         .expect(401);
+    });
+  });
+
+  describe('getAllVideo', () => {
+    it('쿠키를 가지고 전체 비디오 조회를 요청하면 200 상태 코드와 현재 저장 되어 있던 비디오가 반환된다.', async () => {
+      // given
+      const token = await authService.login(oauthRequestFixture);
+      await workbookRepository.save(workbookFixtureWithId);
+      await questionRepository.save(questionFixture);
+      await videoRepository.save(videoFixture);
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .get('/api/video/all')
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(200)
+        .expect((res) => expect(res.body).toHaveLength(1));
+    });
+
+    it('쿠키를 가지고 전체 비디오 조회를 요청 시 저장된 비디오가 없다면 200 상태 코드와 빈 배열이 반환된다.', async () => {
+      // given
+      const token = await authService.login(oauthRequestFixture);
+      await workbookRepository.save(workbookFixtureWithId);
+      await questionRepository.save(questionFixture);
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .get('/api/video/all')
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(200)
+        .expect((res) => expect(res.body).toEqual([]));
+    });
+
+    it('쿠키 없이 전체 비디오 조회를 요청하면 401 상태 코드가 반환된다.', async () => {
+      // given
+      await authService.login(oauthRequestFixture);
+      await workbookRepository.save(workbookFixtureWithId);
+      await questionRepository.save(questionFixture);
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent.get('/api/video/all').expect(401);
     });
   });
 
