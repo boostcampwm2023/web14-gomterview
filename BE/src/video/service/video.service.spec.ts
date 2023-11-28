@@ -146,6 +146,7 @@ describe('VideoService 단위 테스트', () => {
       expect(response.key.includes(content)).toBeTruthy(); // 파일명엔 반드시 문제의 제목이 포함되어 있어야 함
       expect(response.key.endsWith('.webm')).toBeTruthy(); // 파일 확장자는 반드시 webm이어야 함
       expect(response.preSignedUrl.startsWith('https://videos')).toBeTruthy(); // 실제 Pre-Signed Url 구조를 따라가는지 확인하기 위함
+      (videoService as any).getQuestionContent.mockRestore();
     });
 
     it('prSigned URL 얻기 성공 시 member가 없으면 ManipulatedTokenNotFiltered을 반환한다.', () => {
@@ -657,13 +658,42 @@ describe('VideoService 통합 테스트', () => {
   describe('createVideo', () => {
     it('새로운 비디오 저장에 성공하면 undefined를 반환한다.', async () => {
       //given
+      const member = memberFixture;
 
       //when
 
       //then
       await expect(
-        videoService.createVideo(memberFixture, createVideoRequestFixture),
+        videoService.createVideo(member, createVideoRequestFixture),
       ).resolves.toBeUndefined();
+    });
+
+    it('새로운 비디오 저장 시 member가 없으면 ManipulatedTokenNotFiltered를 반환한다.', async () => {
+      //given
+      const member = null;
+
+      //when
+
+      //then
+      expect(
+        videoService.createVideo(member, createVideoRequestFixture),
+      ).rejects.toThrow(ManipulatedTokenNotFiltered);
+    });
+  });
+
+  describe('getPreSignedUrl', () => {
+    it('preSigned URL 얻기 성공 시 PreSignedUrlResponse 형식으로 반환된다.', async () => {
+      //given
+      const member = memberFixture;
+
+      //when
+      const result = await videoService.getPreSignedUrl(
+        member,
+        createPreSignedUrlRequestFixture,
+      );
+
+      //then
+      expect(result).toBeInstanceOf(PreSignedUrlResponse);
     });
 
     it('새로운 비디오 저장 시 member가 없으면 ManipulatedTokenNotFiltered를 반환한다.', async () => {
@@ -674,7 +704,10 @@ describe('VideoService 통합 테스트', () => {
 
       //then
       expect(
-        videoService.createVideo(memberFixture, createVideoRequestFixture),
+        videoService.getPreSignedUrl(
+          memberFixture,
+          createPreSignedUrlRequestFixture,
+        ),
       ).rejects.toThrow(ManipulatedTokenNotFiltered);
     });
   });
