@@ -1,28 +1,14 @@
 import { HTMLElementTypes } from '@/types/utils';
-import { BASE_URL, API } from '@constants/api';
-import { PATH } from '@constants/path';
+import handleGoogleLogin from '@/utils/handleGoogleLogin';
 import { css } from '@emotion/react';
 import { Icon, Typography } from '@foundation/index';
 import useUserInfo from '@hooks/useUserInfo';
 import { theme } from '@styles/theme';
-import { useNavigate } from 'react-router-dom';
 
 type GoogleLoginButtonProps = HTMLElementTypes<HTMLButtonElement>;
 
 const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ ...args }) => {
   const userInfo = useUserInfo();
-  const navigate = useNavigate();
-
-  const handleGoogleLogin = async () => {
-    if (process.env.NODE_ENV === 'development') {
-      const { cookieGenerator } = await import('@/dev/cookieGenerator');
-      void (await cookieGenerator());
-      navigate(PATH.MYPAGE);
-      return;
-    }
-
-    window.location.href = `${BASE_URL}${API.LOGIN}`;
-  };
 
   if (userInfo) return null;
 
