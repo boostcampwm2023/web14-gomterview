@@ -21,7 +21,7 @@ export const workbookFixtureWithId = new Workbook(
 );
 
 export const createWorkbookRequestFixture = new CreateWorkbookRequest(
-  workbookFixture.name,
+  workbookFixture.title,
   workbookFixture.content,
   categoryFixtureWithId.id,
 );
