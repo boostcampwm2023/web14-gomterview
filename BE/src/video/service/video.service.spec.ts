@@ -1,7 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { VideoService } from './video.service';
 import { VideoRepository } from '../repository/video.repository';
-import { memberFixture } from 'src/member/fixture/member.fixture';
+import {
+  memberFixture,
+  otherMemberFixture,
+} from 'src/member/fixture/member.fixture';
 import { QuestionRepository } from 'src/question/repository/question.repository';
 import { MemberRepository } from 'src/member/repository/member.repository';
 import {
@@ -709,6 +712,82 @@ describe('VideoService 통합 테스트', () => {
           createPreSignedUrlRequestFixture,
         ),
       ).rejects.toThrow(ManipulatedTokenNotFiltered);
+    });
+  });
+
+  describe('getVideoDetail', () => {
+    it('비디오 세부 정보 조회 성공 시 VideoDetailResponse 형식으로 반환된다.', async () => {
+      //given
+      const member = memberFixture;
+      const video = await videoRepository.save(videoFixture);
+
+      //when
+      const result = await videoService.getVideoDetail(video.id, member);
+
+      //then
+      expect(result).toBeInstanceOf(VideoDetailResponse);
+      expect(result.nickname).toBe(member.nickname);
+      expect(result.url).toBe(video.url);
+      expect(result.videoName).toBe(video.name);
+      expect(result.hash).toBe(
+        crypto.createHash('md5').update(video.url).digest('hex'),
+      );
+    });
+
+    it('비디오 세부 정보 조회 성공 시 비디오가 private이라면 hash로 null을 반환한다.', async () => {
+      //given
+      const member = memberFixture;
+      const video = await videoRepository.save(privateVideoFixture);
+
+      //when
+      const result = await videoService.getVideoDetail(video.id, member);
+
+      //then
+      expect(result).toBeInstanceOf(VideoDetailResponse);
+      expect(result.nickname).toBe(member.nickname);
+      expect(result.url).toBe(video.url);
+      expect(result.videoName).toBe(video.name);
+      expect(result.hash).toBeNull();
+    });
+
+    it('비디오 세부 정보 조회 시 member가 없으면 ManipulatedTokenNotFiltered를 반환한다.', async () => {
+      //given
+      const member = null;
+      const video = await videoRepository.save(videoFixture);
+
+      //when
+
+      //then
+      expect(videoService.getVideoDetail(video.id, member)).rejects.toThrow(
+        ManipulatedTokenNotFiltered,
+      );
+    });
+
+    it('비디오 세부 정보 조회 시 존재하지 않는 비디오를 조회하려 하면 VideoNotFoundException을 반환한다.', async () => {
+      //given
+      const member = memberFixture;
+      const video = await videoRepository.save(videoFixture);
+
+      //when
+
+      //then
+      expect(
+        videoService.getVideoDetail(video.id + 1000, member),
+      ).rejects.toThrow(VideoNotFoundException);
+    });
+
+    it('비디오 세부 정보 조회 시 다른 사람의 비디오를 조회하려 하면 VideoAccessForbiddenException을 반환한다.', async () => {
+      //given
+      const member = memberFixture;
+      await memberRepository.save(otherMemberFixture);
+      const video = await videoRepository.save(videoOfOtherFixture);
+
+      //when
+
+      //then
+      expect(videoService.getVideoDetail(video.id, member)).rejects.toThrow(
+        VideoAccessForbiddenException,
+      );
     });
   });
 
