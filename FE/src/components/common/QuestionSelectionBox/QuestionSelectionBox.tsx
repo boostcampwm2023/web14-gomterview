@@ -52,12 +52,12 @@ const QuestionSelectionBox = () => {
           <Tabs.TabList
             name="category"
             css={css`
-              background-color: ${theme.colors.surface.default};
+              display: block;
               width: 12rem;
+              padding-top: 1rem;
               border-radius: 1rem 0 0 1rem;
-              padding-top: 6rem;
-              display: flex;
-              flex-direction: column;
+              background-color: ${theme.colors.surface.default};
+              overflow-y: auto;
               > * {
                 margin-bottom: 1rem;
               }
