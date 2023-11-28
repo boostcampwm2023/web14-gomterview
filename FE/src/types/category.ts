@@ -1,9 +1,6 @@
-export type Category = {
+export type CategoryEntity = {
   id: number;
   name: string;
 };
 
-export type CategoryResDto = {
-  customCategory: Category;
-  categories: Category[];
-};
+export type CategoryResDto = CategoryEntity[];
