@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import useWindowSize from './useWindowSize';
 import { breakpoints } from '@styles/_breakpoints';
 
-const parseBreakpoint = (value) => parseInt(value, 10);
+const parseBreakpoint = (value: string) => parseInt(value, 10);
 
 const useBreakpoint = () => {
   const { width } = useWindowSize();
