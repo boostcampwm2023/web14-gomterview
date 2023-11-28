@@ -417,31 +417,22 @@ describe('WorkbookService 통합테스트', () => {
     );
 
     //then
-    expect(workbook.title).toEqual('test title');
-    expect(workbook.content).toEqual('test content');
-    expect(workbook.member.id).toEqual(member.id);
+    const result = await workbookService.findSingleWorkbook(workbook.id);
+    expect(result).toBeInstanceOf(WorkbookResponse);
+    expect(result.title).toBe(workbook.title);
+    expect(result.content).toBe(workbook.content);
+    expect(result.workbookId).toBe(workbook.id);
   });
 
   it('문제집 id가 존재하지 않으면 WorkbookNotFound예외처리한다.', async () => {
     //given
-    const member = await memberRepository.save(memberFixture);
-    const category = await categoryRepository.save(categoryFixtureWithId);
 
     //when
-    const createWorkbookRequest = new CreateWorkbookRequest(
-      'test title',
-      'test content',
-      category.id,
-    );
-    const workbook = await workbookService.createWorkbook(
-      createWorkbookRequest,
-      member,
-    );
 
     //then
-    expect(workbook.title).toEqual('test title');
-    expect(workbook.content).toEqual('test content');
-    expect(workbook.member.id).toEqual(member.id);
+    await expect(workbookService.findSingleWorkbook(12345)).rejects.toThrow(
+      new WorkbookNotFoundException(),
+    );
   });
 
   afterEach(async () => {
