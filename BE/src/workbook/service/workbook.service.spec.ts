@@ -5,6 +5,7 @@ import { WorkbookRepository } from '../repository/workbook.repository';
 import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import {
   createWorkbookRequestFixture,
+  workbookFixture,
   workbookFixtureWithId,
 } from '../fixture/workbook.fixture';
 import { memberFixture } from '../../member/fixture/member.fixture';
@@ -21,6 +22,7 @@ import { createIntegrationTestModule } from '../../util/test.util';
 import * as cookieParser from 'cookie-parser';
 import { Category } from '../../category/entity/category';
 import { CreateWorkbookRequest } from '../dto/createWorkbookRequest';
+import { WorkbookResponse } from '../dto/workbookResponse';
 
 describe('WorkbookService 단위테스트', () => {
   let service: WorkbookService;
@@ -29,6 +31,11 @@ describe('WorkbookService 단위테스트', () => {
   };
   const mockWorkbookRepository = {
     save: jest.fn(),
+    findAll: jest.fn(),
+    findAllByCategoryId: jest.fn(),
+    findTop5Workbooks: jest.fn(),
+    findMembersWorkbooks: jest.fn(),
+    findSingleWorkbook: jest.fn(),
   };
 
   beforeAll(async () => {
@@ -90,6 +97,53 @@ describe('WorkbookService 단위테스트', () => {
       await expect(
         service.createWorkbook(createWorkbookRequestFixture, null),
       ).rejects.toThrow(new ManipulatedTokenNotFiltered());
+    });
+  });
+
+  describe('카테고리를 통한 문제집 조회', () => {
+    it('파라미터 없이 조회한다면 문제집 전체를 조회한다.', async () => {
+      //given
+
+      //when
+      mockWorkbookRepository.findAll.mockResolvedValue([workbookFixture]);
+      const workbooks = await service.findWorkbooks(null);
+      //then
+      expect(workbooks.length).toBe(1);
+      expect(workbooks).toBeInstanceOf([WorkbookResponse]);
+      expect(workbooks[0].title).toEqual(workbookFixture.title);
+      expect(workbooks[0].content).toEqual(workbookFixture.content);
+    });
+
+    it('파라미터를 가지고 조회한다면 해당 카테고리의 전체를 조회한다.', async () => {
+      //given
+
+      //when
+      mockCategoryRepository.findByCategoryId.mockResolvedValue(
+        categoryFixtureWithId,
+      );
+      mockWorkbookRepository.findAllByCategoryId.mockResolvedValue([
+        workbookFixture,
+      ]);
+      const workbooks = await service.findWorkbooks(1);
+      //then
+      expect(workbooks.length).toBe(1);
+      expect(workbooks).toBeInstanceOf([WorkbookResponse]);
+      expect(workbooks[0].title).toEqual(workbookFixture.title);
+      expect(workbooks[0].content).toEqual(workbookFixture.content);
+    });
+
+    it('카테고리가 없다면 CategoryNotFoundException을 반환한다.', async () => {
+      //given
+
+      //when
+      mockCategoryRepository.findByCategoryId.mockResolvedValue(null);
+      mockWorkbookRepository.findAllByCategoryId.mockResolvedValue([
+        workbookFixture,
+      ]);
+      //then
+      await expect(service.findWorkbooks(1234)).rejects.toThrow(
+        new CategoryNotFoundException(),
+      );
     });
   });
 });
