@@ -8,17 +8,17 @@ import { DEFAULT_THUMBNAIL } from 'src/constant/constant';
 
 @Entity({ name: 'Video' })
 export class Video extends DefaultEntity {
-  @Column()
+  @Column({ nullable: true })
   memberId: number;
 
-  @Column()
+  @Column({ nullable: true })
   questionId: number;
 
-  @ManyToOne(() => Member, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Member, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'memberId' })
   member: Member;
 
-  @ManyToOne(() => Question, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Question, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'questionId' })
   question: Question;
 

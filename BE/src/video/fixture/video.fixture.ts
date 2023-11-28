@@ -64,7 +64,7 @@ export const privateVideoFixture = new Video(
   1,
   1,
   '루이뷔통통튀기네',
-  'https://test.com',
+  'https://priavte-test.com',
   'https://thumbnail-test.com',
   '03:29',
   false,

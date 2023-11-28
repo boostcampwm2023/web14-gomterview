@@ -83,6 +83,7 @@ export class VideoService {
 
   async getVideoDetailByHash(hash: string) {
     const originUrl = await getValueFromRedis(hash);
+    console.log(originUrl);
     const video = await this.videoRepository.findByUrl(originUrl);
     if (!video.isPublic) throw new VideoAccessForbiddenException();
     if (isEmpty(video.memberId)) throw new VideoOfWithdrawnMemberException();

@@ -20,8 +20,10 @@ import {
   VideoOfWithdrawnMemberException,
 } from '../exception/video.exception';
 import {
+  VideoOfWithdrawnMemberFixture,
   createPreSignedUrlRequestFixture,
   createVideoRequestFixture,
+  privateVideoFixture,
   videoFixture,
   videoListFixture,
 } from '../fixture/video.fixture';
@@ -47,6 +49,7 @@ import { workbookFixtureWithId } from 'src/workbook/fixture/workbook.fixture';
 import { WorkbookRepository } from 'src/workbook/repository/workbook.repository';
 import 'dotenv/config';
 import { VideoRepository } from '../repository/video.repository';
+import * as crypto from 'crypto';
 
 describe('VideoController 단위 테스트', () => {
   let controller: VideoController;
@@ -690,7 +693,9 @@ describe('VideoController 통합테스트', () => {
         .get('/api/video/all')
         .set('Cookie', [`accessToken=${token}`])
         .expect(200)
-        .expect((res) => expect(res.body).toHaveLength(1));
+        .expect((res) => {
+          expect(res.body).toHaveLength(1);
+        });
     });
 
     it('쿠키를 가지고 전체 비디오 조회를 요청 시 저장된 비디오가 없다면 200 상태 코드와 빈 배열이 반환된다.', async () => {
@@ -717,6 +722,95 @@ describe('VideoController 통합테스트', () => {
       // when & then
       const agent = request.agent(app.getHttpServer());
       await agent.get('/api/video/all').expect(401);
+    });
+  });
+
+  describe('getVideoDetailByHash', () => {
+    it('쿠키를 가지고 해시로 비디오 조회를 요청하면 200 상태 코드와 비디오 정보가 반환된다.', async () => {
+      // given
+      const token = await authService.login(oauthRequestFixture);
+      await workbookRepository.save(workbookFixtureWithId);
+      await questionRepository.save(questionFixture);
+      await videoRepository.save(videoFixture);
+      const hash = crypto
+        .createHash('md5')
+        .update(videoFixture.url)
+        .digest('hex');
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .get(`/api/video/hash/${hash}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(200)
+        .expect((res) =>
+          expect(res.body).toMatchObject(
+            VideoDetailResponse.from(
+              videoFixture,
+              oauthRequestFixture.name,
+              hash,
+            ),
+          ),
+        );
+    });
+
+    it('쿠키 없이 해시로 비디오 조회를 요청하더라도 200 상태 코드와 비디오 정보가 반환된다.', async () => {
+      // given
+      await authService.login(oauthRequestFixture);
+      await workbookRepository.save(workbookFixtureWithId);
+      await questionRepository.save(questionFixture);
+      await videoRepository.save(videoFixture);
+      const hash = crypto
+        .createHash('md5')
+        .update(videoFixture.url)
+        .digest('hex');
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .get(`/api/video/hash/${hash}`)
+        .expect(200)
+        .expect((res) =>
+          expect(res.body).toMatchObject(
+            VideoDetailResponse.from(
+              videoFixture,
+              oauthRequestFixture.name,
+              hash,
+            ),
+          ),
+        );
+    });
+
+    it('해시로 private인 비디오 조회를 요청하면 403 상태 코드가 반환된다.', async () => {
+      // given
+      await authService.login(oauthRequestFixture);
+      await workbookRepository.save(workbookFixtureWithId);
+      await questionRepository.save(questionFixture);
+      await videoRepository.save(privateVideoFixture);
+      const hash = crypto
+        .createHash('md5')
+        .update(privateVideoFixture.url)
+        .digest('hex');
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent.get(`/api/video/hash/${hash}`).expect(403);
+    });
+
+    it('해시로 탈퇴한 회원의 비디오 조회를 요청하면 404 상태 코드가 반환된다.', async () => {
+      // give
+      await authService.login(oauthRequestFixture);
+      await workbookRepository.save(workbookFixtureWithId);
+      await questionRepository.save(questionFixture);
+      await videoRepository.save(VideoOfWithdrawnMemberFixture);
+      const hash = crypto
+        .createHash('md5')
+        .update(videoFixture.url)
+        .digest('hex');
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent.get(`/api/video/hash/${hash}`).expect(404);
     });
   });
 
