@@ -2,35 +2,28 @@ import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import TabPanelItem from './QuestionTabPanelItem';
-import useCategoryQuery from '@/hooks/apis/queries/useCategoryQuery';
 import { useRecoilState } from 'recoil';
 import { QuestionAnswerSelectionModal } from '@atoms/modal';
 import AnswerSelectionModal from './AnswerSelectionModal/AnswerSelectionModal';
 import { Box, SelectionBox, Tabs, Typography } from '@foundation/index';
+import useWorkbookTitleListQuery from '@hooks/apis/queries/useWorkbookTitleListQuery';
 
 const QuestionSelectionBox = () => {
   const [selectedTabIndex, setSelectedTabIndex] = useState('0');
 
-  const { data: categoriesAPIData } = useCategoryQuery();
+  const { data: workbookListData } = useWorkbookTitleListQuery();
 
-  const [{ isOpen, categoryId, question }, setModalState] = useRecoilState(
+  const [{ isOpen, workbookId, question }, setModalState] = useRecoilState(
     QuestionAnswerSelectionModal
   );
 
-  if (!categoriesAPIData) return;
-
-  const myQuestionID = categoriesAPIData.customCategory.id;
-  const categoryData = [
-    ...categoriesAPIData.categories,
-    categoriesAPIData.customCategory,
-  ];
-
+  if (!workbookListData) return;
   return (
     <>
-      {categoryId && question && (
+      {workbookId && question && (
         <AnswerSelectionModal
           isOpen={isOpen}
-          categoryId={categoryId}
+          workbookId={workbookId}
           question={question}
           closeModal={() =>
             setModalState((pre) => ({
@@ -71,14 +64,14 @@ const QuestionSelectionBox = () => {
             `}
             onTabChange={(_, value) => setSelectedTabIndex(value)}
           >
-            {categoryData.map((category, index) => (
-              <Tabs.Tab value={index.toString()} key={category.id}>
+            {workbookListData.map((workbook, index) => (
+              <Tabs.Tab value={index.toString()} key={workbook.workbookId}>
                 <SelectionBox
-                  id={`category-${category.id.toString()}`}
-                  name="category"
+                  id={`workbook-${workbook.workbookId.toString()}`}
+                  name="workbook"
                   defaultChecked={index === 0}
                 >
-                  <Typography variant="title4">{category.name}</Typography>
+                  <Typography variant="title4">{workbook.title}</Typography>
                 </SelectionBox>
               </Tabs.Tab>
             ))}
@@ -89,13 +82,12 @@ const QuestionSelectionBox = () => {
               max-width: calc(100% - 12rem);
             `}
           >
-            {categoryData.map((category, index) => (
+            {workbookListData.map((workbook, index) => (
               <TabPanelItem
                 selectedTabIndex={selectedTabIndex}
                 tabIndex={index.toString()}
-                category={category}
-                type={category.id === myQuestionID ? 'custom' : 'default'}
-                key={category.id}
+                workbook={workbook}
+                key={workbook.workbookId}
               />
             ))}
           </div>

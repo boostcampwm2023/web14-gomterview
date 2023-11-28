@@ -1,29 +1,28 @@
 import { questionSetting } from '@atoms/interviewSetting';
 import { theme } from '@styles/theme';
-import { Category } from '@/types/category';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import QuestionAccordion from './QuestionAccordion';
 import useQuestionCategoryQuery from '@/hooks/apis/queries/useQuestionCategoryQuery';
-import QuestionAddForm from './QuestionAddForm';
 import { Typography, Toggle, Tabs } from '@foundation/index';
+import { WorkbookTitleListResDto } from '@/types/workbook';
+import { ExcludeArray } from '@/types/utils';
+
 type TabPanelItemProps = {
   selectedTabIndex: string;
   tabIndex: string;
-  category: Category;
-  type: 'custom' | 'default';
+  workbook: ExcludeArray<WorkbookTitleListResDto>;
 };
 
 const TabPanelItem: React.FC<TabPanelItemProps> = ({
   selectedTabIndex,
-  category,
+  workbook,
   tabIndex,
-  type,
 }) => {
   const settingPage = useRecoilValue(questionSetting);
   const selectedQuestions = settingPage.selectedData.filter(
-    (question) => question.categoryId === category.id
+    (question) => question.workbookId === workbook.workbookId
   );
 
   const [onlySelectedOption, setOnlySelectedOption] = useState(false);
@@ -33,7 +32,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
   };
 
   const { data: questionAPIData } = useQuestionCategoryQuery({
-    categoryId: category.id,
+    categoryId: workbook.workbookId,
     enabled: selectedTabIndex === tabIndex,
   });
 
@@ -42,7 +41,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
 
   return (
     <Tabs.TabPanel
-      key={`category.id-${category.id}`}
+      key={`workbook.id-${workbook.workbookId}`}
       value={tabIndex}
       css={css`
         height: 100%;
@@ -65,7 +64,6 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
         >
           {questionData.length}개의 질문
         </Typography>
-        {type === 'custom' && <QuestionAddForm categoryId={category.id} />}
         <div
           css={css`
             height: 100%;
@@ -78,7 +76,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
             <QuestionAccordion
               question={question}
               key={question.questionId}
-              categoryId={category.id}
+              workbookId={workbook.workbookId}
             />
           ))}
         </div>

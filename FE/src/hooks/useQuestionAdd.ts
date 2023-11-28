@@ -4,7 +4,7 @@ import useUserInfo from './useUserInfo';
 import { Question } from '@/types/question';
 import { QUERY_KEY } from '@/constants/queryKey';
 
-const useQuestionAdd = (
+const useQuestionAddMutation = (
   categoryId: number,
   { onSuccess }: { onSuccess?: () => void }
 ) => {
@@ -50,4 +50,4 @@ const useQuestionAdd = (
   return { addQuestion };
 };
 
-export default useQuestionAdd;
+export default useQuestionAddMutation;

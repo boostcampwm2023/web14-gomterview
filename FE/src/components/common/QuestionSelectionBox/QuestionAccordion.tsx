@@ -18,7 +18,7 @@ import { LeadingDot } from '@foundation/index';
 
 type QuestionAccordionProps = {
   question: Question;
-  categoryId: number;
+  workbookId: number;
 };
 
 const selectedStyle = css`
@@ -28,11 +28,11 @@ const selectedStyle = css`
 
 const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
   question,
-  categoryId,
+  workbookId,
 }) => {
   const { isSelected, toggleSelected } = useSelectQuestions({
     question: question,
-    categoryId: categoryId,
+    workbookId: workbookId,
   });
   const queryClient = useQueryClient();
   const userInfo = queryClient.getQueryData<User | undefined>(QUERY_KEY.MEMBER);
@@ -44,7 +44,7 @@ const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
     setModal({
       isOpen: true,
       question: question,
-      categoryId: categoryId,
+      workbookId: workbookId,
     });
   };
 
