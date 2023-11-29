@@ -15,7 +15,7 @@ export const differentMemberFixture = new Member(
   'jang@jang.com',
   'jang',
   'https://jangsarchive.tistory.com',
-  new Date()
+  new Date(),
 );
 
 export const otherMemberFixture = new Member(
