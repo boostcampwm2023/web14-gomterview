@@ -1,51 +1,21 @@
-import { useEffect, useState } from 'react';
 import { Box } from '@foundation/index';
 import { css } from '@emotion/react';
 import { HTMLElementTypes } from '@/types/utils';
 import useBreakpoint from '@hooks/useBreakPoint';
+import useThrottleScroll from '@hooks/useThrottleScroll';
 
 type ResponsiveMenuType = HTMLElementTypes<HTMLDivElement> & {
   location?: 'left' | 'right';
+  top?: number;
 };
 const ResponsiveMenu: React.FC<ResponsiveMenuType> = ({
   children,
   location = 'left',
+  top = 100,
   ...arg
 }) => {
-  const [translateY, setTranslateY] = useState(100);
   const isDeviceBreakpoint = useBreakpoint();
-  useEffect(() => {
-    let lastKnownScrollPosition = 0;
-    let ticking = false;
-    let throttleTimeout: NodeJS.Timeout | null = null;
-
-    const handleScroll = () => {
-      lastKnownScrollPosition = 100 + window.scrollY;
-
-      if (!throttleTimeout) {
-        throttleTimeout = setTimeout(() => {
-          if (!ticking) {
-            window.requestAnimationFrame(() => {
-              setTranslateY(lastKnownScrollPosition);
-              ticking = false;
-              throttleTimeout = null;
-            });
-
-            ticking = true;
-          }
-        }, 100);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (throttleTimeout) {
-        clearTimeout(throttleTimeout);
-      }
-    };
-  }, []);
+  const translateY = useThrottleScroll(100, top);
 
   const SideCSS = css`
     position: absolute;
