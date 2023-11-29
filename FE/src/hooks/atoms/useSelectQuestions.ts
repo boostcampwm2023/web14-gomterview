@@ -4,10 +4,10 @@ import { useRecoilState } from 'recoil';
 
 const useSelectQuestions = ({
   question,
-  categoryId,
+  workbookId,
 }: {
   question: Question;
-  categoryId: number;
+  workbookId: number;
 }) => {
   const [selectedQuestions, setSelectedQuestions] =
     useRecoilState(questionSetting);
@@ -26,7 +26,7 @@ const useSelectQuestions = ({
       isSuccess: true,
       selectedData: [
         ...prevState.selectedData,
-        { ...question, categoryId: categoryId },
+        { ...question, workbookId: workbookId },
       ],
     }));
   };
@@ -35,7 +35,7 @@ const useSelectQuestions = ({
 
   const isSelected = selectedQuestions.selectedData.some(
     (item) =>
-      item.questionId === question.questionId && item.categoryId === categoryId
+      item.questionId === question.questionId && item.workbookId === workbookId
   );
 
   return { isSelected, setUnselected, setSelected, toggleSelected };

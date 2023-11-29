@@ -7,7 +7,6 @@ import {
 import Icon from '@foundation/Icon/Icon';
 import Typography from '@foundation/Typography/Typography';
 import { QUERY_KEY } from '@constants/queryKey';
-import useSelectQuestions from '@hooks/atoms/useSelectQuestions';
 import { theme } from '@styles/theme';
 import { Question } from '@/types/question';
 import { User } from '@/types/user';
@@ -18,7 +17,9 @@ import { LeadingDot } from '@foundation/index';
 
 type QuestionAccordionProps = {
   question: Question;
-  categoryId: number;
+  workbookId: number;
+  isSelected: boolean;
+  toggleSelected: () => void;
 };
 
 const selectedStyle = css`
@@ -28,12 +29,10 @@ const selectedStyle = css`
 
 const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
   question,
-  categoryId,
+  workbookId,
+  isSelected,
+  toggleSelected,
 }) => {
-  const { isSelected, toggleSelected } = useSelectQuestions({
-    question: question,
-    categoryId: categoryId,
-  });
   const queryClient = useQueryClient();
   const userInfo = queryClient.getQueryData<User | undefined>(QUERY_KEY.MEMBER);
 
@@ -44,7 +43,7 @@ const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
     setModal({
       isOpen: true,
       question: question,
-      categoryId: categoryId,
+      workbookId: workbookId,
     });
   };
 

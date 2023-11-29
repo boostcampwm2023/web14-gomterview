@@ -1,12 +1,10 @@
 import { Question } from '@/types/question';
+import { WorkbookEntity } from '@/types/workbook';
 import { atom } from 'recoil';
 
 export type RecordMethod = 'local' | 'idrive' | 'none' | undefined;
 
-export type SelectedQuestion = Question & {
-  categoryId: number;
-};
-
+export type SelectedQuestion = Question & Pick<WorkbookEntity, 'workbookId'>;
 export const questionSetting = atom<{
   isSuccess: boolean;
   selectedData: SelectedQuestion[];
