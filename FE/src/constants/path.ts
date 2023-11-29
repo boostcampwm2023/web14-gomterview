@@ -4,6 +4,7 @@ const CONNECTION = 'connection';
 const RECORD = 'record';
 const MYPAGE = 'mypage';
 const QUESTION = 'question';
+const TERMS = 'terms';
 
 export const PATH = {
   ROOT: '/',
@@ -23,4 +24,5 @@ export const SETTING_PATH = {
   CONNECTION: `${CONNECTION}`,
   RECORD: `${RECORD}`,
   QUESTION: `${QUESTION}`,
+  TERMS: `${TERMS}`,
 };

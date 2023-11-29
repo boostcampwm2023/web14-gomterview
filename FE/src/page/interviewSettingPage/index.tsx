@@ -3,6 +3,7 @@ import { SETTING_PATH } from '@/constants/path';
 import {
   questionSetting,
   recordSetting,
+  serviceTerms,
   videoSetting,
 } from '@/atoms/interviewSetting';
 import { useRecoilValue } from 'recoil';
@@ -13,6 +14,7 @@ import VideoSettingPage from './VideoSettingPage';
 import { ProgressStepBar } from '@common/index';
 import StepPage from '@foundation/StepPages';
 import { InterviewSettingPageLayout } from '@components/interviewSettingPage';
+import ServiceTermsPage from './ServiceTermsPage';
 
 const FIRST_PAGE_INDEX = 0;
 const PREV_PAGE_INDEX = -1;
@@ -25,11 +27,22 @@ const InterviewSettingPage: React.FC = () => {
 
   const pageInfo = [
     {
+      name: '약관 동의',
+      path: SETTING_PATH.TERMS,
+      page: (
+        <ServiceTermsPage
+          onPrevClick={() => navigate('/')}
+          onNextClick={() => changeSearchParams(SETTING_PATH.QUESTION)}
+        />
+      ),
+      state: useRecoilValue(serviceTerms),
+    },
+    {
       name: '문제 선택',
       path: SETTING_PATH.QUESTION,
       page: (
         <QuestionSettingPage
-          onPrevClick={() => navigate('/')}
+          onPrevClick={() => changeSearchParams(SETTING_PATH.TERMS)}
           onNextClick={() => changeSearchParams(SETTING_PATH.CONNECTION)}
         />
       ),
