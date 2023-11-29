@@ -4,10 +4,10 @@ import { css } from '@emotion/react';
 import { HTMLElementTypes } from '@/types/utils';
 import useBreakpoint from '@hooks/useBreakPoint';
 
-type CategoryMenuType = HTMLElementTypes<HTMLDivElement> & {
+type ResponsiveMenuType = HTMLElementTypes<HTMLDivElement> & {
   location?: 'left' | 'right';
 };
-const CategoryMenu: React.FC<CategoryMenuType> = ({
+const ResponsiveMenu: React.FC<ResponsiveMenuType> = ({
   children,
   location = 'left',
   ...arg
@@ -74,4 +74,4 @@ const CategoryMenu: React.FC<CategoryMenuType> = ({
   );
 };
 
-export default CategoryMenu;
+export default ResponsiveMenu;
