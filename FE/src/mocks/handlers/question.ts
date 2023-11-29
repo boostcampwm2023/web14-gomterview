@@ -5,11 +5,7 @@ const questionHandlers = [
   http.post(API.QUESTION, () => {
     return HttpResponse.json({}, { status: 201 });
   }),
-  http.get(API.QUESTION, ({ request }) => {
-    const url = new URL(request.url);
-    const category = url.searchParams.get('category');
-
-    console.log(category);
+  http.get(API.QUESTION_ID(), ({ request }) => {
     return HttpResponse.json([
       {
         questionId: 1,

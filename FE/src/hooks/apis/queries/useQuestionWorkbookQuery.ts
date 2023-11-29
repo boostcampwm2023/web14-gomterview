@@ -9,18 +9,18 @@ import { useQuery } from '@tanstack/react-query';
  *
  * QuestionSelectionBox, 문제집 상세보기 페이지 등에서 사용됩니다.
  */
-const useQuestionCategoryQuery = ({
-  categoryId,
+const useQuestionWorkbookQuery = ({
+  workbookId,
   enabled,
 }: {
-  categoryId: number;
+  workbookId: number;
   enabled: boolean;
 }) => {
   return useQuery({
-    queryKey: QUERY_KEY.QUESTION_CATEGORY(categoryId),
-    queryFn: () => getQuestion(categoryId),
+    queryKey: QUERY_KEY.QUESTION_CATEGORY(workbookId),
+    queryFn: () => getQuestion(workbookId),
     enabled,
   });
 };
 
-export default useQuestionCategoryQuery;
+export default useQuestionWorkbookQuery;
