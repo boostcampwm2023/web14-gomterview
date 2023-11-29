@@ -19,7 +19,7 @@ type QuestionAccordionProps = {
   question: Question;
   workbookId: number;
   isSelected: boolean;
-  toggleSelected: () => void;
+  toggleSelected?: () => void;
 };
 
 const selectedStyle = css`
@@ -54,7 +54,7 @@ const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
 
   return (
     <Accordion
-      onChange={toggleSelected}
+      onChange={() => toggleSelected?.()}
       expanded={isSelected}
       css={css`
         margin-bottom: 1.2rem;
