@@ -57,6 +57,7 @@ const InterviewWorkbookDetailPage = () => {
         isOpen={isModalOpen}
         closeModal={closeModal}
         selectedQuestionIds={selectedQuestionId}
+        workbookData={workbookData}
       />
       <InterviewWorkbookDetailPageLayout>
         <WorkbookCard
