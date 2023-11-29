@@ -7,14 +7,14 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
  *
  * 문제집에 새로운 질문을 등록하기 위한 api입니다.
  */
-const useQuestionMutation = (categoryId: number) => {
+const useQuestionMutation = (workbookId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: postQuestion,
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: QUERY_KEY.QUESTION_CATEGORY(categoryId),
+        queryKey: QUERY_KEY.QUESTION_CATEGORY(workbookId),
       });
     },
   });

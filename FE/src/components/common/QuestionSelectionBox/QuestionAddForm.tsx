@@ -1,20 +1,14 @@
 import useInput from '@hooks/useInput';
-import useQuestionAddMutation from '@hooks/useQuestionAdd';
+import useQuestionAdd from '@hooks/useQuestionAdd';
 import { css } from '@emotion/react';
 import { Button, InputArea } from '@foundation/index';
 
 type QuestionAddFormProps = {
-  categoryId: number;
+  workbookId: number;
 };
 
-/**
- * @deprecated
- * 현재 사용하지 않는 컴포넌트 입니다.
- * 나만의 질문에서 사용했던 질문을 바로 추가하는 컴포넌트로 사용하고 있습니다.
- *
- */
-const QuestionAddForm: React.FC<QuestionAddFormProps> = ({ categoryId }) => {
-  const { addQuestion } = useQuestionAddMutation(categoryId, {
+const QuestionAddForm: React.FC<QuestionAddFormProps> = ({ workbookId }) => {
+  const { addQuestion } = useQuestionAdd(workbookId, {
     onSuccess: () => {
       clearInput();
     },
@@ -28,7 +22,7 @@ const QuestionAddForm: React.FC<QuestionAddFormProps> = ({ categoryId }) => {
 
     if (isEmpty()) return;
     addQuestion({
-      categoryId,
+      workbookId,
       value,
     });
   };

@@ -15,17 +15,17 @@ export const getQuestion = async (id: number) => {
 };
 
 export const postQuestion = async ({
-  categoryId,
+  workbookId,
   content,
 }: {
-  categoryId: number;
+  workbookId: number;
   content: string;
 }) => {
   return await getAPIResponseData({
     method: 'post',
     url: API.QUESTION,
     data: {
-      categoryId: categoryId,
+      workbookId: workbookId,
       content: content,
     },
   });
