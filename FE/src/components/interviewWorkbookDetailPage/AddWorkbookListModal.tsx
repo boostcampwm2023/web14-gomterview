@@ -12,7 +12,6 @@ const AddWorkbookListModal = ({
 }: {
   isOpen: boolean;
   closeModal: () => void;
-  workbookId: number;
   selectedQuestionIds: number[];
 }) => {
   const { data: workbookTitleData } = useWorkbookTitleListQuery();
