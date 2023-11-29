@@ -1,34 +1,20 @@
 import { HTMLElementTypes } from '@/types/utils';
-import { BASE_URL, API } from '@constants/api';
-import { PATH } from '@constants/path';
+import redirectToGoogleLogin from '@/utils/redirectToGoogleLogin';
 import { css } from '@emotion/react';
 import { Icon, Typography } from '@foundation/index';
 import useUserInfo from '@hooks/useUserInfo';
 import { theme } from '@styles/theme';
-import { useNavigate } from 'react-router-dom';
 
 type GoogleLoginButtonProps = HTMLElementTypes<HTMLButtonElement>;
 
 const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ ...args }) => {
   const userInfo = useUserInfo();
-  const navigate = useNavigate();
-
-  const handleGoogleLogin = async () => {
-    if (process.env.NODE_ENV === 'development') {
-      const { cookieGenerator } = await import('@/dev/cookieGenerator');
-      void (await cookieGenerator());
-      navigate(PATH.MYPAGE);
-      return;
-    }
-
-    window.location.href = `${BASE_URL}${API.LOGIN}`;
-  };
 
   if (userInfo) return null;
 
   return (
     <button
-      onClick={() => void handleGoogleLogin()}
+      onClick={() => void redirectToGoogleLogin()}
       css={css`
         display: flex;
         align-items: center;
@@ -38,7 +24,7 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ ...args }) => {
         border: 0.0625rem solid ${theme.colors.border.default};
         transition: transform 0.15s ease-in-out;
         background-color: ${theme.colors.surface.default};
-        z-index: 1000;
+        z-index: 1;
 
         &:hover {
           transform: translateY(-0.25rem);

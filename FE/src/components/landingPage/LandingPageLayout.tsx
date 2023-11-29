@@ -1,7 +1,7 @@
+import { Header } from '@components/layout';
 import Layout from '@components/layout/Layout';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
-import LandingPageHeader from './LandingPageHeader';
 
 type LandingPageLayoutProps = {
   children: React.ReactNode;
@@ -17,7 +17,7 @@ const LandingPageLayout: React.FC<LandingPageLayoutProps> = ({ children }) => {
         background: ${theme.gradient.linear.skyblue};
       `}
     >
-      <LandingPageHeader />
+      <Header />
       <div
         css={[
           css`
@@ -30,7 +30,6 @@ const LandingPageLayout: React.FC<LandingPageLayoutProps> = ({ children }) => {
             gap: 2rem;
             padding: 2rem;
             margin: auto 0;
-
             > *:nth-child(3) {
               grid-area: 1 / 2 / 3 / 3;
             }
