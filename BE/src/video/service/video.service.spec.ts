@@ -963,10 +963,58 @@ describe('VideoService 통합 테스트', () => {
   });
 
   describe('deleteVideo', () => {
-    // 성공 시 undefined
-    // manipulated
-    // 비디오 없음
-    // 소유권 없음
+    it('비디오 삭제에 성공하면 undefined를 반환한다.', async () => {
+      // given
+      const member = memberFixture;
+      const video = await videoRepository.save(videoFixture);
+
+      // when
+
+      // then
+      await expect(
+        videoService.deleteVideo(video.id, member),
+      ).resolves.toBeUndefined();
+    });
+
+    it('비디오 삭제 시 member가 없으면 ManipulatedTokenNotFiltered를 반환한다.', async () => {
+      // given
+      const member = null;
+      const video = await videoRepository.save(videoFixture);
+
+      // when
+
+      // then
+      expect(videoService.deleteVideo(video.id, member)).rejects.toThrow(
+        ManipulatedTokenNotFiltered,
+      );
+    });
+
+    it('비디오 삭제 시 존재하지 않는 비디오를 삭제하려 하면 VideoNotFoundException을 반환한다.', async () => {
+      // given
+      const member = memberFixture;
+      const video = await videoRepository.save(videoFixture);
+
+      // when
+
+      // then
+      expect(videoService.deleteVideo(video.id + 1000, member)).rejects.toThrow(
+        VideoNotFoundException,
+      );
+    });
+
+    it('비디오 삭제 시 다른 사람의 비디오를 삭제하려 하면 VideoAccessForbiddenException을 반환한다.', async () => {
+      // given
+      const member = memberFixture;
+      await memberRepository.save(otherMemberFixture);
+      const video = await videoRepository.save(videoOfOtherFixture);
+
+      // when
+
+      // then
+      expect(videoService.deleteVideo(video.id, member)).rejects.toThrow(
+        VideoAccessForbiddenException,
+      );
+    });
   });
 
   afterEach(async () => {
