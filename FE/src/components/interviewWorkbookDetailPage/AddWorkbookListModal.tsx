@@ -15,7 +15,7 @@ const AddWorkbookListModal = ({
   workbookId: number;
   selectedQuestionIds: number[];
 }) => {
-  const { data } = useWorkbookTitleListQuery();
+  const { data: workbookTitleData } = useWorkbookTitleListQuery();
   const { mutateAsync } = useQuestionCopyMutation();
 
   const [selectedWorkbook, setSelectedWorkbook] = useState<string[]>([]);
@@ -68,7 +68,7 @@ const AddWorkbookListModal = ({
               }
             `}
           >
-            {data?.map((item) => (
+            {workbookTitleData?.map((item) => (
               <CheckBox
                 id={item.workbookId.toString()}
                 key={item.workbookId}
