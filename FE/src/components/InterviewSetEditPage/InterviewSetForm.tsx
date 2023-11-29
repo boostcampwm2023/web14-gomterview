@@ -1,6 +1,6 @@
 import { Avatar, Box, Input, InputArea, Typography } from '@foundation/index';
 import { css } from '@emotion/react';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import LabelBox from '@components/InterviewSetEditPage/LabelBox';
 import InterviewSetCategory from '@components/InterviewSetEditPage/InterviewSetCategory';
 import useUserInfo from '@hooks/useUserInfo';
