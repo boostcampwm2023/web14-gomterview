@@ -11,7 +11,7 @@ const InterviewSetCategory: React.FC<InterviewSetCategoryProps> = ({
   selectedId,
   onClick,
 }) => {
-  const { data } = useCategoryQuery();
+  const { data: categories } = useCategoryQuery();
   return (
     <div
       css={css`
@@ -21,7 +21,7 @@ const InterviewSetCategory: React.FC<InterviewSetCategoryProps> = ({
         cursor: pointer;
       `}
     >
-      {data?.map(({ id, name }) => (
+      {categories?.map(({ id, name }) => (
         <Typography
           key={id}
           variant="title4"
