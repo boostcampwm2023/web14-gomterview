@@ -102,4 +102,12 @@ export class WorkbookService {
     await this.workbookRepository.update(workbook);
     return WorkbookResponse.of(workbook);
   }
+
+  async deleteWorkbookById(workbookId: number, member: Member) {
+    validateManipulatedToken(member);
+    const workbook = await this.workbookRepository.findById(workbookId);
+    validateWorkbook(workbook);
+    validateWorkbookOwner(workbook, member);
+    await this.workbookRepository.remove(workbook);
+  }
 }
