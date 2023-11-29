@@ -592,7 +592,7 @@ describe('VideoController 단위 테스트', () => {
   });
 });
 
-describe('VideoController 통합테스트', () => {
+describe('VideoController 통합 테스트', () => {
   let app: INestApplication;
   let authService: AuthService;
   let categoryRepository: CategoryRepository;
@@ -1003,6 +1003,9 @@ describe('VideoController 통합테스트', () => {
   afterEach(async () => {
     await questionRepository.query('delete from token');
     await questionRepository.query('delete from Member');
+    await questionRepository.query('delete from Category');
+    await questionRepository.query('delete from Workbook');
+    await questionRepository.query('delete from Question');
     await questionRepository.query('delete from Video');
     await questionRepository.query('DELETE FROM sqlite_sequence'); // Auto Increment 초기화
   });
