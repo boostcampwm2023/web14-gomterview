@@ -851,14 +851,14 @@ describe('VideoService 통합 테스트', () => {
 
   describe('getAllVideosByMemberId', () => {
     it('비디오 세부 정보 조회 성공 시 SingleVideoResponse의 배열 형식으로 반환된다.', async () => {
-      //given
+      // given
       const member = memberFixture;
       const video = await videoRepository.save(videoFixture);
 
-      //when
+      // when
       const result = await videoService.getAllVideosByMemberId(member);
 
-      //then
+      // then
       expect(result).toHaveLength(1);
       expect(result[0]).toBeInstanceOf(SingleVideoResponse);
       expect(result[0].thumbnail).toBe(video.thumbnail);
@@ -892,9 +892,82 @@ describe('VideoService 통합 테스트', () => {
     });
   });
 
-  describe('toggleVideoStatus', () => {});
+  describe('toggleVideoStatus', () => {
+    it('비디오 상태 토글 시 private 비디오를 토글하면 VideoHashResponse 형식으로 반횐된다.', async () => {
+      // given
+      const member = memberFixture;
+      const video = await videoRepository.save(privateVideoFixture);
 
-  describe('deleteVideo', () => {});
+      // when
+      const result = await videoService.toggleVideoStatus(video.id, member);
+
+      // then
+      expect(result).toBeInstanceOf(VideoHashResponse);
+      expect(result.hash).toBe(
+        crypto.createHash('md5').update(video.url).digest('hex'),
+      );
+    });
+
+    it('비디오 상태 토글 시 public 비디오를 토글하면 해시가 null로 반환된다.', async () => {
+      // given
+      const member = memberFixture;
+      const video = await videoRepository.save(videoFixture);
+
+      // when
+      const result = await videoService.toggleVideoStatus(video.id, member);
+
+      // then
+      expect(result).toBeInstanceOf(VideoHashResponse);
+      expect(result.hash).toBeNull();
+    });
+
+    it('비디오 상태 토글 시 member가 없으면 ManipulatedTokenNotFiltered를 반환한다.', async () => {
+      //given
+      const member = null;
+      const video = await videoRepository.save(videoFixture);
+
+      //when
+
+      //then
+      expect(videoService.toggleVideoStatus(video.id, member)).rejects.toThrow(
+        ManipulatedTokenNotFiltered,
+      );
+    });
+
+    it('비디오 상태 토글 시 존재하지 않는 비디오의 상태를 토글하려 하면 VideoNotFoundException을 반환한다.', async () => {
+      //given
+      const member = memberFixture;
+      const video = await videoRepository.save(videoFixture);
+
+      //when
+
+      //then
+      expect(
+        videoService.toggleVideoStatus(video.id + 1000, member),
+      ).rejects.toThrow(VideoNotFoundException);
+    });
+
+    it('비디오 상태 토글 시 다른 사람의 비디오를 토글하려 하면 VideoAccessForbiddenException을 반환한다.', async () => {
+      //given
+      const member = memberFixture;
+      await memberRepository.save(otherMemberFixture);
+      const video = await videoRepository.save(videoOfOtherFixture);
+
+      //when
+
+      //then
+      expect(videoService.toggleVideoStatus(video.id, member)).rejects.toThrow(
+        VideoAccessForbiddenException,
+      );
+    });
+  });
+
+  describe('deleteVideo', () => {
+    // 성공 시 undefined
+    // manipulated
+    // 비디오 없음
+    // 소유권 없음
+  });
 
   afterEach(async () => {
     await questionRepository.query('delete from Member');
