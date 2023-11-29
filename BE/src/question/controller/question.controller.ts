@@ -23,6 +23,8 @@ import {
 import { createApiResponseOption } from '../../util/swagger.util';
 import { QuestionResponse } from '../dto/questionResponse';
 import { Member } from '../../member/entity/member';
+import { CopyQuestionRequest } from '../dto/copyQuestionRequest';
+import { WorkbookIdResponse } from '../../workbook/dto/workbookIdResponse';
 
 @ApiTags('question')
 @Controller('/api/question')
@@ -45,6 +47,24 @@ export class QuestionController {
   ) {
     return await this.questionService.createQuestion(
       createQuestionRequest,
+      req.user as Member,
+    );
+  }
+
+  @Post('/copy')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiCookieAuth()
+  @ApiBody({ type: CopyQuestionRequest })
+  @ApiOperation({
+    summary: '질문 복제',
+  })
+  @ApiResponse(createApiResponseOption(201, '질문 복제', WorkbookIdResponse))
+  async copyQuestions(
+    @Body() copyQuestionRequest: CopyQuestionRequest,
+    @Req() req: Request,
+  ) {
+    return await this.questionService.copyQuestions(
+      copyQuestionRequest,
       req.user as Member,
     );
   }
