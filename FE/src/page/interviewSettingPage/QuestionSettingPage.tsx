@@ -1,5 +1,6 @@
 import { questionSetting } from '@/atoms/interviewSetting';
 import { QuestionSelectionBox } from '@common/index';
+import { InterviewSettingFooter } from '@components/interviewSettingPage';
 import Description from '@components/interviewSettingPage/Description';
 import { css } from '@emotion/react';
 import { Button } from '@foundation/index';
@@ -36,23 +37,7 @@ const QuestionSettingPage: React.FC<QuestionSettingPageProps> = ({
       >
         <QuestionSelectionBox />
       </div>
-      <div
-        css={css`
-          position: sticky;
-          bottom: 0;
-          backdrop-filter: blur(3px); /* 10px 블러 효과 */
-          background: linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0.72) 100%
-          );
-          padding: 0.5rem;
-          display: flex;
-          justify-content: center;
-          gap: 1rem;
-          margin-top: 2rem;
-        `}
-      >
+      <InterviewSettingFooter>
         <Button
           onClick={onPrevClick}
           size="lg"
@@ -72,7 +57,7 @@ const QuestionSettingPage: React.FC<QuestionSettingPageProps> = ({
         >
           다음
         </Button>
-      </div>
+      </InterviewSettingFooter>
     </>
   );
 };

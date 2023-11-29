@@ -2,7 +2,10 @@ import { videoSetting } from '@/atoms/interviewSetting';
 import useMedia from '@/hooks/useMedia';
 import { theme } from '@/styles/theme';
 import { RecordStatus } from '@components/interviewPage/InterviewHeader';
-import { Description } from '@components/interviewSettingPage';
+import {
+  Description,
+  InterviewSettingFooter,
+} from '@components/interviewSettingPage';
 import { css } from '@emotion/react';
 import { Button } from '@foundation/index';
 import { useEffect } from 'react';
@@ -94,23 +97,7 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
           `}
         />
       </div>
-      <div
-        css={css`
-          position: sticky;
-          bottom: 0;
-          backdrop-filter: blur(3px); /* 10px 블러 효과 */
-          background: linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0.72) 100%
-          );
-          padding: 0.5rem;
-          display: flex;
-          justify-content: center;
-          gap: 1rem;
-          margin-top: 2rem;
-        `}
-      >
+      <InterviewSettingFooter>
         <Button
           onClick={onPrevClick}
           size="lg"
@@ -130,7 +117,7 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
         >
           다음
         </Button>
-      </div>
+      </InterviewSettingFooter>
     </>
   );
 };
