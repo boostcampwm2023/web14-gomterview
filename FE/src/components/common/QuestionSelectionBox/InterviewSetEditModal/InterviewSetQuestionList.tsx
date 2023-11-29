@@ -29,6 +29,7 @@ const InterviewSetQuestionList: React.FC<InterviewSetQuestionListProps> = ({
         flex-direction: column;
         row-gap: 1rem;
         padding: 1rem;
+        border-radius: 1rem;
         background-color: ${theme.colors.surface.inner};
       `}
     >

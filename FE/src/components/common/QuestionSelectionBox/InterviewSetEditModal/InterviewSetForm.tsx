@@ -1,8 +1,8 @@
-import { Avatar, Box, Input, InputArea, Typography } from '@foundation/index';
+import { Avatar, Input, InputArea, Typography } from '@foundation/index';
 import { css } from '@emotion/react';
 import { useCallback, useEffect, useState } from 'react';
-import LabelBox from '@components/InterviewSetEditPage/LabelBox';
-import InterviewSetCategory from '@components/InterviewSetEditPage/InterviewSetCategory';
+import LabelBox from '@common/QuestionSelectionBox/InterviewSetEditModal/LabelBox';
+import InterviewSetCategory from '@common/QuestionSelectionBox/InterviewSetEditModal/InterviewSetCategory';
 import useUserInfo from '@hooks/useUserInfo';
 import useWorkbookQuery from '@hooks/apis/queries/useWorkbookQuery';
 import useWorkbookPatchMutation from '@hooks/apis/mutations/useWorkbookPatchMutation';
@@ -71,7 +71,7 @@ const InterviewSetForm: React.FC<InterviewSetFormProps> = ({ workbookId }) => {
   };
 
   return (
-    <Box
+    <div
       css={css`
         display: flex;
         flex-direction: column;
@@ -84,6 +84,7 @@ const InterviewSetForm: React.FC<InterviewSetFormProps> = ({ workbookId }) => {
           display: flex;
           align-items: center;
           column-gap: 0.5rem;
+          padding-left: 0.25rem;
         `}
       >
         <Avatar width="1.5rem" height="1.5rem" src={userInfo.profileImg} />
@@ -104,7 +105,7 @@ const InterviewSetForm: React.FC<InterviewSetFormProps> = ({ workbookId }) => {
           value={workbookContent}
         />
       </LabelBox>
-    </Box>
+    </div>
   );
 };
 
