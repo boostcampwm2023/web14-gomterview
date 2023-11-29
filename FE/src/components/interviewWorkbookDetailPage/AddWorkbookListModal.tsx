@@ -27,12 +27,14 @@ const AddWorkbookListModal = ({
 
   const handleCheckBox = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { checked, id } = e.target;
-    if (checked) {
-      setSelectedWorkbook((pre) => [...pre, id]);
-    } else {
-      setSelectedWorkbook((pre) => pre.filter((item) => item !== id));
-    }
+    checked ? selectWorkBook(id) : unSelectWorkBook(id);
   };
+
+  const selectWorkBook = (id: string) =>
+    setSelectedWorkbook((pre) => [...pre, id]);
+
+  const unSelectWorkBook = (id: string) =>
+    setSelectedWorkbook((pre) => pre.filter((item) => item !== id));
 
   const mutateAllQuestionCopy = async () => {
     await Promise.all(
