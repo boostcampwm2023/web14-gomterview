@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { QuestionService } from './question.service';
 import { QuestionRepository } from '../repository/question.repository';
 import {
+  copyQuestionRequestFixture,
   createQuestionRequestFixture,
   questionFixture,
 } from '../fixture/question.fixture';
@@ -13,7 +14,10 @@ import { INestApplication } from '@nestjs/common';
 import { Member } from '../../member/entity/member';
 import { MemberModule } from '../../member/member.module';
 import { MemberRepository } from '../../member/repository/member.repository';
-import { memberFixture } from '../../member/fixture/member.fixture';
+import {
+  memberFixture,
+  otherMemberFixture,
+} from '../../member/fixture/member.fixture';
 import {
   NeedToFindByWorkbookIdException,
   QuestionNotFoundException,
@@ -22,7 +26,10 @@ import { ManipulatedTokenNotFiltered } from '../../token/exception/token.excepti
 import { Answer } from '../../answer/entity/answer';
 import { AnswerModule } from '../../answer/answer.module';
 import { WorkbookRepository } from '../../workbook/repository/workbook.repository';
-import { workbookFixture } from '../../workbook/fixture/workbook.fixture';
+import {
+  workbookFixture,
+  workbookFixtureWithId,
+} from '../../workbook/fixture/workbook.fixture';
 import { WorkbookModule } from '../../workbook/workbook.module';
 import { Workbook } from '../../workbook/entity/workbook';
 import {
@@ -33,12 +40,15 @@ import { CategoryRepository } from '../../category/repository/category.repositor
 import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { CategoryModule } from '../../category/category.module';
 import { Category } from '../../category/entity/category';
+import { WorkbookIdResponse } from '../../workbook/dto/workbookIdResponse';
+import { CopyQuestionRequest } from '../dto/copyQuestionRequest';
 
 describe('QuestionService', () => {
   let service: QuestionService;
 
   const mockQuestionRepository = {
     save: jest.fn(),
+    saveAll: jest.fn(),
     findByWorkbookId: jest.fn(),
     findById: jest.fn(),
     remove: jest.fn(),
@@ -195,6 +205,62 @@ describe('QuestionService', () => {
       ).rejects.toThrow(new WorkbookForbiddenException());
     });
   });
+
+  describe('질문 복제', () => {
+    it('workbookId의 조회결과가 모두 있을 때 질문을 성공적으로 복제한다.', async () => {
+      //given
+      //when
+      mockQuestionRepository.findByWorkbookId.mockResolvedValue([
+        questionFixture,
+        questionFixture,
+        questionFixture,
+      ]);
+      mockQuestionRepository.saveAll.mockResolvedValue(undefined);
+      mockWorkbookRepository.findById.mockResolvedValue(workbookFixtureWithId);
+
+      //then
+      const result = await service.copyQuestions(
+        copyQuestionRequestFixture,
+        memberFixture,
+      );
+      expect(result).toBeInstanceOf(WorkbookIdResponse);
+      expect(result.workbookId).toBe(workbookFixtureWithId.id);
+    });
+
+    it('workbookId가 존재하지 않는 문제집이면 WorkbookNotFoundException예외처리한다.', async () => {
+      //given
+      //when
+      mockQuestionRepository.findByWorkbookId.mockResolvedValue([
+        questionFixture,
+        questionFixture,
+        questionFixture,
+      ]);
+      mockQuestionRepository.saveAll.mockResolvedValue(undefined);
+      mockWorkbookRepository.findById.mockResolvedValue(null);
+
+      //then
+      await expect(
+        service.copyQuestions(copyQuestionRequestFixture, memberFixture),
+      ).rejects.toThrow(new WorkbookNotFoundException());
+    });
+
+    it('자신의 것이 아닌 문제집으로 문제들을 복사하려하면 WorkbookForbiddenException예외처리한다.', async () => {
+      //given
+      //when
+      mockQuestionRepository.findByWorkbookId.mockResolvedValue([
+        questionFixture,
+        questionFixture,
+        questionFixture,
+      ]);
+      mockQuestionRepository.saveAll.mockResolvedValue(undefined);
+      mockWorkbookRepository.findById.mockResolvedValue(workbookFixtureWithId);
+
+      //then
+      await expect(
+        service.copyQuestions(copyQuestionRequestFixture, otherMemberFixture),
+      ).rejects.toThrow(new WorkbookForbiddenException());
+    });
+  });
 });
 
 describe('QuestionService 통합 테스트', () => {
@@ -289,5 +355,26 @@ describe('QuestionService 통합 테스트', () => {
     await expect(
       questionService.deleteQuestionById(question.id, member),
     ).resolves.toBeUndefined();
+  });
+
+  it('문제를 성공적으로 복사하면 WorkbookIdResponse를 반환한다.', async () => {
+    //given
+    await memberRepository.save(memberFixture);
+    await categoryRepository.save(categoryFixtureWithId);
+    const workbook = await workbookRepository.save(workbookFixture);
+    for (let index = 0; index < 3; index++) {
+      await questionRepository.save(Question.of(workbook, null, 'tester'));
+    }
+    const other = await memberRepository.save(otherMemberFixture);
+    const othersWorkbook = await workbookRepository.save(
+      Workbook.of('test', 'test', categoryFixtureWithId, other),
+    );
+    //when
+    const copyRequest = new CopyQuestionRequest(othersWorkbook.id, [1, 2, 3]);
+
+    //then
+    const result = await questionService.copyQuestions(copyRequest, other);
+    expect(result).toBeInstanceOf(WorkbookIdResponse);
+    expect(result.workbookId).toBe(othersWorkbook.id);
   });
 });
