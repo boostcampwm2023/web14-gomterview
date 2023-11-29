@@ -52,6 +52,7 @@ describe('WorkbookService 단위테스트', () => {
     findMembersWorkbooks: jest.fn(),
     findSingleWorkbook: jest.fn(),
     update: jest.fn(),
+    remove: jest.fn(),
   };
 
   beforeAll(async () => {
@@ -272,6 +273,63 @@ describe('WorkbookService 단위테스트', () => {
           service.updateWorkbook(workbookUpdateRequest, cases[index]),
         ).rejects.toThrow(result[index]);
       }
+    });
+  });
+
+  describe('문제집 삭제', () => {
+    it('문제집을 성공적으로 삭제한다.', async () => {
+      //given
+
+      //when
+      mockWorkbookRepository.findById.mockResolvedValue(workbookFixtureWithId);
+      mockWorkbookRepository.remove.mockResolvedValue(undefined);
+
+      //then
+      await expect(
+        service.deleteWorkbookById(workbookFixtureWithId.id, memberFixture),
+      ).resolves.toBeUndefined();
+    });
+
+    it('회원이 null이면 ManipulatedToken예외처리한다.', async () => {
+      //given
+
+      //when
+      mockWorkbookRepository.findById.mockResolvedValue(workbookFixtureWithId);
+      mockWorkbookRepository.remove.mockResolvedValue(undefined);
+
+      //then
+      await expect(
+        service.deleteWorkbookById(workbookFixtureWithId.id, null),
+      ).rejects.toThrow(new ManipulatedTokenNotFiltered());
+    });
+
+    it('회원이 다른 사람이라면  WorkbookForbidden예외처리한다.', async () => {
+      //given
+
+      //when
+      mockWorkbookRepository.findById.mockResolvedValue(workbookFixtureWithId);
+      mockWorkbookRepository.remove.mockResolvedValue(undefined);
+
+      //then
+      await expect(
+        service.deleteWorkbookById(
+          workbookFixtureWithId.id,
+          otherMemberFixture,
+        ),
+      ).rejects.toThrow(new WorkbookForbiddenException());
+    });
+
+    it('문제집이 존재하지 않는다면 WorkbookNotFoundException예외처리한다.', async () => {
+      //given
+
+      //when
+      mockWorkbookRepository.findById.mockResolvedValue(null);
+      mockWorkbookRepository.remove.mockResolvedValue(undefined);
+
+      //then
+      await expect(
+        service.deleteWorkbookById(workbookFixtureWithId.id, memberFixture),
+      ).rejects.toThrow(new WorkbookNotFoundException());
     });
   });
 });
