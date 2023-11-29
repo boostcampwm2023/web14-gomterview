@@ -5,4 +5,8 @@ export type HTMLElementTypes<T> = React.ClassAttributes<T> &
     css?: Interpolation<Theme>;
   };
 
+export type FunctionParamsType<T> = T extends (...args: infer P) => unknown
+  ? P
+  : never;
+
 export type ExcludeArray<T> = T extends Array<infer U> ? U : T;

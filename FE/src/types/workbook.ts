@@ -42,7 +42,7 @@ export type WorkbookTitleListResDto = Pick<
  * GET workbook/${workbookId}
  * 문제집 아이디로 문제집을 단건 조회 했을 때 응답 객체 타입
  */
-export type WorkbookResDto = Omit<WorkbookEntity, 'categoryId'>;
+export type WorkbookResDto = WorkbookEntity;
 
 /**
  * PATCH workbook/${workbookId}

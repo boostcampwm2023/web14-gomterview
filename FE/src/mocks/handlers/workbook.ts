@@ -54,6 +54,7 @@ const workbookHandlers = [
     return HttpResponse.json(
       {
         workbookId: 1,
+        categoryId: 1,
         nickname: 'milk717',
         profileImg: 'https://avatars.githubusercontent.com/u/66554167?v=4',
         copyCount: 717,
