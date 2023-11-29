@@ -9,4 +9,9 @@ export const QUERY_KEY = {
   VIDEO_HASH: (videoHash: string) => ['video', videoHash],
   WORKBOOK: ['workbook'],
   WORKBOOK_ID: (workbookId: number) => ['workbook', workbookId],
+  QUESTION_WORKBOOK_ID: (workbookId: number) => [
+    'question',
+    'workbook',
+    workbookId,
+  ],
 };

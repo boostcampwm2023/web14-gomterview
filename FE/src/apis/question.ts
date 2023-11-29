@@ -13,6 +13,13 @@ export const getQuestion = async (workbookId: number) => {
   });
 };
 
+export const getQuestionById = async (id: number) => {
+  return await getAPIResponseData<Question[]>({
+    method: 'get',
+    url: API.QUESTION_ID(id),
+  });
+};
+
 export const postQuestion = async ({
   workbookId,
   content,
