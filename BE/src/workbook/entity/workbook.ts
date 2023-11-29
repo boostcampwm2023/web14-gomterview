@@ -1,17 +1,20 @@
 import { DefaultEntity } from '../../app.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Member } from '../../member/entity/member';
+import { Category } from '../../category/entity/category';
+import { UpdateWorkbookRequest } from '../dto/updateWorkbookRequest';
 
 @Entity({ name: 'Workbook' })
 export class Workbook extends DefaultEntity {
   @Column()
-  name: string;
+  title: string;
 
   @Column({ type: 'blob' })
   content: string;
 
-  @Column()
-  category: string;
+  @ManyToOne(() => Category)
+  @JoinColumn({ name: 'category' })
+  category: Category;
 
   @Column()
   copyCount: number;
@@ -23,14 +26,14 @@ export class Workbook extends DefaultEntity {
   constructor(
     id: number,
     createdAt: Date,
-    name: string,
+    title: string,
     content: string,
-    category: string,
+    category: Category,
     copyCount: number,
     member: Member,
   ) {
     super(id, createdAt);
-    this.name = name;
+    this.title = title;
     this.content = content;
     this.category = category;
     this.copyCount = copyCount;
@@ -38,15 +41,25 @@ export class Workbook extends DefaultEntity {
   }
 
   static of(
-    name: string,
+    title: string,
     content: string,
-    category: string,
+    category: Category,
     member: Member,
   ): Workbook {
-    return new Workbook(null, new Date(), name, content, category, 0, member);
+    return new Workbook(null, new Date(), title, content, category, 0, member);
   }
 
   isOwnedBy(member: Member) {
     return this.member.id === member.id;
+  }
+
+  increaseCopyCount() {
+    this.copyCount++;
+  }
+
+  updateInfo(updateWorkbookRequest: UpdateWorkbookRequest, category: Category) {
+    this.title = updateWorkbookRequest.title;
+    this.content = updateWorkbookRequest.content;
+    this.category = category;
   }
 }

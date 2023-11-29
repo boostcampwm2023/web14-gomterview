@@ -1,7 +1,8 @@
 import { Logo } from '@common/index';
 import { css } from '@emotion/react';
+import Menu from './Header/Menu';
 
-const LandingPageHeader: React.FC = () => {
+const Header: React.FC = () => {
   return (
     <div
       css={css`
@@ -12,11 +13,13 @@ const LandingPageHeader: React.FC = () => {
         justify-content: space-between;
         align-items: center;
         padding: 2rem;
+        z-index: 999;
       `}
     >
       <Logo />
+      <Menu />
     </div>
   );
 };
 
-export default LandingPageHeader;
+export default Header;

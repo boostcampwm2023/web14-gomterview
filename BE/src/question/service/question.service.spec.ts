@@ -9,7 +9,7 @@ import { QuestionResponse } from '../dto/questionResponse';
 import { createIntegrationTestModule } from '../../util/test.util';
 import { QuestionModule } from '../question.module';
 import { Question } from '../entity/question';
-import { INestApplication, UnauthorizedException } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { Member } from '../../member/entity/member';
 import { MemberModule } from '../../member/member.module';
 import { MemberRepository } from '../../member/repository/member.repository';
@@ -25,7 +25,14 @@ import { WorkbookRepository } from '../../workbook/repository/workbook.repositor
 import { workbookFixture } from '../../workbook/fixture/workbook.fixture';
 import { WorkbookModule } from '../../workbook/workbook.module';
 import { Workbook } from '../../workbook/entity/workbook';
-import { WorkbookNotFoundException } from '../../workbook/exception/workbook.exception';
+import {
+  WorkbookForbiddenException,
+  WorkbookNotFoundException,
+} from '../../workbook/exception/workbook.exception';
+import { CategoryRepository } from '../../category/repository/category.repository';
+import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
+import { CategoryModule } from '../../category/category.module';
+import { Category } from '../../category/entity/category';
 
 describe('QuestionService', () => {
   let service: QuestionService;
@@ -185,7 +192,7 @@ describe('QuestionService', () => {
             new Date(),
           ),
         ),
-      ).rejects.toThrow(new UnauthorizedException());
+      ).rejects.toThrow(new WorkbookForbiddenException());
     });
   });
 });
@@ -196,6 +203,7 @@ describe('QuestionService 통합 테스트', () => {
   let workbookRepository: WorkbookRepository;
   let questionRepository: QuestionRepository;
   let memberRepository: MemberRepository;
+  let categoryRepository: CategoryRepository;
 
   beforeAll(async () => {
     const modules = [
@@ -203,8 +211,9 @@ describe('QuestionService 통합 테스트', () => {
       WorkbookModule,
       MemberModule,
       AnswerModule,
+      CategoryModule,
     ];
-    const entities = [Question, Workbook, Member, Answer];
+    const entities = [Question, Workbook, Member, Answer, Category];
 
     const moduleFixture = await createIntegrationTestModule(modules, entities);
     app = moduleFixture.createNestApplication();
@@ -216,6 +225,8 @@ describe('QuestionService 통합 테스트', () => {
     questionRepository =
       moduleFixture.get<QuestionRepository>(QuestionRepository);
     memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
+    categoryRepository =
+      moduleFixture.get<CategoryRepository>(CategoryRepository);
   });
 
   beforeEach(async () => {
@@ -227,6 +238,7 @@ describe('QuestionService 통합 테스트', () => {
   it('새로운 질문을 저장할 때 QuestionResponse객체를 반환한다.', async () => {
     //given
     await memberRepository.save(memberFixture);
+    await categoryRepository.save(categoryFixtureWithId);
     await workbookRepository.save(workbookFixture);
 
     //when
@@ -243,6 +255,7 @@ describe('QuestionService 통합 테스트', () => {
   it('카테고리의 질문을 조회하면 QuestionResponse의 배열로 반환된다.', async () => {
     //given
     const member = await memberRepository.save(memberFixture);
+    await categoryRepository.save(categoryFixtureWithId);
     await workbookRepository.save(workbookFixture);
     const response = await questionService.createQuestion(
       createQuestionRequestFixture,
@@ -252,7 +265,7 @@ describe('QuestionService 통합 테스트', () => {
     //when
 
     const workbook = await workbookRepository.findByNameAndMemberId(
-      workbookFixture.name,
+      workbookFixture.title,
       member.id,
     );
 
@@ -265,6 +278,7 @@ describe('QuestionService 통합 테스트', () => {
   it('id로 질문을 삭제하면 undefined를 반환한다.', async () => {
     //given
     const member = await memberRepository.save(memberFixture);
+    await categoryRepository.save(categoryFixtureWithId);
     const workbook = await workbookRepository.save(workbookFixture);
     const question = await questionRepository.save(
       Question.of(workbook, null, 'tester'),

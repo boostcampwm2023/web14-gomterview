@@ -10,20 +10,20 @@ import { Typography } from '@foundation/index';
 
 type AnswerSelectionModalProps = {
   isOpen: boolean;
-  categoryId: number;
+  workbookId: number;
   closeModal: () => void;
   question: Question;
 };
 
 const AnswerSelectionModal: React.FC<AnswerSelectionModalProps> = ({
   isOpen,
-  categoryId,
+  workbookId,
   closeModal,
   question,
 }) => {
   const { data } = useQuestionAnswerQuery(question.questionId);
 
-  const { mutate: selectAnswerMutate } = useAnswerDefaultMutation(categoryId);
+  const { mutate: selectAnswerMutate } = useAnswerDefaultMutation(workbookId);
 
   if (!data) return;
 

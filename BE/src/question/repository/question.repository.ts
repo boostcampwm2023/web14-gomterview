@@ -9,6 +9,10 @@ export class QuestionRepository {
     @InjectRepository(Question) private repository: Repository<Question>,
   ) {}
 
+  async query(query: string) {
+    return await this.repository.query(query);
+  }
+
   async save(question: Question) {
     return await this.repository.save(question);
   }

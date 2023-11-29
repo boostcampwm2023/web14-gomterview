@@ -7,14 +7,14 @@ type CheckBoxProps = {
   id: string;
   children?: React.ReactNode;
   checked?: boolean;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onInputChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 } & HTMLElementTypes<HTMLLabelElement>;
 
 const CheckBox: React.FC<CheckBoxProps> = ({
   id,
   children,
   checked,
-  onChange,
+  onInputChange,
   ...args
 }) => {
   return (
@@ -23,7 +23,7 @@ const CheckBox: React.FC<CheckBoxProps> = ({
         id={id}
         type="checkbox"
         checked={checked}
-        onChange={onChange}
+        onChange={onInputChange}
         css={css`
           display: none;
           &:checked + label svg {
@@ -36,6 +36,7 @@ const CheckBox: React.FC<CheckBoxProps> = ({
         css={css`
           display: flex;
           align-items: center;
+          cursor: pointer;
         `}
         {...args}
       >

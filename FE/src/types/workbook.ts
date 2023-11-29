@@ -1,4 +1,4 @@
-type WorkbookEntity = {
+export type WorkbookEntity = {
   workbookId: number;
   categoryId: number;
   nickname: string;

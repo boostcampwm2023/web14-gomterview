@@ -10,7 +10,12 @@ export class WorkbookRepository {
   ) {}
 
   async findById(id: number) {
-    return await this.repository.findOneBy({ id: id });
+    return await this.repository
+      .createQueryBuilder('Workbook')
+      .leftJoinAndSelect('Workbook.member', 'member')
+      .leftJoinAndSelect('Workbook.category', 'category')
+      .where('Workbook.id = :id', { id })
+      .getOne();
   }
 
   async query(query: string) {
@@ -21,10 +26,48 @@ export class WorkbookRepository {
     return await this.repository.save(workbook);
   }
 
-  async findByNameAndMemberId(name: string, memberId: number) {
+  async findByNameAndMemberId(title: string, memberId: number) {
     return await this.repository.findOneBy({
-      name: name,
+      title: title,
       member: { id: memberId },
     });
+  }
+
+  async findAll() {
+    return await this.repository
+      .createQueryBuilder('Workbook')
+      .leftJoinAndSelect('Workbook.category', 'category')
+      .leftJoinAndSelect('Workbook.member', 'member')
+      .getMany();
+  }
+
+  async findAllByCategoryId(categoryId: number) {
+    return await this.repository
+      .createQueryBuilder('Workbook')
+      .leftJoinAndSelect('Workbook.member', 'member')
+      .leftJoinAndSelect('Workbook.category', 'category')
+      .where('category.id = :categoryId', { categoryId })
+      .getMany();
+  }
+
+  async findTop5Workbooks() {
+    return await this.repository
+      .createQueryBuilder('Workbook')
+      .select()
+      .orderBy('Workbook.copyCount', 'DESC')
+      .limit(5)
+      .getMany();
+  }
+
+  async findMembersWorkbooks(memberId: number) {
+    return await this.repository
+      .createQueryBuilder('Workbook')
+      .leftJoinAndSelect('Workbook.member', 'member')
+      .where('member.id = :memberId', { memberId })
+      .getMany();
+  }
+
+  async update(workbook: Workbook) {
+    return await this.repository.update({ id: workbook.id }, workbook);
   }
 }
