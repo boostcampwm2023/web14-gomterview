@@ -1,7 +1,7 @@
 import useInput from '@hooks/useInput';
 import useQuestionAdd from '@hooks/useQuestionAdd';
 import { css } from '@emotion/react';
-import { Button, InputArea } from '@foundation/index';
+import { Button, Input } from '@foundation/index';
 
 type QuestionAddFormProps = {
   workbookId: number;
@@ -15,7 +15,7 @@ const QuestionAddForm: React.FC<QuestionAddFormProps> = ({ workbookId }) => {
   });
 
   const { value, onChange, clearInput, isEmpty } =
-    useInput<HTMLTextAreaElement>('');
+    useInput<HTMLInputElement>('');
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,15 +30,13 @@ const QuestionAddForm: React.FC<QuestionAddFormProps> = ({ workbookId }) => {
   return (
     <form
       css={css`
-        padding: 1rem;
         display: flex;
         align-items: center;
-        gap: 0.3rem;
+        gap: 0.5rem;
       `}
       onSubmit={onSubmit}
     >
-      <InputArea
-        rows={1}
+      <Input
         css={css`
           padding: 0.5rem;
         `}
