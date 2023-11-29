@@ -11,26 +11,32 @@ const NewWorkbookListButton = ({
   selectedQuestionIds: number[];
   workbookData: WorkbookEntity;
 }) => {
-  const { mutate: newWorkbookMutate } = useWorkbookPostMutation();
-  const { mutate: newQuestionCopyMutate } = useQuestionCopyMutation();
+  const { mutateAsync: newWorkbookMutate } = useWorkbookPostMutation();
+  const { mutateAsync: newQuestionCopyMutate } = useQuestionCopyMutation();
 
   const handleNewWorkbook = () => {
-    newWorkbookMutate(
-      {
-        title: `${workbookData.title} 복사본`,
-        content: workbookData.content,
-        categoryId: workbookData.categoryId,
-      },
-      {
-        onSuccess: (data) => {
-          newQuestionCopyMutate({
-            workbookId: data.workbookId,
-            questionIds: selectedQuestionIds,
-          });
-        },
-      }
-    );
+    try {
+      void createNewWorkbook();
+      //TODO: 이 다음에는 어떻게 해줄까...?
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
   };
+
+  const createNewWorkbook = async () => {
+    const result = await newWorkbookMutate({
+      title: `${workbookData.title} 복사본`,
+      content: workbookData.content,
+      categoryId: workbookData.categoryId,
+    });
+
+    await newQuestionCopyMutate({
+      workbookId: result.workbookId,
+      questionIds: selectedQuestionIds,
+    });
+  };
+
   return (
     <button
       onClick={handleNewWorkbook}
