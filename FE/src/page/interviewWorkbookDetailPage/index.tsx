@@ -105,6 +105,7 @@ const InterviewWorkbookDetailPage = () => {
                 question={question}
                 workbookId={workbookId}
                 isSelected={isSelected}
+                isEditable={false}
                 toggleSelected={() =>
                   isSelected
                     ? selectQuestion(question.questionId)
