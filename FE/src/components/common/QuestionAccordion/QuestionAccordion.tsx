@@ -19,6 +19,7 @@ type QuestionAccordionProps = {
   question: Question;
   workbookId: number;
   isSelected: boolean;
+  isEditable?: boolean;
   toggleSelected?: () => void;
 };
 
@@ -31,6 +32,7 @@ const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
   question,
   workbookId,
   isSelected,
+  isEditable,
   toggleSelected,
 }) => {
   const queryClient = useQueryClient();
@@ -88,15 +90,17 @@ const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
             {question.answerContent}
           </Typography>
         </LeadingDot>
-        <Icon
-          id="edit"
-          css={css`
-            flex-shrink: 0;
-          `}
-          width="2rem"
-          height="2rem"
-          onClick={userInfo ? handleEditModal : handleEditGuestUser}
-        />
+        {isEditable && (
+          <Icon
+            id="edit"
+            css={css`
+              flex-shrink: 0;
+            `}
+            width="2rem"
+            height="2rem"
+            onClick={userInfo ? handleEditModal : handleEditGuestUser}
+          />
+        )}
       </AccordionDetails>
     </Accordion>
   );

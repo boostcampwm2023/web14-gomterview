@@ -14,7 +14,7 @@ const useQuestionWorkbookQuery = ({
   enabled,
 }: {
   workbookId: number;
-  enabled: boolean;
+  enabled?: boolean;
 }) => {
   return useQuery({
     queryKey: QUERY_KEY.QUESTION_CATEGORY(workbookId),
