@@ -93,7 +93,7 @@ export const videoOfWithdrawnMemberFixture = new Video(
 export const createVideoRequestFixture = new CreateVideoRequest(
   1,
   'foobar.webm',
-  'https://foo.com',
+  'https://u2e0.c18.e2-4.dev/videos/example.mp4',
   'https://bar.com',
   '03:29',
 );

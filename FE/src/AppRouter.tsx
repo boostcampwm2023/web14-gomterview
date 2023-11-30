@@ -11,6 +11,8 @@ import InterviewVideoPublicPage from '@page/interviewVideoPublicPage';
 import InterviewVideoPublicLoader from '@routes/interviewVideoPublicLoader';
 import rootLoader from '@routes/rootLoader';
 import ErrorPage from '@page/errorPage';
+import InterviewWorkbookDetailPage from '@page/interviewWorkbookDetailPage';
+import interviewWorkbookDetailLoader from '@routes/interviewWorkbookDetailLoader';
 
 const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
   const routes = createBrowserRouter([
@@ -49,6 +51,11 @@ const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
               params: params,
               queryClient: queryClient,
             }),
+        },
+        {
+          path: PATH.INTERVIEW_WORKBOOK_DETAIL(),
+          element: <InterviewWorkbookDetailPage />,
+          loader: ({ params }) => interviewWorkbookDetailLoader(params),
         },
         {
           path: '*',

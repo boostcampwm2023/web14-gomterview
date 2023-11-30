@@ -19,7 +19,8 @@ type QuestionAccordionProps = {
   question: Question;
   workbookId: number;
   isSelected: boolean;
-  toggleSelected: () => void;
+  isEditable?: boolean;
+  toggleSelected?: () => void;
 };
 
 const selectedStyle = css`
@@ -31,6 +32,7 @@ const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
   question,
   workbookId,
   isSelected,
+  isEditable,
   toggleSelected,
 }) => {
   const queryClient = useQueryClient();
@@ -54,7 +56,7 @@ const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
 
   return (
     <Accordion
-      onChange={toggleSelected}
+      onChange={() => toggleSelected?.()}
       expanded={isSelected}
       css={css`
         margin-bottom: 1.2rem;
@@ -88,15 +90,17 @@ const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
             {question.answerContent}
           </Typography>
         </LeadingDot>
-        <Icon
-          id="edit"
-          css={css`
-            flex-shrink: 0;
-          `}
-          width="2rem"
-          height="2rem"
-          onClick={userInfo ? handleEditModal : handleEditGuestUser}
-        />
+        {isEditable && (
+          <Icon
+            id="edit"
+            css={css`
+              flex-shrink: 0;
+            `}
+            width="2rem"
+            height="2rem"
+            onClick={userInfo ? handleEditModal : handleEditGuestUser}
+          />
+        )}
       </AccordionDetails>
     </Accordion>
   );

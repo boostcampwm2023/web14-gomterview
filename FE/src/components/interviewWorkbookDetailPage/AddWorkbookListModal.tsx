@@ -1,20 +1,25 @@
+import { WorkbookEntity } from '@/types/workbook';
 import { css } from '@emotion/react';
 import Modal from '@foundation/Modal';
-import { Button, CheckBox, Icon, Typography } from '@foundation/index';
+import { Button, CheckBox, Typography } from '@foundation/index';
 import useQuestionCopyMutation from '@hooks/apis/mutations/useQuestionCopyMutation';
 import useWorkbookTitleListQuery from '@hooks/apis/queries/useWorkbookTitleListQuery';
 import { useState } from 'react';
+import NewWorkbookListButton from './NewWorkbookListButton';
+import { useNavigate } from 'react-router-dom';
 
 const AddWorkbookListModal = ({
   isOpen,
   closeModal,
   selectedQuestionIds,
+  workbookData,
 }: {
   isOpen: boolean;
   closeModal: () => void;
-  workbookId: number;
   selectedQuestionIds: number[];
+  workbookData: WorkbookEntity;
 }) => {
+  const navigate = useNavigate();
   const { data: workbookTitleData } = useWorkbookTitleListQuery();
   const { mutateAsync } = useQuestionCopyMutation();
 
@@ -22,28 +27,25 @@ const AddWorkbookListModal = ({
 
   const handleCheckBox = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { checked, id } = e.target;
-    if (checked) {
-      setSelectedWorkbook((pre) => [...pre, id]);
-    } else {
-      setSelectedWorkbook((pre) => pre.filter((item) => item !== id));
-    }
+    checked ? selectWorkBook(id) : unSelectWorkBook(id);
   };
 
+  const selectWorkBook = (id: string) =>
+    setSelectedWorkbook((pre) => [...pre, id]);
+
+  const unSelectWorkBook = (id: string) =>
+    setSelectedWorkbook((pre) => pre.filter((item) => item !== id));
+
   const mutateAllQuestionCopy = async () => {
-    try {
-      await Promise.all(
-        selectedWorkbook.map((item) => {
-          const workbookId = parseInt(item);
-          return mutateAsync({
-            workbookId: workbookId,
-            questionIds: selectedQuestionIds,
-          });
-        })
-      );
-    } catch (error) {
-      console.error('문제집 복사 중 오류 발생', error);
-      throw error;
-    }
+    await Promise.all(
+      selectedWorkbook.map((item) => {
+        const workbookId = parseInt(item);
+        return mutateAsync({
+          workbookId: workbookId,
+          questionIds: selectedQuestionIds,
+        });
+      })
+    );
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -52,7 +54,15 @@ const AddWorkbookListModal = ({
       alert('문제집을 선택해주세요.');
       return;
     }
-    void mutateAllQuestionCopy();
+
+    try {
+      void mutateAllQuestionCopy();
+      closeModal();
+      // TODO: 문제집 리스트가 있는 페이지로 이동해야함
+    } catch (error) {
+      console.error('문제집 복사 중 오류 발생', error);
+      throw error;
+    }
   };
 
   return (
@@ -63,9 +73,7 @@ const AddWorkbookListModal = ({
           <div
             css={css`
               width: 100%;
-              > * {
-                margin-bottom: 1rem;
-              }
+              gap: 1rem;
             `}
           >
             {workbookTitleData?.map((item) => (
@@ -83,7 +91,10 @@ const AddWorkbookListModal = ({
                 </Typography>
               </CheckBox>
             ))}
-            <NewWorkbookList />
+            <NewWorkbookListButton
+              selectedQuestionIds={selectedQuestionIds}
+              workbookData={workbookData}
+            />
           </div>
         </Modal.content>
         <Modal.footer>
@@ -112,32 +123,5 @@ const ModalHeader = () => {
     >
       <Typography variant="title4">문제집 추가</Typography>
     </div>
-  );
-};
-
-const NewWorkbookList = () => {
-  return (
-    <button
-      css={css`
-        display: flex;
-        align-items: center;
-        width: 100%;
-
-        outline: none;
-        border: none;
-        background-color: transparent;
-        cursor: pointer;
-      `}
-      type="button"
-    >
-      <Icon id="plus" width="1.5rem" height="1.5rem" />
-      <Typography
-        css={css`
-          margin-left: 1rem;
-        `}
-      >
-        새로운 재생 목록 만들기
-      </Typography>
-    </button>
   );
 };

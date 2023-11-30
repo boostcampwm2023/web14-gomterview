@@ -4,6 +4,7 @@ const CONNECTION = 'connection';
 const RECORD = 'record';
 const MYPAGE = 'mypage';
 const QUESTION = 'question';
+const WORKBOOK = 'workbook';
 
 export const PATH = {
   ROOT: '/',
@@ -16,6 +17,8 @@ export const PATH = {
     `/${INTERVIEW}/${videoId ?? ':videoId'}`,
   INTERVIEW_VIDEO_PUBLIC: (videoHash?: string) =>
     `/${INTERVIEW}/public/${videoHash ?? ':videoHash'}`,
+  INTERVIEW_WORKBOOK_DETAIL: (workbookId?: number) =>
+    `/${INTERVIEW}/${WORKBOOK}/${workbookId ?? ':workbookId'}`,
   NOT_FOUND: `/404`,
 };
 

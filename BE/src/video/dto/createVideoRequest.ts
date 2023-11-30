@@ -20,10 +20,17 @@ export class CreateVideoRequest {
   videoName: string;
 
   @ApiProperty(
-    createPropertyOption('https://video-example.com', '비디오 URL', String),
+    createPropertyOption(
+      'https://u2e0.c18.e2-4.dev/videos/example.mp4',
+      '비디오 URL',
+      String,
+    ),
   )
   @IsString()
   @IsNotEmpty()
+  @Matches(/^https:\/\/u2e0\.c18\.e2-4\.dev\/videos/, {
+    message: '비디오 URL 형식이 올바르지 않습니다.',
+  })
   url: string;
 
   @ApiProperty(

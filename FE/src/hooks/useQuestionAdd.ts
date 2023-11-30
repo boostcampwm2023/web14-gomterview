@@ -4,14 +4,14 @@ import useUserInfo from './useUserInfo';
 import { Question } from '@/types/question';
 import { QUERY_KEY } from '@/constants/queryKey';
 
-const useQuestionAddMutation = (
-  categoryId: number,
+const useQuestionAdd = (
+  workbookId: number,
   { onSuccess }: { onSuccess?: () => void }
 ) => {
   const userInfo = useUserInfo();
   const queryClient = useQueryClient();
 
-  const { mutate } = useQuestionMutation(categoryId);
+  const { mutate } = useQuestionMutation(workbookId);
 
   const createNewQuestion = (content: string, lastId: number = 1) => {
     return {
@@ -24,21 +24,21 @@ const useQuestionAddMutation = (
 
   const addQuestion = ({
     value,
-    categoryId,
+    workbookId,
   }: {
     value: string;
-    categoryId: number;
+    workbookId: number;
   }) => {
     if (userInfo) {
       mutate(
-        { content: value, categoryId: categoryId },
+        { content: value, workbookId: workbookId },
         {
           onSuccess: () => onSuccess && onSuccess(),
         }
       );
     } else {
       queryClient.setQueryData<Question[] | []>(
-        QUERY_KEY.QUESTION_CATEGORY(categoryId),
+        QUERY_KEY.QUESTION_CATEGORY(workbookId),
         (prev) => {
           if (prev?.length === 0 || !prev) return [createNewQuestion(value)];
           return [createNewQuestion(value, prev[0].questionId), ...prev];
@@ -50,4 +50,4 @@ const useQuestionAddMutation = (
   return { addQuestion };
 };
 
-export default useQuestionAddMutation;
+export default useQuestionAdd;
