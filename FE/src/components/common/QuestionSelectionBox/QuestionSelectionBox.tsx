@@ -4,7 +4,7 @@ import TabPanelItem from './QuestionTabPanelItem';
 import { useRecoilState } from 'recoil';
 import { QuestionAnswerSelectionModal } from '@atoms/modal';
 import AnswerSelectionModal from './AnswerSelectionModal/AnswerSelectionModal';
-import { Box, Tabs } from '@foundation/index';
+import { Box, Button, Icon, Tabs, Typography } from '@foundation/index';
 import useWorkbookTitleListQuery from '@hooks/apis/queries/useWorkbookTitleListQuery';
 import { useState } from 'react';
 import QuestionTabList from '@common/QuestionSelectionBox/QuestionTabList';
@@ -49,10 +49,39 @@ const QuestionSelectionBox = () => {
             row-gap: 1.5rem;
           `}
         >
-          <QuestionTabList
-            workbookListData={workbookListData}
-            onTabChange={(_, value) => setSelectedTabIndex(value)}
-          />
+          <div
+            css={css`
+              display: flex;
+              flex-direction: column;
+              flex: 1 1 22rem;
+              row-gap: 2rem;
+              padding-top: 1.5rem;
+              border-radius: 1rem 0 0 1rem;
+              background-color: ${theme.colors.surface.default};
+              overflow-y: auto;
+            `}
+          >
+            <Button
+              size="md"
+              variants="secondary"
+              css={css`
+                display: flex;
+                align-items: center;
+                column-gap: 0.5rem;
+                align-self: center;
+                border-radius: 2rem;
+              `}
+            >
+              <Icon id="plus" width="1.5rem" height="1.5rem" />
+              <Typography variant="body1" color={theme.colors.text.subStrong}>
+                새 면접세트 추가
+              </Typography>
+            </Button>
+            <QuestionTabList
+              workbookListData={workbookListData}
+              onTabChange={(_, value) => setSelectedTabIndex(value)}
+            />
+          </div>
           <div
             css={css`
               width: 100%;
