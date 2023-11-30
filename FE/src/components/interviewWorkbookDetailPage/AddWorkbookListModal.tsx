@@ -73,9 +73,7 @@ const AddWorkbookListModal = ({
           <div
             css={css`
               width: 100%;
-              > * {
-                margin-bottom: 1rem;
-              }
+              gap: 1rem;
             `}
           >
             {workbookTitleData?.map((item) => (
