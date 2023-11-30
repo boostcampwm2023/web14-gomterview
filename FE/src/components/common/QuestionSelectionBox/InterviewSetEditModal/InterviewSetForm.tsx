@@ -1,52 +1,96 @@
 import { Button, Input, InputArea } from '@foundation/index';
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import { FormEventHandler, useState } from 'react';
 import LabelBox from '@common/QuestionSelectionBox/InterviewSetEditModal/LabelBox';
 import InterviewSetCategory from '@common/QuestionSelectionBox/InterviewSetEditModal/InterviewSetCategory';
-import useUserInfo from '@hooks/useUserInfo';
-import useWorkbookQuery from '@hooks/apis/queries/useWorkbookQuery';
 import useWorkbookPatchMutation from '@hooks/apis/mutations/useWorkbookPatchMutation';
 import useInput from '@hooks/useInput';
+import useWorkbookPostMutation from '@hooks/apis/mutations/useWorkbookPostMutation';
+import { WorkbookEntity } from '@/types/workbook';
+import { theme } from '@styles/theme';
 
 type InterviewSetFormProps = {
-  workbookId: number;
+  workbookInfo?: WorkbookEntity;
   closeModal: () => void;
 };
 const InterviewSetForm: React.FC<InterviewSetFormProps> = ({
-  workbookId,
+  workbookInfo,
   closeModal,
 }) => {
-  const userInfo = useUserInfo();
-  const { data: workbookInfo } = useWorkbookQuery({
-    workbookId: workbookId ?? 1,
-    enabled: !!workbookId, //추가, 수정을 구분하기 위해 workbookId가 있을 때만 쿼리 요청
-  });
-  const [selectedCategory, setSelectedCategory] = useState(1);
-  const { value: workbookTitle, onChange: handleWorkbookTitleChange } =
-    useInput<HTMLInputElement>(workbookInfo?.title ?? '');
+  //TODO 비회원일때는 로컬에 새 문제집 추가하고, 나만의 질문 추가할 수 있도록 할까??
+  const [activeVaildationError, setActiveVaildationError] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<number>(
+    workbookInfo?.categoryId ?? 1
+  );
+  const {
+    value: workbookTitle,
+    onChange: handleWorkbookTitleChange,
+    isEmpty: isWorkbookTitleEmpty,
+  } = useInput<HTMLInputElement>(workbookInfo?.title ?? '');
   const { value: workbookContent, onChange: handleWorkbookContentChange } =
     useInput<HTMLTextAreaElement>(workbookInfo?.title ?? '');
 
-  const { mutate } = useWorkbookPatchMutation();
+  const { mutate: patchInterviewSet } = useWorkbookPatchMutation();
+  const { mutate: postInterviewSet } = useWorkbookPostMutation();
+
+  const makeRequestBody = () => ({
+    title: workbookTitle,
+    content: workbookContent,
+    categoryId: selectedCategory,
+  });
 
   const handleCategoryClick = (id: number) => {
     setSelectedCategory(id);
   };
 
+  const handleSubmit: FormEventHandler = (e) => {
+    e.preventDefault();
+
+    if (isWorkbookTitleEmpty()) {
+      setActiveVaildationError(true);
+      return;
+    }
+
+    workbookInfo?.workbookId
+      ? patchInterviewSet({
+          workbookId: workbookInfo.workbookId,
+          body: { workbookId: workbookInfo.workbookId, ...makeRequestBody() },
+        })
+      : postInterviewSet(makeRequestBody());
+
+    closeModal();
+  };
+
   return (
     <form
+      onSubmit={handleSubmit}
       css={css`
         display: flex;
         flex-direction: column;
         row-gap: 1rem;
       `}
     >
-      <LabelBox labelName="제목">
-        <Input onChange={handleWorkbookTitleChange} value={workbookTitle} />
+      <LabelBox
+        labelName="제목"
+        labelColor={
+          activeVaildationError && isWorkbookTitleEmpty()
+            ? theme.colors.border.error
+            : theme.colors.border.default
+        }
+      >
+        <Input
+          onChange={handleWorkbookTitleChange}
+          value={workbookTitle}
+          css={css`
+            border-color: ${activeVaildationError &&
+            isWorkbookTitleEmpty() &&
+            theme.colors.border.error};
+          `}
+        />
       </LabelBox>
       <LabelBox labelName="카테고리">
         <InterviewSetCategory
-          selectedId={selectedCategory || workbookInfo!.categoryId}
+          selectedId={selectedCategory}
           onClick={handleCategoryClick}
         />
       </LabelBox>

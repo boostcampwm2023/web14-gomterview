@@ -1,17 +1,22 @@
 import { Modal } from '@foundation/index';
 import { css } from '@emotion/react';
 import InterviewSetForm from '@common/QuestionSelectionBox/InterviewSetEditModal/InterviewSetForm';
+import useWorkbookQuery from '@hooks/apis/queries/useWorkbookQuery';
 
-type InterviewSetEditModalProps = {
+type InterviewSetGeneratorModalProps = {
   isOpen: boolean;
   closeModal: () => void;
   workbookId?: number;
 };
-const InterviewSetEditModal: React.FC<InterviewSetEditModalProps> = ({
+const InterviewSetGeneratorModal: React.FC<InterviewSetGeneratorModalProps> = ({
   isOpen,
   closeModal,
   workbookId,
 }) => {
+  const { data: workbookInfo } = useWorkbookQuery({
+    workbookId: workbookId ?? 1,
+    enabled: !!workbookId, //추가, 수정을 구분하기 위해 workbookId가 있을 때만 쿼리 요청
+  });
   return (
     <Modal isOpen={isOpen} closeModal={closeModal}>
       <Modal.header>새 면접 세트</Modal.header>
@@ -24,10 +29,10 @@ const InterviewSetEditModal: React.FC<InterviewSetEditModalProps> = ({
           padding: 1.5rem;
         `}
       >
-        <InterviewSetForm workbookId={workbookId} closeModal={closeModal} />
+        <InterviewSetForm workbookInfo={workbookInfo} closeModal={closeModal} />
       </div>
     </Modal>
   );
 };
 
-export default InterviewSetEditModal;
+export default InterviewSetGeneratorModal;
