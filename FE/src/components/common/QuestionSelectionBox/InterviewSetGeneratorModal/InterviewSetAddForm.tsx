@@ -1,56 +1,38 @@
 import { Button, Input, InputArea } from '@foundation/index';
 import { css } from '@emotion/react';
-import { FormEventHandler, useEffect, useState } from 'react';
+import { FormEventHandler, useState } from 'react';
 import LabelBox from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/LabelBox';
 import InterviewSetCategory from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetCategory';
-import useWorkbookPatchMutation from '@hooks/apis/mutations/useWorkbookPatchMutation';
 import useInput from '@hooks/useInput';
 import useWorkbookPostMutation from '@hooks/apis/mutations/useWorkbookPostMutation';
 import { theme } from '@styles/theme';
-import { WorkbookEntity } from '@/types/workbook';
 
-type InterviewSetFormProps = {
-  workbookId?: number;
-  workbookInfo?: WorkbookEntity;
+type InterviewSetAddFormProps = {
   closeModal: () => void;
 };
-const InterviewSetForm: React.FC<InterviewSetFormProps> = ({
-  workbookId,
-  workbookInfo,
+const InterviewSetAddForm: React.FC<InterviewSetAddFormProps> = ({
   closeModal,
 }) => {
-  //TODO 비회원일때는 로컬에 새 문제집 추가하고, 나만의 질문 추가할 수 있도록 할까??
   const [activeVaildationError, setActiveVaildationError] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<number>(
-    workbookInfo?.categoryId ?? 1
-  );
+  const [selectedCategory, setSelectedCategory] = useState<number>(1);
   const {
     value: workbookTitle,
     onChange: handleWorkbookTitleChange,
     isEmpty: isWorkbookTitleEmpty,
     clearInput: clearWorkbookTitle,
-  } = useInput<HTMLInputElement>(workbookInfo?.title ?? '');
+  } = useInput<HTMLInputElement>('');
   const {
     value: workbookContent,
     onChange: handleWorkbookContentChange,
     clearInput: clearWorkbookContent,
-  } = useInput<HTMLTextAreaElement>(workbookInfo?.title ?? '');
+  } = useInput<HTMLTextAreaElement>('');
 
-  const { mutate: patchInterviewSet } = useWorkbookPatchMutation();
   const { mutate: postInterviewSet } = useWorkbookPostMutation();
 
-  useEffect(() => {
-    if (workbookId) return;
-
+  const resetState = () => {
     clearWorkbookTitle();
     clearWorkbookContent();
-  }, [clearWorkbookContent, clearWorkbookTitle, workbookId]);
-
-  const makeRequestBody = () => ({
-    title: workbookTitle,
-    content: workbookContent,
-    categoryId: selectedCategory,
-  });
+  };
 
   const handleCategoryClick = (id: number) => {
     setSelectedCategory(id);
@@ -64,19 +46,17 @@ const InterviewSetForm: React.FC<InterviewSetFormProps> = ({
       return;
     }
 
-    workbookInfo?.workbookId
-      ? patchInterviewSet({
-          workbookId: workbookInfo.workbookId,
-          body: { workbookId: workbookInfo.workbookId, ...makeRequestBody() },
-        })
-      : postInterviewSet(makeRequestBody());
-
+    postInterviewSet({
+      title: workbookTitle,
+      content: workbookContent,
+      categoryId: selectedCategory,
+    });
+    resetState();
     closeModal();
   };
 
   const handleReset = () => {
-    clearWorkbookTitle();
-    clearWorkbookContent();
+    resetState();
     closeModal();
   };
 
@@ -139,4 +119,4 @@ const InterviewSetForm: React.FC<InterviewSetFormProps> = ({
   );
 };
 
-export default InterviewSetForm;
+export default InterviewSetAddForm;

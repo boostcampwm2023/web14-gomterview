@@ -1,7 +1,7 @@
 import { Modal } from '@foundation/index';
 import { css } from '@emotion/react';
-import InterviewSetForm from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetForm';
-import useWorkbookQuery from '@hooks/apis/queries/useWorkbookQuery';
+import InterviewSetEditForm from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetEditForm';
+import InterviewSetAddForm from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetAddForm';
 
 type InterviewSetGeneratorModalProps = {
   isOpen: boolean;
@@ -13,12 +13,6 @@ const InterviewSetGeneratorModal: React.FC<InterviewSetGeneratorModalProps> = ({
   closeModal,
   workbookId,
 }) => {
-  //TODO 타입추론 관련 문제 해결하기
-  const { data: workbookInfo, isFetching } = useWorkbookQuery({
-    workbookId: workbookId ?? 1,
-    enabled: !!workbookId, //추가, 수정을 구분하기 위해 workbookId가 있을 때만 쿼리 요청
-  });
-  if (workbookId && isFetching) return;
   return (
     <Modal isOpen={isOpen} closeModal={closeModal}>
       <Modal.header>새 면접 세트</Modal.header>
@@ -31,11 +25,14 @@ const InterviewSetGeneratorModal: React.FC<InterviewSetGeneratorModalProps> = ({
           padding: 1.5rem;
         `}
       >
-        <InterviewSetForm
-          workbookId={workbookId}
-          workbookInfo={workbookInfo}
-          closeModal={closeModal}
-        />
+        {workbookId ? (
+          <InterviewSetEditForm
+            workbookId={workbookId}
+            closeModal={closeModal}
+          />
+        ) : (
+          <InterviewSetAddForm closeModal={closeModal} />
+        )}
       </div>
     </Modal>
   );
