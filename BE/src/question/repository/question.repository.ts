@@ -17,8 +17,17 @@ export class QuestionRepository {
     return await this.repository.save(question);
   }
 
+  async saveAll(questions: Question[]) {
+    await this.repository.insert(questions);
+  }
+
   async findByWorkbookId(workbookId: number) {
-    return await this.repository.findBy({ workbook: { id: workbookId } });
+    return await this.repository
+      .createQueryBuilder('Question')
+      .leftJoinAndSelect('Question.workbook', 'workbook')
+      .leftJoinAndSelect('Question.origin', 'origin')
+      .where('workbook.id = :workbookId', { workbookId })
+      .getMany();
   }
 
   async findById(questionId: number) {
@@ -31,7 +40,14 @@ export class QuestionRepository {
       .leftJoinAndSelect('Question.origin', 'origin')
       .where('Question.id = :id', { id })
       .getOne();
+    return this.fetchOrigin(question);
+  }
 
+  async remove(question: Question) {
+    await this.repository.remove(question);
+  }
+
+  private fetchOrigin(question: Question) {
     if (!question) {
       return null;
     }
@@ -43,9 +59,5 @@ export class QuestionRepository {
     }
 
     return originQuestion;
-  }
-
-  async remove(question: Question) {
-    await this.repository.remove(question);
   }
 }

@@ -13,6 +13,9 @@ import {
   validateWorkbook,
   validateWorkbookOwner,
 } from '../../workbook/util/workbook.util';
+import { CopyQuestionRequest } from '../dto/copyQuestionRequest';
+import { Workbook } from '../../workbook/entity/workbook';
+import { WorkbookIdResponse } from '../../workbook/dto/workbookIdResponse';
 
 @Injectable()
 export class QuestionService {
@@ -42,6 +45,25 @@ export class QuestionService {
     return QuestionResponse.from(question);
   }
 
+  async copyQuestions(
+    copyQuestionRequest: CopyQuestionRequest,
+    member: Member,
+  ) {
+    const workbook = await this.workbookRepository.findById(
+      copyQuestionRequest.workbookId,
+    );
+    validateWorkbook(workbook);
+    validateWorkbookOwner(workbook, member);
+
+    const questions = (
+      await this.questionRepository.findByWorkbookId(workbook.id)
+    )
+      .filter((each) => copyQuestionRequest.questionIds.includes(each.id))
+      .map((question) => this.createCopy(question, workbook));
+    await this.questionRepository.saveAll(questions);
+    return WorkbookIdResponse.of(workbook);
+  }
+
   async findAllByWorkbookId(workbookId: number) {
     if (isEmpty(workbookId)) {
       throw new NeedToFindByWorkbookIdException();
@@ -67,5 +89,13 @@ export class QuestionService {
     const workbook = await this.workbookRepository.findById(workbookId);
     validateWorkbook(workbook);
     validateWorkbookOwner(workbook, member);
+  }
+
+  private createCopy(question: Question, workbook: Workbook) {
+    if (question.origin) {
+      return Question.copyOf(question.origin, workbook);
+    }
+
+    return Question.copyOf(question, workbook);
   }
 }
