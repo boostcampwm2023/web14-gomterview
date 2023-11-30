@@ -15,12 +15,14 @@ type TabPanelItemProps = {
   selectedTabIndex: string;
   tabIndex: string;
   workbook: ExcludeArray<WorkbookTitleListResDto>;
+  onEditButtonClick: (workbookId: number) => void;
 };
 
 const TabPanelItem: React.FC<TabPanelItemProps> = ({
   selectedTabIndex,
   workbook,
   tabIndex,
+  onEditButtonClick,
 }) => {
   const userInfo = useUserInfo();
   const settingPage = useRecoilValue(questionSetting);
@@ -75,6 +77,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
             <Button
               variants="secondary"
               size="sm"
+              onClick={() => onEditButtonClick(workbook.workbookId)}
               css={css`
                 display: flex;
                 align-items: center;
