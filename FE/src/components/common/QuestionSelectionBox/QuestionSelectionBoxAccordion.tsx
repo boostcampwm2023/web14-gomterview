@@ -18,6 +18,7 @@ const QuestionSelectionBoxAccordion: React.FC<
     <QuestionAccordion
       question={question}
       workbookId={workbookId}
+      isEditable={true}
       isSelected={isSelected}
       toggleSelected={toggleSelected}
     />

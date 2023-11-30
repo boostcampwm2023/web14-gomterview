@@ -6,14 +6,12 @@ import {
 } from '@foundation/Accordion';
 import Icon from '@foundation/Icon/Icon';
 import Typography from '@foundation/Typography/Typography';
-import { QUERY_KEY } from '@constants/queryKey';
 import { theme } from '@styles/theme';
 import { Question } from '@/types/question';
-import { User } from '@/types/user';
 import { css } from '@emotion/react';
-import { useQueryClient } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 import { LeadingDot } from '@foundation/index';
+import useUserInfo from '@hooks/useUserInfo';
 
 type QuestionAccordionProps = {
   question: Question;
@@ -35,8 +33,7 @@ const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
   isEditable,
   toggleSelected,
 }) => {
-  const queryClient = useQueryClient();
-  const userInfo = queryClient.getQueryData<User | undefined>(QUERY_KEY.MEMBER);
+  const userInfo = useUserInfo();
 
   const setModal = useSetRecoilState(QuestionAnswerSelectionModal);
 
