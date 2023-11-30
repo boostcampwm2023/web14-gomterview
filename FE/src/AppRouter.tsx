@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import LandingPage from '@/page/LandingPage';
 import InterviewSettingPage from '@page/interviewSettingPage';
 import InterviewPage from '@page/interviewPage';
@@ -8,10 +7,10 @@ import { PATH } from '@constants/path';
 import { QueryClient } from '@tanstack/react-query';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 import myPageLoader from '@routes/myPageLoader';
-import invalidPathLoader from '@routes/invalidPathLoader';
 import InterviewVideoPublicPage from '@page/interviewVideoPublicPage';
 import InterviewVideoPublicLoader from '@routes/interviewVideoPublicLoader';
 import rootLoader from '@routes/rootLoader';
+import ErrorPage from '@page/errorPage';
 import InterviewWorkbookDetailPage from '@page/interviewWorkbookDetailPage';
 import interviewWorkbookDetailLoader from '@routes/interviewWorkbookDetailLoader';
 
@@ -21,6 +20,7 @@ const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
       path: PATH.ROOT,
       element: <Outlet />,
       loader: () => rootLoader({ queryClient: queryClient }),
+      errorElement: <ErrorPage />,
       children: [
         {
           index: true,
@@ -59,8 +59,7 @@ const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
         },
         {
           path: '*',
-          loader: () => invalidPathLoader(),
-          element: <LandingPage />,
+          element: <ErrorPage />,
         },
       ],
     },
