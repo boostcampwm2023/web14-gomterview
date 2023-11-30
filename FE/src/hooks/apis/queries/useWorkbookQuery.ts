@@ -14,12 +14,12 @@ const useWorkbookQuery = ({
   enabled,
 }: {
   workbookId: number;
-  enabled: boolean;
+  enabled?: boolean;
 }) => {
   return useQuery({
     queryKey: QUERY_KEY.WORKBOOK_ID(workbookId),
     queryFn: () => getWorkbookById(workbookId),
-    enabled: enabled,
+    enabled,
   });
 };
 
