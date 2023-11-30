@@ -64,7 +64,7 @@ const QuestionSelectionBox = () => {
             css={css`
               display: flex;
               flex-direction: column;
-              flex: 1 1 22rem;
+              flex-basis: 12rem;
               row-gap: 2rem;
               padding-top: 1.5rem;
               border-radius: 1rem 0 0 1rem;

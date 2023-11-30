@@ -57,16 +57,24 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
           height: 100%;
         `}
       >
-        <Typography
-          component="p"
-          variant="body3"
-          color={theme.colors.text.subStrong}
+        <div
           css={css`
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             padding: 1rem;
           `}
         >
-          {questionData.length}개의 질문
-        </Typography>
+          <Typography variant="title4">{workbook.title}</Typography>
+          <Typography
+            component="p"
+            variant="body3"
+            color={theme.colors.text.subStrong}
+          >
+            {questionData.length}개의 질문
+          </Typography>
+        </div>
+
         {userInfo && (
           <div
             css={css`
