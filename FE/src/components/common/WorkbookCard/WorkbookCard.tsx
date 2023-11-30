@@ -1,10 +1,13 @@
-import { WorkbookListResDto } from '@/types/workbook';
+import { WorkbookEntity } from '@/types/workbook';
 import { Box, Avatar, Typography, Icon } from '@foundation/index';
 import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
 import { HTMLElementTypes } from '@/types/utils';
 
-type WorkbookCardType = Omit<WorkbookListResDto, 'workbookId'> &
+export type WorkbookCardType = Omit<
+  WorkbookEntity,
+  'categoryId' | 'workbookId'
+> &
   HTMLElementTypes<HTMLDivElement>;
 
 const WorkbookCard: React.FC<WorkbookCardType> = ({

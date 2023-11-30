@@ -27,7 +27,7 @@ export type WorkbookAddResDto = Pick<WorkbookEntity, 'workbookId'>;
  * GET workbook?category=${categoryId}
  * 카테고리별 문제집을 조회했을 때 응답 객체 타입
  */
-export type WorkbookListResDto = Omit<WorkbookEntity, 'categoryId'>;
+export type WorkbookListResDto = Omit<WorkbookEntity, 'categoryId'>[];
 
 /**
  * GET workbook/title
