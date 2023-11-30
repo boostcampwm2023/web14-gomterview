@@ -13,6 +13,7 @@ const InterviewSetGeneratorModal: React.FC<InterviewSetGeneratorModalProps> = ({
   closeModal,
   workbookId,
 }) => {
+  //TODO 타입추론 관련 문제 해결하기
   const { data: workbookInfo } = useWorkbookQuery({
     workbookId: workbookId ?? 1,
     enabled: !!workbookId, //추가, 수정을 구분하기 위해 workbookId가 있을 때만 쿼리 요청
