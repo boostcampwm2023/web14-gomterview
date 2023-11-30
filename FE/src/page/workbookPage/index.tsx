@@ -2,8 +2,11 @@ import {
   CategoryMenu,
   WorkbookList,
   WorkbookPageLayout,
+  WorkbookPlusButton,
 } from '@components/workbookPage';
+
 import { Typography } from '@foundation/index';
+
 import { SyntheticEvent, useState } from 'react';
 
 const WorkbookPage: React.FC = () => {
@@ -18,6 +21,7 @@ const WorkbookPage: React.FC = () => {
       <Typography variant="title1">면접 Set 목록</Typography>
       <CategoryMenu handleTabChange={handleTabChange} />
       <WorkbookList selectedTabIndex={selectedTabIndex} />
+      <WorkbookPlusButton />
     </WorkbookPageLayout>
   );
 };
