@@ -2,6 +2,7 @@ import { SelectionBox, Tabs, Typography } from '@foundation/index';
 import { WorkbookTitleListResDto } from '@/types/workbook';
 import { SyntheticEvent } from 'react';
 import { css } from '@emotion/react';
+import { truncateText } from '@/utils/textUtils';
 
 type QuestionTabListProps = {
   workbookListData: WorkbookTitleListResDto;
@@ -28,7 +29,9 @@ const QuestionTabList: React.FC<QuestionTabListProps> = ({
             name="workbook"
             defaultChecked={index === 0}
           >
-            <Typography variant="title4">{workbook.title}</Typography>
+            <Typography variant="title4">
+              {truncateText(workbook.title, 12)}
+            </Typography>
           </SelectionBox>
         </Tabs.Tab>
       ))}

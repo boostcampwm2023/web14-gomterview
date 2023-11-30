@@ -64,7 +64,7 @@ const QuestionSelectionBox = () => {
             css={css`
               display: flex;
               flex-direction: column;
-              flex-basis: 12rem;
+              width: 15rem;
               row-gap: 2rem;
               padding-top: 1.5rem;
               border-radius: 1rem 0 0 1rem;
@@ -99,7 +99,7 @@ const QuestionSelectionBox = () => {
           <div
             css={css`
               width: 100%;
-              max-width: calc(100% - 12rem);
+              max-width: calc(100% - 15rem);
             `}
           >
             {workbookListData.map((workbook, index) => (
