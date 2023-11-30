@@ -18,7 +18,9 @@ const InterviewWorkbookDetailPage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const { workbookId } = useLoaderData() as { workbookId: number };
-  const { data: questionWorkbookData } = useQuestionWorkbookQuery(workbookId);
+  const { data: questionWorkbookData } = useQuestionWorkbookQuery({
+    workbookId,
+  });
   const { data: workbookData } = useWorkbookQuery(workbookId);
 
   const selectQuestion = (questionId: number) =>
