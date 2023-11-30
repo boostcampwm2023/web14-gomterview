@@ -83,7 +83,8 @@ const QuestionSelectionBox = () => {
                 align-items: center;
                 column-gap: 0.5rem;
                 align-self: center;
-                border-radius: 2rem;
+                background-color: ${theme.colors.surface.inner};
+                border: none;
               `}
             >
               <Icon id="plus" width="1.5rem" height="1.5rem" />
