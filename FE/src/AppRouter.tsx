@@ -13,6 +13,7 @@ import rootLoader from '@routes/rootLoader';
 import ErrorPage from '@page/errorPage';
 import InterviewWorkbookDetailPage from '@page/interviewWorkbookDetailPage';
 import interviewWorkbookDetailLoader from '@routes/interviewWorkbookDetailLoader';
+import WorkbookPage from '@page/workbookPage';
 
 const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
   const routes = createBrowserRouter([
@@ -33,6 +34,10 @@ const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
         {
           path: PATH.INTERVIEW_SETTING,
           element: <InterviewSettingPage />,
+        },
+        {
+          path: PATH.WORKBOOK,
+          element: <WorkbookPage />,
         },
         {
           path: PATH.MYPAGE,
