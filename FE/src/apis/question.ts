@@ -6,26 +6,25 @@ import {
 } from '@/types/question';
 import getAPIResponseData from '@/utils/getAPIResponseData';
 
-export const getQuestion = async (id: number) => {
+export const getQuestion = async (workbookId: number) => {
   return await getAPIResponseData<Question[]>({
     method: 'get',
-    url: API.QUESTION,
-    params: { category: id },
+    url: API.QUESTION_ID(workbookId),
   });
 };
 
 export const postQuestion = async ({
-  categoryId,
+  workbookId,
   content,
 }: {
-  categoryId: number;
+  workbookId: number;
   content: string;
 }) => {
   return await getAPIResponseData({
     method: 'post',
     url: API.QUESTION,
     data: {
-      categoryId: categoryId,
+      workbookId: workbookId,
       content: content,
     },
   });

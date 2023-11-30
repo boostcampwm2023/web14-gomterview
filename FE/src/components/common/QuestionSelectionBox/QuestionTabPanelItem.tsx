@@ -3,7 +3,7 @@ import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import useQuestionCategoryQuery from '@/hooks/apis/queries/useQuestionCategoryQuery';
+import useQuestionWorkbookQuery from '@hooks/apis/queries/useQuestionWorkbookQuery';
 import { Typography, Toggle, Tabs } from '@foundation/index';
 import { WorkbookTitleListResDto } from '@/types/workbook';
 import { ExcludeArray } from '@/types/utils';
@@ -31,8 +31,8 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
     setOnlySelectedOption((prev) => !prev);
   };
 
-  const { data: questionAPIData } = useQuestionCategoryQuery({
-    categoryId: workbook.workbookId,
+  const { data: questionAPIData } = useQuestionWorkbookQuery({
+    workbookId: workbook.workbookId,
     enabled: selectedTabIndex === tabIndex,
   });
 
