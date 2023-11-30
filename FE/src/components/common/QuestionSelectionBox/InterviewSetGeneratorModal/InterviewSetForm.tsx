@@ -1,8 +1,8 @@
 import { Button, Input, InputArea } from '@foundation/index';
 import { css } from '@emotion/react';
 import { FormEventHandler, useState } from 'react';
-import LabelBox from '@common/QuestionSelectionBox/InterviewSetEditModal/LabelBox';
-import InterviewSetCategory from '@common/QuestionSelectionBox/InterviewSetEditModal/InterviewSetCategory';
+import LabelBox from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/LabelBox';
+import InterviewSetCategory from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetCategory';
 import useWorkbookPatchMutation from '@hooks/apis/mutations/useWorkbookPatchMutation';
 import useInput from '@hooks/useInput';
 import useWorkbookPostMutation from '@hooks/apis/mutations/useWorkbookPostMutation';

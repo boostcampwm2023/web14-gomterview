@@ -1,6 +1,6 @@
 import { Modal } from '@foundation/index';
 import { css } from '@emotion/react';
-import InterviewSetForm from '@common/QuestionSelectionBox/InterviewSetEditModal/InterviewSetForm';
+import InterviewSetForm from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetForm';
 import useWorkbookQuery from '@hooks/apis/queries/useWorkbookQuery';
 
 type InterviewSetGeneratorModalProps = {
