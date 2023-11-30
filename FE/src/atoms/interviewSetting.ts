@@ -35,3 +35,12 @@ export const recordSetting = atom<{
     method: undefined,
   },
 });
+
+export const serviceTerms = atom<{
+  isSuccess: boolean;
+}>({
+  key: 'serviceTerms',
+  default: {
+    isSuccess: false,
+  },
+});

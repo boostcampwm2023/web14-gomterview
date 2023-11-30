@@ -1,7 +1,11 @@
 import { RecordMethod, recordSetting } from '@/atoms/interviewSetting';
 import { QUERY_KEY } from '@/constants/queryKey';
 import { User } from '@/types/user';
-import { Description, RecordRadio } from '@components/interviewSettingPage';
+import {
+  Description,
+  InterviewSettingFooter,
+  RecordRadio,
+} from '@components/interviewSettingPage';
 import { css } from '@emotion/react';
 import { Button } from '@foundation/index';
 import { useQueryClient } from '@tanstack/react-query';
@@ -78,23 +82,7 @@ const RecordSettingPage: React.FC<RecordSettingPageProps> = ({
           저장하지 않음
         </RecordRadio>
       </div>
-      <div
-        css={css`
-          position: sticky;
-          bottom: 0;
-          backdrop-filter: blur(3px); /* 10px 블러 효과 */
-          background: linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0.72) 100%
-          );
-          padding: 0.5rem;
-          display: flex;
-          justify-content: center;
-          gap: 1rem;
-          margin-top: 1rem;
-        `}
-      >
+      <InterviewSettingFooter>
         <Button
           onClick={onPrevClick}
           size="lg"
@@ -114,7 +102,7 @@ const RecordSettingPage: React.FC<RecordSettingPageProps> = ({
         >
           다음
         </Button>
-      </div>
+      </InterviewSettingFooter>
     </>
   );
 };
