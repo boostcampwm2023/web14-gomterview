@@ -1,12 +1,11 @@
 import { Modal } from '@foundation/index';
 import { css } from '@emotion/react';
 import InterviewSetForm from '@common/QuestionSelectionBox/InterviewSetEditModal/InterviewSetForm';
-import InterviewSetQuestionList from '@common/QuestionSelectionBox/InterviewSetEditModal/InterviewSetQuestionList';
 
 type InterviewSetEditModalProps = {
   isOpen: boolean;
   closeModal: () => void;
-  workbookId: number;
+  workbookId?: number;
 };
 const InterviewSetEditModal: React.FC<InterviewSetEditModalProps> = ({
   isOpen,
@@ -15,19 +14,17 @@ const InterviewSetEditModal: React.FC<InterviewSetEditModalProps> = ({
 }) => {
   return (
     <Modal isOpen={isOpen} closeModal={closeModal}>
-      <Modal.header>면접 세트 편집하기</Modal.header>
+      <Modal.header>새 면접 세트</Modal.header>
       <div
         css={css`
           min-width: 40vw;
           max-width: 40rem;
           width: 100%;
           max-height: 80vh;
-          overflow-y: auto;
-          padding: 1rem;
+          padding: 1.5rem;
         `}
       >
-        <InterviewSetForm workbookId={workbookId} />
-        <InterviewSetQuestionList workbookId={workbookId} />
+        <InterviewSetForm workbookId={workbookId} closeModal={closeModal} />
       </div>
     </Modal>
   );
