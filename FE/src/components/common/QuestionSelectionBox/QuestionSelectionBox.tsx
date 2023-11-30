@@ -8,21 +8,28 @@ import { Box, Button, Icon, Tabs, Typography } from '@foundation/index';
 import useWorkbookTitleListQuery from '@hooks/apis/queries/useWorkbookTitleListQuery';
 import { useState } from 'react';
 import QuestionTabList from '@common/QuestionSelectionBox/QuestionTabList';
+import InterviewSetGeneratorModal from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetGeneratorModal';
 
 const QuestionSelectionBox = () => {
   const [selectedTabIndex, setSelectedTabIndex] = useState('0');
   const { data: workbookListData } = useWorkbookTitleListQuery();
 
-  const [{ isOpen, workbookId, question }, setModalState] = useRecoilState(
-    QuestionAnswerSelectionModal
-  );
+  const [
+    { isOpen: isQuestionAnswerSelectionModalOpen, workbookId, question },
+    setModalState,
+  ] = useRecoilState(QuestionAnswerSelectionModal);
+
+  const [
+    isInterviewSetGeneratorModalOpen,
+    setIsInterviewSetGeneratorModalOpen,
+  ] = useState(false);
 
   if (!workbookListData) return;
   return (
     <>
       {workbookId && question && (
         <AnswerSelectionModal
-          isOpen={isOpen}
+          isOpen={isQuestionAnswerSelectionModalOpen}
           workbookId={workbookId}
           question={question}
           closeModal={() =>
@@ -33,6 +40,10 @@ const QuestionSelectionBox = () => {
           }
         />
       )}
+      <InterviewSetGeneratorModal
+        isOpen={isInterviewSetGeneratorModalOpen}
+        closeModal={() => setIsInterviewSetGeneratorModalOpen(false)}
+      />
       <Box
         css={css`
           background-color: ${theme.colors.surface.inner};
@@ -64,6 +75,9 @@ const QuestionSelectionBox = () => {
             <Button
               size="md"
               variants="secondary"
+              onClick={() =>
+                setIsInterviewSetGeneratorModalOpen((prev) => !prev)
+              }
               css={css`
                 display: flex;
                 align-items: center;
