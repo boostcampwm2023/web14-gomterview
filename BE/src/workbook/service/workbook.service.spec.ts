@@ -52,6 +52,7 @@ describe('WorkbookService 단위테스트', () => {
     findMembersWorkbooks: jest.fn(),
     findSingleWorkbook: jest.fn(),
     update: jest.fn(),
+    remove: jest.fn(),
   };
 
   beforeAll(async () => {
@@ -272,6 +273,63 @@ describe('WorkbookService 단위테스트', () => {
           service.updateWorkbook(workbookUpdateRequest, cases[index]),
         ).rejects.toThrow(result[index]);
       }
+    });
+  });
+
+  describe('문제집 삭제', () => {
+    it('문제집을 성공적으로 삭제한다.', async () => {
+      //given
+
+      //when
+      mockWorkbookRepository.findById.mockResolvedValue(workbookFixtureWithId);
+      mockWorkbookRepository.remove.mockResolvedValue(undefined);
+
+      //then
+      await expect(
+        service.deleteWorkbookById(workbookFixtureWithId.id, memberFixture),
+      ).resolves.toBeUndefined();
+    });
+
+    it('회원이 null이면 ManipulatedToken예외처리한다.', async () => {
+      //given
+
+      //when
+      mockWorkbookRepository.findById.mockResolvedValue(workbookFixtureWithId);
+      mockWorkbookRepository.remove.mockResolvedValue(undefined);
+
+      //then
+      await expect(
+        service.deleteWorkbookById(workbookFixtureWithId.id, null),
+      ).rejects.toThrow(new ManipulatedTokenNotFiltered());
+    });
+
+    it('회원이 다른 사람이라면  WorkbookForbidden예외처리한다.', async () => {
+      //given
+
+      //when
+      mockWorkbookRepository.findById.mockResolvedValue(workbookFixtureWithId);
+      mockWorkbookRepository.remove.mockResolvedValue(undefined);
+
+      //then
+      await expect(
+        service.deleteWorkbookById(
+          workbookFixtureWithId.id,
+          otherMemberFixture,
+        ),
+      ).rejects.toThrow(new WorkbookForbiddenException());
+    });
+
+    it('문제집이 존재하지 않는다면 WorkbookNotFoundException예외처리한다.', async () => {
+      //given
+
+      //when
+      mockWorkbookRepository.findById.mockResolvedValue(null);
+      mockWorkbookRepository.remove.mockResolvedValue(undefined);
+
+      //then
+      await expect(
+        service.deleteWorkbookById(workbookFixtureWithId.id, memberFixture),
+      ).rejects.toThrow(new WorkbookNotFoundException());
     });
   });
 });
@@ -567,6 +625,70 @@ describe('WorkbookService 통합테스트', () => {
           otherMemberFixture,
         ),
       ).rejects.toThrow(new WorkbookForbiddenException());
+    });
+  });
+
+  describe('문제집 삭제', () => {
+    it('문제집 삭제를 성공한다.', async () => {
+      //given
+      await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
+      await workbookRepository.save(workbookFixtureWithId);
+
+      //when
+
+      //then
+      await expect(
+        workbookService.deleteWorkbookById(
+          workbookFixtureWithId.id,
+          memberFixture,
+        ),
+      ).resolves.toBeUndefined();
+    });
+
+    it('문제집 삭제시 회원이 없으면 Manipulated예외처리한다..', async () => {
+      //given
+      await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
+      await workbookRepository.save(workbookFixtureWithId);
+
+      //when
+
+      //then
+      await expect(
+        workbookService.deleteWorkbookById(workbookFixtureWithId.id, null),
+      ).rejects.toThrow(new ManipulatedTokenNotFiltered());
+    });
+
+    it('다른 회원이 문제집 수정을 요청하면 WorkbookForbidden예외처리한다.', async () => {
+      //given
+      await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
+      await workbookRepository.save(workbookFixtureWithId);
+
+      //when
+
+      //then
+      await expect(
+        workbookService.deleteWorkbookById(
+          workbookFixtureWithId.id,
+          otherMemberFixture,
+        ),
+      ).rejects.toThrow(new WorkbookForbiddenException());
+    });
+
+    it('존재하지 않는 문제집 삭제를 요청하면 WorkbookNotFoundExeption예외처리한다.', async () => {
+      //given
+      await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
+      await workbookRepository.save(workbookFixtureWithId);
+
+      //when
+
+      //then
+      await expect(
+        workbookService.deleteWorkbookById(1244232, memberFixture),
+      ).rejects.toThrow(new WorkbookNotFoundException());
     });
   });
 

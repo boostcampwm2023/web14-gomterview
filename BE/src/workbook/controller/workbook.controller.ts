@@ -1,12 +1,14 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
   Post,
   Query,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { WorkbookService } from '../service/workbook.service';
@@ -19,7 +21,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { createApiResponseOption } from '../../util/swagger.util';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { CreateWorkbookRequest } from '../dto/createWorkbookRequest';
 import { Member } from '../../member/entity/member';
 import { WorkbookIdResponse } from '../dto/workbookIdResponse';
@@ -115,5 +117,24 @@ export class WorkbookController {
       updateWorkbookRequest,
       req.user as Member,
     );
+  }
+
+  @Delete('/:workbookId')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiCookieAuth()
+  @ApiOperation({
+    summary: '문제집 수정',
+  })
+  @ApiResponse(createApiResponseOption(204, '문제집 수정 완료', null))
+  async deleteAnswer(
+    @Req() req: Request,
+    @Param('workbookId') workbookId: number,
+    @Res() res: Response,
+  ) {
+    await this.workbookService.deleteWorkbookById(
+      workbookId,
+      req.user as Member,
+    );
+    res.status(204).send();
   }
 }

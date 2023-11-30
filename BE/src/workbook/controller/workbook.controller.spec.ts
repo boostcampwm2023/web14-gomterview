@@ -14,8 +14,10 @@ import {
   memberFixturesOAuthRequest,
   mockReqWithMemberFixture,
   oauthRequestFixture,
+  otherMemberFixture,
 } from '../../member/fixture/member.fixture';
 import { WorkbookIdResponse } from '../dto/workbookIdResponse';
+import { Request, Response } from 'express';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { CategoryRepository } from '../../category/repository/category.repository';
 import { MemberRepository } from '../../member/repository/member.repository';
@@ -36,12 +38,16 @@ import {
 } from '../../category/fixture/category.fixture';
 import * as request from 'supertest';
 import { CreateWorkbookRequest } from '../dto/createWorkbookRequest';
-import { WorkbookNotFoundException } from '../exception/workbook.exception';
+import {
+  WorkbookForbiddenException,
+  WorkbookNotFoundException,
+} from '../exception/workbook.exception';
 import { WorkbookResponse } from '../dto/workbookResponse';
 import { WorkbookTitleResponse } from '../dto/workbookTitleResponse';
 import { CategoryNotFoundException } from '../../category/exception/category.exception';
 import { WorkbookRepository } from '../repository/workbook.repository';
 import { UpdateWorkbookRequest } from '../dto/updateWorkbookRequest';
+import { ManipulatedTokenNotFiltered } from '../../token/exception/token.exception';
 
 describe('WorkbookController 단위테스트', () => {
   let controller: WorkbookController;
@@ -51,6 +57,7 @@ describe('WorkbookController 단위테스트', () => {
     findWorkbookTitles: jest.fn(),
     findSingleWorkbook: jest.fn(),
     updateWorkbook: jest.fn(),
+    deleteWorkbookById: jest.fn(),
   };
   const mockTokenService = {};
 
@@ -209,6 +216,75 @@ describe('WorkbookController 단위테스트', () => {
       expect(result.content).toBe(workbookFixtureWithId.content);
     });
   });
+
+  describe('문제집을 삭제한다', () => {
+    const response = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    } as unknown as Response;
+
+    it('member와 id를 주면 문제집을 삭제한다', async () => {
+      //given
+
+      //when
+      mockWorkbookService.deleteWorkbookById.mockResolvedValue(undefined);
+
+      //then
+      await expect(
+        controller.deleteAnswer(mockReqWithMemberFixture, 1, response),
+      ).resolves.toBeUndefined();
+    });
+
+    it('member가 null이면 ManipulatedToken예외처리한다', async () => {
+      //given
+
+      //when
+      mockWorkbookService.deleteWorkbookById.mockRejectedValue(
+        new ManipulatedTokenNotFiltered(),
+      );
+
+      //then
+      await expect(
+        controller.deleteAnswer(
+          { user: null } as unknown as Request,
+          1,
+          response,
+        ),
+      ).rejects.toThrow(new ManipulatedTokenNotFiltered());
+    });
+
+    it('다른 회원이 삭제요청하면 WorkbookForbiddenException처리한다', async () => {
+      //given
+
+      //when
+      mockWorkbookService.deleteWorkbookById.mockRejectedValue(
+        new WorkbookForbiddenException(),
+      );
+
+      //then
+      await expect(
+        controller.deleteAnswer(
+          { user: otherMemberFixture } as unknown as Request,
+          1,
+          response,
+        ),
+      ).rejects.toThrow(new WorkbookForbiddenException());
+    });
+
+    it('없는 문제집을 삭제요청하면 WorkbookNotFoundException처리한다', async () => {
+      //given
+
+      //when
+      mockWorkbookService.deleteWorkbookById.mockRejectedValue(
+        new WorkbookNotFoundException(),
+      );
+
+      //then
+      await expect(
+        controller.deleteAnswer(mockReqWithMemberFixture, 11412, response),
+      ).rejects.toThrow(new WorkbookNotFoundException());
+    });
+  });
 });
 
 describe('WorkbookController 통합테스트', () => {
@@ -241,10 +317,13 @@ describe('WorkbookController 통합테스트', () => {
   });
 
   describe('문제집을 추가한다', () => {
-    it('토큰과 dto를 정상적으로 넣으면 201코드와 WorkbookIdResponse를 반환한다.', async () => {
-      //given
+    beforeEach(async () => {
       await memberRepository.save(memberFixture);
       await categoryRepository.save(categoryFixtureWithId);
+    });
+
+    it('토큰과 dto를 정상적으로 넣으면 201코드와 WorkbookIdResponse를 반환한다.', async () => {
+      //given
       const token = await authService.login(memberFixturesOAuthRequest);
 
       //when & then
@@ -258,8 +337,6 @@ describe('WorkbookController 통합테스트', () => {
 
     it('토큰이 없으면 401에러를 반환한다.', async () => {
       //given
-      await memberRepository.save(memberFixture);
-      await categoryRepository.save(categoryFixtureWithId);
 
       //when & then
       const agent = request.agent(app.getHttpServer());
@@ -271,8 +348,6 @@ describe('WorkbookController 통합테스트', () => {
 
     it('요청 dto의 title이 빈 문자열/null이면 400에러를 반환한다.', async () => {
       //given
-      await memberRepository.save(memberFixture);
-      await categoryRepository.save(categoryFixtureWithId);
       const token = await authService.login(memberFixturesOAuthRequest);
 
       //when & then
@@ -294,8 +369,6 @@ describe('WorkbookController 통합테스트', () => {
 
     it('요청 dto의 content가 빈 문자열/null이면 400에러를 반환한다.', async () => {
       //given
-      await memberRepository.save(memberFixture);
-      await categoryRepository.save(categoryFixtureWithId);
       const token = await authService.login(memberFixturesOAuthRequest);
 
       //when & then
@@ -337,8 +410,7 @@ describe('WorkbookController 통합테스트', () => {
   });
 
   describe('카테고리별 문제집을 조회한다', () => {
-    it('카테고리id를 입력해주지 않으면 전체를 조회한다.', async () => {
-      //given
+    beforeEach(async () => {
       const member = await memberRepository.save(memberFixture);
       for (const eachCategory of categoryListFixture) {
         const category = await categoryRepository.save(eachCategory);
@@ -351,6 +423,10 @@ describe('WorkbookController 통합테스트', () => {
           ),
         );
       }
+    });
+
+    it('카테고리id를 입력해주지 않으면 전체를 조회한다.', async () => {
+      //given
 
       //when & then
       const agent = request.agent(app.getHttpServer());
@@ -368,19 +444,6 @@ describe('WorkbookController 통합테스트', () => {
 
     it('특정 카테고리를 입력해주면 해당 카테고리의 문제집들을 조회한다.', async () => {
       //given
-      const member = await memberRepository.save(memberFixture);
-      for (const eachCategory of categoryListFixture) {
-        const category = await categoryRepository.save(eachCategory);
-        await workbookRepository.save(
-          Workbook.of(
-            `title_${category.name}`,
-            `content_${category.name}`,
-            category,
-            member,
-          ),
-        );
-      }
-
       //when & then
       const agent = request.agent(app.getHttpServer());
       await agent
@@ -394,18 +457,6 @@ describe('WorkbookController 통합테스트', () => {
 
     it('카테고리id가 존재하지 않는 값이라면 404에러를 반환한다.', async () => {
       //given
-      const member = await memberRepository.save(memberFixture);
-      for (const eachCategory of categoryListFixture) {
-        const category = await categoryRepository.save(eachCategory);
-        await workbookRepository.save(
-          Workbook.of(
-            `title_${category.name}`,
-            `content_${category.name}`,
-            category,
-            member,
-          ),
-        );
-      }
 
       //when & then
       const agent = request.agent(app.getHttpServer());
@@ -414,8 +465,7 @@ describe('WorkbookController 통합테스트', () => {
   });
 
   describe('회원의 문제집을 조회한다', () => {
-    it('쿠키가 있을 경우 회원의 문제집을 조회한다.', async () => {
-      //given
+    beforeEach(async () => {
       const member = await memberRepository.save(memberFixture);
       for (const eachCategory of categoryListFixture) {
         const category = await categoryRepository.save(eachCategory);
@@ -428,7 +478,6 @@ describe('WorkbookController 통합테스트', () => {
           ),
         );
       }
-
       const other = await memberRepository.save(differentMemberFixture);
       const category = await categoryRepository.findByCategoryId(1);
       await workbookRepository.save(
@@ -439,6 +488,10 @@ describe('WorkbookController 통합테스트', () => {
           other,
         ),
       );
+    });
+
+    it('쿠키가 있을 경우 회원의 문제집을 조회한다.', async () => {
+      //given
 
       //when & then
       const token = await authService.login(memberFixturesOAuthRequest);
@@ -508,6 +561,8 @@ describe('WorkbookController 통합테스트', () => {
   });
 
   describe('단건의 문제집을 조회한다', () => {
+    beforeEach(() => {});
+
     it('존재하는 경우 단건을 반환한다.', async () => {
       //given
       const other = await memberRepository.save(differentMemberFixture);
@@ -692,6 +747,60 @@ describe('WorkbookController 통합테스트', () => {
         .patch(`/api/workbook/`)
         .set('Cookie', [`accessToken=${token}`])
         .send(updateWorkbookRequest)
+        .expect(404);
+    });
+  });
+
+  describe('문제집을 삭제한다', () => {
+    beforeEach(async () => {
+      await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
+    });
+
+    it('문제집을 성공적으로 삭제한다', async () => {
+      //given
+      const workbook = await workbookRepository.save(workbookFixtureWithId);
+
+      //when & then
+      const token = await authService.login(memberFixturesOAuthRequest);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .delete(`/api/workbook/${workbook.id}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(204);
+    });
+
+    it('쿠키가 없으면 401에러를 반환한다', async () => {
+      //given
+      const workbook = await workbookRepository.save(workbookFixtureWithId);
+
+      //when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent.delete(`/api/workbook/${workbook.id}`).expect(401);
+    });
+
+    it('다른 사람의 문제집 삭제 요청을 하면 403에러를 반환한다', async () => {
+      //given
+      const workbook = await workbookRepository.save(workbookFixtureWithId);
+
+      //when & then
+      const token = await authService.login(oauthRequestFixture);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .delete(`/api/workbook/${workbook.id}`)
+        .set('Cookie', [`accessToken=${token}`])
+        .expect(403);
+    });
+
+    it('존재하지 않는 문제집을 삭제하려하면 404에러를 반환한다', async () => {
+      //given
+
+      //when & then
+      const token = await authService.login(memberFixturesOAuthRequest);
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .delete(`/api/workbook/124123`)
+        .set('Cookie', [`accessToken=${token}`])
         .expect(404);
     });
   });

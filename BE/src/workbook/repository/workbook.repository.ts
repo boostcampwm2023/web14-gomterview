@@ -70,4 +70,8 @@ export class WorkbookRepository {
   async update(workbook: Workbook) {
     return await this.repository.update({ id: workbook.id }, workbook);
   }
+
+  async remove(workbook: Workbook) {
+    await this.repository.remove(workbook);
+  }
 }
