@@ -6,9 +6,14 @@ import { theme } from '@styles/theme';
 type LabelBoxProps = {
   children: React.ReactNode;
   labelName: string;
+  labelColor?: string;
 };
 
-const LabelBox: React.FC<LabelBoxProps> = ({ children, labelName }) => {
+const LabelBox: React.FC<LabelBoxProps> = ({
+  children,
+  labelName,
+  labelColor,
+}) => {
   return (
     <div
       css={css`
@@ -20,7 +25,7 @@ const LabelBox: React.FC<LabelBoxProps> = ({ children, labelName }) => {
       <Typography
         component="label"
         variant="captionWeak"
-        color={theme.colors.text.subStrong}
+        color={labelColor ?? theme.colors.text.subStrong}
         css={css`
           padding-left: 0.25rem;
         `}

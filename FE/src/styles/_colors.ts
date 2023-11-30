@@ -67,6 +67,7 @@ export const colors = {
   border: {
     default: colorChips.grayscale500, // #B0B8C1
     weak: colorChips.grayscale300, // #EDEDED
+    error: colorChips.red500,
   },
   surface: {
     default: colorChips.grayscaleWhite, // #FFFFFF

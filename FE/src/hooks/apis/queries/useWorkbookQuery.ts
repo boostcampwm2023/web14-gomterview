@@ -9,10 +9,17 @@ import { getWorkbookById } from '@/apis/workbook';
  *
  * 문제집 상세보기, 문제집 수정 페이지 등에서 사용됩니다.
  */
-const useWorkbookQuery = (workbookId: number) => {
+const useWorkbookQuery = ({
+  workbookId,
+  enabled,
+}: {
+  workbookId: number;
+  enabled?: boolean;
+}) => {
   return useQuery({
     queryKey: QUERY_KEY.WORKBOOK_ID(workbookId),
     queryFn: () => getWorkbookById(workbookId),
+    enabled,
   });
 };
 
