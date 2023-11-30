@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import useQuestionWorkbookQuery from '@hooks/apis/queries/useQuestionWorkbookQuery';
-import { Typography, Toggle, Tabs } from '@foundation/index';
+import { Typography, Toggle, Tabs, Button } from '@foundation/index';
 import { WorkbookTitleListResDto } from '@/types/workbook';
 import { ExcludeArray } from '@/types/utils';
 import QuestionSelectionBoxAccordion from './QuestionSelectionBoxAccordion';
@@ -60,19 +60,37 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
         <div
           css={css`
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            row-gap: 0.5rem;
             padding: 1rem;
           `}
         >
           <Typography variant="title4">{workbook.title}</Typography>
-          <Typography
-            component="p"
-            variant="body3"
-            color={theme.colors.text.subStrong}
+          <div
+            css={css`
+              display: flex;
+              justify-content: space-between;
+            `}
           >
-            {questionData.length}개의 질문
-          </Typography>
+            <Button
+              variants="secondary"
+              size="sm"
+              css={css`
+                display: flex;
+                align-items: center;
+                column-gap: 0.5rem;
+              `}
+            >
+              면접 세트 수정
+            </Button>
+            <Typography
+              component="p"
+              variant="body3"
+              color={theme.colors.text.subStrong}
+            >
+              {questionData.length}개의 질문
+            </Typography>
+          </div>
         </div>
 
         {userInfo && (
