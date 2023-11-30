@@ -14,10 +14,11 @@ const InterviewSetGeneratorModal: React.FC<InterviewSetGeneratorModalProps> = ({
   workbookId,
 }) => {
   //TODO 타입추론 관련 문제 해결하기
-  const { data: workbookInfo } = useWorkbookQuery({
+  const { data: workbookInfo, isFetching } = useWorkbookQuery({
     workbookId: workbookId ?? 1,
     enabled: !!workbookId, //추가, 수정을 구분하기 위해 workbookId가 있을 때만 쿼리 요청
   });
+  if (workbookId && isFetching) return;
   return (
     <Modal isOpen={isOpen} closeModal={closeModal}>
       <Modal.header>새 면접 세트</Modal.header>
@@ -30,7 +31,11 @@ const InterviewSetGeneratorModal: React.FC<InterviewSetGeneratorModalProps> = ({
           padding: 1.5rem;
         `}
       >
-        <InterviewSetForm workbookInfo={workbookInfo} closeModal={closeModal} />
+        <InterviewSetForm
+          workbookId={workbookId}
+          workbookInfo={workbookInfo}
+          closeModal={closeModal}
+        />
       </div>
     </Modal>
   );

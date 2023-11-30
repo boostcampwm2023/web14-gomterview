@@ -1,19 +1,21 @@
 import { Button, Input, InputArea } from '@foundation/index';
 import { css } from '@emotion/react';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useEffect, useState } from 'react';
 import LabelBox from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/LabelBox';
 import InterviewSetCategory from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetCategory';
 import useWorkbookPatchMutation from '@hooks/apis/mutations/useWorkbookPatchMutation';
 import useInput from '@hooks/useInput';
 import useWorkbookPostMutation from '@hooks/apis/mutations/useWorkbookPostMutation';
-import { WorkbookEntity } from '@/types/workbook';
 import { theme } from '@styles/theme';
+import { WorkbookEntity } from '@/types/workbook';
 
 type InterviewSetFormProps = {
+  workbookId?: number;
   workbookInfo?: WorkbookEntity;
   closeModal: () => void;
 };
 const InterviewSetForm: React.FC<InterviewSetFormProps> = ({
+  workbookId,
   workbookInfo,
   closeModal,
 }) => {
@@ -26,12 +28,23 @@ const InterviewSetForm: React.FC<InterviewSetFormProps> = ({
     value: workbookTitle,
     onChange: handleWorkbookTitleChange,
     isEmpty: isWorkbookTitleEmpty,
+    clearInput: clearWorkbookTitle,
   } = useInput<HTMLInputElement>(workbookInfo?.title ?? '');
-  const { value: workbookContent, onChange: handleWorkbookContentChange } =
-    useInput<HTMLTextAreaElement>(workbookInfo?.title ?? '');
+  const {
+    value: workbookContent,
+    onChange: handleWorkbookContentChange,
+    clearInput: clearWorkbookContent,
+  } = useInput<HTMLTextAreaElement>(workbookInfo?.title ?? '');
 
   const { mutate: patchInterviewSet } = useWorkbookPatchMutation();
   const { mutate: postInterviewSet } = useWorkbookPostMutation();
+
+  useEffect(() => {
+    if (workbookId) return;
+
+    clearWorkbookTitle();
+    clearWorkbookContent();
+  }, [clearWorkbookContent, clearWorkbookTitle, workbookId]);
 
   const makeRequestBody = () => ({
     title: workbookTitle,
@@ -61,10 +74,16 @@ const InterviewSetForm: React.FC<InterviewSetFormProps> = ({
     closeModal();
   };
 
+  const handleReset = () => {
+    clearWorkbookTitle();
+    clearWorkbookContent();
+    closeModal();
+  };
+
   return (
     <form
       onSubmit={handleSubmit}
-      onReset={closeModal}
+      onReset={handleReset}
       css={css`
         display: flex;
         flex-direction: column;
