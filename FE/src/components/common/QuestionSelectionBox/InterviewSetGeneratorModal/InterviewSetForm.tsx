@@ -64,6 +64,7 @@ const InterviewSetForm: React.FC<InterviewSetFormProps> = ({
   return (
     <form
       onSubmit={handleSubmit}
+      onReset={closeModal}
       css={css`
         display: flex;
         flex-direction: column;
@@ -108,10 +109,12 @@ const InterviewSetForm: React.FC<InterviewSetFormProps> = ({
           margin-top: 1rem;
         `}
       >
-        <Button variants="secondary" type="submit">
+        <Button variants="secondary" type="reset">
           취소
         </Button>
-        <Button variants="primary">만들기</Button>
+        <Button variants="primary" type="submit">
+          만들기
+        </Button>
       </div>
     </form>
   );
