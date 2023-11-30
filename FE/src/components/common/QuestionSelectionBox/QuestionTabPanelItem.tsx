@@ -8,6 +8,8 @@ import { Typography, Toggle, Tabs } from '@foundation/index';
 import { WorkbookTitleListResDto } from '@/types/workbook';
 import { ExcludeArray } from '@/types/utils';
 import QuestionSelectionBoxAccordion from './QuestionSelectionBoxAccordion';
+import QuestionAddForm from '@common/QuestionSelectionBox/QuestionAddForm';
+import useUserInfo from '@hooks/useUserInfo';
 
 type TabPanelItemProps = {
   selectedTabIndex: string;
@@ -20,6 +22,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
   workbook,
   tabIndex,
 }) => {
+  const userInfo = useUserInfo();
   const settingPage = useRecoilValue(questionSetting);
   const selectedQuestions = settingPage.selectedData.filter(
     (question) => question.workbookId === workbook.workbookId
@@ -64,6 +67,15 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
         >
           {questionData.length}개의 질문
         </Typography>
+        {userInfo && (
+          <div
+            css={css`
+              padding: 0 1rem;
+            `}
+          >
+            <QuestionAddForm workbookId={workbook.workbookId} />
+          </div>
+        )}
         <div
           css={css`
             height: 100%;
