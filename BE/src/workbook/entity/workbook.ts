@@ -9,7 +9,7 @@ export class Workbook extends DefaultEntity {
   @Column()
   title: string;
 
-  @Column({ type: 'blob' })
+  @Column({ type: 'blob', nullable: true })
   content: string;
 
   @ManyToOne(() => Category)
