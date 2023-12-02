@@ -6,7 +6,6 @@ import {
   createObjectParamsForPreSign,
   getIdriveS3Client,
 } from 'src/util/idrive.util';
-import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
 import { v4 as uuidv4 } from 'uuid';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { QuestionRepository } from 'src/question/repository/question.repository';
@@ -48,19 +47,9 @@ export class VideoService {
     await this.videoRepository.save(newVideo);
   }
 
-  async getPreSignedUrl(
-    member: Member,
-    createPreSignedUrlRequest: CreatePreSignedUrlRequest,
-  ) {
+  async getPreSignedUrl(member: Member) {
     validateManipulatedToken(member);
-
-    const content = await this.getQuestionContent(
-      createPreSignedUrlRequest.questionId,
-    );
-    const encodedFileName = encodeURIComponent(
-      `${member.nickname}_${content}_${uuidv4()}`,
-    );
-    const key = `${encodedFileName}.webm`;
+    const key = `${uuidv4()}.webm`;
 
     const s3 = getIdriveS3Client();
     try {

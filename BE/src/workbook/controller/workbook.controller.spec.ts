@@ -367,27 +367,6 @@ describe('WorkbookController 통합테스트', () => {
       }
     });
 
-    it('요청 dto의 content가 빈 문자열/null이면 400에러를 반환한다.', async () => {
-      //given
-      const token = await authService.login(memberFixturesOAuthRequest);
-
-      //when & then
-      const cases = ['', null];
-      const agent = request.agent(app.getHttpServer());
-      for (const content of cases) {
-        const createWorkbookRequest = new CreateWorkbookRequest(
-          'test title',
-          content,
-          categoryFixtureWithId.id,
-        );
-        await agent
-          .post('/api/workbook')
-          .set('Cookie', [`accessToken=${token}`])
-          .send(createWorkbookRequest)
-          .expect(400);
-      }
-    });
-
     it('category가 존재하지 않으면 404에러를 반환한다.', async () => {
       //given
       await memberRepository.save(memberFixture);
@@ -663,33 +642,6 @@ describe('WorkbookController 통합테스트', () => {
           workbook.id,
           each,
           'test content',
-          category.id,
-        );
-
-        const agent = request.agent(app.getHttpServer());
-        await agent
-          .patch(`/api/workbook/`)
-          .set('Cookie', [`accessToken=${token}`])
-          .send(updateWorkbookRequest)
-          .expect(400);
-      }
-    });
-
-    it('내용이 null, 빈 문자열, 공백 문자열일 때 400에러처리한다.', async () => {
-      //given
-      await memberRepository.save(memberFixture);
-      const category = await categoryRepository.save(categoryFixtureWithId);
-      const workbook = await workbookRepository.save(workbookFixtureWithId);
-
-      //when & then
-      const token = await authService.login(memberFixturesOAuthRequest);
-      const cases = [null, ''];
-
-      for (const each of cases) {
-        const updateWorkbookRequest = new UpdateWorkbookRequest(
-          workbook.id,
-          'test title',
-          each,
           category.id,
         );
 

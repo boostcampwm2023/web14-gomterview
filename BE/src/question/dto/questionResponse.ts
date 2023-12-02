@@ -31,6 +31,7 @@ export class QuestionResponse {
 
   static from(question: Question) {
     const answer = question.defaultAnswer;
+    console.log(answer);
     if (isEmpty(answer))
       return new QuestionResponse(question.id, question.content, null, null);
 

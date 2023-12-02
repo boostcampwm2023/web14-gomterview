@@ -56,14 +56,14 @@ export class Video extends DefaultEntity {
     this.isPublic = isPublic;
   }
 
-  static from(member: Member, createVidoeRequest: CreateVideoRequest): Video {
+  static from(member: Member, createVideoRequest: CreateVideoRequest): Video {
     return new Video(
       member.id,
-      createVidoeRequest.questionId,
-      createVidoeRequest.videoName,
-      createVidoeRequest.url,
-      createVidoeRequest.thumbnail || DEFAULT_THUMBNAIL,
-      createVidoeRequest.videoLength,
+      createVideoRequest.questionId,
+      `${member.nickname}_${createVideoRequest.videoName}`,
+      createVideoRequest.url,
+      createVideoRequest.thumbnail || DEFAULT_THUMBNAIL,
+      createVideoRequest.videoLength,
       false,
     );
   }

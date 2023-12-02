@@ -1,4 +1,3 @@
-import { CreatePreSignedUrlRequest } from '../dto/createPreSignedUrlRequest';
 import { CreateVideoRequest } from '../dto/createVideoRequest';
 import { Video } from '../entity/video';
 
@@ -96,8 +95,4 @@ export const createVideoRequestFixture = new CreateVideoRequest(
   'https://u2e0.c18.e2-4.dev/videos/example.mp4',
   'https://bar.com',
   '03:29',
-);
-
-export const createPreSignedUrlRequestFixture = new CreatePreSignedUrlRequest(
-  1,
 );

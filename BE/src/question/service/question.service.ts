@@ -56,10 +56,11 @@ export class QuestionService {
     validateWorkbookOwner(workbook, member);
 
     const questions = (
-      await this.questionRepository.findByWorkbookId(workbook.id)
-    )
-      .filter((each) => copyQuestionRequest.questionIds.includes(each.id))
-      .map((question) => this.createCopy(question, workbook));
+      await this.questionRepository.findAllByIds(
+        copyQuestionRequest.questionIds,
+      )
+    ).map((question) => this.createCopy(question, workbook));
+    console.log(questions);
     await this.questionRepository.saveAll(questions);
     return WorkbookIdResponse.of(workbook);
   }

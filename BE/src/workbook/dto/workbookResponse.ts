@@ -47,7 +47,7 @@ export class WorkbookResponse {
     this.profileImg = profileImg;
     this.copyCount = copyCount;
     this.title = title;
-    this.content = content;
+    this.content = content.toString();
   }
 
   static of(workbook: Workbook) {

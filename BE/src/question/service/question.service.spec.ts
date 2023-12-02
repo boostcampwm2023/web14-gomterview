@@ -52,6 +52,7 @@ describe('QuestionService', () => {
     findByWorkbookId: jest.fn(),
     findById: jest.fn(),
     remove: jest.fn(),
+    findAllByIds: jest.fn(),
   };
 
   const mockWorkbookRepository = {
@@ -210,7 +211,7 @@ describe('QuestionService', () => {
     it('workbookId의 조회결과가 모두 있을 때 질문을 성공적으로 복제한다.', async () => {
       //given
       //when
-      mockQuestionRepository.findByWorkbookId.mockResolvedValue([
+      mockQuestionRepository.findAllByIds.mockResolvedValue([
         questionFixture,
         questionFixture,
         questionFixture,
@@ -230,7 +231,7 @@ describe('QuestionService', () => {
     it('workbookId가 존재하지 않는 문제집이면 WorkbookNotFoundException예외처리한다.', async () => {
       //given
       //when
-      mockQuestionRepository.findByWorkbookId.mockResolvedValue([
+      mockQuestionRepository.findAllByIds.mockResolvedValue([
         questionFixture,
         questionFixture,
         questionFixture,
@@ -247,7 +248,7 @@ describe('QuestionService', () => {
     it('자신의 것이 아닌 문제집으로 문제들을 복사하려하면 WorkbookForbiddenException예외처리한다.', async () => {
       //given
       //when
-      mockQuestionRepository.findByWorkbookId.mockResolvedValue([
+      mockQuestionRepository.findAllByIds.mockResolvedValue([
         questionFixture,
         questionFixture,
         questionFixture,

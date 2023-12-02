@@ -21,7 +21,6 @@ export class CategoryController {
     ),
   )
   async findCategories() {
-    const categories = await this.categoryService.findUsingCategories();
-    return CategoryListResponse.of(categories);
+    return await this.categoryService.findUsingCategories();
   }
 }
