@@ -4,9 +4,8 @@ import { Icon } from '@foundation/index';
 import useUserInfo from '@hooks/useUserInfo';
 import { breakpoints } from '@styles/_breakpoints';
 import { theme } from '@styles/theme';
-
-import InterviewSetGeneratorModal from '@common/QuestionSelectionBox/InterviewSetEditModal/InterviewSetGeneratorModal';
 import { RequestLoginModal } from '@components/workbookPage';
+import { InterviewSetGeneratorModal } from '@common/index';
 
 const WorkbookPlusButton: React.FC = () => {
   const isLogin = useUserInfo();
@@ -35,7 +34,7 @@ const WorkbookPlusButton: React.FC = () => {
           width: 3.125rem;
           height: 3.125rem;
           transition: all 0.3s;
-          cursor: point;
+          cursor: pointer;
           :hover {
             background-color: ${theme.colors.point.primary.hover};
             transform: scale(1.1);

@@ -7,3 +7,4 @@ export { VideoPlayer } from './VideoPlayer';
 export { default as QuestionSelectionBox } from './QuestionSelectionBox/QuestionSelectionBox';
 export { default as WorkbookCard } from './WorkbookCard/WorkbookCard';
 export { default as ResponsiveMenu } from './ResponsiveMenu/ResponsiveMenu';
+export { default as InterviewSetGeneratorModal } from './QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetGeneratorModal';

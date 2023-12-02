@@ -57,7 +57,7 @@ const QuestionSelectionBox = () => {
         css={css`
           background-color: ${theme.colors.surface.inner};
           width: 100%;
-          height: 30rem;
+          height: 40rem;
         `}
       >
         <Tabs
