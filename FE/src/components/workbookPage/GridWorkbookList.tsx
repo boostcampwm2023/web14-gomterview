@@ -26,7 +26,7 @@ const GridWorkbookList: React.FC<GridWorkBookListType> = ({ workbookList }) => {
           (workbook, index) =>
             index % 2 === 0 && (
               <Workbook
-                key={index}
+                key={workbook.workbookId}
                 nickname={workbook.nickname}
                 profileImg={workbook.profileImg}
                 copyCount={workbook.copyCount}
@@ -47,7 +47,7 @@ const GridWorkbookList: React.FC<GridWorkBookListType> = ({ workbookList }) => {
           (workbook, index) =>
             index % 2 === 1 && (
               <Workbook
-                key={index}
+                key={workbook.workbookId}
                 nickname={workbook.nickname}
                 profileImg={workbook.profileImg}
                 copyCount={workbook.copyCount}

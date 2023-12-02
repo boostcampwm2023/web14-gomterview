@@ -24,9 +24,9 @@ const WorkbookList: React.FC<WorkbookListType> = ({ selectedTabIndex }) => {
           row-gap: 20px;
         `}
       >
-        {workbookList.map((workbook, index) => (
+        {workbookList.map((workbook) => (
           <Workbook
-            key={index}
+            key={workbook.workbookId}
             nickname={workbook.nickname}
             profileImg={workbook.profileImg}
             copyCount={workbook.copyCount}
