@@ -1,17 +1,18 @@
 import { css } from '@emotion/react';
-import { Typography } from '@foundation/index';
-import useCategoryQuery from '@hooks/apis/queries/useCategoryQuery';
 import { theme } from '@styles/theme';
+import { Typography } from '@foundation/index';
+import { CategoryResDto } from '@/types/category';
 
 type InterviewSetCategoryProps = {
-  selectedId: number;
-  onClick: (id: number) => void;
+  categories?: CategoryResDto;
+  selectedCategoryIndex: number;
+  onClick: (index: number) => void;
 };
 const InterviewSetCategory: React.FC<InterviewSetCategoryProps> = ({
-  selectedId,
+  categories,
+  selectedCategoryIndex,
   onClick,
 }) => {
-  const { data: categories } = useCategoryQuery();
   return (
     <div
       css={css`
@@ -21,16 +22,16 @@ const InterviewSetCategory: React.FC<InterviewSetCategoryProps> = ({
         cursor: pointer;
       `}
     >
-      {categories?.map(({ id, name }) => (
+      {categories?.map(({ id, name }, index) => (
         <Typography
           key={id}
           variant="title4"
+          onClick={() => onClick(index)}
           color={
-            selectedId === id
+            selectedCategoryIndex === index
               ? theme.colors.text.default
               : theme.colors.text.subStrong
           }
-          onClick={() => onClick(id)}
         >
           {name}
         </Typography>

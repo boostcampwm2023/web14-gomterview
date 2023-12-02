@@ -7,6 +7,7 @@ import useInput from '@hooks/useInput';
 import { theme } from '@styles/theme';
 import useWorkbookQuery from '@hooks/apis/queries/useWorkbookQuery';
 import useWorkbookPatchMutation from '@hooks/apis/mutations/useWorkbookPatchMutation';
+import useCategoryQuery from '@hooks/apis/queries/useCategoryQuery';
 
 type InterviewSetFormProps = {
   workbookId: number;
@@ -19,8 +20,9 @@ const InterviewSetEditForm: React.FC<InterviewSetFormProps> = ({
   const { data: workbookInfo } = useWorkbookQuery({
     workbookId: workbookId,
   });
+  const { data: categories } = useCategoryQuery();
   const [activeVaildationError, setActiveVaildationError] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<number>(1);
+  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const {
     value: workbookTitle,
     onChange: handleWorkbookTitleChange,
@@ -35,17 +37,24 @@ const InterviewSetEditForm: React.FC<InterviewSetFormProps> = ({
 
   const { mutate: patchInterviewSet } = useWorkbookPatchMutation();
 
-  const handleCategoryClick = (id: number) => {
-    setSelectedCategory(id);
+  const findSelectedCategoryId = () => {
+    return categories?.find((_, index) => index === selectedCategoryIndex)?.id;
+  };
+
+  const handleCategoryClick = (index: number) => {
+    setSelectedCategoryIndex(index);
   };
 
   const handleSubmit: FormEventHandler = (e) => {
     e.preventDefault();
 
-    if (isWorkbookTitleEmpty()) {
+    const selectedCategoryId = findSelectedCategoryId();
+    if (isWorkbookTitleEmpty() || !selectedCategoryId) {
       setActiveVaildationError(true);
       return;
     }
+
+    console.log(selectedCategoryId);
 
     patchInterviewSet({
       workbookId: workbookId,
@@ -53,7 +62,7 @@ const InterviewSetEditForm: React.FC<InterviewSetFormProps> = ({
         workbookId: workbookId,
         title: workbookTitle,
         content: workbookContent,
-        categoryId: selectedCategory,
+        categoryId: selectedCategoryId,
       },
     });
     closeModal();
@@ -95,7 +104,8 @@ const InterviewSetEditForm: React.FC<InterviewSetFormProps> = ({
       </LabelBox>
       <LabelBox labelName="카테고리">
         <InterviewSetCategory
-          selectedId={selectedCategory}
+          categories={categories}
+          selectedCategoryIndex={selectedCategoryIndex}
           onClick={handleCategoryClick}
         />
       </LabelBox>

@@ -6,19 +6,19 @@ const categoryHandlers = [
     return HttpResponse.json(
       [
         {
-          id: 1,
+          id: 11,
           name: 'FE',
         },
         {
-          id: 2,
+          id: 12,
           name: 'BE',
         },
         {
-          id: 3,
+          id: 13,
           name: 'CS',
         },
         {
-          id: 4,
+          id: 14,
           name: 'Android',
         },
         {

@@ -6,6 +6,7 @@ import InterviewSetCategory from '@common/QuestionSelectionBox/InterviewSetGener
 import useInput from '@hooks/useInput';
 import useWorkbookPostMutation from '@hooks/apis/mutations/useWorkbookPostMutation';
 import { theme } from '@styles/theme';
+import useCategoryQuery from '@hooks/apis/queries/useCategoryQuery';
 
 type InterviewSetAddFormProps = {
   closeModal: () => void;
@@ -13,8 +14,9 @@ type InterviewSetAddFormProps = {
 const InterviewSetAddForm: React.FC<InterviewSetAddFormProps> = ({
   closeModal,
 }) => {
+  const { data: categories } = useCategoryQuery();
   const [activeValidationError, setActiveValidationError] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<number>(1);
+  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const {
     value: workbookTitle,
     onChange: handleWorkbookTitleChange,
@@ -34,14 +36,19 @@ const InterviewSetAddForm: React.FC<InterviewSetAddFormProps> = ({
     clearWorkbookContent();
   };
 
-  const handleCategoryClick = (id: number) => {
-    setSelectedCategory(id);
+  const findSelectedCategoryId = () => {
+    return categories?.find((_, index) => index === selectedCategoryIndex)?.id;
+  };
+
+  const handleCategoryClick = (index: number) => {
+    setSelectedCategoryIndex(index);
   };
 
   const handleSubmit: FormEventHandler = (e) => {
     e.preventDefault();
 
-    if (isWorkbookTitleEmpty()) {
+    const selectedCategoryId = findSelectedCategoryId();
+    if (isWorkbookTitleEmpty() || !selectedCategoryId) {
       setActiveValidationError(true);
       return;
     }
@@ -49,7 +56,7 @@ const InterviewSetAddForm: React.FC<InterviewSetAddFormProps> = ({
     postInterviewSet({
       title: workbookTitle,
       content: workbookContent,
-      categoryId: selectedCategory,
+      categoryId: selectedCategoryId,
     });
     resetState();
     closeModal();
@@ -90,7 +97,8 @@ const InterviewSetAddForm: React.FC<InterviewSetAddFormProps> = ({
       </LabelBox>
       <LabelBox labelName="카테고리">
         <InterviewSetCategory
-          selectedId={selectedCategory}
+          categories={categories}
+          selectedCategoryIndex={selectedCategoryIndex}
           onClick={handleCategoryClick}
         />
       </LabelBox>
