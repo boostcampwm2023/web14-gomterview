@@ -447,10 +447,10 @@ describe('WorkbookController 통합테스트', () => {
       //when & then
       const agent = request.agent(app.getHttpServer());
       await agent
-        .get('/api/workbook?categoryId=1')
+        .get('/api/workbook?category=1')
         .expect(200)
         .then((response) => {
-          expect(response.body.length).toBe(1);
+          expect(response.body.length).toBe(4);
           expect(response.body[0].title).toBe('title_BE');
         });
     });
@@ -460,7 +460,7 @@ describe('WorkbookController 통합테스트', () => {
 
       //when & then
       const agent = request.agent(app.getHttpServer());
-      await agent.get('/api/workbook?categoryId=15314').expect(404);
+      await agent.get('/api/workbook?category=15314').expect(404);
     });
   });
 
