@@ -13,7 +13,7 @@ type InterviewSetAddFormProps = {
 const InterviewSetAddForm: React.FC<InterviewSetAddFormProps> = ({
   closeModal,
 }) => {
-  const [activeVaildationError, setActiveVaildationError] = useState(false);
+  const [activeValidationError, setActiveValidationError] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<number>(1);
   const {
     value: workbookTitle,
@@ -42,7 +42,7 @@ const InterviewSetAddForm: React.FC<InterviewSetAddFormProps> = ({
     e.preventDefault();
 
     if (isWorkbookTitleEmpty()) {
-      setActiveVaildationError(true);
+      setActiveValidationError(true);
       return;
     }
 
@@ -73,7 +73,7 @@ const InterviewSetAddForm: React.FC<InterviewSetAddFormProps> = ({
       <LabelBox
         labelName="제목"
         labelColor={
-          activeVaildationError && isWorkbookTitleEmpty()
+          activeValidationError && isWorkbookTitleEmpty()
             ? theme.colors.border.error
             : theme.colors.border.default
         }
@@ -82,7 +82,7 @@ const InterviewSetAddForm: React.FC<InterviewSetAddFormProps> = ({
           onChange={handleWorkbookTitleChange}
           value={workbookTitle}
           css={css`
-            border-color: ${activeVaildationError &&
+            border-color: ${activeValidationError &&
             isWorkbookTitleEmpty() &&
             theme.colors.border.error};
           `}
