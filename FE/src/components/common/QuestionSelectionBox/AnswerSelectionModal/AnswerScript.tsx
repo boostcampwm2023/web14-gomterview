@@ -1,10 +1,10 @@
 import { theme } from '@styles/theme';
-import { Answer } from '@/types/answer';
+import { AnswerEntity } from '@/types/answer';
 import { css } from '@emotion/react';
 import { Avatar, Box, Typography } from '@foundation/index';
 
 type AnswerScriptProps = {
-  answer: Answer;
+  answer: AnswerEntity;
   onClick: () => void;
 };
 
