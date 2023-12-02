@@ -30,7 +30,7 @@ const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
   question,
   workbookId,
   isSelected,
-  isEditable,
+  isEditable = true,
   toggleSelected,
 }) => {
   const userInfo = useUserInfo();
