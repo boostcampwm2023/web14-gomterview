@@ -11,7 +11,7 @@ import { getWorkbookTitle } from '@/apis/workbook';
  */
 const useWorkbookTitleListQuery = () => {
   return useQuery({
-    queryKey: QUERY_KEY.WORKBOOK,
+    queryKey: QUERY_KEY.WORKBOOK_TITLE,
     queryFn: () => getWorkbookTitle(),
   });
 };

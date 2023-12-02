@@ -55,7 +55,6 @@ const InterviewSetEditForm: React.FC<InterviewSetFormProps> = ({
     }
 
     patchInterviewSet({
-      workbookId: workbookId,
       body: {
         workbookId: workbookId,
         title: workbookTitle,
