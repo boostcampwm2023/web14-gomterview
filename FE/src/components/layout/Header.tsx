@@ -1,6 +1,7 @@
 import { Logo } from '@common/index';
 import { css } from '@emotion/react';
 import Menu from './Header/Menu';
+import { theme } from '@styles/theme';
 
 const Header: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const Header: React.FC = () => {
         align-items: center;
         padding: 2rem;
         z-index: 999;
+        background-color: ${theme.colors.surface.default};
       `}
     >
       <Logo />

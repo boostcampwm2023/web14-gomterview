@@ -18,11 +18,8 @@ const WorkbookPageLayout: React.FC<WorkbookPageLayoutProps> = ({
         css={css`
           position: relative;
           height: auto;
-          padding: 5rem 0;
+          padding: 6rem 0;
           row-gap: 1.5rem;
-          @media (max-width: ${theme.breakpoints.tablet}) {
-            padding: 1rem;
-          }
         `}
       >
         {children}
