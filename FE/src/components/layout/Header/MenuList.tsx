@@ -11,7 +11,7 @@ const MenuList: React.FC = () => {
 
   return (
     <>
-      <MenuItem path={PATH.ROOT} text="면접 Set 보러가기" />
+      <MenuItem path={PATH.WORKBOOK} text="면접 세트 보러가기" />
       <MenuItem path={PATH.INTERVIEW_SETTING} text="면접 문제 풀러가기" />
       {isLogin ? (
         <MenuItem path={PATH.MYPAGE} text="마이페이지" />

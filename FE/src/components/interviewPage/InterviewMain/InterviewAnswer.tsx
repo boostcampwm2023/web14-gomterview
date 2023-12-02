@@ -3,11 +3,11 @@ import { theme } from '@styles/theme';
 
 import { Typography } from '@foundation/index';
 
-type InterviewAnswerType = {
+type InterviewAnswerProps = {
   answer: string;
 };
 
-const InterviewAnswer: React.FC<InterviewAnswerType> = ({ answer }) => {
+const InterviewAnswer: React.FC<InterviewAnswerProps> = ({ answer }) => {
   return (
     <div
       css={css`

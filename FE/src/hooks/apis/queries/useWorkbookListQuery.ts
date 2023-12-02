@@ -11,7 +11,7 @@ import { getWorkbookByCategory } from '@/apis/workbook';
  */
 const useWorkbookListQuery = (categoryId: number) => {
   return useQuery({
-    queryKey: QUERY_KEY.WORKBOOK,
+    queryKey: QUERY_KEY.WORKBOOK_CATEGORY(categoryId),
     queryFn: () => getWorkbookByCategory(categoryId),
   });
 };

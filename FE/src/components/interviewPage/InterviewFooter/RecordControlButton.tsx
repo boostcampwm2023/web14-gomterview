@@ -5,13 +5,13 @@ import { Icon, Typography } from '@foundation/index';
 import RecordStartModal from '../InterviewModal/RecordStartModal';
 import { useState } from 'react';
 
-type RecordControlButtonType = {
+type RecordControlButtonProps = {
   isRecording: boolean;
   handleStartRecording: () => void;
   handleStopRecording: () => void;
 };
 
-const RecordControlButton: React.FC<RecordControlButtonType> = ({
+const RecordControlButton: React.FC<RecordControlButtonProps> = ({
   isRecording,
   handleStartRecording,
   handleStopRecording,

@@ -12,8 +12,10 @@ const Header: React.FC = () => {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 2rem;
+        padding: 1rem 1.5rem;
         z-index: 999;
+        background-color: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(10px); /* 10px 블러 효과 */
       `}
     >
       <Logo />

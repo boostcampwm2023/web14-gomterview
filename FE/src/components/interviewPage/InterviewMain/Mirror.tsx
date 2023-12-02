@@ -1,11 +1,11 @@
 import { css } from '@emotion/react';
 import { RefObject } from 'react';
 
-type MirrorType = {
+type MirrorProps = {
   mirrorVideoRef: RefObject<HTMLVideoElement>;
 };
 
-const Mirror: React.FC<MirrorType> = ({ mirrorVideoRef }) => {
+const Mirror: React.FC<MirrorProps> = ({ mirrorVideoRef }) => {
   return (
     <video
       ref={mirrorVideoRef}

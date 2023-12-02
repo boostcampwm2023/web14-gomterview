@@ -250,6 +250,22 @@ const spliteSvgCode = (
         fill="#9299A1"
       />
     </symbol>
+    <symbol id="white-plus" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M6 12H18"
+        stroke="#FFFFFF"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12 18V6"
+        stroke="#FFFFFF"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </symbol>
   </svg>
 );
 

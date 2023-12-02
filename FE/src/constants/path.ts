@@ -21,6 +21,7 @@ export const PATH = {
   INTERVIEW_WORKBOOK_DETAIL: (workbookId?: number) =>
     `/${INTERVIEW}/${WORKBOOK}/${workbookId ?? ':workbookId'}`,
   NOT_FOUND: `/404`,
+  WORKBOOK: `/${WORKBOOK}`,
 };
 
 export const SETTING_PATH = {
