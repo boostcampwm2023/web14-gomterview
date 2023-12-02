@@ -6,6 +6,7 @@ import { RecoilRoot } from 'recoil';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import GlobalSVGProvider from '@/GlobalSvgProvider';
 import AppRouter from '@/AppRouter';
+import ModalProvider from './modalProvider';
 
 function App() {
   const queryClient = new QueryClient();
@@ -18,6 +19,7 @@ function App() {
           <Global styles={_global} />
           <AppRouter queryClient={queryClient} />
           <GlobalSVGProvider />
+          <ModalProvider />
         </ThemeProvider>
       </RecoilRoot>
     </QueryClientProvider>
