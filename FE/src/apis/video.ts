@@ -4,7 +4,6 @@ import {
   VideoAddReqDto,
   VideoItemResDto,
   VideoListResDto,
-  VideoPreSignedReqDto,
   VideoPreSignedResDto,
   VideoPublicToggleResDto,
 } from '@/types/video';
@@ -17,11 +16,10 @@ export const postVideo = async (body: VideoAddReqDto) => {
   });
 };
 
-export const postPreSignedUrl = async (body: VideoPreSignedReqDto) => {
-  return await getAPIResponseData<VideoPreSignedResDto, VideoPreSignedReqDto>({
+export const postPreSignedUrl = async () => {
+  return await getAPIResponseData<VideoPreSignedResDto>({
     method: 'post',
     url: API.VIDEO_PRE_SIGNED,
-    data: body,
   });
 };
 

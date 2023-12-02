@@ -41,6 +41,7 @@ export type VideoAddReqDto = Pick<
 /**
  * POST video/pre-signed
  * 비디오 등록 전 질문 아이디로 비디오 등록용 pre-signed url을 요청하는 객체 타입
+ * @deprecated
  */
 export type VideoPreSignedReqDto = Pick<VideoEntity, 'questionId'>;
 
