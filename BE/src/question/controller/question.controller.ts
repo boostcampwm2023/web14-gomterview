@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Post,
   Query,
   Req,
@@ -69,14 +70,14 @@ export class QuestionController {
     );
   }
 
-  @Get()
+  @Get(':workbookId')
   @ApiOperation({
     summary: '카테고리별 질문 리스트 조회',
   })
   @ApiResponse(
     createApiResponseOption(200, 'QuestionResponse 리스트', [QuestionResponse]),
   )
-  async findWorkbookQuestions(@Query('workbook') workbookId: number) {
+  async findWorkbookQuestions(@Param('workbookId') workbookId: number) {
     return await this.questionService.findAllByWorkbookId(workbookId);
   }
 

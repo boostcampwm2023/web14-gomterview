@@ -26,6 +26,7 @@ export class QuestionRepository {
       .createQueryBuilder('Question')
       .leftJoinAndSelect('Question.workbook', 'workbook')
       .leftJoinAndSelect('Question.origin', 'origin')
+      .leftJoinAndSelect('Question.defaultAnswer', 'defaultAnswer')
       .where('workbook.id = :workbookId', { workbookId })
       .getMany();
   }
