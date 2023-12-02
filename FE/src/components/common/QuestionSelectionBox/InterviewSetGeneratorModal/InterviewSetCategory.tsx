@@ -1,10 +1,10 @@
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
 import { Typography } from '@foundation/index';
-import { CategoryResDto } from '@/types/category';
+import { CategoryListResDto } from '@/types/category';
 
 type InterviewSetCategoryProps = {
-  categories?: CategoryResDto;
+  categories?: CategoryListResDto;
   selectedCategoryIndex: number;
   onClick: (index: number) => void;
 };

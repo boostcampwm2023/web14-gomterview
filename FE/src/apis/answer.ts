@@ -1,9 +1,9 @@
-import { Answer } from '@/types/answer';
+import { AnswerItemResDto } from '@/types/answer';
 import { API } from '@/constants/api';
 import getAPIResponseData from '@/utils/getAPIResponseData';
 
 export const getQuestionAnswer = async (questionId: number) => {
-  return await getAPIResponseData<Answer[]>({
+  return await getAPIResponseData<AnswerItemResDto[]>({
     method: 'get',
     url: API.ANSWER_ID(questionId),
   });

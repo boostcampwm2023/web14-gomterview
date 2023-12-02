@@ -10,9 +10,8 @@
 
 - [곰터뷰 서비스 바로가기](https://www.gomterview.com)
 - [곰터뷰 피그마](https://www.figma.com/file/DGvVrbuTotapX9sTETDCqV/%EC%9B%B9-%EB%94%94%EC%9E%90%EC%9D%B8?type=design&node-id=0:1&mode=design&t=CZLWQG6hGeCCMeax-1)
-- [곰터뷰 Swagger](http://43.202.237.125:8080/api-docs)
 - [곰터뷰 Jira](https://milk717.atlassian.net/jira/software/projects/NDD/boards/1)
-- [곰터뷰 팀 기술 블로그 🚧준비중🚧]()
+- [곰터뷰 팀 기술 블로그](https://blog.gomterview.com)
 
 ## NDD 팀원을 소개합니다
 

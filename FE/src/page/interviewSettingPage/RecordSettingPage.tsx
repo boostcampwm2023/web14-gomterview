@@ -1,6 +1,6 @@
 import { RecordMethod, recordSetting } from '@/atoms/interviewSetting';
 import { QUERY_KEY } from '@/constants/queryKey';
-import { User } from '@/types/user';
+import { MemberEntity } from '@/types/user';
 import {
   Description,
   InterviewSettingFooter,
@@ -22,7 +22,9 @@ const RecordSettingPage: React.FC<RecordSettingPageProps> = ({
 }) => {
   const [setting, setSetting] = useRecoilState(recordSetting);
   const queryClient = useQueryClient();
-  const userInfo = queryClient.getQueryData<User | undefined>(QUERY_KEY.MEMBER);
+  const userInfo = queryClient.getQueryData<MemberEntity | undefined>(
+    QUERY_KEY.MEMBER
+  );
 
   const handleRecordChange = (name: RecordMethod) => {
     setSetting({
