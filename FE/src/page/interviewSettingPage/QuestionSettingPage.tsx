@@ -1,7 +1,6 @@
 import { questionSetting } from '@/atoms/interviewSetting';
 import { QuestionSelectionBox } from '@common/index';
 import { InterviewSettingFooter } from '@components/interviewSettingPage';
-import Description from '@components/interviewSettingPage/Description';
 import { css } from '@emotion/react';
 import { Button } from '@foundation/index';
 import { useRecoilValue } from 'recoil';
@@ -19,17 +18,6 @@ const QuestionSettingPage: React.FC<QuestionSettingPageProps> = ({
 
   return (
     <>
-      <Description title="문제 선택">
-        - 주어진 카테고리 중에서 관련 있는 문제를 선택해 주세요.
-        <br />
-        - 자신의 경험과 능력을 가장 잘 보여줄 수 있는 문제를 골라주세요.
-        <br />
-        - 문제 선택이 완료되면, 제출 버튼을 눌러 주세요.
-        <br />
-        - 선택한 문제에 대해 충분히 준비해 오시길 바랍니다.
-        <br />
-        🍀 행운을 빕니다! 여러분과의 면접을 기대하겠습니다!
-      </Description>
       <div
         css={css`
           margin-top: 2rem;
