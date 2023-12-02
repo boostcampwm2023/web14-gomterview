@@ -13,7 +13,6 @@ export class CreateWorkbookRequest {
     createPropertyOption('나만볼꺼다요 메롱', '문제집에 대한 설명', String),
   )
   @IsString()
-  @IsNotEmpty()
   content: string;
 
   @ApiProperty(createPropertyOption(1, '카테고리 id', Number))
