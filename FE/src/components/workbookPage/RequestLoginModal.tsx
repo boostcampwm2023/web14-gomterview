@@ -1,7 +1,8 @@
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
 import { Typography, Modal, Button } from '@foundation/index';
-import redirectToGoogleLogin from '@/utils/redirectToGoogleLogin';
+import { useNavigate } from 'react-router-dom';
+import { PATH } from '@constants/path';
 
 type RequestLoginModalProps = {
   isOpen: boolean;
@@ -12,6 +13,8 @@ const RequestLoginModal: React.FC<RequestLoginModalProps> = ({
   isOpen,
   closeModal,
 }) => {
+  const navigate = useNavigate();
+
   return (
     <Modal isOpen={isOpen} closeModal={closeModal}>
       <Modal.content>
@@ -42,10 +45,10 @@ const RequestLoginModal: React.FC<RequestLoginModalProps> = ({
             </Button>
             <Button
               onClick={() => {
-                void redirectToGoogleLogin();
+                navigate(PATH.ROOT);
               }}
             >
-              구글 로그인
+              로그인하러 이동
             </Button>
           </div>
         </div>
