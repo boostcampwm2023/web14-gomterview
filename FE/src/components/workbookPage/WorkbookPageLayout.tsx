@@ -1,7 +1,6 @@
 import { Header } from '@components/layout';
 import Layout from '@components/layout/Layout';
 import { css } from '@emotion/react';
-import { theme } from '@styles/theme';
 
 type WorkbookPageLayoutProps = {
   children: React.ReactNode;
@@ -18,7 +17,7 @@ const WorkbookPageLayout: React.FC<WorkbookPageLayoutProps> = ({
         css={css`
           position: relative;
           height: auto;
-          padding: 6rem 0;
+          padding: 4.5rem 0.25rem;
           row-gap: 1.5rem;
         `}
       >

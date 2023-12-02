@@ -13,7 +13,7 @@ type ResponsiveMenuType = HTMLElementTypes<HTMLDivElement> & {
 const ResponsiveMenu: React.FC<ResponsiveMenuType> = ({
   children,
   location = 'left',
-  top = 100,
+  top = 23,
   inlineCss,
   sideCss,
   ...arg
