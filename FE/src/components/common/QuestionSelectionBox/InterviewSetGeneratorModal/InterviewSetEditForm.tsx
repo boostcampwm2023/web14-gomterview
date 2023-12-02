@@ -21,7 +21,7 @@ const InterviewSetEditForm: React.FC<InterviewSetFormProps> = ({
     workbookId: workbookId,
   });
   const { data: categories } = useCategoryQuery();
-  const [activeVaildationError, setActiveVaildationError] = useState(false);
+  const [activeValidationError, setActiveValidationError] = useState(false);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const {
     value: workbookTitle,
@@ -50,11 +50,9 @@ const InterviewSetEditForm: React.FC<InterviewSetFormProps> = ({
 
     const selectedCategoryId = findSelectedCategoryId();
     if (isWorkbookTitleEmpty() || !selectedCategoryId) {
-      setActiveVaildationError(true);
+      setActiveValidationError(true);
       return;
     }
-
-    console.log(selectedCategoryId);
 
     patchInterviewSet({
       workbookId: workbookId,
@@ -87,7 +85,7 @@ const InterviewSetEditForm: React.FC<InterviewSetFormProps> = ({
       <LabelBox
         labelName="제목"
         labelColor={
-          activeVaildationError && isWorkbookTitleEmpty()
+          activeValidationError && isWorkbookTitleEmpty()
             ? theme.colors.border.error
             : theme.colors.border.default
         }
@@ -96,7 +94,7 @@ const InterviewSetEditForm: React.FC<InterviewSetFormProps> = ({
           onChange={handleWorkbookTitleChange}
           value={workbookTitle}
           css={css`
-            border-color: ${activeVaildationError &&
+            border-color: ${activeValidationError &&
             isWorkbookTitleEmpty() &&
             theme.colors.border.error};
           `}
