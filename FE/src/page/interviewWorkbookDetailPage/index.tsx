@@ -8,6 +8,7 @@ import { css } from '@emotion/react';
 import { Box, Button, CheckBox } from '@foundation/index';
 import useQuestionWorkbookQuery from '@hooks/apis/queries/useQuestionWorkbookQuery';
 import useWorkbookQuery from '@hooks/apis/queries/useWorkbookQuery';
+import useUserInfo from '@hooks/useUserInfo';
 import { theme } from '@styles/theme';
 import { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
@@ -18,6 +19,7 @@ const InterviewWorkbookDetailPage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const { workbookId } = useLoaderData() as { workbookId: number };
+  const userInfo = useUserInfo();
   const { data: questionWorkbookData } = useQuestionWorkbookQuery({
     workbookId,
   });
@@ -46,9 +48,11 @@ const InterviewWorkbookDetailPage = () => {
   };
 
   const openModal = () => {
-    selectedQuestionId.length < 1
-      ? alert('질문을 선택해주세요')
-      : setIsModalOpen(true);
+    if (!userInfo) alert('로그인이 필요합니다.');
+    else
+      selectedQuestionId.length < 1
+        ? alert('질문을 선택해주세요')
+        : setIsModalOpen(true);
   };
 
   if (!workbookData) return;

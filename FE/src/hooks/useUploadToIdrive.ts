@@ -19,9 +19,7 @@ export const useUploadToIDrive = () => {
     recordTime,
   }: UploadParams): Promise<void> => {
     try {
-      const preSignedResponse = await getPreSignedUrl({
-        questionId: currentQuestion.questionId,
-      });
+      const preSignedResponse = await getPreSignedUrl();
       // response를 받습니다
 
       await putVideoToIdrive({
