@@ -1,28 +1,43 @@
 import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
-import { useState } from 'react';
 import TabPanelItem from './QuestionTabPanelItem';
 import { useRecoilState } from 'recoil';
 import { QuestionAnswerSelectionModal } from '@atoms/modal';
 import AnswerSelectionModal from './AnswerSelectionModal/AnswerSelectionModal';
-import { Box, SelectionBox, Tabs, Typography } from '@foundation/index';
+import { Box, Button, Icon, Tabs, Typography } from '@foundation/index';
 import useWorkbookTitleListQuery from '@hooks/apis/queries/useWorkbookTitleListQuery';
+import { useState } from 'react';
+import QuestionTabList from '@common/QuestionSelectionBox/QuestionTabList';
+import InterviewSetGeneratorModal from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetGeneratorModal';
 
 const QuestionSelectionBox = () => {
   const [selectedTabIndex, setSelectedTabIndex] = useState('0');
-
+  const [selectedWorkbookId, setSelectedWorkbookId] = useState<
+    number | undefined
+  >(undefined);
   const { data: workbookListData } = useWorkbookTitleListQuery();
 
-  const [{ isOpen, workbookId, question }, setModalState] = useRecoilState(
-    QuestionAnswerSelectionModal
-  );
+  const [
+    { isOpen: isQuestionAnswerSelectionModalOpen, workbookId, question },
+    setModalState,
+  ] = useRecoilState(QuestionAnswerSelectionModal);
+
+  const [
+    isInterviewSetGeneratorModalOpen,
+    setIsInterviewSetGeneratorModalOpen,
+  ] = useState(false);
+
+  const handleInterviewSetGeneratorModal = (workbookId?: number) => {
+    setSelectedWorkbookId(workbookId);
+    setIsInterviewSetGeneratorModalOpen(true);
+  };
 
   if (!workbookListData) return;
   return (
     <>
       {workbookId && question && (
         <AnswerSelectionModal
-          isOpen={isOpen}
+          isOpen={isQuestionAnswerSelectionModalOpen}
           workbookId={workbookId}
           question={question}
           closeModal={() =>
@@ -33,6 +48,11 @@ const QuestionSelectionBox = () => {
           }
         />
       )}
+      <InterviewSetGeneratorModal
+        workbookId={selectedWorkbookId}
+        isOpen={isInterviewSetGeneratorModalOpen}
+        closeModal={() => setIsInterviewSetGeneratorModalOpen(false)}
+      />
       <Box
         css={css`
           background-color: ${theme.colors.surface.inner};
@@ -49,37 +69,45 @@ const QuestionSelectionBox = () => {
             row-gap: 1.5rem;
           `}
         >
-          <Tabs.TabList
-            name="category"
+          <div
             css={css`
-              display: block;
-              width: 12rem;
-              padding-top: 1rem;
+              display: flex;
+              flex-direction: column;
+              width: 15rem;
+              row-gap: 2rem;
+              padding-top: 1.5rem;
               border-radius: 1rem 0 0 1rem;
               background-color: ${theme.colors.surface.default};
               overflow-y: auto;
-              > * {
-                margin-bottom: 1rem;
-              }
             `}
-            onTabChange={(_, value) => setSelectedTabIndex(value)}
           >
-            {workbookListData.map((workbook, index) => (
-              <Tabs.Tab value={index.toString()} key={workbook.workbookId}>
-                <SelectionBox
-                  id={`workbook-${workbook.workbookId.toString()}`}
-                  name="workbook"
-                  defaultChecked={index === 0}
-                >
-                  <Typography variant="title4">{workbook.title}</Typography>
-                </SelectionBox>
-              </Tabs.Tab>
-            ))}
-          </Tabs.TabList>
+            <Button
+              size="md"
+              variants="secondary"
+              onClick={() => handleInterviewSetGeneratorModal()}
+              css={css`
+                display: flex;
+                align-items: center;
+                column-gap: 0.5rem;
+                align-self: center;
+                background-color: ${theme.colors.surface.inner};
+                border: none;
+              `}
+            >
+              <Icon id="plus" width="1.5rem" height="1.5rem" />
+              <Typography variant="body1" color={theme.colors.text.subStrong}>
+                새 면접세트 추가
+              </Typography>
+            </Button>
+            <QuestionTabList
+              workbookListData={workbookListData}
+              onTabChange={(_, value) => setSelectedTabIndex(value)}
+            />
+          </div>
           <div
             css={css`
               width: 100%;
-              max-width: calc(100% - 12rem);
+              max-width: calc(100% - 15rem);
             `}
           >
             {workbookListData.map((workbook, index) => (
@@ -87,6 +115,7 @@ const QuestionSelectionBox = () => {
                 selectedTabIndex={selectedTabIndex}
                 tabIndex={index.toString()}
                 workbook={workbook}
+                onEditButtonClick={handleInterviewSetGeneratorModal}
                 key={workbook.workbookId}
               />
             ))}

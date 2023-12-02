@@ -4,22 +4,27 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import useQuestionWorkbookQuery from '@hooks/apis/queries/useQuestionWorkbookQuery';
-import { Typography, Toggle, Tabs } from '@foundation/index';
+import { Typography, Toggle, Tabs, Button } from '@foundation/index';
 import { WorkbookTitleListResDto } from '@/types/workbook';
 import { ExcludeArray } from '@/types/utils';
 import QuestionSelectionBoxAccordion from './QuestionSelectionBoxAccordion';
+import QuestionAddForm from '@common/QuestionSelectionBox/QuestionAddForm';
+import useUserInfo from '@hooks/useUserInfo';
 
 type TabPanelItemProps = {
   selectedTabIndex: string;
   tabIndex: string;
   workbook: ExcludeArray<WorkbookTitleListResDto>;
+  onEditButtonClick: (workbookId: number) => void;
 };
 
 const TabPanelItem: React.FC<TabPanelItemProps> = ({
   selectedTabIndex,
   workbook,
   tabIndex,
+  onEditButtonClick,
 }) => {
+  const userInfo = useUserInfo();
   const settingPage = useRecoilValue(questionSetting);
   const selectedQuestions = settingPage.selectedData.filter(
     (question) => question.workbookId === workbook.workbookId
@@ -54,16 +59,52 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
           height: 100%;
         `}
       >
-        <Typography
-          component="p"
-          variant="body3"
-          color={theme.colors.text.subStrong}
+        <div
           css={css`
+            display: flex;
+            flex-direction: column;
+            row-gap: 0.5rem;
             padding: 1rem;
           `}
         >
-          {questionData.length}개의 질문
-        </Typography>
+          <Typography variant="title4">{workbook.title}</Typography>
+          <div
+            css={css`
+              display: flex;
+              justify-content: space-between;
+            `}
+          >
+            <Button
+              variants="secondary"
+              size="sm"
+              onClick={() => onEditButtonClick(workbook.workbookId)}
+              css={css`
+                display: flex;
+                align-items: center;
+                column-gap: 0.5rem;
+              `}
+            >
+              면접 세트 수정
+            </Button>
+            <Typography
+              component="p"
+              variant="body3"
+              color={theme.colors.text.subStrong}
+            >
+              {questionData.length}개의 질문
+            </Typography>
+          </div>
+        </div>
+
+        {userInfo && (
+          <div
+            css={css`
+              padding: 0 1rem;
+            `}
+          >
+            <QuestionAddForm workbookId={workbook.workbookId} />
+          </div>
+        )}
         <div
           css={css`
             height: 100%;
