@@ -21,7 +21,7 @@ const InterviewWorkbookDetailPage = () => {
   const { data: questionWorkbookData } = useQuestionWorkbookQuery({
     workbookId,
   });
-  const { data: workbookData } = useWorkbookQuery(workbookId);
+  const { data: workbookData } = useWorkbookQuery({ workbookId: workbookId });
 
   const selectQuestion = (questionId: number) =>
     setSelectedQuestionId((prev) => prev.filter((id) => id !== questionId));
