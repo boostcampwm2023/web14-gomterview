@@ -4,11 +4,11 @@ import useBreakpoint from '@hooks/useBreakPoint';
 import Workbook from './Workbook';
 import GridWorkbookList from './GridWorkbookList';
 
-type WorkbookListType = {
+type WorkbookListProps = {
   selectedTabIndex: string;
 };
 
-const WorkbookList: React.FC<WorkbookListType> = ({ selectedTabIndex }) => {
+const WorkbookList: React.FC<WorkbookListProps> = ({ selectedTabIndex }) => {
   const isDeviceBreakpoint = useBreakpoint();
   const { data: workbookList } = useWorkbookListQuery(Number(selectedTabIndex));
 

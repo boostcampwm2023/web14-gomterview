@@ -3,11 +3,11 @@ import { css } from '@emotion/react';
 
 import { Icon, Typography } from '@foundation/index';
 
-type InterviewExitButtonType = {
+type InterviewExitButtonProps = {
   handleInterviewExit: () => void;
 };
 
-const InterviewExitButton: React.FC<InterviewExitButtonType> = ({
+const InterviewExitButton: React.FC<InterviewExitButtonProps> = ({
   handleInterviewExit,
 }) => {
   return (

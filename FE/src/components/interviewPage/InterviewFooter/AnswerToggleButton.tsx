@@ -2,11 +2,11 @@ import { css } from '@emotion/react';
 import { Icon, Typography } from '@foundation/index';
 import { theme } from '@styles/theme';
 
-type AnswerToggleButtonType = {
+type AnswerToggleButtonProps = {
   handleAnswerToggle: () => void;
 };
 
-const AnswerToggleButton: React.FC<AnswerToggleButtonType> = ({
+const AnswerToggleButton: React.FC<AnswerToggleButtonProps> = ({
   handleAnswerToggle,
 }) => {
   return (

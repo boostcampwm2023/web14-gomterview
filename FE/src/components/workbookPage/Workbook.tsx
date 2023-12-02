@@ -1,12 +1,12 @@
-import { WorkbookCardType } from '@common/WorkbookCard/WorkbookCard';
+import { WorkbookCardProps } from '@common/WorkbookCard/WorkbookCard';
 import { WorkbookCard } from '@common/index';
 import { PATH } from '@constants/path';
 import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 
-type WorkbookType = WorkbookCardType & { workbookId: number };
+type WorkbookProps = WorkbookCardProps & { workbookId: number };
 
-const Workbook: React.FC<WorkbookType> = (props) => {
+const Workbook: React.FC<WorkbookProps> = (props) => {
   const navigate = useNavigate();
 
   return (

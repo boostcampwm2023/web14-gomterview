@@ -2,11 +2,13 @@ import { WorkbookListResDto } from '@/types/workbook';
 import { css } from '@emotion/react';
 import Workbook from './Workbook';
 
-type GridWorkBookListType = {
+type GridWorkBookListProps = {
   workbookList: WorkbookListResDto;
 };
 
-const GridWorkbookList: React.FC<GridWorkBookListType> = ({ workbookList }) => {
+const GridWorkbookList: React.FC<GridWorkBookListProps> = ({
+  workbookList,
+}) => {
   return (
     <div
       css={css`

@@ -3,11 +3,11 @@ import { css } from '@emotion/react';
 
 import { Icon, Typography } from '@foundation/index';
 
-type NextButtonType = {
+type NextButtonProps = {
   handleNext: () => void;
 };
 
-const NextButton: React.FC<NextButtonType> = ({ handleNext }) => {
+const NextButton: React.FC<NextButtonProps> = ({ handleNext }) => {
   return (
     <div
       css={css`

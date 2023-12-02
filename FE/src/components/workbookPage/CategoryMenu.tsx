@@ -6,11 +6,11 @@ import useCategoryQuery from '@hooks/apis/queries/useCategoryQuery';
 import useBreakpoint from '@hooks/useBreakPoint';
 import { SyntheticEvent } from 'react';
 
-type CategoryMenuType = {
+type CategoryMenuProps = {
   handleTabChange: (_: SyntheticEvent, v: string) => void;
 };
 
-const CategoryMenu: React.FC<CategoryMenuType> = ({ handleTabChange }) => {
+const CategoryMenu: React.FC<CategoryMenuProps> = ({ handleTabChange }) => {
   const { data: categories } = useCategoryQuery();
 
   const isDeviceBreakpoint = useBreakpoint();

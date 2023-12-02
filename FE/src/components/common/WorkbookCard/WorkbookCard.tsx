@@ -4,13 +4,13 @@ import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
 import { HTMLElementTypes } from '@/types/utils';
 
-export type WorkbookCardType = Omit<
+export type WorkbookCardProps = Omit<
   WorkbookEntity,
   'categoryId' | 'workbookId'
 > &
   HTMLElementTypes<HTMLDivElement>;
 
-const WorkbookCard: React.FC<WorkbookCardType> = ({
+const WorkbookCard: React.FC<WorkbookCardProps> = ({
   nickname,
   profileImg,
   copyCount,
