@@ -1,27 +1,35 @@
-name: BE DEV CD
+name: BE CD
 
 on:
   push:
     branches:
       - dev
 
-defaults:
-  run:
-    working-directory: ./BE
-
 jobs:
-  build:
-    runs-on: self-hosted
+  build-and-push:
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Stop Server
-        run: sudo docker stop ${{secrets.BE_DOCKER_CONTAINER}}
-      - name: Delete Old Docker Container
-        run: sudo docker rm ${{secrets.BE_DOCKER_CONTAINER}}
-      - name: Pull Docker Image
-        run: sudo docker pull ${{secrets.BE_DOCKER_USERNAME}}/${{secrets.BE_DOCKER_REPO}}:${{secrets.DOCKER_DEV_TAG}}
-      - name: Build and Push Docker Image
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        run: echo "${{secrets.BE_DOCKER_PASSWORD}}" | docker login -u "${{secrets.BE_DOCKER_USERNAME}}" --password-stdin
+
+      - name: Build and push Docker image
         run: |
           sudo docker build -t ${{secrets.BE_DOCKER_USERNAME}}/${{secrets.BE_DOCKER_REPO}}:${{secrets.DOCKER_DEV_TAG}} --platform linux/amd64 .
           sudo docker push ${{secrets.BE_DOCKER_USERNAME}}/${{secrets.BE_DOCKER_REPO}}:${{secrets.DOCKER_DEV_TAG}}
+
+  deploy-with-runner:
+    needs: pull-and-deploy
+    name: Deploy with runner
+    runs-on: self-hosted
+
+    steps:
+      - name: Pull Docker image
+        run: sudo docker pull ${{secrets.BE_DOCKER_USERNAME}}/${{secrets.BE_DOCKER_REPO}}:${{secrets.DOCKER_DEV_TAG}}
+      - name: Delete Old docker container
+        run: sudo docker rm -f server || true
       - name: Run Docker Container
-        run: docker run --oom-kill-disable --restart on-failure -d -p 80:8080 -e TZ=Asia/Seoul --name ${{secrets.BE_DOCKER_CONTAINER}} ${{secrets.BE_DOCKER_USERNAME}}/${{secrets.BE_DOCKER_REPO}}:${{secrets.DOCKER_DEV_TAG}}
+        run: sudo docker run --oom-kill-disable --restart on-failure -d -p 80:8080 --name server --network ndd-network ${{secrets.BE_DOCKER_USERNAME}}/${{secrets.BE_DOCKER_REPO}}:${{secrets.DOCKER_DEV_TAG}}
