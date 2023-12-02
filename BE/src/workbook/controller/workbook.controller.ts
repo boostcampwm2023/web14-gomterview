@@ -68,7 +68,7 @@ export class WorkbookController {
       WorkbookResponse,
     ]),
   )
-  async findWorkbooks(@Query('categoryId') categoryId: number) {
+  async findWorkbooks(@Query('category') categoryId: number) {
     return await this.workbookService.findWorkbooks(categoryId);
   }
 
