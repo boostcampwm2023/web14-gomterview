@@ -21,13 +21,12 @@ import {
   VideoOfWithdrawnMemberException,
 } from '../exception/video.exception';
 import {
-  videoOfWithdrawnMemberFixture,
-  createPreSignedUrlRequestFixture,
   createVideoRequestFixture,
   privateVideoFixture,
   videoFixture,
   videoListFixture,
   videoOfOtherFixture,
+  videoOfWithdrawnMemberFixture,
 } from '../fixture/video.fixture';
 import { VideoDetailResponse } from '../dto/videoDetailResponse';
 import { VideoHashResponse } from '../dto/videoHashResponse';
@@ -118,8 +117,6 @@ describe('VideoController 단위 테스트', () => {
   });
 
   describe('getPreSignedUrl', () => {
-    const createPreSignedUrlRequest = createPreSignedUrlRequestFixture;
-
     it('Pre-Signed URL 발급 완료 시 PreSignedUrlResponse 객체 형태로 응답된다.', async () => {
       //given
 
@@ -129,10 +126,7 @@ describe('VideoController 단위 테스트', () => {
       );
 
       //then
-      const result = await controller.getPreSignedUrl(
-        mockReqWithMemberFixture,
-        createPreSignedUrlRequest,
-      );
+      const result = await controller.getPreSignedUrl(mockReqWithMemberFixture);
 
       expect(result).toBeInstanceOf(PreSignedUrlResponse);
       expect(result.preSignedUrl).toBe('fakePreSignedUrl');
@@ -147,10 +141,7 @@ describe('VideoController 단위 테스트', () => {
 
       // then
       expect(
-        controller.getPreSignedUrl(
-          mockReqWithMemberFixture,
-          createPreSignedUrlRequest,
-        ),
+        controller.getPreSignedUrl(mockReqWithMemberFixture),
       ).rejects.toThrow(IDriveException);
     });
 
@@ -164,9 +155,9 @@ describe('VideoController 단위 테스트', () => {
       );
 
       // then
-      expect(
-        controller.getPreSignedUrl(member, createPreSignedUrlRequest),
-      ).rejects.toThrow(ManipulatedTokenNotFiltered);
+      expect(controller.getPreSignedUrl(member)).rejects.toThrow(
+        ManipulatedTokenNotFiltered,
+      );
     });
   });
 
@@ -678,7 +669,6 @@ describe('VideoController 통합 테스트', () => {
       await agent
         .post('/api/video/pre-signed')
         .set('Cookie', [`accessToken=${token}`])
-        .send(createPreSignedUrlRequestFixture)
         .expect(201);
     });
 
@@ -687,10 +677,7 @@ describe('VideoController 통합 테스트', () => {
 
       // when & then
       const agent = request.agent(app.getHttpServer());
-      await agent
-        .post('/api/video/pre-signed')
-        .send(createPreSignedUrlRequestFixture)
-        .expect(401);
+      await agent.post('/api/video/pre-signed').expect(401);
     });
   });
 

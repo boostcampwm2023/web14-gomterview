@@ -8,13 +8,12 @@ import {
 import { QuestionRepository } from 'src/question/repository/question.repository';
 import { MemberRepository } from 'src/member/repository/member.repository';
 import {
-  videoOfWithdrawnMemberFixture,
-  createPreSignedUrlRequestFixture,
   createVideoRequestFixture,
   privateVideoFixture,
   videoFixture,
   videoListFixture,
   videoOfOtherFixture,
+  videoOfWithdrawnMemberFixture,
 } from '../fixture/video.fixture';
 import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
@@ -54,6 +53,7 @@ import { categoryFixtureWithId } from 'src/category/fixture/category.fixture';
 import { workbookFixtureWithId } from 'src/workbook/fixture/workbook.fixture';
 import { questionFixture } from 'src/question/fixture/question.fixture';
 import { QuestionModule } from 'src/question/question.module';
+
 jest.mock('src/util/redis.util');
 
 describe('VideoService 단위 테스트', () => {
@@ -130,8 +130,6 @@ describe('VideoService 단위 테스트', () => {
   });
 
   describe('getPreSignedUrl', () => {
-    const request = createPreSignedUrlRequestFixture;
-
     it('preSigned URL 얻기 성공 시 PreSignedUrlResponse 형식으로 반환된다.', async () => {
       // given
       const member = memberFixture;
@@ -141,12 +139,10 @@ describe('VideoService 단위 테스트', () => {
         .mockResolvedValue(content);
 
       // when
-      const response = await videoService.getPreSignedUrl(member, request);
+      const response = await videoService.getPreSignedUrl(member);
 
       // then
       expect(response).toBeInstanceOf(PreSignedUrlResponse);
-      expect(response.key.includes(member.nickname)).toBeTruthy(); // 파일명엔 반드시 회원의 닉네임이 포함되어 있어야 함
-      expect(response.key.includes(content)).toBeTruthy(); // 파일명엔 반드시 문제의 제목이 포함되어 있어야 함
       expect(response.key.endsWith('.webm')).toBeTruthy(); // 파일 확장자는 반드시 webm이어야 함
       expect(response.preSignedUrl.startsWith('https://videos')).toBeTruthy(); // 실제 Pre-Signed Url 구조를 따라가는지 확인하기 위함
       (videoService as any).getQuestionContent.mockRestore();
@@ -159,7 +155,7 @@ describe('VideoService 단위 테스트', () => {
       // when
 
       // then
-      expect(videoService.getPreSignedUrl(member, request)).rejects.toThrow(
+      expect(videoService.getPreSignedUrl(member)).rejects.toThrow(
         ManipulatedTokenNotFiltered,
       );
     });
@@ -174,9 +170,9 @@ describe('VideoService 단위 테스트', () => {
       getSignedUrlMock.mockRejectedValue(new IDriveException());
 
       // then
-      await expect(
-        videoService.getPreSignedUrl(member, request),
-      ).rejects.toThrow(IDriveException);
+      await expect(videoService.getPreSignedUrl(member)).rejects.toThrow(
+        IDriveException,
+      );
 
       getSignedUrlMock.mockRestore();
     });
@@ -699,10 +695,7 @@ describe('VideoService 통합 테스트', () => {
       const member = memberFixture;
 
       //when
-      const result = await videoService.getPreSignedUrl(
-        member,
-        createPreSignedUrlRequestFixture,
-      );
+      const result = await videoService.getPreSignedUrl(member);
 
       //then
       expect(result).toBeInstanceOf(PreSignedUrlResponse);
@@ -715,12 +708,9 @@ describe('VideoService 통합 테스트', () => {
       //when
 
       //then
-      expect(
-        videoService.getPreSignedUrl(
-          memberFixture,
-          createPreSignedUrlRequestFixture,
-        ),
-      ).rejects.toThrow(ManipulatedTokenNotFiltered);
+      expect(videoService.getPreSignedUrl(memberFixture)).rejects.toThrow(
+        ManipulatedTokenNotFiltered,
+      );
     });
   });
 

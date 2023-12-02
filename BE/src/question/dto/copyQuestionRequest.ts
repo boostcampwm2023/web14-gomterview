@@ -12,7 +12,6 @@ export class CopyQuestionRequest {
     createPropertyOption([1, 2, 3, 4, 5], '복사할 질문들의 id', Number),
   )
   @IsNotEmpty()
-  @IsNumber()
   questionIds: number[];
 
   constructor(workbookId: number, questionIds: number[]) {
