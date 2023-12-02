@@ -19,6 +19,12 @@ jobs:
       - name: Build and push Docker image
         run: |
           cd BE
+          touch ./.env
+          echo "${{ secrets.BE_ENV }}" > ./.env
+          cd src/config
+          touch ./cors.secure.ts
+          echo "${{ secrets.BE_CONFIG }}" > ./cors.secure.ts
+          cd ../../
           sudo docker build -t ${{secrets.BE_DOCKER_USERNAME}}/${{secrets.BE_DOCKER_REPO}}:${{secrets.DOCKER_DEV_TAG}} --platform linux/amd64 .
           sudo docker push ${{secrets.BE_DOCKER_USERNAME}}/${{secrets.BE_DOCKER_REPO}}:${{secrets.DOCKER_DEV_TAG}}
 
