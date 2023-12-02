@@ -11,3 +11,8 @@ export const QuestionAnswerSelectionModal = atom<{
     isOpen: false,
   },
 });
+
+export const modalState = atom<{ id: string; element: React.FC }[]>({
+  key: 'modalState',
+  default: [],
+});
