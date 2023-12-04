@@ -16,7 +16,7 @@ import StepPage from '@foundation/StepPages';
 import { InterviewSettingPageLayout } from '@components/interviewSettingPage';
 import ServiceTermsPage from './ServiceTermsPage';
 
-const FIRST_PAGE_INDEX = 1;
+const FIRST_PAGE_INDEX = 0;
 const PREV_PAGE_INDEX = -1;
 
 const InterviewSettingPage: React.FC = () => {
