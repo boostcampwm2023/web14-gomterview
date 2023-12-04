@@ -1,10 +1,11 @@
 import { css } from '@emotion/react';
-import { Button, Icon, Typography } from '@foundation/index';
+import { Button, Icon, Menu, MenuItem, Typography } from '@foundation/index';
 import { theme } from '@styles/theme';
 import { ExcludeArray } from '@/types/utils';
 import { WorkbookTitleListResDto } from '@/types/workbook';
 import InterviewSetGeneratorModal from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetGeneratorModal';
 import { useState } from 'react';
+import useWorkbookDeleteMutation from '@hooks/apis/mutations/useWorkbookDeleteMutation';
 
 type QuestionTabPanelHeaderProps = {
   workbook: ExcludeArray<WorkbookTitleListResDto>;
@@ -18,6 +19,12 @@ const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
     isInterviewSetGeneratorModalOpen,
     setIsInterviewSetGeneratorModalOpen,
   ] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { mutate: deleteWorkbook } = useWorkbookDeleteMutation();
+
+  const handleWorkbookDeleteClick = () => {
+    deleteWorkbook(workbook.workbookId);
+  };
 
   return (
     <>
@@ -63,20 +70,49 @@ const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
               <Icon id="edit-outline" width="20" height="20" />
               면접 세트 수정
             </Button>
-            <Button
-              variants="secondary"
-              size="sm"
+            <div
               css={css`
-                display: flex;
-                align-items: center;
-                padding: 0.5rem;
-                border: none;
+                position: relative;
               `}
             >
-              <Icon id="ellipsis-vertical" />
-            </Button>
+              <Button
+                onClick={() => setIsMenuOpen((prev) => !prev)}
+                variants="secondary"
+                size="sm"
+                css={css`
+                  display: flex;
+                  align-items: center;
+                  padding: 0.5rem;
+                  border: none;
+                `}
+              >
+                <Icon id="ellipsis-vertical" />
+              </Button>
+              <Menu open={isMenuOpen}>
+                <MenuItem>
+                  <Button
+                    variants="secondary"
+                    css={css`
+                      border: none;
+                    `}
+                  >
+                    <Typography noWrap>면접 질문 수정</Typography>
+                  </Button>
+                </MenuItem>
+                <MenuItem>
+                  <Button
+                    onClick={handleWorkbookDeleteClick}
+                    variants="secondary"
+                    css={css`
+                      border: none;
+                    `}
+                  >
+                    <Typography noWrap>면접 세트 삭제</Typography>
+                  </Button>
+                </MenuItem>
+              </Menu>
+            </div>
           </div>
-
           <Typography
             component="p"
             variant="body3"
