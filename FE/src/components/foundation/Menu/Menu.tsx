@@ -24,6 +24,7 @@ const Menu: React.FC<MenuProps> = ({ open, closeMenu, children }) => {
         `}
       />
       <div
+        onClick={closeMenu}
         css={css`
           position: absolute;
           top: 100%;
