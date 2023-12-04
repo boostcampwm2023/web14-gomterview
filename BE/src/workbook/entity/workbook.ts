@@ -50,6 +50,7 @@ export class Workbook extends DefaultEntity {
     content: string,
     category: Category,
     member: Member,
+    isPublic: boolean,
   ): Workbook {
     return new Workbook(
       null,
@@ -59,7 +60,7 @@ export class Workbook extends DefaultEntity {
       category,
       0,
       member,
-      true,
+      isPublic,
     );
   }
 

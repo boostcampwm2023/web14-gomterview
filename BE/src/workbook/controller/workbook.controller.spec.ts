@@ -358,6 +358,7 @@ describe('WorkbookController 통합테스트', () => {
           title,
           'test content',
           categoryFixtureWithId.id,
+          true,
         );
         await agent
           .post('/api/workbook')
@@ -379,6 +380,7 @@ describe('WorkbookController 통합테스트', () => {
         'test title',
         'test content',
         12345,
+        true,
       );
       await agent
         .post('/api/workbook')
@@ -399,6 +401,7 @@ describe('WorkbookController 통합테스트', () => {
             `content_${category.name}`,
             category,
             member,
+            true,
           ),
         );
       }
@@ -448,6 +451,7 @@ describe('WorkbookController 통합테스트', () => {
             `content_${category.name}`,
             category,
             member,
+            true,
           ),
         );
       }
@@ -459,6 +463,7 @@ describe('WorkbookController 통합테스트', () => {
           `other${category.name}`,
           category,
           other,
+          true,
         ),
       );
     });
@@ -492,6 +497,7 @@ describe('WorkbookController 통합테스트', () => {
           `content_${category.name}`,
           category,
           member,
+          true,
         );
         for (
           let index = 0;
@@ -511,6 +517,7 @@ describe('WorkbookController 통합테스트', () => {
         `other${category.name}`,
         category,
         other,
+        true,
       );
       for (let index = 0; index < 10; index++) {
         workbook.increaseCopyCount();
@@ -545,6 +552,7 @@ describe('WorkbookController 통합테스트', () => {
         `other${category.name}`,
         category,
         other,
+        true,
       );
       await workbookRepository.save(workbook);
 

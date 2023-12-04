@@ -368,7 +368,7 @@ describe('QuestionService 통합 테스트', () => {
     }
     const other = await memberRepository.save(otherMemberFixture);
     const othersWorkbook = await workbookRepository.save(
-      Workbook.of('test', 'test', categoryFixtureWithId, other),
+      Workbook.of('test', 'test', categoryFixtureWithId, other, true),
     );
     //when
     const copyRequest = new CopyQuestionRequest(othersWorkbook.id, [1, 2, 3]);

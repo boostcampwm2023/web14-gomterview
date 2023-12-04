@@ -375,6 +375,7 @@ describe('WorkbookService 통합테스트', () => {
         'test title',
         'test content',
         category.id,
+        true,
       );
       const workbook = await workbookService.createWorkbook(
         createWorkbookRequest,
@@ -401,6 +402,7 @@ describe('WorkbookService 통합테스트', () => {
               `${each.name}_${index}`,
               category,
               member,
+              true,
             ),
           );
         }
@@ -428,6 +430,7 @@ describe('WorkbookService 통합테스트', () => {
               `${each.name}_${index}`,
               category,
               member,
+              true,
             ),
           );
         }
@@ -453,6 +456,7 @@ describe('WorkbookService 통합테스트', () => {
               `${each.name}_${index}`,
               category,
               member,
+              true,
             ),
           );
         }
@@ -480,6 +484,7 @@ describe('WorkbookService 통합테스트', () => {
               `${each.name}_${index}`,
               category,
               member,
+              true,
             ),
           );
         }
@@ -506,6 +511,7 @@ describe('WorkbookService 통합테스트', () => {
               `${each.name}_${index}`,
               category,
               member,
+              true,
             ),
           );
         }
@@ -532,6 +538,7 @@ describe('WorkbookService 통합테스트', () => {
         'test title',
         'test content',
         category.id,
+        true,
       );
       const workbook = await workbookService.createWorkbook(
         createWorkbookRequest,

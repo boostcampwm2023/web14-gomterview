@@ -35,6 +35,7 @@ export class WorkbookService {
         createWorkbookRequest.content,
         category,
         member,
+        createWorkbookRequest.isPublic,
       ),
     );
   }
