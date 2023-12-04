@@ -10,7 +10,7 @@ type WorkbookListProps = {
 
 const WorkbookList: React.FC<WorkbookListProps> = ({ selectedTabIndex }) => {
   const isDeviceBreakpoint = useBreakpoint();
-  const { data: workbookList } = useWorkbookListQuery(Number(selectedTabIndex));
+  const { data: workbookList } = useWorkbookListQuery(selectedTabIndex);
 
   if (!workbookList) {
     return;

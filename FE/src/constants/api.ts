@@ -25,5 +25,5 @@ export const API = {
   WORKBOOK: '/workbook',
   WORKBOOK_TITLE: '/workbook/title',
   WORKBOOK_ID: (id?: Id) => `/workbook/${id ?? ':id'}`,
-  WORKBOOK_CATEGORY_ID: (id?: Id) => `/workbook?category=${id ?? ':id'}`,
+  WORKBOOK_CATEGORY_ID: (id?: string) => `/workbook?category=${id ?? ':id'}`,
 } as const;
