@@ -11,11 +11,13 @@ type QuestionTabPanelHeaderProps = {
   workbook: ExcludeArray<WorkbookTitleListResDto>;
   questionLength: number;
   onWorkbookDelete: () => void;
+  onEditButtonClick: () => void;
 };
 const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
   workbook,
   questionLength,
   onWorkbookDelete,
+  onEditButtonClick,
 }) => {
   const [
     isInterviewSetGeneratorModalOpen,
@@ -94,6 +96,7 @@ const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
               <Menu open={isMenuOpen} closeMenu={() => setIsMenuOpen(false)}>
                 <MenuItem>
                   <Button
+                    onClick={onEditButtonClick}
                     variants="secondary"
                     css={css`
                       border: none;

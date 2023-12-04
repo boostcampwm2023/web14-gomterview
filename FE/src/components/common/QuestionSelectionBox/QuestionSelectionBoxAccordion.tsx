@@ -5,11 +5,12 @@ import useSelectQuestions from '@hooks/atoms/useSelectQuestions';
 type QuestionSelectionBoxAccordionProps = {
   question: Question;
   workbookId: number;
+  isSelectable?: boolean;
 };
 
 const QuestionSelectionBoxAccordion: React.FC<
   QuestionSelectionBoxAccordionProps
-> = ({ question, workbookId }) => {
+> = ({ question, workbookId, isSelectable = true }) => {
   const { isSelected, toggleSelected } = useSelectQuestions({
     question: question,
     workbookId: workbookId,
@@ -19,7 +20,7 @@ const QuestionSelectionBoxAccordion: React.FC<
       question={question}
       workbookId={workbookId}
       isSelected={isSelected}
-      toggleSelected={toggleSelected}
+      toggleSelected={isSelectable ? toggleSelected : undefined}
     />
   );
 };

@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import useQuestionWorkbookQuery from '@hooks/apis/queries/useQuestionWorkbookQuery';
-import { Typography, Toggle, Tabs } from '@foundation/index';
+import { Typography, Toggle, Tabs, CheckBox } from '@foundation/index';
 import { WorkbookTitleListResDto } from '@/types/workbook';
 import { ExcludeArray } from '@/types/utils';
 import QuestionSelectionBoxAccordion from './QuestionSelectionBoxAccordion';
@@ -32,6 +32,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
   );
 
   const [onlySelectedOption, setOnlySelectedOption] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const toggleShowSelectionOption = () => {
     setOnlySelectedOption((prev) => !prev);
@@ -64,6 +65,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
           workbook={workbook}
           questionLength={questionData.length}
           onWorkbookDelete={onWorkbookDelete}
+          onEditButtonClick={() => setIsEditMode((prev) => !prev)}
         />
         {userInfo && (
           <div
@@ -76,6 +78,9 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
         )}
         <div
           css={css`
+            display: flex;
+            flex-direction: column;
+            row-gap: 1.2rem;
             height: 100%;
             overflow-y: auto;
             flex: 1;
@@ -83,11 +88,24 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
           `}
         >
           {questionData.map((question) => (
-            <QuestionSelectionBoxAccordion
+            <div
               key={question.questionId}
-              question={question}
-              workbookId={workbook.workbookId}
-            />
+              css={css`
+                display: flex;
+                align-items: center;
+                column-gap: 0.5rem;
+              `}
+            >
+              {isEditMode && (
+                <CheckBox id={`question-${question.questionId}`} />
+              )}
+              <QuestionSelectionBoxAccordion
+                key={question.questionId}
+                question={question}
+                workbookId={workbook.workbookId}
+                isSelectable={!isEditMode}
+              />
+            </div>
           ))}
         </div>
         <div
