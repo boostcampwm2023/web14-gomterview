@@ -14,3 +14,5 @@ export { default as Typography } from './Typography/Typography';
 export { default as Toggle } from './Toggle/Toggle';
 export { default as CheckBox } from './CheckBox/CheckBox';
 export { default as Input } from './Input/Input';
+export { default as Menu } from './Menu/Menu';
+export { default as MenuItem } from './Menu/MenuItem';
