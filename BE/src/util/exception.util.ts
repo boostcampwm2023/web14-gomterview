@@ -2,6 +2,7 @@ import { HttpException } from '@nestjs/common';
 import {
   BAD_REQUEST,
   FORBIDDEN,
+  GONE,
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
   UNAUTHORIZED,
@@ -37,6 +38,12 @@ class HttpNotFoundException extends HttpCustomException {
   }
 }
 
+class HttpGoneException extends HttpCustomException {
+  constructor(message: string, errorCode: string) {
+    super(message, errorCode, GONE);
+  }
+}
+
 class HttpInternalServerError extends HttpCustomException {
   constructor(message: string, errorCode: string) {
     super(message, errorCode, INTERNAL_SERVER_ERROR);
@@ -48,5 +55,6 @@ export {
   HttpUnauthorizedException,
   HttpForbiddenException,
   HttpNotFoundException,
+  HttpGoneException,
   HttpInternalServerError,
 };
