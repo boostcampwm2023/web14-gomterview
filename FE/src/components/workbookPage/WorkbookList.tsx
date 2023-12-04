@@ -5,12 +5,12 @@ import Workbook from './Workbook';
 import GridWorkbookList from './GridWorkbookList';
 
 type WorkbookListProps = {
-  selectedTabIndex: string;
+  selectedCategoryId: string;
 };
 
-const WorkbookList: React.FC<WorkbookListProps> = ({ selectedTabIndex }) => {
+const WorkbookList: React.FC<WorkbookListProps> = ({ selectedCategoryId }) => {
   const isDeviceBreakpoint = useBreakpoint();
-  const { data: workbookList } = useWorkbookListQuery(selectedTabIndex);
+  const { data: workbookList } = useWorkbookListQuery(selectedCategoryId);
 
   if (!workbookList) {
     return;
