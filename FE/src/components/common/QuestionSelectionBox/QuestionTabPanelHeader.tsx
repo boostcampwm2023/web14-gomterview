@@ -10,10 +10,12 @@ import useWorkbookDeleteMutation from '@hooks/apis/mutations/useWorkbookDeleteMu
 type QuestionTabPanelHeaderProps = {
   workbook: ExcludeArray<WorkbookTitleListResDto>;
   questionLength: number;
+  onWorkbookDelete: () => void;
 };
 const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
   workbook,
   questionLength,
+  onWorkbookDelete,
 }) => {
   const [
     isInterviewSetGeneratorModalOpen,
@@ -24,6 +26,7 @@ const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
 
   const handleWorkbookDeleteClick = () => {
     deleteWorkbook(workbook.workbookId);
+    onWorkbookDelete();
   };
 
   return (

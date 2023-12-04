@@ -103,10 +103,11 @@ const QuestionSelectionBox = () => {
           >
             {workbookListData.map((workbook, index) => (
               <TabPanelItem
+                key={workbook.workbookId}
                 selectedTabIndex={selectedTabIndex}
                 tabIndex={index.toString()}
                 workbook={workbook}
-                key={workbook.workbookId}
+                onWorkbookDelete={() => setSelectedTabIndex('0')}
               />
             ))}
           </div>

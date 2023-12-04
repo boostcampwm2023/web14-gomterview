@@ -16,12 +16,14 @@ type TabPanelItemProps = {
   selectedTabIndex: string;
   tabIndex: string;
   workbook: ExcludeArray<WorkbookTitleListResDto>;
+  onWorkbookDelete: () => void;
 };
 
 const TabPanelItem: React.FC<TabPanelItemProps> = ({
   selectedTabIndex,
   workbook,
   tabIndex,
+  onWorkbookDelete,
 }) => {
   const userInfo = useUserInfo();
   const settingPage = useRecoilValue(questionSetting);
@@ -61,6 +63,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
         <QuestionTabPanelHeader
           workbook={workbook}
           questionLength={questionData.length}
+          onWorkbookDelete={onWorkbookDelete}
         />
         {userInfo && (
           <div
