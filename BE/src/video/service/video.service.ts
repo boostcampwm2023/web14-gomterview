@@ -2,10 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Member } from 'src/member/entity/member';
 import { Video } from '../entity/video';
 import { VideoRepository } from '../repository/video.repository';
-import {
-  createObjectParamsForPreSign,
-  getIdriveS3Client,
-} from 'src/util/idrive.util';
+import { getIdriveS3Client, getPutCommandObject } from 'src/util/idrive.util';
 import { v4 as uuidv4 } from 'uuid';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { QuestionRepository } from 'src/question/repository/question.repository';
@@ -31,6 +28,7 @@ import {
 } from 'src/util/redis.util';
 import { SingleVideoResponse } from '../dto/singleVideoResponse';
 import { MemberNotFoundException } from 'src/member/exception/member.exception';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 @Injectable()
 export class VideoService {
@@ -50,13 +48,12 @@ export class VideoService {
   async getPreSignedUrl(member: Member) {
     validateManipulatedToken(member);
     const key = `${uuidv4()}.webm`;
-
     const s3 = getIdriveS3Client();
+    const command = getPutCommandObject(key);
+    const expiresIn = 10;
+
     try {
-      const preSignedUrl = await s3.getSignedUrlPromise(
-        'putObject',
-        createObjectParamsForPreSign('videos', key),
-      );
+      const preSignedUrl = await getSignedUrl(s3, command, { expiresIn });
       return new PreSignedUrlResponse(preSignedUrl, key);
     } catch (error) {
       throw new IDriveException();

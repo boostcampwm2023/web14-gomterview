@@ -17,7 +17,6 @@ import {
 } from '../fixture/video.fixture';
 import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
-import { S3 } from 'aws-sdk';
 import {
   IDriveException,
   Md5HashException,
@@ -53,8 +52,9 @@ import { categoryFixtureWithId } from 'src/category/fixture/category.fixture';
 import { workbookFixtureWithId } from 'src/workbook/fixture/workbook.fixture';
 import { questionFixture } from 'src/question/fixture/question.fixture';
 import { QuestionModule } from 'src/question/question.module';
-
+import * as S3RequestPresigner from '@aws-sdk/s3-request-presigner';
 jest.mock('src/util/redis.util');
+jest.mock('@aws-sdk/s3-request-presigner');
 
 describe('VideoService 단위 테스트', () => {
   let videoService: VideoService;
@@ -133,19 +133,23 @@ describe('VideoService 단위 테스트', () => {
     it('preSigned URL 얻기 성공 시 PreSignedUrlResponse 형식으로 반환된다.', async () => {
       // given
       const member = memberFixture;
-      const content = 'mockContent';
-      (videoService as any).getQuestionContent = jest
-        .fn()
-        .mockResolvedValue(content);
+      const url = 'fakeUrl';
 
       // when
+      const getSignedUrlSpy = jest.spyOn(
+        S3RequestPresigner as any,
+        'getSignedUrl',
+      );
+      getSignedUrlSpy.mockResolvedValue(url);
       const response = await videoService.getPreSignedUrl(member);
 
       // then
       expect(response).toBeInstanceOf(PreSignedUrlResponse);
       expect(response.key.endsWith('.webm')).toBeTruthy(); // 파일 확장자는 반드시 webm이어야 함
-      expect(response.preSignedUrl.startsWith('https://videos')).toBeTruthy(); // 실제 Pre-Signed Url 구조를 따라가는지 확인하기 위함
-      (videoService as any).getQuestionContent.mockRestore();
+      expect(response.preSignedUrl).toBe(url);
+
+      // restore
+      getSignedUrlSpy.mockRestore();
     });
 
     it('prSigned URL 얻기 성공 시 member가 없으면 ManipulatedTokenNotFiltered을 반환한다.', () => {
@@ -165,16 +169,19 @@ describe('VideoService 단위 테스트', () => {
       const member = memberFixture;
 
       // when
-      const getSignedUrlMock = jest.fn();
-      (S3.prototype.getSignedUrlPromise as jest.Mock) = getSignedUrlMock;
-      getSignedUrlMock.mockRejectedValue(new IDriveException());
+      const getSignedUrlSpy = jest.spyOn(
+        S3RequestPresigner as any,
+        'getSignedUrl',
+      );
+      getSignedUrlSpy.mockRejectedValue(new IDriveException());
 
       // then
       await expect(videoService.getPreSignedUrl(member)).rejects.toThrow(
         IDriveException,
       );
 
-      getSignedUrlMock.mockRestore();
+      // restore
+      getSignedUrlSpy.mockRestore();
     });
   });
 
@@ -259,8 +266,8 @@ describe('VideoService 단위 테스트', () => {
       const video = videoFixture;
 
       // when
-      const createHashMock = jest.spyOn(crypto, 'createHash');
-      createHashMock.mockImplementationOnce(() => {
+      const createHashSpy = jest.spyOn(crypto, 'createHash');
+      createHashSpy.mockImplementationOnce(() => {
         throw new Md5HashException();
       });
       mockVideoRepository.findById.mockResolvedValue(video);
@@ -508,8 +515,8 @@ describe('VideoService 단위 테스트', () => {
       const video = videoFixture;
 
       // when
-      const createHashMock = jest.spyOn(crypto, 'createHash');
-      createHashMock.mockImplementationOnce(() => {
+      const createHashSpy = jest.spyOn(crypto, 'createHash');
+      createHashSpy.mockImplementationOnce(() => {
         throw new Md5HashException();
       });
       mockVideoRepository.findById.mockResolvedValue(video);

@@ -1,20 +1,14 @@
-import * as AWS from 'aws-sdk';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { IDRIVE_CONFIG } from 'src/config/idrive.config';
 
-let s3Client: AWS.S3; // 싱글톤으로 유지할 S3 클라이언트
+let s3Client: S3Client; // 싱글톤으로 유지할 S3 Client 인스턴스
 
-export const getIdriveS3Client = (): AWS.S3 => {
+export const getIdriveS3Client = (): S3Client => {
   if (!s3Client) {
-    s3Client = new AWS.S3(IDRIVE_CONFIG);
+    s3Client = new S3Client(IDRIVE_CONFIG);
   }
   return s3Client;
 };
 
-export const createObjectParamsForPreSign = (
-  bucketName: string,
-  key: string,
-) => ({
-  Bucket: bucketName,
-  Key: key,
-  Expires: 100, // 100초 동안만 url 유지
-});
+export const getPutCommandObject = (key: string): PutObjectCommand =>
+  new PutObjectCommand({ Bucket: 'videos', Key: key });
