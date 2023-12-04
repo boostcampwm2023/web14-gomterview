@@ -88,7 +88,7 @@ const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
               >
                 <Icon id="ellipsis-vertical" />
               </Button>
-              <Menu open={isMenuOpen}>
+              <Menu open={isMenuOpen} closeMenu={() => setIsMenuOpen(false)}>
                 <MenuItem>
                   <Button
                     variants="secondary"

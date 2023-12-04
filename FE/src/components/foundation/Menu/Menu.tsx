@@ -1,34 +1,43 @@
+import React from 'react';
 import { css } from '@emotion/react';
-import React, { useEffect } from 'react';
 import { theme } from '@styles/theme';
 
 type MenuProps = {
   open: boolean;
-  onClose?: () => void;
+  closeMenu: () => void;
   children: React.ReactNode;
 };
-const Menu: React.FC<MenuProps> = ({ open, onClose, children }) => {
-  useEffect(() => {
-    onClose?.();
-  }, [onClose, open]);
-
+const Menu: React.FC<MenuProps> = ({ open, closeMenu, children }) => {
   if (!open) return null;
 
   return (
-    <div
-      css={css`
-        position: absolute;
-        top: 100%;
-        display: flex;
-        flex-direction: column;
-        padding: 0.25rem 0;
-        background-color: ${theme.colors.surface.default};
-        border-radius: 0.5rem;
-        z-index: 99;
-      `}
-    >
-      {children}
-    </div>
+    <>
+      <div
+        onClick={closeMenu}
+        css={css`
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100svh;
+          z-index: 99;
+        `}
+      />
+      <div
+        css={css`
+          position: absolute;
+          top: 100%;
+          display: flex;
+          flex-direction: column;
+          padding: 0.25rem 0;
+          background-color: ${theme.colors.surface.default};
+          border-radius: 0.5rem;
+          z-index: 999;
+        `}
+      >
+        {children}
+      </div>
+    </>
   );
 };
 
