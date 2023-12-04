@@ -667,7 +667,7 @@ describe('WorkbookService 통합테스트', () => {
       ).rejects.toThrow(new ManipulatedTokenNotFiltered());
     });
 
-    it('다른 회원이 문제집 수정을 요청하면 WorkbookForbidden예외처리한다.', async () => {
+    it('다른 회원이 문제집 삭제를 요청하면 WorkbookForbidden예외처리한다.', async () => {
       //given
       await memberRepository.save(memberFixture);
       await categoryRepository.save(categoryFixtureWithId);

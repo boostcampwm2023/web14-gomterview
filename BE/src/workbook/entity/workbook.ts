@@ -23,7 +23,7 @@ export class Workbook extends DefaultEntity {
   @JoinColumn({ name: 'member' })
   member: Member;
 
-  @Column()
+  @Column({ default: true })
   isPublic: boolean;
 
   constructor(

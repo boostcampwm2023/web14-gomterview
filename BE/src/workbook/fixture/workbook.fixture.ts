@@ -33,5 +33,5 @@ export const updateWorkbookRequestFixture = new UpdateWorkbookRequest(
   'newT',
   'newC',
   categoryFixtureWithId.id,
-  true,
+  false,
 );

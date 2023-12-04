@@ -60,6 +60,8 @@ export class WorkbookController {
   }
 
   @Get()
+  @OptionalGuard()
+  @UseGuards(TokenSoftGuard)
   @ApiOperation({
     summary: '카테고리별(null이면 전체) 문제집 조회',
   })
@@ -123,9 +125,9 @@ export class WorkbookController {
   @UseGuards(AuthGuard('jwt'))
   @ApiCookieAuth()
   @ApiOperation({
-    summary: '문제집 수정',
+    summary: '문제집 삭제',
   })
-  @ApiResponse(createApiResponseOption(204, '문제집 수정 완료', null))
+  @ApiResponse(createApiResponseOption(204, '문제집 삭제 완료', null))
   async deleteAnswer(
     @Req() req: Request,
     @Param('workbookId') workbookId: number,
