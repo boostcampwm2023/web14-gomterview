@@ -37,3 +37,10 @@ export const postQuestionCopy = async (body: QuestionCopyReqDto) => {
     data: body,
   });
 };
+
+export const deleteQuestionById = async (questionId: number) => {
+  return await getAPIResponseData({
+    method: 'delete',
+    url: API.QUESTION_ID(questionId),
+  });
+};
