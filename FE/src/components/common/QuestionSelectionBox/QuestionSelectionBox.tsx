@@ -24,10 +24,6 @@ const QuestionSelectionBox = () => {
     setIsInterviewSetGeneratorModalOpen,
   ] = useState(false);
 
-  const handleInterviewSetGeneratorModal = (workbookId?: number) => {
-    setIsInterviewSetGeneratorModalOpen(true);
-  };
-
   if (!workbookListData) return;
   return (
     <>
@@ -79,7 +75,7 @@ const QuestionSelectionBox = () => {
             <Button
               size="md"
               variants="secondary"
-              onClick={() => handleInterviewSetGeneratorModal()}
+              onClick={() => setIsInterviewSetGeneratorModalOpen(true)}
               css={css`
                 display: flex;
                 align-items: center;
