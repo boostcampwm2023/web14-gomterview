@@ -18,10 +18,7 @@ import {
   memberFixture,
   otherMemberFixture,
 } from '../../member/fixture/member.fixture';
-import {
-  NeedToFindByWorkbookIdException,
-  QuestionNotFoundException,
-} from '../exception/question.exception';
+import { QuestionNotFoundException } from '../exception/question.exception';
 import { ManipulatedTokenNotFiltered } from '../../token/exception/token.exception';
 import { Answer } from '../../answer/entity/answer';
 import { AnswerModule } from '../../answer/answer.module';
@@ -33,6 +30,7 @@ import {
 import { WorkbookModule } from '../../workbook/workbook.module';
 import { Workbook } from '../../workbook/entity/workbook';
 import {
+  NeedToFindByWorkbookIdException,
   WorkbookForbiddenException,
   WorkbookNotFoundException,
 } from '../../workbook/exception/workbook.exception';

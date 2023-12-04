@@ -1,4 +1,5 @@
 import {
+  HttpBadRequestException,
   HttpForbiddenException,
   HttpNotFoundException,
 } from '../../util/exception.util';
@@ -15,4 +16,14 @@ class WorkbookForbiddenException extends HttpForbiddenException {
   }
 }
 
-export { WorkbookNotFoundException, WorkbookForbiddenException };
+class NeedToFindByWorkbookIdException extends HttpBadRequestException {
+  constructor() {
+    super('문제집 id를 입력해주세요.', 'W03');
+  }
+}
+
+export {
+  WorkbookNotFoundException,
+  WorkbookForbiddenException,
+  NeedToFindByWorkbookIdException,
+};

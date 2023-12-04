@@ -5,7 +5,6 @@ import { isEmpty } from 'class-validator';
 import { Question } from '../entity/question';
 import { QuestionResponse } from '../dto/questionResponse';
 import { Member } from '../../member/entity/member';
-import { NeedToFindByWorkbookIdException } from '../exception/question.exception';
 import { validateManipulatedToken } from '../../util/token.util';
 import { validateQuestion } from '../util/question.util';
 import { WorkbookRepository } from '../../workbook/repository/workbook.repository';
@@ -16,6 +15,7 @@ import {
 import { CopyQuestionRequest } from '../dto/copyQuestionRequest';
 import { Workbook } from '../../workbook/entity/workbook';
 import { WorkbookIdResponse } from '../../workbook/dto/workbookIdResponse';
+import { NeedToFindByWorkbookIdException } from '../../workbook/exception/workbook.exception';
 
 @Injectable()
 export class QuestionService {
