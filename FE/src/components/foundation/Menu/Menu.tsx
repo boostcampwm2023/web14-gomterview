@@ -1,13 +1,14 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
+import { HTMLElementTypes } from '@/types/utils';
 
 type MenuProps = {
   open: boolean;
   closeMenu: () => void;
   children: React.ReactNode;
-};
-const Menu: React.FC<MenuProps> = ({ open, closeMenu, children }) => {
+} & HTMLElementTypes<HTMLDivElement>;
+const Menu: React.FC<MenuProps> = ({ open, closeMenu, children, ...args }) => {
   if (!open) return null;
 
   return (
@@ -22,6 +23,7 @@ const Menu: React.FC<MenuProps> = ({ open, closeMenu, children }) => {
           height: 100svh;
           z-index: 99;
         `}
+        {...args}
       />
       <div
         onClick={closeMenu}

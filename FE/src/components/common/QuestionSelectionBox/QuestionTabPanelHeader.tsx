@@ -94,27 +94,11 @@ const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
                 <Icon id="ellipsis-vertical" />
               </Button>
               <Menu open={isMenuOpen} closeMenu={() => setIsMenuOpen(false)}>
-                <MenuItem>
-                  <Button
-                    onClick={onEditButtonClick}
-                    variants="secondary"
-                    css={css`
-                      border: none;
-                    `}
-                  >
-                    <Typography noWrap>면접 질문 수정</Typography>
-                  </Button>
+                <MenuItem onClick={onEditButtonClick}>
+                  <Typography noWrap>면접 질문 수정</Typography>
                 </MenuItem>
-                <MenuItem>
-                  <Button
-                    onClick={handleWorkbookDeleteClick}
-                    variants="secondary"
-                    css={css`
-                      border: none;
-                    `}
-                  >
-                    <Typography noWrap>면접 세트 삭제</Typography>
-                  </Button>
+                <MenuItem onClick={handleWorkbookDeleteClick}>
+                  <Typography noWrap>면접 세트 삭제</Typography>
                 </MenuItem>
               </Menu>
             </div>
