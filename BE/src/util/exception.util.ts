@@ -3,6 +3,7 @@ import {
   BAD_REQUEST,
   FORBIDDEN,
   INTERNAL_SERVER_ERROR,
+  NOT_FOUND,
   UNAUTHORIZED,
 } from '../constant/constant';
 
@@ -32,7 +33,7 @@ class HttpForbiddenException extends HttpCustomException {
 
 class HttpNotFoundException extends HttpCustomException {
   constructor(message: string, errorCode: string) {
-    super(message, errorCode, BAD_REQUEST);
+    super(message, errorCode, NOT_FOUND);
   }
 }
 
