@@ -14,7 +14,7 @@ class TokenExpiredException extends HttpException {
 
 class ManipulatedTokenNotFiltered extends HttpException {
   constructor() {
-    super('토큰 암호화가 뚫렸습니다.', 500);
+    super({ message: '토큰 암호화가 뚫렸습니다.', errorCode: 'SERVER' }, 500);
   }
 }
 
