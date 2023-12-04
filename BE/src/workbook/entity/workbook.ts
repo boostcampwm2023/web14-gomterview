@@ -23,6 +23,9 @@ export class Workbook extends DefaultEntity {
   @JoinColumn({ name: 'member' })
   member: Member;
 
+  @Column({ default: true })
+  isPublic: boolean;
+
   constructor(
     id: number,
     createdAt: Date,
@@ -31,6 +34,7 @@ export class Workbook extends DefaultEntity {
     category: Category,
     copyCount: number,
     member: Member,
+    isPublic: boolean,
   ) {
     super(id, createdAt);
     this.title = title;
@@ -38,6 +42,7 @@ export class Workbook extends DefaultEntity {
     this.category = category;
     this.copyCount = copyCount;
     this.member = member;
+    this.isPublic = isPublic;
   }
 
   static of(
@@ -45,8 +50,18 @@ export class Workbook extends DefaultEntity {
     content: string,
     category: Category,
     member: Member,
+    isPublic: boolean,
   ): Workbook {
-    return new Workbook(null, new Date(), title, content, category, 0, member);
+    return new Workbook(
+      null,
+      new Date(),
+      title,
+      content,
+      category,
+      0,
+      member,
+      isPublic,
+    );
   }
 
   isOwnedBy(member: Member) {

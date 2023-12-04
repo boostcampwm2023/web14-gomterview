@@ -160,6 +160,7 @@ describe('AnswerService 단위 테스트', () => {
             'https://jangsarchive.tistory.com',
             new Date(),
           ),
+          true,
         ),
       );
       mockAnswerRepository.findById.mockResolvedValue(answerFixture);

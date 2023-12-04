@@ -1,6 +1,7 @@
 import { Workbook } from '../entity/workbook';
 import { ApiProperty } from '@nestjs/swagger';
 import { createPropertyOption } from '../../util/swagger.util';
+import { isEmpty } from 'class-validator';
 
 export class WorkbookResponse {
   @ApiProperty(createPropertyOption(1, '문제집 ID', Number))
@@ -32,6 +33,9 @@ export class WorkbookResponse {
   @ApiProperty(createPropertyOption('내꺼 건들 ㄴㄴ해', '문제집 설명', String))
   content: string;
 
+  @ApiProperty(createPropertyOption(true, '문제집 공개여부', Boolean))
+  isPublic: boolean;
+
   constructor(
     workbookId: number,
     categoryId: number,
@@ -40,6 +44,7 @@ export class WorkbookResponse {
     copyCount: number,
     title: string,
     content: string,
+    isPublic: boolean,
   ) {
     this.workbookId = workbookId;
     this.categoryId = categoryId;
@@ -47,7 +52,8 @@ export class WorkbookResponse {
     this.profileImg = profileImg;
     this.copyCount = copyCount;
     this.title = title;
-    this.content = content.toString();
+    this.content = isEmpty(content) ? '' : content.toString();
+    this.isPublic = isPublic;
   }
 
   static of(workbook: Workbook) {
@@ -60,6 +66,7 @@ export class WorkbookResponse {
       workbook.copyCount,
       workbook.title,
       workbook.content,
+      workbook.isPublic,
     );
   }
 }

@@ -261,6 +261,7 @@ describe('WorkbookService 단위테스트', () => {
         'newT',
         'newC',
         categoryFixtureWithId.id,
+        true,
       );
       //then
       const cases = [otherMemberFixture, null];
@@ -374,6 +375,7 @@ describe('WorkbookService 통합테스트', () => {
         'test title',
         'test content',
         category.id,
+        true,
       );
       const workbook = await workbookService.createWorkbook(
         createWorkbookRequest,
@@ -400,6 +402,7 @@ describe('WorkbookService 통합테스트', () => {
               `${each.name}_${index}`,
               category,
               member,
+              true,
             ),
           );
         }
@@ -427,6 +430,7 @@ describe('WorkbookService 통합테스트', () => {
               `${each.name}_${index}`,
               category,
               member,
+              true,
             ),
           );
         }
@@ -452,6 +456,7 @@ describe('WorkbookService 통합테스트', () => {
               `${each.name}_${index}`,
               category,
               member,
+              true,
             ),
           );
         }
@@ -479,6 +484,7 @@ describe('WorkbookService 통합테스트', () => {
               `${each.name}_${index}`,
               category,
               member,
+              true,
             ),
           );
         }
@@ -505,6 +511,7 @@ describe('WorkbookService 통합테스트', () => {
               `${each.name}_${index}`,
               category,
               member,
+              true,
             ),
           );
         }
@@ -531,6 +538,7 @@ describe('WorkbookService 통합테스트', () => {
         'test title',
         'test content',
         category.id,
+        true,
       );
       const workbook = await workbookService.createWorkbook(
         createWorkbookRequest,
@@ -587,7 +595,13 @@ describe('WorkbookService 통합테스트', () => {
       //then
       await expect(
         workbookService.updateWorkbook(
-          new UpdateWorkbookRequest(workbookFixture.id, 'newT', 'newC', 12345),
+          new UpdateWorkbookRequest(
+            workbookFixture.id,
+            'newT',
+            'newC',
+            12345,
+            true,
+          ),
           member,
         ),
       ).rejects.toThrow(new CategoryNotFoundException());
@@ -604,7 +618,7 @@ describe('WorkbookService 통합테스트', () => {
       //then
       await expect(
         workbookService.updateWorkbook(
-          new UpdateWorkbookRequest(123142, 'newT', 'newC', category.id),
+          new UpdateWorkbookRequest(123142, 'newT', 'newC', category.id, true),
           member,
         ),
       ).rejects.toThrow(new WorkbookNotFoundException());
@@ -660,7 +674,7 @@ describe('WorkbookService 통합테스트', () => {
       ).rejects.toThrow(new ManipulatedTokenNotFiltered());
     });
 
-    it('다른 회원이 문제집 수정을 요청하면 WorkbookForbidden예외처리한다.', async () => {
+    it('다른 회원이 문제집 삭제를 요청하면 WorkbookForbidden예외처리한다.', async () => {
       //given
       await memberRepository.save(memberFixture);
       await categoryRepository.save(categoryFixtureWithId);

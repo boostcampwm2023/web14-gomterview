@@ -9,6 +9,7 @@ export const workbookFixture = Workbook.of(
   '테스트로 만드는 문제집입니다.',
   categoryFixtureWithId,
   memberFixture,
+  true,
 );
 
 export const workbookFixtureWithId = new Workbook(
@@ -19,12 +20,14 @@ export const workbookFixtureWithId = new Workbook(
   categoryFixtureWithId,
   0,
   memberFixture,
+  true,
 );
 
 export const createWorkbookRequestFixture = new CreateWorkbookRequest(
   workbookFixture.title,
   workbookFixture.content,
   categoryFixtureWithId.id,
+  true,
 );
 
 export const updateWorkbookRequestFixture = new UpdateWorkbookRequest(
@@ -32,4 +35,5 @@ export const updateWorkbookRequestFixture = new UpdateWorkbookRequest(
   'newT',
   'newC',
   categoryFixtureWithId.id,
+  false,
 );

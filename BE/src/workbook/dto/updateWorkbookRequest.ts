@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { createPropertyOption } from '../../util/swagger.util';
 import { IsNotEmpty, IsString } from '@nestjs/class-validator';
-import { IsNumber } from 'class-validator';
+import { IsBoolean, IsNumber } from 'class-validator';
 
 export class UpdateWorkbookRequest {
   @ApiProperty(createPropertyOption(1, '문제집 id', Number))
@@ -25,15 +25,21 @@ export class UpdateWorkbookRequest {
   @IsNotEmpty()
   categoryId: number;
 
+  @ApiProperty(createPropertyOption(true, '문제집 공개여부', Boolean))
+  @IsBoolean()
+  isPublic: boolean;
+
   constructor(
     workbookId: number,
     title: string,
     content: string,
     categoryId: number,
+    isPublic: boolean,
   ) {
     this.workbookId = workbookId;
     this.title = title;
     this.content = content;
     this.categoryId = categoryId;
+    this.isPublic = isPublic;
   }
 }
