@@ -637,6 +637,7 @@ describe('WorkbookController 통합테스트', () => {
           each,
           'test content',
           category.id,
+          true,
         );
 
         const agent = request.agent(app.getHttpServer());
@@ -662,6 +663,7 @@ describe('WorkbookController 통합테스트', () => {
         'test title',
         'test content',
         category.id,
+        true,
       );
 
       const agent = request.agent(app.getHttpServer());
@@ -686,6 +688,7 @@ describe('WorkbookController 통합테스트', () => {
         'test title',
         'test content',
         151231,
+        true,
       );
 
       const agent = request.agent(app.getHttpServer());

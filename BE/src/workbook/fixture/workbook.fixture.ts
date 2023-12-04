@@ -19,6 +19,7 @@ export const workbookFixtureWithId = new Workbook(
   categoryFixtureWithId,
   0,
   memberFixture,
+  true,
 );
 
 export const createWorkbookRequestFixture = new CreateWorkbookRequest(
@@ -32,4 +33,5 @@ export const updateWorkbookRequestFixture = new UpdateWorkbookRequest(
   'newT',
   'newC',
   categoryFixtureWithId.id,
+  true,
 );

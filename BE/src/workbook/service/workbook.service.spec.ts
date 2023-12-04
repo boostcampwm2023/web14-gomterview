@@ -261,6 +261,7 @@ describe('WorkbookService 단위테스트', () => {
         'newT',
         'newC',
         categoryFixtureWithId.id,
+        true,
       );
       //then
       const cases = [otherMemberFixture, null];
@@ -587,7 +588,13 @@ describe('WorkbookService 통합테스트', () => {
       //then
       await expect(
         workbookService.updateWorkbook(
-          new UpdateWorkbookRequest(workbookFixture.id, 'newT', 'newC', 12345),
+          new UpdateWorkbookRequest(
+            workbookFixture.id,
+            'newT',
+            'newC',
+            12345,
+            true,
+          ),
           member,
         ),
       ).rejects.toThrow(new CategoryNotFoundException());
@@ -604,7 +611,7 @@ describe('WorkbookService 통합테스트', () => {
       //then
       await expect(
         workbookService.updateWorkbook(
-          new UpdateWorkbookRequest(123142, 'newT', 'newC', category.id),
+          new UpdateWorkbookRequest(123142, 'newT', 'newC', category.id, true),
           member,
         ),
       ).rejects.toThrow(new WorkbookNotFoundException());
