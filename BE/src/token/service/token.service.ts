@@ -98,16 +98,11 @@ export class TokenService {
   private async parseJwtError(message: string) {
     switch (message) {
       // 토큰에 대한 오류를 판단합니다.
-      case 'INVALID_TOKEN':
-      case 'TOKEN_IS_ARRAY':
-      case 'NO_USER':
-        throw new InvalidTokenException();
-
       case 'jwt expired':
         throw new TokenExpiredException();
 
       default:
-        throw new Error(message);
+        throw new InvalidTokenException();
     }
   }
 
