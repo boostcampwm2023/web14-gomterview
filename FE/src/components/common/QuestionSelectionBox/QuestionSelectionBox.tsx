@@ -52,7 +52,7 @@ const QuestionSelectionBox = () => {
         `}
       >
         <Tabs
-          initialValue={selectedTabIndex}
+          value={selectedTabIndex}
           css={css`
             display: flex;
             width: 100%;
