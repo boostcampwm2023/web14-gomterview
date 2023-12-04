@@ -1,5 +1,8 @@
 import { HttpException } from '@nestjs/common';
-import { HttpInternalServerError } from '../../util/exception.util';
+import {
+  HttpGoneException,
+  HttpInternalServerError,
+} from '../../util/exception.util';
 
 class InvalidTokenException extends HttpException {
   constructor() {
@@ -7,9 +10,9 @@ class InvalidTokenException extends HttpException {
   }
 }
 
-class TokenExpiredException extends HttpException {
+class TokenExpiredException extends HttpGoneException {
   constructor() {
-    super('토큰이 만료되었습니다', 410);
+    super('토큰이 만료되었습니다', 'T1');
   }
 }
 
