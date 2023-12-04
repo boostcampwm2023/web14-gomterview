@@ -75,8 +75,8 @@ export class QuestionService {
   async deleteQuestionById(questionId: number, member: Member) {
     validateManipulatedToken(member);
     const question = await this.questionRepository.findById(questionId);
-    validateQuestion(question);
     await this.validateMembersWorkbookById(question.workbook.id, member);
+    validateQuestion(question);
     await this.questionRepository.remove(question);
   }
 
