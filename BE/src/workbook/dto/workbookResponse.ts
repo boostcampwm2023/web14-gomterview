@@ -1,6 +1,7 @@
 import { Workbook } from '../entity/workbook';
 import { ApiProperty } from '@nestjs/swagger';
 import { createPropertyOption } from '../../util/swagger.util';
+import { isEmpty } from 'class-validator';
 
 export class WorkbookResponse {
   @ApiProperty(createPropertyOption(1, '문제집 ID', Number))
@@ -47,7 +48,7 @@ export class WorkbookResponse {
     this.profileImg = profileImg;
     this.copyCount = copyCount;
     this.title = title;
-    this.content = content.toString();
+    this.content = isEmpty(content) ? '' : content.toString();
   }
 
   static of(workbook: Workbook) {
