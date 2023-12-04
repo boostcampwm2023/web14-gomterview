@@ -1,4 +1,10 @@
 import { HttpException } from '@nestjs/common';
+import {
+  BAD_REQUEST,
+  FORBIDDEN,
+  INTERNAL_SERVER_ERROR,
+  UNAUTHORIZED,
+} from '../constant/constant';
 
 class HttpCustomException extends HttpException {
   constructor(message: string, errorCode: string, status: number) {
@@ -8,31 +14,31 @@ class HttpCustomException extends HttpException {
 
 class HttpBadRequestException extends HttpCustomException {
   constructor(message: string, errorCode: string) {
-    super(message, errorCode, 400);
+    super(message, errorCode, BAD_REQUEST);
   }
 }
 
 class HttpUnauthorizedException extends HttpCustomException {
   constructor(message: string, errorCode: string) {
-    super(message, errorCode, 401);
+    super(message, errorCode, UNAUTHORIZED);
   }
 }
 
 class HttpForbiddenException extends HttpCustomException {
   constructor(message: string, errorCode: string) {
-    super(message, errorCode, 403);
+    super(message, errorCode, FORBIDDEN);
   }
 }
 
 class HttpNotFoundException extends HttpCustomException {
   constructor(message: string, errorCode: string) {
-    super(message, errorCode, 404);
+    super(message, errorCode, BAD_REQUEST);
   }
 }
 
 class HttpInternalServerError extends HttpCustomException {
   constructor(message: string, errorCode: string) {
-    super(message, errorCode, 500);
+    super(message, errorCode, INTERNAL_SERVER_ERROR);
   }
 }
 
