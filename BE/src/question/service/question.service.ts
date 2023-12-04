@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { QuestionRepository } from '../repository/question.repository';
 import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 import { isEmpty } from 'class-validator';
@@ -33,10 +33,7 @@ export class QuestionService {
     );
 
     validateWorkbook(workbook);
-
-    if (!workbook.isOwnedBy(member)) {
-      throw new UnauthorizedException();
-    }
+    validateWorkbookOwner(workbook, member);
 
     const question = await this.questionRepository.save(
       Question.of(workbook, null, createQuestionRequest.content),
