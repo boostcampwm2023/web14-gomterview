@@ -1,7 +1,7 @@
 import { questionSetting } from '@atoms/interviewSetting';
 import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import useQuestionWorkbookQuery from '@hooks/apis/queries/useQuestionWorkbookQuery';
 import { Typography, Toggle, Tabs, CheckBox } from '@foundation/index';
@@ -11,6 +11,11 @@ import QuestionSelectionBoxAccordion from './QuestionSelectionBoxAccordion';
 import QuestionAddForm from '@common/QuestionSelectionBox/QuestionAddForm';
 import useUserInfo from '@hooks/useUserInfo';
 import QuestionTabPanelHeader from '@common/QuestionSelectionBox/QuestionTabPanelHeader';
+import WorkbookEditModeDialog from '@common/QuestionSelectionBox/WorkbookEditModeDialog';
+import useOutsideClick from '@hooks/useOutsideClick';
+import useDeleteQuestionMutation from '@hooks/apis/mutations/useDeleteQuestionMutation';
+import { QUERY_KEY } from '@constants/queryKey';
+import { useQueryClient } from '@tanstack/react-query';
 
 type TabPanelItemProps = {
   selectedTabIndex: string;
@@ -25,6 +30,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
   tabIndex,
   onWorkbookDelete,
 }) => {
+  const queryClient = useQueryClient();
   const userInfo = useUserInfo();
   const settingPage = useRecoilValue(questionSetting);
   const selectedQuestions = settingPage.selectedData.filter(
@@ -33,6 +39,13 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
 
   const [onlySelectedOption, setOnlySelectedOption] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [checkedQuestion, setCheckedQuestion] = useState<number[]>([]);
+
+  const tabContentRef = useRef<HTMLDivElement>(null);
+
+  useOutsideClick(tabContentRef, () => {
+    handleCancelEditMode();
+  });
 
   const toggleShowSelectionOption = () => {
     setOnlySelectedOption((prev) => !prev);
@@ -42,6 +55,33 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
     workbookId: workbook.workbookId,
     enabled: selectedTabIndex === tabIndex,
   });
+  const { mutateAsync: deleteQuestionAsync } = useDeleteQuestionMutation();
+
+  const handleQuestionChecked = (questionId: number) => {
+    isEditMode &&
+      setCheckedQuestion((prev) =>
+        prev.includes(questionId)
+          ? prev.filter((id) => id !== questionId)
+          : [...prev, questionId]
+      );
+  };
+
+  const handleCancelEditMode = () => {
+    setCheckedQuestion([]);
+    setIsEditMode(false);
+  };
+
+  const handleDeleteQuestion = async () => {
+    await Promise.all(
+      checkedQuestion.map((questionId) => {
+        return deleteQuestionAsync(questionId);
+      })
+    );
+    void queryClient.invalidateQueries({
+      queryKey: QUERY_KEY.WORKBOOK_ID(workbook.workbookId),
+    });
+    handleCancelEditMode();
+  };
 
   const questionData = onlySelectedOption ? selectedQuestions : questionAPIData;
   if (!questionData) return;
@@ -55,7 +95,9 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
       `}
     >
       <div
+        ref={tabContentRef}
         css={css`
+          position: relative;
           display: flex;
           flex-direction: column;
           height: 100%;
@@ -65,7 +107,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
           workbook={workbook}
           questionLength={questionData.length}
           onWorkbookDelete={onWorkbookDelete}
-          onEditButtonClick={() => setIsEditMode((prev) => !prev)}
+          onEditButtonClick={() => setIsEditMode(true)}
         />
         {userInfo && (
           <div
@@ -90,6 +132,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
           {questionData.map((question) => (
             <div
               key={question.questionId}
+              onClick={() => handleQuestionChecked(question.questionId)}
               css={css`
                 display: flex;
                 align-items: center;
@@ -97,7 +140,17 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
               `}
             >
               {isEditMode && (
-                <CheckBox id={`question-${question.questionId}`} />
+                <CheckBox
+                  id={`question-${question.questionId}`}
+                  checked={
+                    !!checkedQuestion.find(
+                      (questionId) => question.questionId === questionId
+                    )
+                  }
+                  onInputChange={() =>
+                    handleQuestionChecked(question.questionId)
+                  }
+                />
               )}
               <QuestionSelectionBoxAccordion
                 key={question.questionId}
@@ -108,6 +161,13 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
             </div>
           ))}
         </div>
+        {isEditMode && (
+          <WorkbookEditModeDialog
+            count={checkedQuestion.length}
+            onCancelClick={handleCancelEditMode}
+            onDeleteClick={handleDeleteQuestion}
+          />
+        )}
         <div
           css={css`
             display: flex;
