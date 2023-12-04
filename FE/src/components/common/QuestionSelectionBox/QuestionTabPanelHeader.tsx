@@ -63,6 +63,18 @@ const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
               <Icon id="edit-outline" width="20" height="20" />
               면접 세트 수정
             </Button>
+            <Button
+              variants="secondary"
+              size="sm"
+              css={css`
+                display: flex;
+                align-items: center;
+                padding: 0.5rem;
+                border: none;
+              `}
+            >
+              <Icon id="ellipsis-vertical" />
+            </Button>
           </div>
 
           <Typography
