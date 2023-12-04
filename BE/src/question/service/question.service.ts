@@ -1,11 +1,10 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { QuestionRepository } from '../repository/question.repository';
 import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 import { isEmpty } from 'class-validator';
 import { Question } from '../entity/question';
 import { QuestionResponse } from '../dto/questionResponse';
 import { Member } from '../../member/entity/member';
-import { NeedToFindByWorkbookIdException } from '../exception/question.exception';
 import { validateManipulatedToken } from '../../util/token.util';
 import { validateQuestion } from '../util/question.util';
 import { WorkbookRepository } from '../../workbook/repository/workbook.repository';
@@ -16,6 +15,7 @@ import {
 import { CopyQuestionRequest } from '../dto/copyQuestionRequest';
 import { Workbook } from '../../workbook/entity/workbook';
 import { WorkbookIdResponse } from '../../workbook/dto/workbookIdResponse';
+import { NeedToFindByWorkbookIdException } from '../../workbook/exception/workbook.exception';
 
 @Injectable()
 export class QuestionService {
@@ -33,10 +33,7 @@ export class QuestionService {
     );
 
     validateWorkbook(workbook);
-
-    if (!workbook.isOwnedBy(member)) {
-      throw new UnauthorizedException();
-    }
+    validateWorkbookOwner(workbook, member);
 
     const question = await this.questionRepository.save(
       Question.of(workbook, null, createQuestionRequest.content),

@@ -1,25 +1,9 @@
-import { HttpException } from '@nestjs/common';
+import { HttpNotFoundException } from '../../util/exception.util';
 
-class ContentNotFoundException extends HttpException {
+class QuestionNotFoundException extends HttpNotFoundException {
   constructor() {
-    super('내용을 입력해주세요.', 404);
+    super('해당 질문을 찾을 수 없습니다.', 'Q01');
   }
 }
 
-class NeedToFindByWorkbookIdException extends HttpException {
-  constructor() {
-    super('카테고리 id를 입력해주세요.', 400);
-  }
-}
-
-class QuestionNotFoundException extends HttpException {
-  constructor() {
-    super('해당 질문을 찾을 수 없습니다.', 404);
-  }
-}
-
-export {
-  ContentNotFoundException,
-  NeedToFindByWorkbookIdException,
-  QuestionNotFoundException,
-};
+export { QuestionNotFoundException };
