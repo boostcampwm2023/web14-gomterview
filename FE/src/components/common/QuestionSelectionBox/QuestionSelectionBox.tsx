@@ -12,9 +12,6 @@ import InterviewSetGeneratorModal from '@common/QuestionSelectionBox/InterviewSe
 
 const QuestionSelectionBox = () => {
   const [selectedTabIndex, setSelectedTabIndex] = useState('0');
-  const [selectedWorkbookId, setSelectedWorkbookId] = useState<
-    number | undefined
-  >(undefined);
   const { data: workbookListData } = useWorkbookTitleListQuery();
 
   const [
@@ -28,7 +25,6 @@ const QuestionSelectionBox = () => {
   ] = useState(false);
 
   const handleInterviewSetGeneratorModal = (workbookId?: number) => {
-    setSelectedWorkbookId(workbookId);
     setIsInterviewSetGeneratorModalOpen(true);
   };
 
@@ -49,7 +45,6 @@ const QuestionSelectionBox = () => {
         />
       )}
       <InterviewSetGeneratorModal
-        workbookId={selectedWorkbookId}
         isOpen={isInterviewSetGeneratorModalOpen}
         closeModal={() => setIsInterviewSetGeneratorModalOpen(false)}
       />
@@ -115,7 +110,6 @@ const QuestionSelectionBox = () => {
                 selectedTabIndex={selectedTabIndex}
                 tabIndex={index.toString()}
                 workbook={workbook}
-                onEditButtonClick={handleInterviewSetGeneratorModal}
                 key={workbook.workbookId}
               />
             ))}
