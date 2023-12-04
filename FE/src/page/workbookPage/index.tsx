@@ -11,7 +11,7 @@ import { Typography } from '@foundation/index';
 import { SyntheticEvent, useState } from 'react';
 
 const WorkbookPage: React.FC = () => {
-  const [selectedTabIndex, setSelectedTabIndex] = useState('0');
+  const [selectedTabIndex, setSelectedTabIndex] = useState('');
 
   const handleTabChange = (_: SyntheticEvent, v: string) => {
     setSelectedTabIndex(v);
