@@ -1,8 +1,9 @@
 import { HttpException } from '@nestjs/common';
+import { HttpNotFoundException } from '../../util/exception.util';
 
-class WorkbookNotFoundException extends HttpException {
+class WorkbookNotFoundException extends HttpNotFoundException {
   constructor() {
-    super({ message: '문제집을 찾을 수 없습니다.', errorCode: 'W01' }, 404);
+    super('문제집을 찾을 수 없습니다.', 'W01');
   }
 }
 
