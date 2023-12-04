@@ -48,7 +48,7 @@ export class WorkbookRepository {
       .leftJoinAndSelect('Workbook.member', 'member')
       .leftJoinAndSelect('Workbook.category', 'category')
       .where('Workbook.isPublic = :state', { state: true })
-      .orWhere('category.id = :categoryId', { categoryId })
+      .andWhere('category.id = :categoryId', { categoryId })
       .getMany();
   }
 
