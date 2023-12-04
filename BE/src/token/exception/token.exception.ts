@@ -1,4 +1,5 @@
 import { HttpException } from '@nestjs/common';
+import { HttpInternalServerError } from '../../util/exception.util';
 
 class InvalidTokenException extends HttpException {
   constructor() {
@@ -12,9 +13,9 @@ class TokenExpiredException extends HttpException {
   }
 }
 
-class ManipulatedTokenNotFiltered extends HttpException {
+class ManipulatedTokenNotFiltered extends HttpInternalServerError {
   constructor() {
-    super('토큰 암호화가 뚫렸습니다.', 500);
+    super('토큰 암호화가 뚫렸습니다.', 'SERVER');
   }
 }
 

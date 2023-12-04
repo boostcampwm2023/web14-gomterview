@@ -1,4 +1,5 @@
 import { HttpException } from '@nestjs/common';
+import { HttpNotFoundException } from '../../util/exception.util';
 
 class CategoryNameEmptyException extends HttpException {
   constructor() {
@@ -6,9 +7,9 @@ class CategoryNameEmptyException extends HttpException {
   }
 }
 
-class CategoryNotFoundException extends HttpException {
+class CategoryNotFoundException extends HttpNotFoundException {
   constructor() {
-    super('카테고리가 존재하지 않습니다.', 404);
+    super('카테고리가 존재하지 않습니다.', 'C02');
   }
 }
 
