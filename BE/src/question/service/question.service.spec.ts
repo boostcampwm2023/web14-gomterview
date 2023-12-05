@@ -377,4 +377,38 @@ describe('QuestionService 통합 테스트', () => {
     expect(result).toBeInstanceOf(WorkbookIdResponse);
     expect(result.workbookId).toBe(othersWorkbook.id);
   });
+
+  it('다른 복사본에서 복사를 진행하면 원본을 origin으로 가진다.', async () => {
+    //given
+    await memberRepository.save(memberFixture);
+    await categoryRepository.save(categoryFixtureWithId);
+    const workbook = await workbookRepository.save(workbookFixture);
+    const workbook2 = await workbookRepository.save(
+      Workbook.of('copy', 'copy', categoryFixtureWithId, memberFixture, true),
+    );
+
+    const questionIds = [];
+
+    for (let index = 0; index < 3; index++) {
+      const question = await questionRepository.save(
+        Question.of(workbook, null, 'tester'),
+      );
+      questionIds.push(
+        (await questionRepository.save(Question.copyOf(question, workbook2)))
+          .id,
+      );
+    }
+
+    const other = await memberRepository.save(otherMemberFixture);
+    const othersWorkbook = await workbookRepository.save(
+      Workbook.of('test', 'test', categoryFixtureWithId, other, true),
+    );
+    //when
+    const copyRequest = new CopyQuestionRequest(othersWorkbook.id, questionIds);
+
+    //then
+    const result = await questionService.copyQuestions(copyRequest, other);
+    expect(result).toBeInstanceOf(WorkbookIdResponse);
+    expect(result.workbookId).toBe(othersWorkbook.id);
+  });
 });
