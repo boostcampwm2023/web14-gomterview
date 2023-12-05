@@ -362,6 +362,33 @@ describe('AnswerService 통합테스트', () => {
       const list = await answerService.getAnswerList(question.id);
       expect(list[0].content).toEqual('defaultAnswer');
     });
+
+    it('원본질문이 아니면 원본 질문의 답변이 온다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
+      const workbook = await workbookRepository.save(workbookFixture);
+      const origin = await questionRepository.save(
+        Question.of(workbook, null, 'origin'),
+      );
+      const question = await questionRepository.save(
+        Question.of(workbook, origin, 'test'),
+      );
+      for (let index = 1; index <= 10; index++) {
+        await answerRepository.save(Answer.of(`test${index}`, member, origin));
+      }
+      const answer = await answerRepository.save(
+        Answer.of(`defaultAnswer`, member, origin),
+      );
+      question.setDefaultAnswer(answer);
+      await questionRepository.save(question);
+
+      //when
+
+      //then
+      const list = await answerService.getAnswerList(question.id);
+      expect(list[0].content).toEqual('defaultAnswer');
+    });
   });
 
   describe('답변 삭제', () => {
