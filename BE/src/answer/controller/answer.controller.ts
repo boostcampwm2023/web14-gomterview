@@ -38,6 +38,11 @@ export class AnswerController {
     summary: '질문에 새로운 답변 추가',
   })
   @ApiResponse(createApiResponseOption(201, '답변 생성 완료', AnswerResponse))
+  @ApiResponse(createApiResponseOption(204, '질문 삭제', null))
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
+  @ApiResponse(createApiResponseOption(401, 'T01', null))
+  @ApiResponse(createApiResponseOption(410, 'T02', null))
+  @ApiResponse(createApiResponseOption(404, 'Q01', null))
   async createAnswer(
     @Body() createAnswerRequest: CreateAnswerRequest,
     @Req() req: Request,
@@ -56,6 +61,12 @@ export class AnswerController {
     summary: '질문의 대표답변 설정',
   })
   @ApiResponse(createApiResponseOption(201, '대표답변 설정 완료', null))
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
+  @ApiResponse(createApiResponseOption(401, 'T01', null))
+  @ApiResponse(createApiResponseOption(410, 'T02', null))
+  @ApiResponse(createApiResponseOption(404, 'Q01', null))
+  @ApiResponse(createApiResponseOption(403, 'Q02', null))
+  @ApiResponse(createApiResponseOption(404, 'A01', null))
   async updateDefaultAnswer(
     @Body() defaultAnswerRequest: DefaultAnswerRequest,
     @Req() req: Request,
@@ -73,6 +84,7 @@ export class AnswerController {
   @ApiResponse(
     createApiResponseOption(200, '답변 리스트 캡슐화해 반환', [AnswerResponse]),
   )
+  @ApiResponse(createApiResponseOption(404, 'Q01', null))
   async getQuestionAnswers(@Param('questionId') questionId: number) {
     return await this.answerService.getAnswerList(questionId);
   }
@@ -84,6 +96,11 @@ export class AnswerController {
     summary: '답변 삭제',
   })
   @ApiResponse(createApiResponseOption(204, '답변 삭제 완료', null))
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
+  @ApiResponse(createApiResponseOption(401, 'T01', null))
+  @ApiResponse(createApiResponseOption(410, 'T02', null))
+  @ApiResponse(createApiResponseOption(404, 'A01', null))
+  @ApiResponse(createApiResponseOption(403, 'A02', null))
   async deleteAnswer(
     @Param('answerId') answerId: number,
     @Req() req: Request,
