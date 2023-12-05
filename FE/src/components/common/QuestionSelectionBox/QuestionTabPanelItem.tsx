@@ -175,7 +175,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
           <WorkbookEditModeDialog
             count={checkedQuestion.length}
             onCancelClick={handleCancelEditMode}
-            onDeleteClick={handleDeleteQuestion}
+            onDeleteClick={() => void handleDeleteQuestion()}
           />
         )}
         <div
