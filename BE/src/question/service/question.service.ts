@@ -57,7 +57,6 @@ export class QuestionService {
         copyQuestionRequest.questionIds,
       )
     ).map((question) => this.createCopy(question, workbook));
-    console.log(questions);
     await this.questionRepository.saveAll(questions);
     return WorkbookIdResponse.of(workbook);
   }
