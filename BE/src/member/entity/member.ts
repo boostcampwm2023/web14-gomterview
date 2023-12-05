@@ -1,6 +1,5 @@
 import { DefaultEntity } from 'src/app.entity';
 import { Column, Entity } from 'typeorm';
-import { objectEquals } from '../../util/util';
 
 @Entity({ name: 'Member' })
 export class Member extends DefaultEntity {
@@ -26,9 +25,5 @@ export class Member extends DefaultEntity {
     this.email = email;
     this.nickname = nickname;
     this.profileImg = profileImg;
-  }
-
-  equals(member: Member) {
-    return objectEquals(this, member);
   }
 }
