@@ -7,7 +7,8 @@
     "build": "npx webpack build --mode production --env mode=production",
     "start": "webpack --mode development --env production=false",
     "dev": "webpack serve --mode development --open --hot --env mode=development",
-    "local": "webpack serve --mode development --open --hot --env mode=local"
+    "local": "webpack serve --mode development --open --hot --env mode=local",
+    "lint": "npx prettier --write src & eslint src && echo ✔ No ESLint error"
   },
   "author": "",
   "license": "ISC",
@@ -49,6 +50,7 @@
     "eslint-plugin-unused-imports": "^3.0.0",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
+    "husky": "^8.0.3",
     "lint-staged": "^15.2.0",
     "msw": "^2.0.3",
     "prettier": "^3.0.3",
@@ -63,9 +65,8 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "prettier --write",
-      "eslint"
-    ],
-    "*.json": "prettier --write"
+      "eslint",
+      "prettier --write"
+    ]
   }
 }
