@@ -156,7 +156,7 @@ describe('MemberController 통합 테스트', () => {
   });
 
   describe('getMyInfo', () => {
-    it('쿠키를 가지고 회원 정보 반환 요청을 하면 200 상태 코드와 회원 정보가 반환된다.)', (done) => {
+    it('쿠키를 가지고 회원 정보 반환 요청을 하면 200 상태 코드와 회원 정보가 반환된다.', (done) => {
       authService.login(oauthRequestFixture).then((validToken) => {
         const agent = request.agent(app.getHttpServer());
         agent
@@ -172,7 +172,7 @@ describe('MemberController 통합 테스트', () => {
       });
     });
 
-    it('유효하지 않은 토큰으로 회원 정보 반환을 요청하면 401 상태코드가 반환된다.)', () => {
+    it('유효하지 않은 토큰으로 회원 정보 반환을 요청하면 401 상태코드가 반환된다.', () => {
       const agent = request.agent(app.getHttpServer());
       agent
         .get('/api/member')
@@ -182,7 +182,7 @@ describe('MemberController 통합 테스트', () => {
   });
 
   describe('getNameForInterview', () => {
-    it('쿠키를 가지고 면접 화면에 표출할 닉네임 반환 요청을 하면 200 상태 코드와 회원 닉네임이 들어간 채로 반환된다.)', (done) => {
+    it('쿠키를 가지고 면접 화면에 표출할 닉네임 반환 요청을 하면 200 상태 코드와 회원 닉네임이 들어간 채로 반환된다.', (done) => {
       authService.login(oauthRequestFixture).then((validToken) => {
         const agent = request.agent(app.getHttpServer());
         agent
@@ -198,7 +198,7 @@ describe('MemberController 통합 테스트', () => {
       });
     });
 
-    it('유효하지 않은 토큰으로 면접 화면에 표출할 닉네임 반환을 요청하면 401 상태코드가 반환된다.)', () => {
+    it('유효하지 않은 토큰으로 면접 화면에 표출할 닉네임 반환을 요청하면 401 상태코드가 반환된다.', () => {
       const agent = request.agent(app.getHttpServer());
       agent
         .get('/api/member/name')
@@ -206,7 +206,7 @@ describe('MemberController 통합 테스트', () => {
         .expect(401);
     });
 
-    it('만료된 토큰으로 면접 화면에 표출할 닉네임 반환을 요청하면 410 상태코드가 반환된다.)', async () => {
+    it('만료된 토큰으로 면접 화면에 표출할 닉네임 반환을 요청하면 410 상태코드가 반환된다.', async () => {
       const expirationTime = Math.floor(Date.now() / 1000) - 1;
       const expiredToken = await jwtService.signAsync(
         { id: memberFixture.id } as TokenPayload,
