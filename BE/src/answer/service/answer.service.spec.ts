@@ -40,6 +40,7 @@ import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { CategoryRepository } from '../../category/repository/category.repository';
 import { CategoryModule } from '../../category/category.module';
 import { Category } from '../../category/entity/category';
+import { QuestionResponse } from '../../question/dto/questionResponse';
 
 describe('AnswerService 단위 테스트', () => {
   let service: AnswerService;
@@ -297,9 +298,16 @@ describe('AnswerService 통합테스트', () => {
         member,
       );
       const updatedQuestion = await questionRepository.findById(question.id);
+      const questionResponse = QuestionResponse.from(updatedQuestion);
 
       //then
       expect(updatedQuestion.defaultAnswer.id).toEqual(answer.id);
+      expect(questionResponse.questionId).toBe(updatedQuestion.id);
+      expect(questionResponse.questionContent).toBe(updatedQuestion.content);
+      expect(questionResponse.answerId).toBe(updatedQuestion.defaultAnswer.id);
+      expect(questionResponse.answerContent).toBe(
+        updatedQuestion.defaultAnswer.content,
+      );
     });
   });
 
