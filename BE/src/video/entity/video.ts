@@ -1,5 +1,5 @@
 // video.entity.ts
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { DefaultEntity } from 'src/app.entity';
 import { Member } from 'src/member/entity/member';
 import { Question } from 'src/question/entity/question';
@@ -7,6 +7,8 @@ import { CreateVideoRequest } from '../dto/createVideoRequest';
 import { DEFAULT_THUMBNAIL } from 'src/constant/constant';
 
 @Entity({ name: 'Video' })
+@Index('idx_video_url', ['url'])
+// @Index('idx_video_createdAt', ['createdAt']) TODO: 추후 기능 구현 상황에 따라 인덱싱하기
 export class Video extends DefaultEntity {
   @Column({ nullable: true })
   memberId: number;
