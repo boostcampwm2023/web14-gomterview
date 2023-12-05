@@ -57,17 +57,14 @@ const useWorkbookAdd = ({ onSuccess }: useWorkbookAddProps) => {
 
     queryClient.setQueryData<WorkbookTitleListResDto | []>(
       QUERY_KEY.WORKBOOK_TITLE,
-      (prev) => {
-        if (!prev || !prev.length)
-          return [createNewWorkbookTitleItem(workbook, newId)];
-        return [...prev, createNewWorkbookTitleItem(workbook, newId)];
-      }
+      (prev) =>
+        !prev || !prev.length
+          ? [createNewWorkbookTitleItem(workbook, newId)]
+          : [...prev, createNewWorkbookTitleItem(workbook, newId)]
     );
     queryClient.setQueryData<WorkbookResDto>(
       QUERY_KEY.WORKBOOK_ID(newId),
-      (_) => {
-        return createNewWorkbookEntity(workbook, newId);
-      }
+      (_) => createNewWorkbookEntity(workbook, newId)
     );
   };
 
