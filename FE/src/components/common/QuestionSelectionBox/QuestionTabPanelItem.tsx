@@ -2,7 +2,7 @@ import { questionSetting } from '@atoms/interviewSetting';
 import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
 import { useRef, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import useQuestionWorkbookQuery from '@hooks/apis/queries/useQuestionWorkbookQuery';
 import { Typography, Toggle, Tabs, CheckBox } from '@foundation/index';
 import { WorkbookTitleListResDto } from '@/types/workbook';
@@ -12,9 +12,7 @@ import QuestionAddForm from '@common/QuestionSelectionBox/QuestionAddForm';
 import QuestionTabPanelHeader from '@common/QuestionSelectionBox/QuestionTabPanelHeader';
 import WorkbookEditModeDialog from '@common/QuestionSelectionBox/WorkbookEditModeDialog';
 import useOutsideClick from '@hooks/useOutsideClick';
-import useDeleteQuestionMutation from '@hooks/apis/mutations/useDeleteQuestionMutation';
-import { QUERY_KEY } from '@constants/queryKey';
-import { useQueryClient } from '@tanstack/react-query';
+import useWorkbookQuestionDelete from '@hooks/useWorkbookQuestionDelete';
 
 type TabPanelItemProps = {
   selectedTabIndex: string;
@@ -29,17 +27,13 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
   tabIndex,
   onWorkbookDelete,
 }) => {
-  const queryClient = useQueryClient();
   const settingPage = useRecoilValue(questionSetting);
   const selectedQuestions = settingPage.selectedData.filter(
     (question) => question.workbookId === workbook.workbookId
   );
-  // 비회원 로직 작성시 훅으로 분리할 것을 염두해서 위의 settingPage 변수와 통합하지 않았습니다.
-  const [, setSelectedQuestions] = useRecoilState(questionSetting);
 
   const [onlySelectedOption, setOnlySelectedOption] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [checkedQuestion, setCheckedQuestion] = useState<number[]>([]);
 
   const tabContentRef = useRef<HTMLDivElement>(null);
 
@@ -55,42 +49,25 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
     workbookId: workbook.workbookId,
     enabled: selectedTabIndex === tabIndex,
   });
-  const { mutateAsync: deleteQuestionAsync } = useDeleteQuestionMutation();
+  const {
+    addCheckedQuestion,
+    resetCheckedQuestion,
+    deleteCheckedQuestion,
+    isCheckedQuestion,
+    checkQuestionCount,
+  } = useWorkbookQuestionDelete(workbook.workbookId);
 
   const handleQuestionChecked = (questionId: number) => {
-    isEditMode &&
-      setCheckedQuestion((prev) =>
-        prev.includes(questionId)
-          ? prev.filter((id) => id !== questionId)
-          : [...prev, questionId]
-      );
+    isEditMode && addCheckedQuestion(questionId);
   };
 
   const handleCancelEditMode = () => {
-    setCheckedQuestion([]);
+    resetCheckedQuestion();
     setIsEditMode(false);
   };
 
-  //TODO 비회원 구현할 때 수정 로직 훅으로 분리하기
   const handleDeleteQuestion = async () => {
-    await Promise.all(
-      checkedQuestion.map((questionId) => {
-        return deleteQuestionAsync(questionId);
-      })
-    );
-    void queryClient.invalidateQueries({
-      queryKey: QUERY_KEY.WORKBOOK_ID(workbook.workbookId),
-    });
-
-    setSelectedQuestions((prev) => {
-      const selectedQuestions = prev.selectedData.filter(
-        (question) => !checkedQuestion.includes(question.questionId)
-      );
-      return {
-        isSuccess: selectedQuestions.length >= 1,
-        selectedData: selectedQuestions,
-      };
-    });
+    await deleteCheckedQuestion();
     handleCancelEditMode();
   };
 
@@ -151,11 +128,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
               {isEditMode && (
                 <CheckBox
                   id={`question-${question.questionId}`}
-                  checked={
-                    !!checkedQuestion.find(
-                      (questionId) => question.questionId === questionId
-                    )
-                  }
+                  checked={isCheckedQuestion(question.questionId)}
                   onInputChange={() =>
                     handleQuestionChecked(question.questionId)
                   }
@@ -172,7 +145,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
         </div>
         {isEditMode && (
           <WorkbookEditModeDialog
-            count={checkedQuestion.length}
+            count={checkQuestionCount()}
             onCancelClick={handleCancelEditMode}
             onDeleteClick={() => void handleDeleteQuestion()}
           />
