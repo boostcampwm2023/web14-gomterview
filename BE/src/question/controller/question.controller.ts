@@ -101,12 +101,11 @@ export class QuestionController {
     summary: '질문 삭제',
   })
   @ApiResponse(createApiResponseOption(204, '질문 삭제', null))
-  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
   @ApiResponse(createApiResponseOption(401, 'T01', null))
-  @ApiResponse(createApiResponseOption(410, 'T02', null))
-  @ApiResponse(createApiResponseOption(404, 'W01', null))
   @ApiResponse(createApiResponseOption(403, 'W02', null))
-  @ApiResponse(createApiResponseOption(404, 'Q01', null))
+  @ApiResponse(createApiResponseOption(404, 'W01, Q01', null))
+  @ApiResponse(createApiResponseOption(410, 'T02', null))
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
   async deleteQuestionById(
     @Param('questionId') questionId: number,
     @Req() req: Request,

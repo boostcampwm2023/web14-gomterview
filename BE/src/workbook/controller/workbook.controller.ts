@@ -121,8 +121,7 @@ export class WorkbookController {
     createApiResponseOption(200, '문제집 수정 완료', WorkbookResponse),
   )
   @ApiResponse(createApiResponseOption(500, 'SERVER', null))
-  @ApiResponse(createApiResponseOption(404, 'C02', null))
-  @ApiResponse(createApiResponseOption(404, 'W01', null))
+  @ApiResponse(createApiResponseOption(404, 'C02, W01', null))
   @ApiResponse(createApiResponseOption(403, 'W02', null))
   async updateAnswer(
     @Body() updateWorkbookRequest: UpdateWorkbookRequest,
