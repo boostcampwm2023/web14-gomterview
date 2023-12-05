@@ -11,6 +11,7 @@ import {
   updateWorkbookRequestFixture,
   workbookFixture,
   workbookFixtureWithId,
+  workbookInsertResult,
 } from '../fixture/workbook.fixture';
 import {
   differentMemberFixture,
@@ -53,6 +54,8 @@ describe('WorkbookService 단위테스트', () => {
     findSingleWorkbook: jest.fn(),
     update: jest.fn(),
     remove: jest.fn(),
+    insert: jest.fn(),
+    findByIdWithoutJoin: jest.fn(),
   };
 
   beforeAll(async () => {
@@ -80,12 +83,12 @@ describe('WorkbookService 단위테스트', () => {
       mockCategoryRepository.findByCategoryId.mockResolvedValue(
         categoryFixtureWithId,
       );
-      mockWorkbookRepository.save.mockResolvedValue(workbookFixtureWithId);
+      mockWorkbookRepository.insert.mockResolvedValue(workbookInsertResult);
 
       //then
       await expect(
         service.createWorkbook(createWorkbookRequestFixture, memberFixture),
-      ).resolves.toEqual(workbookFixtureWithId);
+      ).resolves.toEqual(workbookFixtureWithId.id);
     });
 
     it('문제집을 추가할 때, categoryId로 조회되지 않으면 CategoryNotFoundException을 반환한다', async () => {
@@ -93,7 +96,7 @@ describe('WorkbookService 단위테스트', () => {
 
       //when
       mockCategoryRepository.findByCategoryId.mockResolvedValue(null);
-      mockWorkbookRepository.save.mockResolvedValue(workbookFixtureWithId);
+      mockWorkbookRepository.insert.mockResolvedValue(workbookFixtureWithId);
 
       //then
       await expect(
@@ -108,7 +111,7 @@ describe('WorkbookService 단위테스트', () => {
       mockCategoryRepository.findByCategoryId.mockResolvedValue(
         categoryFixtureWithId,
       );
-      mockWorkbookRepository.save.mockResolvedValue(workbookFixtureWithId);
+      mockWorkbookRepository.insert.mockResolvedValue(workbookFixtureWithId);
 
       //then
       await expect(
@@ -282,7 +285,9 @@ describe('WorkbookService 단위테스트', () => {
       //given
 
       //when
-      mockWorkbookRepository.findById.mockResolvedValue(workbookFixtureWithId);
+      mockWorkbookRepository.findByIdWithoutJoin.mockResolvedValue(
+        workbookFixtureWithId,
+      );
       mockWorkbookRepository.remove.mockResolvedValue(undefined);
 
       //then
@@ -295,7 +300,9 @@ describe('WorkbookService 단위테스트', () => {
       //given
 
       //when
-      mockWorkbookRepository.findById.mockResolvedValue(workbookFixtureWithId);
+      mockWorkbookRepository.findByIdWithoutJoin.mockResolvedValue(
+        workbookFixtureWithId,
+      );
       mockWorkbookRepository.remove.mockResolvedValue(undefined);
 
       //then
@@ -308,7 +315,9 @@ describe('WorkbookService 단위테스트', () => {
       //given
 
       //when
-      mockWorkbookRepository.findById.mockResolvedValue(workbookFixtureWithId);
+      mockWorkbookRepository.findByIdWithoutJoin.mockResolvedValue(
+        workbookFixtureWithId,
+      );
       mockWorkbookRepository.remove.mockResolvedValue(undefined);
 
       //then
@@ -324,7 +333,7 @@ describe('WorkbookService 단위테스트', () => {
       //given
 
       //when
-      mockWorkbookRepository.findById.mockResolvedValue(null);
+      mockWorkbookRepository.findByIdWithoutJoin.mockResolvedValue(null);
       mockWorkbookRepository.remove.mockResolvedValue(undefined);
 
       //then
@@ -383,9 +392,7 @@ describe('WorkbookService 통합테스트', () => {
       );
 
       //then
-      expect(workbook.title).toEqual('test title');
-      expect(workbook.content).toEqual('test content');
-      expect(workbook.member.id).toEqual(member.id);
+      expect(workbook).toBe(1);
     });
   });
 
@@ -540,17 +547,17 @@ describe('WorkbookService 통합테스트', () => {
         category.id,
         true,
       );
-      const workbook = await workbookService.createWorkbook(
+      const workbookId = await workbookService.createWorkbook(
         createWorkbookRequest,
         member,
       );
 
       //then
-      const result = await workbookService.findSingleWorkbook(workbook.id);
+      const result = await workbookService.findSingleWorkbook(workbookId);
       expect(result).toBeInstanceOf(WorkbookResponse);
-      expect(result.title).toBe(workbook.title);
-      expect(result.content).toBe(workbook.content);
-      expect(result.workbookId).toBe(workbook.id);
+      expect(result.title).toBe(createWorkbookRequest.title);
+      expect(result.content).toBe(createWorkbookRequest.content);
+      expect(result.workbookId).toBe(workbookId);
     });
 
     it('문제집 id가 존재하지 않으면 WorkbookNotFound예외처리한다.', async () => {

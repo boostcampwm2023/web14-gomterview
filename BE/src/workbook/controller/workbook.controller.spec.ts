@@ -84,7 +84,9 @@ describe('WorkbookController 단위테스트', () => {
       //given
 
       //when
-      mockWorkbookService.createWorkbook.mockResolvedValue(workbookFixture);
+      mockWorkbookService.createWorkbook.mockResolvedValue(
+        workbookFixtureWithId.id,
+      );
       const response = await controller.createAnswer(
         createWorkbookRequestFixture,
         mockReqWithMemberFixture,
@@ -92,7 +94,7 @@ describe('WorkbookController 단위테스트', () => {
 
       //then
       expect(response).toBeInstanceOf(WorkbookIdResponse);
-      expect(response.workbookId).toBe(workbookFixture.id);
+      expect(response.workbookId).toBe(workbookFixtureWithId.id);
     });
   });
 
