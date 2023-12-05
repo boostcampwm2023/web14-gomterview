@@ -41,6 +41,7 @@ export class VideoController {
     summary: '비디오 정보를 DB에 저장',
   })
   @ApiResponse(createApiResponseOption(201, '비디오 정보 저장 완료', null))
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
   async createVideo(
     @Req() req: Request,
     @Body() createVideoRequest: CreateVideoRequest,
@@ -61,6 +62,8 @@ export class VideoController {
       PreSignedUrlResponse,
     ),
   )
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
+  @ApiResponse(createApiResponseOption(500, 'V1', null))
   async getPreSignedUrl(@Req() req: Request) {
     return await this.videoService.getPreSignedUrl(req.user as Member);
   }
@@ -76,6 +79,7 @@ export class VideoController {
       SingleVideoResponse,
     ]),
   )
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
   async getAllVideo(@Req() req: Request) {
     return await this.videoService.getAllVideosByMemberId(req.user as Member);
   }
@@ -91,6 +95,10 @@ export class VideoController {
       VideoDetailResponse,
     ),
   )
+  @ApiResponse(createApiResponseOption(403, 'V2', null))
+  @ApiResponse(createApiResponseOption(404, 'V4', null))
+  @ApiResponse(createApiResponseOption(404, 'M1', null))
+  @ApiResponse(createApiResponseOption(500, 'V6', null))
   async getVideoDetailByHash(@Param('hash') hash: string) {
     return await this.videoService.getVideoDetailByHash(hash);
   }
@@ -108,6 +116,10 @@ export class VideoController {
       VideoDetailResponse,
     ),
   )
+  @ApiResponse(createApiResponseOption(403, 'V2', null))
+  @ApiResponse(createApiResponseOption(404, 'V3', null))
+  @ApiResponse(createApiResponseOption(404, 'V8', null))
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
   async getVideoDetail(@Param('videoId') videoId: number, @Req() req: Request) {
     return await this.videoService.getVideoDetail(videoId, req.user as Member);
   }
@@ -121,6 +133,12 @@ export class VideoController {
   @ApiResponse(
     createApiResponseOption(200, '비디오 상태 전환 완료', VideoHashResponse),
   )
+  @ApiResponse(createApiResponseOption(403, 'V2', null))
+  @ApiResponse(createApiResponseOption(404, 'V3', null))
+  @ApiResponse(createApiResponseOption(500, 'V5', null))
+  @ApiResponse(createApiResponseOption(500, 'V6', null))
+  @ApiResponse(createApiResponseOption(500, 'V7', null))
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
   async toggleVideoStatus(
     @Param('videoId') videoId: number,
     @Req() req: Request,
@@ -138,6 +156,9 @@ export class VideoController {
     summary: '비디오 삭제',
   })
   @ApiResponse(createApiResponseOption(204, '비디오 삭제 완료', null))
+  @ApiResponse(createApiResponseOption(403, 'V2', null))
+  @ApiResponse(createApiResponseOption(404, 'V3', null))
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
   async deleteVideo(
     @Param('videoId') videoId: number,
     @Req() req: Request,
