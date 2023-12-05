@@ -20,8 +20,7 @@ const Tooltip: React.FC<TooltipProps> = ({
       css={[
         css`
           position: relative;
-          z-index: 100;
-          &:hover span:first-of-type {
+          &:hover > :first-child {
             position: absolute;
             padding: 0.3rem 0.5rem;
             background-color: ${theme.colors.text.subStrong};
