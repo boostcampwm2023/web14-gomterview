@@ -13,6 +13,7 @@ import { validateQuestion } from '../../question/util/question.util';
 import { AnswerForbiddenException } from '../exception/answer.exception';
 import { WorkbookRepository } from '../../workbook/repository/workbook.repository';
 import { QuestionForbiddenException } from '../../question/exception/question.exception';
+import { validateWorkbook } from '../../workbook/util/workbook.util';
 
 @Injectable()
 export class AnswerService {
@@ -23,7 +24,7 @@ export class AnswerService {
   ) {}
 
   async addAnswer(createAnswerRequest: CreateAnswerRequest, member: Member) {
-    const question = await this.questionRepository.findWithOriginById(
+    const question = await this.questionRepository.findOriginById(
       createAnswerRequest.questionId,
     );
 
@@ -49,7 +50,7 @@ export class AnswerService {
     const workbook = await this.workbookRepository.findById(
       question.workbook.id,
     );
-
+    validateWorkbook(workbook);
     if (!workbook.isOwnedBy(member)) {
       throw new QuestionForbiddenException();
     }
@@ -80,7 +81,7 @@ export class AnswerService {
   async getAnswerList(questionId: number) {
     const question = await this.questionRepository.findById(questionId);
     const originalQuestion =
-      await this.questionRepository.findWithOriginById(questionId);
+      await this.questionRepository.findOriginById(questionId);
 
     validateQuestion(originalQuestion);
 
