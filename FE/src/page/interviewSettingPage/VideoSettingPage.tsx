@@ -95,10 +95,6 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
           connectStatus={connectStatus}
           reloadMedia={() => void startMedia()}
           isSetting
-            height: 100%;
-            transform: scaleX(-1);
-            width: 100%;
-          `}
         />
       </div>
 
