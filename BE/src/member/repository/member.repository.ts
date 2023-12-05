@@ -14,11 +14,11 @@ export class MemberRepository {
   }
 
   async findById(id: number) {
-    return await this.memberRepository.findOneBy({ id: id });
+    return await this.memberRepository.findOneBy({ id });
   }
 
   async findByEmail(email: string) {
-    return await this.memberRepository.findOneBy({ email: email });
+    return await this.memberRepository.findOneBy({ email });
   }
 
   async query(query: string) {

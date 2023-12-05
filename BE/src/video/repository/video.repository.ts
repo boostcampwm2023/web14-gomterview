@@ -23,11 +23,11 @@ export class VideoRepository {
   }
 
   async findById(id: number) {
-    return await this.videoRepository.findOneBy({ id: id });
+    return await this.videoRepository.findOneBy({ id: Number(id) });
   }
 
   async findByUrl(url: string) {
-    return await this.videoRepository.findOneBy({ url: url });
+    return await this.videoRepository.findOneBy({ url });
   }
 
   async toggleVideoStatus(videoId: number) {
@@ -35,7 +35,7 @@ export class VideoRepository {
       .createQueryBuilder()
       .update(Video)
       .set({ isPublic: () => 'NOT isPublic' })
-      .where('id = :id', { id: videoId })
+      .where('id = :id', { id: Number(videoId) })
       .execute();
   }
 
