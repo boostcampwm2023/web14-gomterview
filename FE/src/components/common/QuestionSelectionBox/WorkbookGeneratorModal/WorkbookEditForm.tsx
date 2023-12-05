@@ -6,8 +6,8 @@ import WorkbookCategory from '@common/QuestionSelectionBox/WorkbookGeneratorModa
 import useInput from '@hooks/useInput';
 import { theme } from '@styles/theme';
 import useWorkbookQuery from '@hooks/apis/queries/useWorkbookQuery';
-import useWorkbookPatchMutation from '@hooks/apis/mutations/useWorkbookPatchMutation';
 import useCategoryQuery from '@hooks/apis/queries/useCategoryQuery';
+import useWorkbookEdit from '@hooks/useWorkbookEdit';
 
 type InterviewSetFormProps = {
   workbookId: number;
@@ -28,15 +28,15 @@ const WorkbookEditForm: React.FC<InterviewSetFormProps> = ({
     value: workbookTitle,
     onChange: handleWorkbookTitleChange,
     isEmpty: isWorkbookTitleEmpty,
-    clearInput: clearWorkbookTitle,
   } = useInput<HTMLInputElement>(workbookInfo?.title ?? '');
-  const {
-    value: workbookContent,
-    onChange: handleWorkbookContentChange,
-    clearInput: clearWorkbookContent,
-  } = useInput<HTMLTextAreaElement>(workbookInfo?.content ?? '');
+  const { value: workbookContent, onChange: handleWorkbookContentChange } =
+    useInput<HTMLTextAreaElement>(workbookInfo?.content ?? '');
 
-  const { mutate: patchInterviewSet } = useWorkbookPatchMutation();
+  const { editWorkbook } = useWorkbookEdit({
+    onSuccess: () => {
+      closeModal();
+    },
+  });
 
   const findSelectedCategoryId = () => {
     return categories?.find((_, index) => index === selectedCategoryIndex)?.id;
@@ -55,27 +55,18 @@ const WorkbookEditForm: React.FC<InterviewSetFormProps> = ({
       return;
     }
 
-    patchInterviewSet({
-      body: {
-        workbookId: workbookId,
-        title: workbookTitle,
-        content: workbookContent,
-        categoryId: selectedCategoryId,
-      },
+    editWorkbook({
+      workbookId: workbookId,
+      title: workbookTitle,
+      content: workbookContent,
+      categoryId: selectedCategoryId,
     });
-    closeModal();
-  };
-
-  const handleReset = () => {
-    clearWorkbookTitle();
-    clearWorkbookContent();
-    closeModal();
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      onReset={handleReset}
+      onReset={closeModal}
       css={css`
         display: flex;
         flex-direction: column;
