@@ -2,7 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MemberController } from './member.controller';
 import { MemberResponse } from '../dto/memberResponse';
 import { Request } from 'express';
-import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception';
+import {
+  InvalidTokenException,
+  ManipulatedTokenNotFiltered,
+  TokenExpiredException,
+} from 'src/token/exception/token.exception';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AuthModule } from 'src/auth/auth.module';
@@ -18,13 +22,19 @@ import { TokenModule } from '../../token/token.module';
 import { MemberModule } from '../member.module';
 import { Member } from '../entity/member';
 import { Token } from '../../token/entity/token';
-import { createIntegrationTestModule } from '../../util/test.util';
+import {
+  addAppModules,
+  createIntegrationTestModule,
+} from '../../util/test.util';
 import { Category } from '../../category/entity/category';
+import { MemberNicknameResponse } from '../dto/memberNicknameResponse';
 
-describe('MemberController', () => {
+describe('MemberController 단위 테스트', () => {
   let memberController: MemberController;
 
-  const mockMemberService = {};
+  const mockMemberService = {
+    getNameForInterview: jest.fn(),
+  };
   const mockTokenService = {};
 
   beforeEach(async () => {
@@ -44,29 +54,81 @@ describe('MemberController', () => {
     expect(memberController).toBeDefined();
   });
 
-  it('should return member information as MemberResponse type', async () => {
-    const result = memberController.getMyInfo(
-      mockReqWithMemberFixture as unknown as Request,
-    );
+  describe('getMyInfo', () => {
+    it('should return member information as MemberResponse type', async () => {
+      const result = memberController.getMyInfo(
+        mockReqWithMemberFixture as unknown as Request,
+      );
 
-    expect(result).toBeInstanceOf(MemberResponse);
-    expect(result).toEqual(MemberResponse.from(memberFixture));
-    expect(result['id']).toBe(1);
-    expect(result['email']).toBe('test@example.com');
-    expect(result['nickname']).toBe('TestUser');
-    expect(result['profileImg']).toBe('https://example.com');
+      expect(result).toBeInstanceOf(MemberResponse);
+      expect(result).toEqual(MemberResponse.from(memberFixture));
+      expect(result['id']).toBe(1);
+      expect(result['email']).toBe('test@example.com');
+      expect(result['nickname']).toBe('TestUser');
+      expect(result['profileImg']).toBe('https://example.com');
+    });
+
+    it('should handle invalid user in the request', async () => {
+      const mockUser = undefined;
+      const mockReq = { user: mockUser };
+      expect(() =>
+        memberController.getMyInfo(mockReq as unknown as Request),
+      ).toThrow(ManipulatedTokenNotFiltered);
+    });
   });
 
-  it('should handle invalid user in the request', async () => {
-    const mockUser = undefined;
-    const mockReq = { user: mockUser };
-    expect(() =>
-      memberController.getMyInfo(mockReq as unknown as Request),
-    ).toThrow(ManipulatedTokenNotFiltered);
+  describe('getNameForInterview', () => {
+    const nickname = 'fakeNickname';
+
+    it('면접 화면에 표출할 이름 반환 성공 시에는 MemberNicknameResponse 형태로 반환한다.', async () => {
+      // given
+      const mockReq = mockReqWithMemberFixture;
+
+      // when
+      mockMemberService.getNameForInterview.mockResolvedValue(
+        new MemberNicknameResponse(nickname),
+      );
+
+      // then
+      const result = await memberController.getNameForInterview(mockReq);
+
+      expect(result).toBeInstanceOf(MemberNicknameResponse);
+      expect(result.nickname).toBe(nickname);
+    });
+
+    it('면접 화면에 표출할 이름 반환 시 토큰이 만료되었으면 TokenExpiredException을 반환한다.', async () => {
+      // given
+      const mockReq = mockReqWithMemberFixture;
+
+      // when
+      mockMemberService.getNameForInterview.mockRejectedValue(
+        new TokenExpiredException(),
+      );
+
+      // then
+      expect(memberController.getNameForInterview(mockReq)).rejects.toThrow(
+        TokenExpiredException,
+      );
+    });
+
+    it('면접 화면에 표출할 이름 반환 시 토큰이 유효하지 않으면 InvalidTokenException을 반환한다.', async () => {
+      // given
+      const mockReq = mockReqWithMemberFixture;
+
+      // when
+      mockMemberService.getNameForInterview.mockRejectedValue(
+        new InvalidTokenException(),
+      );
+
+      // then
+      expect(memberController.getNameForInterview(mockReq)).rejects.toThrow(
+        InvalidTokenException,
+      );
+    });
   });
 });
 
-describe('MemberController (E2E Test)', () => {
+describe('MemberController 통합 테스트', () => {
   let app: INestApplication;
   let authService: AuthService;
 
@@ -80,34 +142,37 @@ describe('MemberController (E2E Test)', () => {
     );
 
     app = moduleFixture.createNestApplication();
+    addAppModules(app);
     await app.init();
 
     authService = moduleFixture.get<AuthService>(AuthService);
   });
 
-  it('GET /api/member (회원 정보 반환 성공)', (done) => {
-    authService.login(oauthRequestFixture).then((validToken) => {
+  describe('getMyInfo', () => {
+    it('쿠키를 가지고 회원 정보 반환 요청을 하면 200 상태 코드와 회원 정보가 반환된다.)', (done) => {
+      authService.login(oauthRequestFixture).then((validToken) => {
+        const agent = request.agent(app.getHttpServer());
+        agent
+          .get('/api/member')
+          .set('Cookie', [`accessToken=${validToken}`])
+          .expect(200)
+          .then((response) => {
+            expect(response.body.email).toBe(oauthRequestFixture.email);
+            expect(response.body.nickname).toBe(oauthRequestFixture.name);
+            expect(response.body.profileImg).toBe(oauthRequestFixture.img);
+            done();
+          });
+      });
+    });
+
+    it('유효하지 않은 토큰으로 회원 정보 반환을 요청하면 401 상태코드가 반환된다.)', (done) => {
       const agent = request.agent(app.getHttpServer());
       agent
         .get('/api/member')
-        .set('Cookie', [`accessToken=${validToken}`])
-        .expect(200)
-        .then((response) => {
-          expect(response.body.email).toBe(oauthRequestFixture.email);
-          expect(response.body.nickname).toBe(oauthRequestFixture.name);
-          expect(response.body.profileImg).toBe(oauthRequestFixture.img);
-          done();
-        });
+        .set('Cookie', [`accessToken=Bearer INVALID_TOKEN`])
+        .expect(401)
+        .then(() => done());
     });
-  });
-
-  it('GET /api/member (유효하지 않은 토큰 사용으로 인한 회원 정보 반환 실패)', (done) => {
-    const agent = request.agent(app.getHttpServer());
-    agent
-      .get('/api/member')
-      .set('Cookie', [`accessToken=Bearer INVALID_TOKEN`])
-      .expect(401)
-      .then(() => done());
   });
 
   afterAll(async () => {
