@@ -3,11 +3,10 @@
     "@babel/preset-env",
     [
       "@babel/preset-react",
-      {
-        "runtime": "automatic"
-      }
+      { "runtime": "automatic", "importSource": "@emotion/react" }
     ],
     "@babel/preset-typescript"
   ],
+  "plugins": ["@emotion/babel-plugin"],
   "targets": "> 0.5%, not dead"
 }

@@ -72,17 +72,6 @@ module.exports = (env) => {
           exclude: /node_modules/,
           use: {
             loader: 'babel-loader',
-            options: {
-              presets: [
-                '@babel/preset-env',
-                [
-                  '@babel/preset-react',
-                  { runtime: 'automatic', importSource: '@emotion/react' },
-                ],
-                '@babel/preset-typescript', // TypeScript를 위한 Babel 프리셋 추가
-              ],
-              plugins: ['@emotion/babel-plugin'],
-            },
           },
         },
         {
