@@ -28,17 +28,21 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
   const {
     videoRef: mirrorVideoRef,
     connectStatus,
+    media,
     startMedia,
     stopMedia,
   } = useMedia();
 
   useEffect(() => {
-    if (isCurrentPage) void startMedia();
+    if (isCurrentPage && !media) {
+      void startMedia();
+      return;
+    }
 
     return () => {
-      stopMedia();
+      if (!isCurrentPage && media) stopMedia();
     };
-  }, [isCurrentPage]);
+  }, [isCurrentPage, media, startMedia, stopMedia]);
 
   useEffect(() => {
     if (connectStatus === 'connect') {
