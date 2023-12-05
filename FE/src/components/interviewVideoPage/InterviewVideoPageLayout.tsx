@@ -1,6 +1,6 @@
-import { Logo } from '@common/index';
 import Layout from '@components/layout/Layout';
 import { css } from '@emotion/react';
+import { Header } from '@components/layout';
 
 type InterviewVideoPageLayoutProps = {
   children: React.ReactNode;
@@ -11,20 +11,14 @@ const InterviewVideoPageLayout: React.FC<InterviewVideoPageLayoutProps> = ({
 }) => {
   return (
     <div>
-      <div
-        css={css`
-          display: flex;
-          padding: 2rem;
-        `}
-      >
-        <Logo />
-      </div>
+      <Header />
       <Layout
         direction="column"
         full
         css={css`
           align-items: center;
           row-gap: 1rem;
+          margin-top: 5rem;
           min-height: auto;
         `}
       >
