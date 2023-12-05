@@ -2,7 +2,7 @@ import { questionSetting } from '@atoms/interviewSetting';
 import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
 import { useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import useQuestionWorkbookQuery from '@hooks/apis/queries/useQuestionWorkbookQuery';
 import { Typography, Toggle, Tabs, CheckBox } from '@foundation/index';
 import { WorkbookTitleListResDto } from '@/types/workbook';
@@ -36,6 +36,8 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
   const selectedQuestions = settingPage.selectedData.filter(
     (question) => question.workbookId === workbook.workbookId
   );
+  // 비회원 로직 작성시 훅으로 분리할 것을 염두해서 위의 settingPage 변수와 통합하지 않았습니다.
+  const [, setSelectedQuestions] = useRecoilState(questionSetting);
 
   const [onlySelectedOption, setOnlySelectedOption] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -71,6 +73,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
     setIsEditMode(false);
   };
 
+  //TODO 비회원 구현할 때 수정 로직 훅으로 분리하기
   const handleDeleteQuestion = async () => {
     await Promise.all(
       checkedQuestion.map((questionId) => {
@@ -79,6 +82,13 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
     );
     void queryClient.invalidateQueries({
       queryKey: QUERY_KEY.WORKBOOK_ID(workbook.workbookId),
+    });
+
+    setSelectedQuestions({
+      isSuccess: true,
+      selectedData: settingPage.selectedData.filter(
+        (question) => !checkedQuestion.includes(question.questionId)
+      ),
     });
     handleCancelEditMode();
   };
