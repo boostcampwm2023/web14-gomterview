@@ -1,4 +1,7 @@
-import { HttpNotFoundException } from '../../util/exception.util';
+import {
+  HttpForbiddenException,
+  HttpNotFoundException,
+} from '../../util/exception.util';
 
 class QuestionNotFoundException extends HttpNotFoundException {
   constructor() {
@@ -6,4 +9,10 @@ class QuestionNotFoundException extends HttpNotFoundException {
   }
 }
 
-export { QuestionNotFoundException };
+class QuestionForbiddenException extends HttpForbiddenException {
+  constructor() {
+    super('질문에 대한 권한이 없습니다.', 'Q02');
+  }
+}
+
+export { QuestionNotFoundException, QuestionForbiddenException };

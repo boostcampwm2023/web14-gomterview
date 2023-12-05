@@ -5,7 +5,6 @@ import {
   Get,
   Param,
   Post,
-  Query,
   Req,
   Res,
   UseGuards,
@@ -42,6 +41,11 @@ export class QuestionController {
   @ApiResponse(
     createApiResponseOption(201, '커스텀 질문 저장 완료', QuestionResponse),
   )
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
+  @ApiResponse(createApiResponseOption(401, 'T01', null))
+  @ApiResponse(createApiResponseOption(410, 'T02', null))
+  @ApiResponse(createApiResponseOption(404, 'W01', null))
+  @ApiResponse(createApiResponseOption(403, 'W02', null))
   async createCustomQuestion(
     @Body() createQuestionRequest: CreateQuestionRequest,
     @Req() req: Request,
@@ -60,6 +64,11 @@ export class QuestionController {
     summary: '질문 복제',
   })
   @ApiResponse(createApiResponseOption(201, '질문 복제', WorkbookIdResponse))
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
+  @ApiResponse(createApiResponseOption(401, 'T01', null))
+  @ApiResponse(createApiResponseOption(410, 'T02', null))
+  @ApiResponse(createApiResponseOption(404, 'W01', null))
+  @ApiResponse(createApiResponseOption(403, 'W02', null))
   async copyQuestions(
     @Body() copyQuestionRequest: CopyQuestionRequest,
     @Req() req: Request,
@@ -77,19 +86,28 @@ export class QuestionController {
   @ApiResponse(
     createApiResponseOption(200, 'QuestionResponse 리스트', [QuestionResponse]),
   )
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
+  @ApiResponse(createApiResponseOption(401, 'T01', null))
+  @ApiResponse(createApiResponseOption(410, 'T02', null))
+  @ApiResponse(createApiResponseOption(400, 'W03', null))
   async findWorkbookQuestions(@Param('workbookId') workbookId: number) {
     return await this.questionService.findAllByWorkbookId(workbookId);
   }
 
-  @Delete()
+  @Delete(':questionId')
   @UseGuards(AuthGuard('jwt'))
   @ApiCookieAuth()
   @ApiOperation({
     summary: '질문 삭제',
   })
   @ApiResponse(createApiResponseOption(204, '질문 삭제', null))
+  @ApiResponse(createApiResponseOption(401, 'T01', null))
+  @ApiResponse(createApiResponseOption(403, 'W02', null))
+  @ApiResponse(createApiResponseOption(404, 'W01, Q01', null))
+  @ApiResponse(createApiResponseOption(410, 'T02', null))
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
   async deleteQuestionById(
-    @Query('questionId') questionId: number,
+    @Param('questionId') questionId: number,
     @Req() req: Request,
     @Res() res: Response,
   ) {

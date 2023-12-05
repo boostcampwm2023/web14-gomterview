@@ -7,7 +7,10 @@ import { memberFixture } from '../../member/fixture/member.fixture';
 import { questionFixture } from '../../question/fixture/question.fixture';
 import { CreateAnswerRequest } from '../dto/createAnswerRequest';
 import { AnswerResponse } from '../dto/answerResponse';
-import { QuestionNotFoundException } from '../../question/exception/question.exception';
+import {
+  QuestionForbiddenException,
+  QuestionNotFoundException,
+} from '../../question/exception/question.exception';
 import { INestApplication } from '@nestjs/common';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { MemberModule } from '../../member/member.module';
@@ -33,7 +36,6 @@ import {
 } from '../../workbook/fixture/workbook.fixture';
 import { Workbook } from '../../workbook/entity/workbook';
 import { WorkbookModule } from '../../workbook/workbook.module';
-import { WorkbookForbiddenException } from '../../workbook/exception/workbook.exception';
 import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { CategoryRepository } from '../../category/repository/category.repository';
 import { CategoryModule } from '../../category/category.module';
@@ -168,7 +170,7 @@ describe('AnswerService 단위 테스트', () => {
       //then
       await expect(
         service.setDefaultAnswer(defaultAnswerRequestFixture, memberFixture),
-      ).rejects.toThrow(new WorkbookForbiddenException());
+      ).rejects.toThrow(new QuestionForbiddenException());
     });
   });
 });

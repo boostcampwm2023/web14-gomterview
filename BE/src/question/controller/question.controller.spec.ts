@@ -202,7 +202,7 @@ describe('QuestionController 통합테스트', () => {
       const token = await authService.login(memberFixturesOAuthRequest);
       const agent = request.agent(app.getHttpServer());
       await agent
-        .delete(`/api/question?questionId=${question.id}`)
+        .delete(`/api/question/${question.id}`)
         .set('Cookie', [`accessToken=${token}`])
         .expect(204);
     });
@@ -218,7 +218,7 @@ describe('QuestionController 통합테스트', () => {
 
       //when & then
       const agent = request.agent(app.getHttpServer());
-      await agent.delete(`/api/question?questionId=${question.id}`).expect(401);
+      await agent.delete(`/api/question/${question.id}`).expect(401);
     });
 
     it('questionId로 질문이 조회되지 않으면 QuestionNotFoundException을 발생시킨다.', async () => {
@@ -230,7 +230,7 @@ describe('QuestionController 통합테스트', () => {
       const token = await authService.login(memberFixturesOAuthRequest);
       const agent = request.agent(app.getHttpServer());
       await agent
-        .delete(`/api/question?questionId=${1000}`)
+        .delete(`/api/question/${1000}`)
         .set('Cookie', [`accessToken=${token}`])
         .expect(404);
     });
@@ -247,7 +247,7 @@ describe('QuestionController 통합테스트', () => {
       const token = await authService.login(oauthRequestFixture);
       const agent = request.agent(app.getHttpServer());
       await agent
-        .delete(`/api/question?questionId=${question.id}`)
+        .delete(`/api/question/${question.id}`)
         .set('Cookie', [`accessToken=${token}`])
         .expect(403);
     });
