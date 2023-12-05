@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd frontEnd
+npx lint-staged
