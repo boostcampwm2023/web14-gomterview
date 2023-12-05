@@ -116,11 +116,6 @@ export class VideoService {
       throw new VideoAccessForbiddenException();
   }
 
-  private async getQuestionContent(questionId: number) {
-    const question = await this.questionRepository.findById(questionId);
-    return question ? question.content : '삭제된 질문';
-  }
-
   private getHashedUrl(url: string): string {
     try {
       const hash = crypto.createHash('md5').update(url).digest('hex');

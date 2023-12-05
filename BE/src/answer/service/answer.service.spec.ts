@@ -40,6 +40,7 @@ import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { CategoryRepository } from '../../category/repository/category.repository';
 import { CategoryModule } from '../../category/category.module';
 import { Category } from '../../category/entity/category';
+import { QuestionResponse } from '../../question/dto/questionResponse';
 
 describe('AnswerService 단위 테스트', () => {
   let service: AnswerService;
@@ -297,9 +298,16 @@ describe('AnswerService 통합테스트', () => {
         member,
       );
       const updatedQuestion = await questionRepository.findById(question.id);
+      const questionResponse = QuestionResponse.from(updatedQuestion);
 
       //then
       expect(updatedQuestion.defaultAnswer.id).toEqual(answer.id);
+      expect(questionResponse.questionId).toBe(updatedQuestion.id);
+      expect(questionResponse.questionContent).toBe(updatedQuestion.content);
+      expect(questionResponse.answerId).toBe(updatedQuestion.defaultAnswer.id);
+      expect(questionResponse.answerContent).toBe(
+        updatedQuestion.defaultAnswer.content,
+      );
     });
   });
 
@@ -352,6 +360,33 @@ describe('AnswerService 통합테스트', () => {
       }
       const answer = await answerRepository.save(
         Answer.of(`defaultAnswer`, member, question),
+      );
+      question.setDefaultAnswer(answer);
+      await questionRepository.save(question);
+
+      //when
+
+      //then
+      const list = await answerService.getAnswerList(question.id);
+      expect(list[0].content).toEqual('defaultAnswer');
+    });
+
+    it('원본질문이 아니면 원본 질문의 답변이 온다.', async () => {
+      //given
+      const member = await memberRepository.save(memberFixture);
+      await categoryRepository.save(categoryFixtureWithId);
+      const workbook = await workbookRepository.save(workbookFixture);
+      const origin = await questionRepository.save(
+        Question.of(workbook, null, 'origin'),
+      );
+      const question = await questionRepository.save(
+        Question.of(workbook, origin, 'test'),
+      );
+      for (let index = 1; index <= 10; index++) {
+        await answerRepository.save(Answer.of(`test${index}`, member, origin));
+      }
+      const answer = await answerRepository.save(
+        Answer.of(`defaultAnswer`, member, origin),
       );
       question.setDefaultAnswer(answer);
       await questionRepository.save(question);

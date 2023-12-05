@@ -36,8 +36,4 @@ export class Answer extends DefaultEntity {
   isOwnedBy(member: Member) {
     return this.member.id === member.id;
   }
-
-  isAnswerOf(question: Question) {
-    return this.question.id === question.id;
-  }
 }

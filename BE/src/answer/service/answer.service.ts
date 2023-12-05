@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AnswerRepository } from '../repository/answer.repository';
 import { QuestionRepository } from '../../question/repository/question.repository';
-import { isEmpty } from 'class-validator';
 import { CreateAnswerRequest } from '../dto/createAnswerRequest';
 import { Member } from '../../member/entity/member';
 import { Question } from '../../question/entity/question';
@@ -118,11 +117,5 @@ export class AnswerService {
   ) {
     const answer = Answer.of(createAnswerRequest.content, member, question);
     return await this.answerRepository.save(answer);
-  }
-
-  private async getOriginalQuestion(question: Question) {
-    return isEmpty(question.origin)
-      ? question
-      : this.questionRepository.findById(question.origin.id);
   }
 }

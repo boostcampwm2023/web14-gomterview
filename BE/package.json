@@ -97,6 +97,19 @@
     "testEnvironment": "node",
     "moduleNameMapper": {
       "src/(.*)": "<rootDir>/$1"
-    }
+    },
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/src/util/",
+      "/src/config/",
+      "app.controller.ts",
+      "app.entity.ts",
+      "app.module.ts",
+      "app.service.ts",
+      "main.ts",
+      "google.strategy.ts",
+      "/src/auth/",
+      "/src/token/"
+    ]
   }
 }

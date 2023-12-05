@@ -13,16 +13,8 @@ export class CategoryRepository {
     return await this.repository.save(category);
   }
 
-  async remove(category: Category) {
-    await this.repository.remove(category);
-  }
-
   async findByCategoryId(categoryId: number) {
     return await this.repository.findOneBy({ id: categoryId });
-  }
-
-  async query(query: string) {
-    return await this.repository.query(query);
   }
 
   async findAll() {
