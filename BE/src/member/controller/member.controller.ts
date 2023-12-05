@@ -3,10 +3,10 @@ import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { MemberResponse } from '../dto/memberResponse';
 import {
-  ApiTags,
-  ApiResponse,
-  ApiOperation,
   ApiCookieAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { Member } from '../entity/member';
 import { createApiResponseOption } from 'src/util/swagger.util';
@@ -50,8 +50,8 @@ export class MemberController {
       MemberNicknameResponse,
     ),
   )
-  @ApiResponse(createApiResponseOption(401, 'T1', null))
-  @ApiResponse(createApiResponseOption(410, 'T2', null))
+  @ApiResponse(createApiResponseOption(401, 'T01', null))
+  @ApiResponse(createApiResponseOption(410, 'T02', null))
   async getNameForInterview(@Req() req: Request) {
     return await this.memberService.getNameForInterview(req);
   }
