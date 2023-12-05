@@ -34,9 +34,9 @@ const useWorkbookEdit = ({ onSuccess }: useWorkbookEditProps) => {
 
     queryClient.setQueryData<WorkbookResDto>(
       QUERY_KEY.WORKBOOK_ID(workbook.workbookId),
-      (current) =>
-        current && {
-          ...current,
+      (prev) =>
+        prev && {
+          ...prev,
           categoryId: workbook.categoryId,
           title: workbook.title,
           content: workbook.content,
