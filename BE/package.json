@@ -107,7 +107,9 @@
       "app.module.ts",
       "app.service.ts",
       "main.ts",
-      "google.strategy.ts"
+      "google.strategy.ts",
+      "/src/auth/",
+      "/src/token/"
     ]
   }
 }
