@@ -83,7 +83,7 @@ describe('MemberController 단위 테스트', () => {
   describe('getNameForInterview', () => {
     const nickname = 'fakeNickname';
 
-    it('면접 화면에 표출할 닉네임 반환 성공 시에는 MemberNicknameResponse 형태로 반환한다.', async () => {
+    it('면접 화면에 표출할 닉네임 반환 성공 시에는 MemberNicknameResponse 형식으로 반환한다.', async () => {
       // given
       const mockReq = mockReqWithMemberFixture;
 
@@ -207,7 +207,7 @@ describe('MemberController 통합 테스트', () => {
     });
 
     it('만료된 토큰으로 면접 화면에 표출할 닉네임 반환을 요청하면 410 상태코드가 반환된다.', async () => {
-      const expirationTime = Math.floor(Date.now() / 1000) - 1;
+      const expirationTime = -1;
       const expiredToken = await jwtService.signAsync(
         { id: memberFixture.id } as TokenPayload,
         {
@@ -226,6 +226,7 @@ describe('MemberController 통합 테스트', () => {
   afterEach(async () => {
     await memberRepository.query('delete from Member');
     await memberRepository.query('delete from Token');
+    await memberRepository.query('DELETE FROM sqlite_sequence'); // Auto Increment 초기화
   });
 
   afterAll(async () => await app.close());
