@@ -23,7 +23,7 @@ const ErrorPage = () => {
         `}
       >
         <Typography variant="title1">{`${error?.status} error`}</Typography>
-        <Typography variant="body1">{error.statusText}</Typography>
+        <Typography variant="body1">{error?.statusText}</Typography>
       </div>
     </ErrorPageLayout>
   );
