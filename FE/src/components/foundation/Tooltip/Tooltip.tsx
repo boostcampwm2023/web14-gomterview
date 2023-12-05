@@ -1,8 +1,17 @@
-import { css } from '@emotion/react';
+import { css, keyframes } from '@emotion/react';
 import { theme } from '@styles/theme';
 import React from 'react';
 import { Typography } from '..';
 import { positionStyles } from './Tooltip.styles';
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
 
 type TooltipProps = {
   children: React.ReactNode;
@@ -20,6 +29,7 @@ const Tooltip: React.FC<TooltipProps> = ({
       css={[
         css`
           position: relative;
+
           &:hover > :first-child {
             position: absolute;
             padding: 0.3rem 0.5rem;
@@ -38,6 +48,7 @@ const Tooltip: React.FC<TooltipProps> = ({
         noWrap
         css={css`
           display: none;
+          animation: ${fadeIn} 0.2s linear;
         `}
       >
         {title}
