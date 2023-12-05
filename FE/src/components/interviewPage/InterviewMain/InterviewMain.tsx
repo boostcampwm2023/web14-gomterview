@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { RefObject } from 'react';
-import Mirror from './Mirror';
+import { Mirror } from '@common/index';
 import { theme } from '@styles/theme';
 import { InterviewQuestion, InterviewAnswer } from './index';
 
