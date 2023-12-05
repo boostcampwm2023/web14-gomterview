@@ -16,7 +16,7 @@ const CategoryMenu: React.FC<CategoryMenuProps> = ({ handleTabChange }) => {
   const isDeviceBreakpoint = useBreakpoint();
 
   return (
-    <Tabs initialValue="0">
+    <Tabs value="0">
       <ResponsiveMenu
         css={css`
           margin-bottom: 1.25rem;

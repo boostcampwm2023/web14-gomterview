@@ -14,7 +14,7 @@ const MyPageTabs: React.FC = () => {
 
   return (
     <Tabs
-      initialValue={value}
+      value={value}
       css={css`
         display: flex;
         flex-direction: column;

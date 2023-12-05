@@ -12,9 +12,6 @@ import InterviewSetGeneratorModal from '@common/QuestionSelectionBox/InterviewSe
 
 const QuestionSelectionBox = () => {
   const [selectedTabIndex, setSelectedTabIndex] = useState('0');
-  const [selectedWorkbookId, setSelectedWorkbookId] = useState<
-    number | undefined
-  >(undefined);
   const { data: workbookListData } = useWorkbookTitleListQuery();
 
   const [
@@ -26,11 +23,6 @@ const QuestionSelectionBox = () => {
     isInterviewSetGeneratorModalOpen,
     setIsInterviewSetGeneratorModalOpen,
   ] = useState(false);
-
-  const handleInterviewSetGeneratorModal = (workbookId?: number) => {
-    setSelectedWorkbookId(workbookId);
-    setIsInterviewSetGeneratorModalOpen(true);
-  };
 
   if (!workbookListData) return;
   return (
@@ -49,7 +41,6 @@ const QuestionSelectionBox = () => {
         />
       )}
       <InterviewSetGeneratorModal
-        workbookId={selectedWorkbookId}
         isOpen={isInterviewSetGeneratorModalOpen}
         closeModal={() => setIsInterviewSetGeneratorModalOpen(false)}
       />
@@ -61,7 +52,7 @@ const QuestionSelectionBox = () => {
         `}
       >
         <Tabs
-          initialValue={selectedTabIndex}
+          value={selectedTabIndex}
           css={css`
             display: flex;
             width: 100%;
@@ -84,7 +75,7 @@ const QuestionSelectionBox = () => {
             <Button
               size="md"
               variants="secondary"
-              onClick={() => handleInterviewSetGeneratorModal()}
+              onClick={() => setIsInterviewSetGeneratorModalOpen(true)}
               css={css`
                 display: flex;
                 align-items: center;
@@ -112,11 +103,11 @@ const QuestionSelectionBox = () => {
           >
             {workbookListData.map((workbook, index) => (
               <TabPanelItem
+                key={workbook.workbookId}
                 selectedTabIndex={selectedTabIndex}
                 tabIndex={index.toString()}
                 workbook={workbook}
-                onEditButtonClick={handleInterviewSetGeneratorModal}
-                key={workbook.workbookId}
+                onWorkbookDelete={() => setSelectedTabIndex('0')}
               />
             ))}
           </div>
