@@ -1,6 +1,7 @@
 import { videoSetting } from '@/atoms/interviewSetting';
 import useMedia from '@/hooks/useMedia';
 import { theme } from '@/styles/theme';
+import { Mirror } from '@common/index';
 import { RecordStatus } from '@components/interviewPage/InterviewHeader';
 import {
   Description,
