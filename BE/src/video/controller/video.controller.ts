@@ -62,8 +62,7 @@ export class VideoController {
       PreSignedUrlResponse,
     ),
   )
-  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
-  @ApiResponse(createApiResponseOption(500, 'V1', null))
+  @ApiResponse(createApiResponseOption(500, 'V1, SERVER', null))
   async getPreSignedUrl(@Req() req: Request) {
     return await this.videoService.getPreSignedUrl(req.user as Member);
   }
@@ -96,8 +95,7 @@ export class VideoController {
     ),
   )
   @ApiResponse(createApiResponseOption(403, 'V2', null))
-  @ApiResponse(createApiResponseOption(404, 'V4', null))
-  @ApiResponse(createApiResponseOption(404, 'M1', null))
+  @ApiResponse(createApiResponseOption(404, 'V4, M1', null))
   @ApiResponse(createApiResponseOption(500, 'V6', null))
   async getVideoDetailByHash(@Param('hash') hash: string) {
     return await this.videoService.getVideoDetailByHash(hash);
@@ -118,8 +116,7 @@ export class VideoController {
   )
   @ApiResponse(createApiResponseOption(403, 'V2', null))
   @ApiResponse(createApiResponseOption(404, 'V3', null))
-  @ApiResponse(createApiResponseOption(404, 'V8', null))
-  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
+  @ApiResponse(createApiResponseOption(500, 'V8, SERVER', null))
   async getVideoDetail(@Param('videoId') videoId: number, @Req() req: Request) {
     return await this.videoService.getVideoDetail(videoId, req.user as Member);
   }
@@ -135,10 +132,7 @@ export class VideoController {
   )
   @ApiResponse(createApiResponseOption(403, 'V2', null))
   @ApiResponse(createApiResponseOption(404, 'V3', null))
-  @ApiResponse(createApiResponseOption(500, 'V5', null))
-  @ApiResponse(createApiResponseOption(500, 'V6', null))
-  @ApiResponse(createApiResponseOption(500, 'V7', null))
-  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
+  @ApiResponse(createApiResponseOption(500, 'V5, V6, V7, SERVER', null))
   async toggleVideoStatus(
     @Param('videoId') videoId: number,
     @Req() req: Request,
