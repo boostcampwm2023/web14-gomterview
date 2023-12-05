@@ -38,11 +38,7 @@ export const getWorkbookById = async (workbookId: number) => {
   });
 };
 
-export const patchWorkbookById = async ({
-  body,
-}: {
-  body: WorkbookPatchReqDto;
-}) => {
+export const patchWorkbookById = async (body: WorkbookPatchReqDto) => {
   return await getAPIResponseData<null, WorkbookPatchReqDto>({
     method: 'patch',
     url: API.WORKBOOK,
