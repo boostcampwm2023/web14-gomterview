@@ -1,8 +1,8 @@
 import { Button, Input, InputArea } from '@foundation/index';
 import { css } from '@emotion/react';
 import { FormEventHandler, useState } from 'react';
-import LabelBox from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/LabelBox';
-import InterviewSetCategory from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetCategory';
+import LabelBox from '@common/QuestionSelectionBox/WorkbookGeneratorModal/LabelBox';
+import WorkbookCategory from '@common/QuestionSelectionBox/WorkbookGeneratorModal/WorkbookCategory';
 import useInput from '@hooks/useInput';
 import useWorkbookPostMutation from '@hooks/apis/mutations/useWorkbookPostMutation';
 import { theme } from '@styles/theme';
@@ -11,7 +11,7 @@ import useCategoryQuery from '@hooks/apis/queries/useCategoryQuery';
 type InterviewSetAddFormProps = {
   closeModal: () => void;
 };
-const InterviewSetAddForm: React.FC<InterviewSetAddFormProps> = ({
+const WorkbookAddForm: React.FC<InterviewSetAddFormProps> = ({
   closeModal,
 }) => {
   const { data: categories } = useCategoryQuery();
@@ -96,7 +96,7 @@ const InterviewSetAddForm: React.FC<InterviewSetAddFormProps> = ({
         />
       </LabelBox>
       <LabelBox labelName="카테고리">
-        <InterviewSetCategory
+        <WorkbookCategory
           categories={categories}
           selectedCategoryIndex={selectedCategoryIndex}
           onClick={handleCategoryClick}
@@ -127,4 +127,4 @@ const InterviewSetAddForm: React.FC<InterviewSetAddFormProps> = ({
   );
 };
 
-export default InterviewSetAddForm;
+export default WorkbookAddForm;

@@ -8,7 +8,7 @@ type InterviewSetCategoryProps = {
   selectedCategoryIndex: number;
   onClick: (index: number) => void;
 };
-const InterviewSetCategory: React.FC<InterviewSetCategoryProps> = ({
+const WorkbookCategory: React.FC<InterviewSetCategoryProps> = ({
   categories,
   selectedCategoryIndex,
   onClick,
@@ -40,4 +40,4 @@ const InterviewSetCategory: React.FC<InterviewSetCategoryProps> = ({
   );
 };
 
-export default InterviewSetCategory;
+export default WorkbookCategory;

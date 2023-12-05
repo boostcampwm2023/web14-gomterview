@@ -8,7 +8,7 @@ import { Box, Button, Icon, Tabs, Typography } from '@foundation/index';
 import useWorkbookTitleListQuery from '@hooks/apis/queries/useWorkbookTitleListQuery';
 import { useState } from 'react';
 import QuestionTabList from '@common/QuestionSelectionBox/QuestionTabList';
-import InterviewSetGeneratorModal from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetGeneratorModal';
+import WorkbookGeneratorModal from '@common/QuestionSelectionBox/WorkbookGeneratorModal/WorkbookGeneratorModal';
 
 const QuestionSelectionBox = () => {
   const [selectedTabIndex, setSelectedTabIndex] = useState('0');
@@ -40,7 +40,7 @@ const QuestionSelectionBox = () => {
           }
         />
       )}
-      <InterviewSetGeneratorModal
+      <WorkbookGeneratorModal
         isOpen={isInterviewSetGeneratorModalOpen}
         closeModal={() => setIsInterviewSetGeneratorModalOpen(false)}
       />

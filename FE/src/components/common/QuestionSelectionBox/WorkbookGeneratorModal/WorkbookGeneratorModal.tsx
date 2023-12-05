@@ -1,14 +1,14 @@
 import { Modal } from '@foundation/index';
 import { css } from '@emotion/react';
-import InterviewSetEditForm from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetEditForm';
-import InterviewSetAddForm from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetAddForm';
+import WorkbookEditForm from '@common/QuestionSelectionBox/WorkbookGeneratorModal/WorkbookEditForm';
+import WorkbookAddForm from '@common/QuestionSelectionBox/WorkbookGeneratorModal/WorkbookAddForm';
 
 type InterviewSetGeneratorModalProps = {
   isOpen: boolean;
   closeModal: () => void;
   workbookId?: number;
 };
-const InterviewSetGeneratorModal: React.FC<InterviewSetGeneratorModalProps> = ({
+const WorkbookGeneratorModal: React.FC<InterviewSetGeneratorModalProps> = ({
   isOpen,
   closeModal,
   workbookId,
@@ -26,16 +26,13 @@ const InterviewSetGeneratorModal: React.FC<InterviewSetGeneratorModalProps> = ({
         `}
       >
         {workbookId ? (
-          <InterviewSetEditForm
-            workbookId={workbookId}
-            closeModal={closeModal}
-          />
+          <WorkbookEditForm workbookId={workbookId} closeModal={closeModal} />
         ) : (
-          <InterviewSetAddForm closeModal={closeModal} />
+          <WorkbookAddForm closeModal={closeModal} />
         )}
       </div>
     </Modal>
   );
 };
 
-export default InterviewSetGeneratorModal;
+export default WorkbookGeneratorModal;

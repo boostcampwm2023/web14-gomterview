@@ -1,8 +1,8 @@
 import { Button, Input, InputArea } from '@foundation/index';
 import { css } from '@emotion/react';
 import { FormEventHandler, useState } from 'react';
-import LabelBox from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/LabelBox';
-import InterviewSetCategory from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetCategory';
+import LabelBox from '@common/QuestionSelectionBox/WorkbookGeneratorModal/LabelBox';
+import WorkbookCategory from '@common/QuestionSelectionBox/WorkbookGeneratorModal/WorkbookCategory';
 import useInput from '@hooks/useInput';
 import { theme } from '@styles/theme';
 import useWorkbookQuery from '@hooks/apis/queries/useWorkbookQuery';
@@ -13,7 +13,7 @@ type InterviewSetFormProps = {
   workbookId: number;
   closeModal: () => void;
 };
-const InterviewSetEditForm: React.FC<InterviewSetFormProps> = ({
+const WorkbookEditForm: React.FC<InterviewSetFormProps> = ({
   workbookId,
   closeModal,
 }) => {
@@ -100,7 +100,7 @@ const InterviewSetEditForm: React.FC<InterviewSetFormProps> = ({
         />
       </LabelBox>
       <LabelBox labelName="카테고리">
-        <InterviewSetCategory
+        <WorkbookCategory
           categories={categories}
           selectedCategoryIndex={selectedCategoryIndex}
           onClick={handleCategoryClick}
@@ -131,4 +131,4 @@ const InterviewSetEditForm: React.FC<InterviewSetFormProps> = ({
   );
 };
 
-export default InterviewSetEditForm;
+export default WorkbookEditForm;

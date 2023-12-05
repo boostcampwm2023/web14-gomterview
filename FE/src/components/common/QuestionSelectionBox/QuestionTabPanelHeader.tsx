@@ -3,7 +3,7 @@ import { Button, Icon, Menu, MenuItem, Typography } from '@foundation/index';
 import { theme } from '@styles/theme';
 import { ExcludeArray } from '@/types/utils';
 import { WorkbookTitleListResDto } from '@/types/workbook';
-import InterviewSetGeneratorModal from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetGeneratorModal';
+import WorkbookGeneratorModal from '@common/QuestionSelectionBox/WorkbookGeneratorModal/WorkbookGeneratorModal';
 import { useState } from 'react';
 import useWorkbookDeleteMutation from '@hooks/apis/mutations/useWorkbookDeleteMutation';
 
@@ -33,7 +33,7 @@ const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
 
   return (
     <>
-      <InterviewSetGeneratorModal
+      <WorkbookGeneratorModal
         workbookId={workbook.workbookId}
         isOpen={isInterviewSetGeneratorModalOpen}
         closeModal={() => setIsInterviewSetGeneratorModalOpen(false)}
