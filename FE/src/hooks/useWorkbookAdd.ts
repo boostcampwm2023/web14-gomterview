@@ -17,6 +17,15 @@ const useWorkbookAdd = ({ onSuccess }: useWorkbookAddProps) => {
 
   const { mutate: postInterviewSet } = useWorkbookPostMutation();
 
+  const generateNewWorkbookId = () => {
+    const lastId =
+      queryClient
+        .getQueryData<WorkbookTitleListResDto>(QUERY_KEY.WORKBOOK_TITLE)
+        ?.at(-1)?.workbookId ?? 0;
+
+    return lastId > 0 ? 0 : lastId - 1;
+  };
+
   const createNewWorkbookTitleItem = (
     workbook: WorkbookAddReqDto,
     newId: number
@@ -40,20 +49,7 @@ const useWorkbookAdd = ({ onSuccess }: useWorkbookAddProps) => {
   };
 
   const addWorkbookToServer = (workbook: WorkbookAddReqDto) => {
-    postInterviewSet({
-      title: workbook.title,
-      content: workbook.content,
-      categoryId: workbook.categoryId,
-    });
-  };
-
-  const generateNewWorkbookId = () => {
-    const lastId =
-      queryClient
-        .getQueryData<WorkbookTitleListResDto>(QUERY_KEY.WORKBOOK_TITLE)
-        ?.at(-1)?.workbookId ?? 0;
-
-    return lastId > 0 ? 0 : lastId - 1;
+    postInterviewSet(workbook);
   };
 
   const addWorkbookToState = (workbook: WorkbookAddReqDto) => {
