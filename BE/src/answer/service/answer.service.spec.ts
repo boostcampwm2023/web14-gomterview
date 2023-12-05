@@ -51,6 +51,8 @@ describe('AnswerService 단위 테스트', () => {
     findById: jest.fn(),
     findWithOriginById: jest.fn(),
     save: jest.fn(),
+    findOriginById: jest.fn(),
+    update: jest.fn(),
   };
 
   const mockWorkbookRepository = {
@@ -84,9 +86,7 @@ describe('AnswerService 단위 테스트', () => {
   describe('답변 추가', () => {
     it('질문에 답변을 추가한다.', async () => {
       //given
-      mockQuestionRepository.findWithOriginById.mockResolvedValue(
-        questionFixture,
-      );
+      mockQuestionRepository.findOriginById.mockResolvedValue(questionFixture);
 
       //when
       const answer = Answer.of('test', memberFixture, questionFixture);
@@ -100,7 +100,7 @@ describe('AnswerService 단위 테스트', () => {
 
     it('질문에 답변을 추가할 때 id로 질문을 확인할 수 없을 때 QuestionNotFoundException을 반환한다.', async () => {
       //given
-      mockQuestionRepository.findWithOriginById.mockRejectedValue(
+      mockQuestionRepository.findOriginById.mockRejectedValue(
         new QuestionNotFoundException(),
       );
 
@@ -121,7 +121,7 @@ describe('AnswerService 단위 테스트', () => {
 
       //when
       mockQuestionRepository.findById.mockResolvedValue(questionFixture);
-      mockQuestionRepository.save.mockResolvedValue(questionFixture);
+      mockQuestionRepository.update.mockResolvedValue(questionFixture);
       mockWorkbookRepository.findById.mockResolvedValue(workbookFixtureWithId);
       mockAnswerRepository.findById.mockResolvedValue(answerFixture);
 

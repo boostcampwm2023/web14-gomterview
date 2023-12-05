@@ -10,7 +10,8 @@ export class AnswerRepository {
   ) {}
 
   async save(answer: Answer) {
-    return await this.repository.save(answer);
+    await this.repository.insert(answer);
+    return answer;
   }
 
   async findById(id: number) {

@@ -50,13 +50,22 @@ export class QuestionRepository {
     return await this.repository.findOneBy({ id: questionId });
   }
 
-  async findWithOriginById(id: number): Promise<Question | null> {
-    const question = await this.repository
+  async findQuestionWithOriginById(id: number) {
+    return await this.repository
       .createQueryBuilder('Question')
       .leftJoinAndSelect('Question.origin', 'origin')
+      .leftJoinAndSelect('Question.defaultAnswer', 'defaultAnswer')
       .where('Question.id = :id', { id })
       .getOne();
+  }
+
+  async findOriginById(id: number): Promise<Question | null> {
+    const question = await this.findQuestionWithOriginById(id);
     return this.fetchOrigin(question);
+  }
+
+  async update(question: Question) {
+    await this.repository.update({ id: question.id }, question);
   }
 
   async remove(question: Question) {
