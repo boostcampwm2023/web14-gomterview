@@ -23,7 +23,8 @@ const Tooltip: React.FC<TooltipProps> = ({
           &:hover > :first-child {
             position: absolute;
             padding: 0.3rem 0.5rem;
-            background-color: ${theme.colors.text.subStrong};
+            background-color: ${theme.colors.surface.tooltip};
+
             color: ${theme.colors.text.white};
             border-radius: 0.5rem;
             display: block;
