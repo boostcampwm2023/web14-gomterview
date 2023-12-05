@@ -32,7 +32,7 @@ export class AnswerService {
 
     const answer = await this.saveAnswerAndQuestion(
       createAnswerRequest,
-      await this.getOriginalQuestion(question),
+      question,
       member,
     );
     return AnswerResponse.from(answer, member);
@@ -78,31 +78,37 @@ export class AnswerService {
     throw new AnswerForbiddenException();
   }
 
-  async getAnswerList(questionId: number) {
-    const question = await this.questionRepository.findById(questionId);
-    const originalQuestion =
-      await this.questionRepository.findOriginById(questionId);
-
-    validateQuestion(originalQuestion);
+  async getAnswerList(id: number) {
+    const question =
+      await this.questionRepository.findQuestionWithOriginById(id);
+    validateQuestion(question);
+    const questionId = question.origin ? question.origin.id : question.id;
 
     const answers = (
-      await this.answerRepository.findAllByQuestionId(originalQuestion.id)
+      await this.answerRepository.findAllByQuestionId(questionId)
     ).map((answer) => AnswerResponse.from(answer, answer.member));
 
     if (question.defaultAnswer) {
-      const defaultAnswerResponse = AnswerResponse.from(
-        question.defaultAnswer,
-        question.defaultAnswer.member,
-      );
-
-      const resultList = answers.filter(
-        (response) => response.answerId != defaultAnswerResponse.answerId,
-      );
-      resultList.unshift(defaultAnswerResponse);
-      return resultList;
+      return this.createAnswerResponsesWithDefaultAnswer(question, answers);
     }
 
     return answers;
+  }
+
+  private createAnswerResponsesWithDefaultAnswer(
+    question: Question,
+    answers: AnswerResponse[],
+  ) {
+    const defaultAnswerResponse = AnswerResponse.from(
+      question.defaultAnswer,
+      question.defaultAnswer.member,
+    );
+
+    const resultList = answers.filter(
+      (response) => response.answerId != defaultAnswerResponse.answerId,
+    );
+    resultList.unshift(defaultAnswerResponse);
+    return resultList;
   }
 
   private async saveAnswerAndQuestion(
