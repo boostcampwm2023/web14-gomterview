@@ -14,7 +14,7 @@ const useAnswerDefaultMutation = (categoryId: number) => {
     mutationFn: postDefaultAnswer,
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: QUERY_KEY.QUESTION_CATEGORY(categoryId),
+        queryKey: QUERY_KEY.QUESTION_WORKBOOK(categoryId),
       });
     },
   });

@@ -14,7 +14,7 @@ const useQuestionMutation = (workbookId: number) => {
     mutationFn: postQuestion,
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: QUERY_KEY.QUESTION_CATEGORY(workbookId),
+        queryKey: QUERY_KEY.QUESTION_WORKBOOK(workbookId),
       });
     },
   });
