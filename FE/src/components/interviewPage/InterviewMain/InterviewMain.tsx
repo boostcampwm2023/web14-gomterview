@@ -9,6 +9,8 @@ type InterviewMainProps = {
   isScriptInView: boolean;
   question: string;
   answer: string;
+  connectStatus: 'connect' | 'fail' | 'pending';
+  reloadMedia: () => void;
 };
 
 const InterviewMain: React.FC<InterviewMainProps> = ({
@@ -16,6 +18,8 @@ const InterviewMain: React.FC<InterviewMainProps> = ({
   isScriptInView,
   question,
   answer,
+  connectStatus,
+  reloadMedia,
 }) => {
   return (
     <div
@@ -27,10 +31,15 @@ const InterviewMain: React.FC<InterviewMainProps> = ({
         align-items: center;
         background-color: ${theme.colors.surface.black100};
         overflow: hidden;
+        padding-top: 3.125rem;
       `}
     >
       <InterviewQuestion question={question} />
-      <Mirror mirrorVideoRef={mirrorVideoRef} />
+      <Mirror
+        mirrorVideoRef={mirrorVideoRef}
+        connectStatus={connectStatus}
+        reloadMedia={reloadMedia}
+      />
       {isScriptInView && <InterviewAnswer answer={answer} />}
     </div>
   );

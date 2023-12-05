@@ -86,17 +86,18 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
         >
           <RecordStatus isRecording={connectStatus === 'connect'} />
         </div>
-        <video
-          ref={mirrorVideoRef}
-          autoPlay
-          muted
-          css={css`
+        <Mirror
+          mirrorVideoRef={mirrorVideoRef}
+          connectStatus={connectStatus}
+          reloadMedia={() => void startMedia()}
+          isSetting
             height: 100%;
             transform: scaleX(-1);
             width: 100%;
           `}
         />
       </div>
+
       <InterviewSettingFooter>
         <Button
           onClick={onPrevClick}

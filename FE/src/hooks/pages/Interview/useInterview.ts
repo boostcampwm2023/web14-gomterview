@@ -105,6 +105,7 @@ const useInterview = () => {
     handleDownload,
     timeOverModalIsOpen,
     setTimeOverModalIsOpen,
+    reloadMedia: () => void startMedia(),
   };
 };
 
