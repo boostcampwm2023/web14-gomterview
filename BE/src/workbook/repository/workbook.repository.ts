@@ -9,19 +9,6 @@ export class WorkbookRepository {
     @InjectRepository(Workbook) private repository: Repository<Workbook>,
   ) {}
 
-  async findByIdWithoutJoin(id: number) {
-    return await this.repository.findOneBy({ id: id });
-  }
-
-  async findById(id: number) {
-    return await this.repository
-      .createQueryBuilder('Workbook')
-      .leftJoinAndSelect('Workbook.member', 'member')
-      .leftJoinAndSelect('Workbook.category', 'category')
-      .where('Workbook.id = :id', { id })
-      .getOne();
-  }
-
   async query(query: string) {
     return await this.repository.query(query);
   }
@@ -76,6 +63,19 @@ export class WorkbookRepository {
       .leftJoinAndSelect('Workbook.member', 'member')
       .where('member.id = :memberId', { memberId })
       .getMany();
+  }
+
+  async findById(id: number) {
+    return await this.repository
+      .createQueryBuilder('Workbook')
+      .leftJoinAndSelect('Workbook.member', 'member')
+      .leftJoinAndSelect('Workbook.category', 'category')
+      .where('Workbook.id = :id', { id })
+      .getOne();
+  }
+
+  async findByIdWithoutJoin(id: number) {
+    return await this.repository.findOneBy({ id: id });
   }
 
   async update(workbook: Workbook) {
