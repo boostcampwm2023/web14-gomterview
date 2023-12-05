@@ -35,7 +35,7 @@ export class QuestionService {
     validateWorkbook(workbook);
     validateWorkbookOwner(workbook, member);
 
-    const question = await this.questionRepository.save(
+    const question = await this.questionRepository.insert(
       Question.of(workbook, null, createQuestionRequest.content),
     );
 
@@ -57,7 +57,6 @@ export class QuestionService {
         copyQuestionRequest.questionIds,
       )
     ).map((question) => this.createCopy(question, workbook));
-    console.log(questions);
     await this.questionRepository.saveAll(questions);
     return WorkbookIdResponse.of(workbook);
   }

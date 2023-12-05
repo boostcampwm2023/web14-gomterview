@@ -17,6 +17,11 @@ export class QuestionRepository {
     return await this.repository.save(question);
   }
 
+  async insert(question: Question) {
+    await this.repository.insert(question);
+    return question;
+  }
+
   async saveAll(questions: Question[]) {
     await this.repository.insert(questions);
   }
