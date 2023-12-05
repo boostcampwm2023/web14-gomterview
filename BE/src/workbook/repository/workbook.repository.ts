@@ -9,6 +9,10 @@ export class WorkbookRepository {
     @InjectRepository(Workbook) private repository: Repository<Workbook>,
   ) {}
 
+  async findByIdWithoutJoin(id: number) {
+    return await this.repository.findOneBy({ id: id });
+  }
+
   async findById(id: number) {
     return await this.repository
       .createQueryBuilder('Workbook')
@@ -24,6 +28,10 @@ export class WorkbookRepository {
 
   async save(workbook: Workbook) {
     return await this.repository.save(workbook);
+  }
+
+  async insert(workbook: Workbook) {
+    return await this.repository.insert(workbook);
   }
 
   async findByNameAndMemberId(title: string, memberId: number) {
