@@ -285,6 +285,98 @@ describe('QuestionController 통합테스트', () => {
         .expect(201)
         .then(() => {});
     });
+
+    it('문제집을 복제 권한이 없으면 403 코드를 반환한다.', async () => {
+      //given
+      await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(categoryFixtureWithId);
+      const workbook = await workbookRepository.save(workbookFixture);
+      const question = await questionRepository.save(
+        Question.of(workbook, null, 'tester'),
+      );
+
+      await authService.login(oauthRequestFixture);
+      const requester = await memberRepository.findByEmail(
+        oauthRequestFixture.email,
+      );
+      const copyWorkbook = await workbookRepository.save(
+        Workbook.of('copy', 'copy', category, requester, true),
+      );
+
+      const copyRequest = new CopyQuestionRequest(copyWorkbook.id, [
+        question.id,
+      ]);
+
+      //when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .post('/api/question/copy')
+        .set('Cookie', [
+          `accessToken=${await authService.login(memberFixturesOAuthRequest)}`,
+        ])
+        .send(copyRequest)
+        .expect(403)
+        .then(() => {});
+    });
+
+    it('토큰이 없으면 401코드를 반환한다.', async () => {
+      //given
+      await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(categoryFixtureWithId);
+      const workbook = await workbookRepository.save(workbookFixture);
+      const question = await questionRepository.save(
+        Question.of(workbook, null, 'tester'),
+      );
+
+      await authService.login(oauthRequestFixture);
+      const requester = await memberRepository.findByEmail(
+        oauthRequestFixture.email,
+      );
+      const copyWorkbook = await workbookRepository.save(
+        Workbook.of('copy', 'copy', category, requester, true),
+      );
+
+      const copyRequest = new CopyQuestionRequest(copyWorkbook.id, [
+        question.id,
+      ]);
+
+      //when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .post('/api/question/copy')
+        .send(copyRequest)
+        .expect(401)
+        .then(() => {});
+    });
+
+    it('문제집이 없다면 404를 반환한다.', async () => {
+      //given
+      await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(categoryFixtureWithId);
+      const workbook = await workbookRepository.save(workbookFixture);
+      const question = await questionRepository.save(
+        Question.of(workbook, null, 'tester'),
+      );
+
+      const token = await authService.login(oauthRequestFixture);
+      const requester = await memberRepository.findByEmail(
+        oauthRequestFixture.email,
+      );
+      await workbookRepository.save(
+        Workbook.of('copy', 'copy', category, requester, true),
+      );
+
+      const copyRequest = new CopyQuestionRequest(135124, [question.id]);
+
+      //when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .post('/api/question/copy')
+        .set('Cookie', [`accessToken=${token}`])
+        .send(copyRequest)
+        .expect(404)
+        .then(() => {});
+    });
   });
 
   afterEach(async () => {
