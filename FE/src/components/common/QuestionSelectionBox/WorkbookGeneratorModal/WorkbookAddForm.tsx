@@ -8,12 +8,10 @@ import { theme } from '@styles/theme';
 import useCategoryQuery from '@hooks/apis/queries/useCategoryQuery';
 import useWorkbookAdd from '@hooks/useWorkbookAdd';
 
-type InterviewSetAddFormProps = {
+type WorkbookAddFormProps = {
   closeModal: () => void;
 };
-const WorkbookAddForm: React.FC<InterviewSetAddFormProps> = ({
-  closeModal,
-}) => {
+const WorkbookAddForm: React.FC<WorkbookAddFormProps> = ({ closeModal }) => {
   const { data: categories } = useCategoryQuery();
   const [activeValidationError, setActiveValidationError] = useState(false);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);

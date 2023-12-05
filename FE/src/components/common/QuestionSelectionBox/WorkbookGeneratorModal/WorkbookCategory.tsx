@@ -3,12 +3,12 @@ import { theme } from '@styles/theme';
 import { Typography } from '@foundation/index';
 import { CategoryListResDto } from '@/types/category';
 
-type InterviewSetCategoryProps = {
+type WorkbookCategoryProps = {
   categories?: CategoryListResDto;
   selectedCategoryIndex: number;
   onClick: (index: number) => void;
 };
-const WorkbookCategory: React.FC<InterviewSetCategoryProps> = ({
+const WorkbookCategory: React.FC<WorkbookCategoryProps> = ({
   categories,
   selectedCategoryIndex,
   onClick,

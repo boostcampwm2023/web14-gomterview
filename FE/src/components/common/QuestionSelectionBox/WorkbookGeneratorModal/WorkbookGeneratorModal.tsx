@@ -4,11 +4,11 @@ import WorkbookAddForm from '@common/QuestionSelectionBox/WorkbookGeneratorModal
 import ModalHeader from '@foundation/Modal/ModalHeader';
 import { Modal } from '@foundation/index';
 
-type InterviewSetGeneratorModalProps = {
+type WorkbookGeneratorModalProps = {
   closeModal: () => void;
   workbookId?: number;
 };
-const WorkbookGeneratorModal: React.FC<InterviewSetGeneratorModalProps> = ({
+const WorkbookGeneratorModal: React.FC<WorkbookGeneratorModalProps> = ({
   closeModal,
   workbookId,
 }) => {

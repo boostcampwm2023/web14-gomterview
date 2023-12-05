@@ -9,11 +9,11 @@ import useWorkbookQuery from '@hooks/apis/queries/useWorkbookQuery';
 import useCategoryQuery from '@hooks/apis/queries/useCategoryQuery';
 import useWorkbookEdit from '@hooks/useWorkbookEdit';
 
-type InterviewSetFormProps = {
+type WorkbookEditFormProps = {
   workbookId: number;
   closeModal: () => void;
 };
-const WorkbookEditForm: React.FC<InterviewSetFormProps> = ({
+const WorkbookEditForm: React.FC<WorkbookEditFormProps> = ({
   workbookId,
   closeModal,
 }) => {
