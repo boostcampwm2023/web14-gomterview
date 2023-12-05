@@ -9,7 +9,7 @@ import { getWorkbookByCategory } from '@/apis/workbook';
  *
  * 문제집 리스트 페이지에서 사용됩니다.
  */
-const useWorkbookListQuery = (categoryId: number) => {
+const useWorkbookListQuery = (categoryId: string) => {
   return useQuery({
     queryKey: QUERY_KEY.WORKBOOK_CATEGORY(categoryId),
     queryFn: () => getWorkbookByCategory(categoryId),

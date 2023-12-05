@@ -17,7 +17,7 @@ export const postWorkbook = async (body: WorkbookAddReqDto) => {
   });
 };
 
-export const getWorkbookByCategory = async (categoryId: number) => {
+export const getWorkbookByCategory = async (categoryId: string) => {
   return await getAPIResponseData<WorkbookListResDto>({
     method: 'get',
     url: API.WORKBOOK_CATEGORY_ID(categoryId),

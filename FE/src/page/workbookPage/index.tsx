@@ -11,10 +11,10 @@ import { Typography } from '@foundation/index';
 import { SyntheticEvent, useState } from 'react';
 
 const WorkbookPage: React.FC = () => {
-  const [selectedTabIndex, setSelectedTabIndex] = useState('0');
+  const [selectedCategoryId, setSelectedCategoryId] = useState('');
 
   const handleTabChange = (_: SyntheticEvent, v: string) => {
-    setSelectedTabIndex(v);
+    setSelectedCategoryId(v);
   };
 
   return (
@@ -28,7 +28,7 @@ const WorkbookPage: React.FC = () => {
         면접 세트 목록
       </Typography>
       <CategoryMenu handleTabChange={handleTabChange} />
-      <WorkbookList selectedTabIndex={selectedTabIndex} />
+      <WorkbookList selectedCategoryId={selectedCategoryId} />
       <WorkbookPlusButton />
     </WorkbookPageLayout>
   );
