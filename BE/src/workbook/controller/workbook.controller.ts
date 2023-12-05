@@ -55,12 +55,12 @@ export class WorkbookController {
     @Body() createWorkbookRequest: CreateWorkbookRequest,
     @Req() req: Request,
   ) {
-    const workbook = await this.workbookService.createWorkbook(
+    const workbookId = await this.workbookService.createWorkbook(
       createWorkbookRequest,
       req.user as Member,
     );
 
-    return WorkbookIdResponse.of(workbook);
+    return new WorkbookIdResponse(workbookId);
   }
 
   @Get()
