@@ -174,14 +174,22 @@ describe('WorkbookController 단위테스트', () => {
 
       //when
       mockWorkbookService.findSingleWorkbook.mockResolvedValue(
-        WorkbookResponse.of(workbookFixture),
+        WorkbookResponse.of(
+          Workbook.of(
+            'title',
+            null,
+            categoryFixtureWithId,
+            memberFixture,
+            true,
+          ),
+        ),
       );
 
       //then
       const result = await controller.findSingleWorkbook(1);
       expect(result).toBeInstanceOf(WorkbookResponse);
-      expect(result.title).toBe(workbookFixture.title);
-      expect(result.content).toBe(workbookFixture.content);
+      expect(result.title).toBe('title');
+      expect(result.content).toBe('');
     });
 
     it('문제집이 없다면 WorkbookNotFoundException을 반환한다.', async () => {
