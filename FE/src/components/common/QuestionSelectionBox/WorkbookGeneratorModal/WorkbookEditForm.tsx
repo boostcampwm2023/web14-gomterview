@@ -19,6 +19,7 @@ const WorkbookEditForm: React.FC<InterviewSetFormProps> = ({
 }) => {
   const { data: workbookInfo } = useWorkbookQuery({
     workbookId: workbookId,
+    enabled: workbookId > 0,
   });
   const { data: categories } = useCategoryQuery();
   const [activeValidationError, setActiveValidationError] = useState(false);
