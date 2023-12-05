@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { theme } from '@styles/theme';
 
 type VideoPlayerProps = {
   url: string;
@@ -12,9 +13,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ url }) => {
       controls
       muted
       css={css`
-        //16:9 비율로 설정
-        width: 80vw;
-        height: 45vw;
+        background-color: ${theme.colors.surface.black100};
+        max-height: 60svh;
+        width: 100%;
         object-fit: contain;
         align-self: center;
       `}
