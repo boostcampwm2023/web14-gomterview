@@ -10,4 +10,8 @@ export class Category extends DefaultEntity {
     super(id, createdAt);
     this.name = name;
   }
+
+  static of(name: string) {
+    return new Category(null, name, new Date());
+  }
 }
