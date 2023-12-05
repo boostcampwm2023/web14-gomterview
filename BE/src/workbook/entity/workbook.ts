@@ -1,10 +1,12 @@
 import { DefaultEntity } from '../../app.entity';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { Member } from '../../member/entity/member';
 import { Category } from '../../category/entity/category';
 import { UpdateWorkbookRequest } from '../dto/updateWorkbookRequest';
 
 @Entity({ name: 'Workbook' })
+@Index('idx_isPublic', ['isPublic'])
+@Index('idx_isPublic_categoryId', ['isPublic', 'category'])
 export class Workbook extends DefaultEntity {
   @Column()
   title: string;
@@ -14,6 +16,7 @@ export class Workbook extends DefaultEntity {
 
   @ManyToOne(() => Category)
   @JoinColumn({ name: 'category' })
+  @Index('idx_categoryId')
   category: Category;
 
   @Column()
@@ -21,6 +24,7 @@ export class Workbook extends DefaultEntity {
 
   @ManyToOne(() => Member, { nullable: true, onDelete: 'CASCADE', eager: true })
   @JoinColumn({ name: 'member' })
+  @Index('idx_memberId')
   member: Member;
 
   @Column({ default: true })
