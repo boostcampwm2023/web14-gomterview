@@ -16,16 +16,13 @@ export class MemberService {
     if (!req.cookies['accessToken'])
       return new MemberNicknameResponse(this.getNameWithPrefix(`면접자`));
 
-    return new MemberNicknameResponse(
-      this.getNameWithPrefix(
-        (await this.getMemberByToken(getTokenValue(req))).nickname,
-      ),
-    );
+    const member = await this.getMemberByToken(getTokenValue(req));
+    return new MemberNicknameResponse(this.getNameWithPrefix(member.nickname));
   }
 
   private async getMemberByToken(tokenValue: string) {
-    const memberId = (await this.tokenService.getPayload(tokenValue)).id;
-    return await this.memberRepository.findById(memberId);
+    const member = await this.tokenService.getPayload(tokenValue);
+    return await this.memberRepository.findById(member.id);
   }
 
   private getNameWithPrefix(nickname: string) {
