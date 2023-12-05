@@ -4,9 +4,9 @@ import { FormEventHandler, useState } from 'react';
 import LabelBox from '@common/QuestionSelectionBox/WorkbookGeneratorModal/LabelBox';
 import WorkbookCategory from '@common/QuestionSelectionBox/WorkbookGeneratorModal/WorkbookCategory';
 import useInput from '@hooks/useInput';
-import useWorkbookPostMutation from '@hooks/apis/mutations/useWorkbookPostMutation';
 import { theme } from '@styles/theme';
 import useCategoryQuery from '@hooks/apis/queries/useCategoryQuery';
+import useWorkbookAdd from '@hooks/useWorkbookAdd';
 
 type InterviewSetAddFormProps = {
   closeModal: () => void;
@@ -29,7 +29,11 @@ const WorkbookAddForm: React.FC<InterviewSetAddFormProps> = ({
     clearInput: clearWorkbookContent,
   } = useInput<HTMLTextAreaElement>('');
 
-  const { mutate: postInterviewSet } = useWorkbookPostMutation();
+  const { addWorkbook } = useWorkbookAdd({
+    onSuccess: () => {
+      handleReset();
+    },
+  });
 
   const resetState = () => {
     clearWorkbookTitle();
@@ -53,7 +57,7 @@ const WorkbookAddForm: React.FC<InterviewSetAddFormProps> = ({
       return;
     }
 
-    postInterviewSet({
+    addWorkbook({
       title: workbookTitle,
       content: workbookContent,
       categoryId: selectedCategoryId,

@@ -24,7 +24,7 @@ const WorkbookGeneratorModal: React.FC<InterviewSetGeneratorModalProps> = ({
           padding: 1.5rem;
         `}
       >
-        {workbookId ? (
+        {workbookId !== undefined ? (
           <WorkbookEditForm workbookId={workbookId} closeModal={closeModal} />
         ) : (
           <WorkbookAddForm closeModal={closeModal} />

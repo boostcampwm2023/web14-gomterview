@@ -9,7 +9,6 @@ import { WorkbookTitleListResDto } from '@/types/workbook';
 import { ExcludeArray } from '@/types/utils';
 import QuestionSelectionBoxAccordion from './QuestionSelectionBoxAccordion';
 import QuestionAddForm from '@common/QuestionSelectionBox/QuestionAddForm';
-import useUserInfo from '@hooks/useUserInfo';
 import QuestionTabPanelHeader from '@common/QuestionSelectionBox/QuestionTabPanelHeader';
 import WorkbookEditModeDialog from '@common/QuestionSelectionBox/WorkbookEditModeDialog';
 import useOutsideClick from '@hooks/useOutsideClick';
@@ -31,7 +30,6 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
   onWorkbookDelete,
 }) => {
   const queryClient = useQueryClient();
-  const userInfo = useUserInfo();
   const settingPage = useRecoilValue(questionSetting);
   const selectedQuestions = settingPage.selectedData.filter(
     (question) => question.workbookId === workbook.workbookId
@@ -122,15 +120,13 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
           onWorkbookDelete={onWorkbookDelete}
           onEditButtonClick={() => setIsEditMode(true)}
         />
-        {userInfo && (
-          <div
-            css={css`
-              padding: 0 1rem;
-            `}
-          >
-            <QuestionAddForm workbookId={workbook.workbookId} />
-          </div>
-        )}
+        <div
+          css={css`
+            padding: 0 1rem;
+          `}
+        >
+          <QuestionAddForm workbookId={workbook.workbookId} />
+        </div>
         <div
           css={css`
             display: flex;
