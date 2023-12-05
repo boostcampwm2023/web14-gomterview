@@ -5,7 +5,6 @@ import {
   Get,
   Param,
   Post,
-  Query,
   Req,
   Res,
   UseGuards,
@@ -81,7 +80,7 @@ export class QuestionController {
     return await this.questionService.findAllByWorkbookId(workbookId);
   }
 
-  @Delete()
+  @Delete(':questionId')
   @UseGuards(AuthGuard('jwt'))
   @ApiCookieAuth()
   @ApiOperation({
@@ -89,7 +88,7 @@ export class QuestionController {
   })
   @ApiResponse(createApiResponseOption(204, '질문 삭제', null))
   async deleteQuestionById(
-    @Query('questionId') questionId: number,
+    @Param('questionId') questionId: number,
     @Req() req: Request,
     @Res() res: Response,
   ) {
