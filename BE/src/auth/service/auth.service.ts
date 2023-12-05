@@ -4,8 +4,6 @@ import { OAuthRequest } from '../interface/auth.interface';
 import { Member } from 'src/member/entity/member';
 import { isEmpty } from 'class-validator';
 import { TokenService } from '../../token/service/token.service';
-import { CategoryRepository } from '../../category/repository/category.repository';
-import { QuestionRepository } from '../../question/repository/question.repository';
 import { BEARER_PREFIX } from 'src/constant/constant';
 
 @Injectable()
@@ -13,8 +11,6 @@ export class AuthService {
   constructor(
     private memberRepository: MemberRepository,
     private tokenService: TokenService,
-    private categoryRepository: CategoryRepository,
-    private questionRepository: QuestionRepository,
   ) {}
 
   async login(oauthRequest: OAuthRequest) {

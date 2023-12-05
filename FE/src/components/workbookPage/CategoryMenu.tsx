@@ -16,7 +16,7 @@ const CategoryMenu: React.FC<CategoryMenuProps> = ({ handleTabChange }) => {
   const isDeviceBreakpoint = useBreakpoint();
 
   return (
-    <Tabs initialValue="0">
+    <Tabs value="0">
       <ResponsiveMenu
         css={css`
           margin-bottom: 1.25rem;
@@ -39,15 +39,27 @@ const CategoryMenu: React.FC<CategoryMenuProps> = ({ handleTabChange }) => {
             `}
             onTabChange={handleTabChange}
           >
-            {categories?.map((category, index) => (
-              <Tabs.Tab value={index.toString()} key={category.id}>
+            <Tabs.Tab value="" key="0">
+              <SelectionBox
+                id={`category-all`}
+                name="category-list"
+                lineDirection={isDeviceBreakpoint('laptop') ? 'bottom' : 'left'}
+                defaultChecked={true}
+                css={css`
+                  padding: 0.5rem 1rem;
+                `}
+              >
+                <Typography variant="title4">ALL</Typography>
+              </SelectionBox>
+            </Tabs.Tab>
+            {categories?.map((category) => (
+              <Tabs.Tab value={category.id.toString()} key={category.id}>
                 <SelectionBox
                   id={`category-${category.id.toString()}`}
                   name="category-list"
                   lineDirection={
                     isDeviceBreakpoint('laptop') ? 'bottom' : 'left'
                   }
-                  defaultChecked={index === 0}
                   css={css`
                     padding: 0.5rem 1rem;
                   `}

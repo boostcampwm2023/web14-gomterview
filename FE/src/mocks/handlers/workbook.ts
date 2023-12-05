@@ -9,6 +9,18 @@ const workbookHandlers = [
     const category = request.url.split('category=')[1];
 
     switch (category) {
+      case '':
+        return HttpResponse.json([
+          {
+            workbookId: 1,
+            nickname: 'milk717',
+            profileImg: 'https://avatars.githubusercontent.com/u/66554167?v=4',
+            copyCount: 717,
+            title: '전체리스트가 와야합니다 ',
+            content:
+              '취업하고싶어요! 돈벌고싶어요! 클라이밍, 피아노, 플라잉요가.... 하고싶은게 너무 많아요\n에버랜드, 스키장, 온천 가고싶어요.\n어디 놀러간 적이 100만년 전...',
+          },
+        ]);
       case '0':
         return HttpResponse.json(
           [

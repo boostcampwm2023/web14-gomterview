@@ -12,7 +12,7 @@ import { validateAnswer } from '../util/answer.util';
 import { validateQuestion } from '../../question/util/question.util';
 import { AnswerForbiddenException } from '../exception/answer.exception';
 import { WorkbookRepository } from '../../workbook/repository/workbook.repository';
-import { WorkbookForbiddenException } from '../../workbook/exception/workbook.exception';
+import { QuestionForbiddenException } from '../../question/exception/question.exception';
 
 @Injectable()
 export class AnswerService {
@@ -51,7 +51,7 @@ export class AnswerService {
     );
 
     if (!workbook.isOwnedBy(member)) {
-      throw new WorkbookForbiddenException();
+      throw new QuestionForbiddenException();
     }
 
     const answer = await this.answerRepository.findById(

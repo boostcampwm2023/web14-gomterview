@@ -1,5 +1,5 @@
 import { QUERY_KEY } from '@/constants/queryKey';
-import { MemberItemResDto } from '@/types/user';
+import { MemberItemResDto } from '@/types/member';
 import { useQueryClient } from '@tanstack/react-query';
 
 const useUserInfo = () => {

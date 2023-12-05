@@ -1,7 +1,7 @@
-import { HttpException } from '@nestjs/common';
+import { HttpNotFoundException } from 'src/util/exception.util';
 
-export class MemberNotFoundException extends HttpException {
+export class MemberNotFoundException extends HttpNotFoundException {
   constructor() {
-    super('회원을 찾을 수 없습니다.', 404);
+    super('회원을 찾을 수 없습니다.', 'M01');
   }
 }

@@ -56,7 +56,8 @@ const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
       onChange={() => toggleSelected?.()}
       expanded={isSelected}
       css={css`
-        margin-bottom: 1.2rem;
+        width: 100%;
+        min-width: calc(100% - 2rem);
       `}
     >
       <AccordionSummary

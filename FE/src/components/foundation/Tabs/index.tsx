@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import TabList from '@foundation/Tabs/TabList';
 import TabPanel from '@foundation/Tabs/TabPanel';
 import Tab from '@foundation/Tabs/Tab';
@@ -6,7 +6,7 @@ import { HTMLElementTypes } from '@/types/utils';
 
 type TabProviderProps = {
   children: React.ReactNode;
-  initialValue: string;
+  value: string;
 } & HTMLElementTypes<HTMLDivElement>;
 
 const initialContext = {
@@ -16,8 +16,12 @@ const initialContext = {
 
 export const TabContext = createContext(initialContext);
 
-const Tabs = ({ children, initialValue, ...args }: TabProviderProps) => {
-  const [selectedValue, setSelectedValue] = useState(initialValue);
+const Tabs = ({ children, value, ...args }: TabProviderProps) => {
+  const [selectedValue, setSelectedValue] = useState(value);
+
+  useEffect(() => {
+    setSelectedValue(value);
+  }, [value]);
 
   const handleTabChange = (newValue: string) => {
     setSelectedValue(newValue);

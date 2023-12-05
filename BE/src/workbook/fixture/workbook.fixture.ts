@@ -37,3 +37,7 @@ export const updateWorkbookRequestFixture = new UpdateWorkbookRequest(
   categoryFixtureWithId.id,
   false,
 );
+
+export const workbookInsertResult = {
+  identifiers: [{ id: workbookFixtureWithId.id }],
+};

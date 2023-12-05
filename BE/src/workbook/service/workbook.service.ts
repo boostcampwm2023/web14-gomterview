@@ -29,15 +29,15 @@ export class WorkbookService {
     validateManipulatedToken(member);
     validateCategory(category);
 
-    return await this.workbookRepository.save(
-      Workbook.of(
-        createWorkbookRequest.title,
-        createWorkbookRequest.content,
-        category,
-        member,
-        createWorkbookRequest.isPublic,
-      ),
+    const workbook = Workbook.of(
+      createWorkbookRequest.title,
+      createWorkbookRequest.content,
+      category,
+      member,
+      createWorkbookRequest.isPublic,
     );
+    const result = await this.workbookRepository.insert(workbook);
+    return result.identifiers[0].id as number;
   }
 
   async findWorkbooks(categoryId: number) {
@@ -59,6 +59,7 @@ export class WorkbookService {
 
     const workbooks =
       await this.workbookRepository.findAllByCategoryId(categoryId);
+
     return workbooks.map(WorkbookResponse.of);
   }
 
@@ -106,7 +107,8 @@ export class WorkbookService {
 
   async deleteWorkbookById(workbookId: number, member: Member) {
     validateManipulatedToken(member);
-    const workbook = await this.workbookRepository.findById(workbookId);
+    const workbook =
+      await this.workbookRepository.findByIdWithoutJoin(workbookId);
     validateWorkbook(workbook);
     validateWorkbookOwner(workbook, member);
     await this.workbookRepository.remove(workbook);

@@ -7,7 +7,7 @@ export const QUERY_KEY = {
   VIDEO: ['video'],
   VIDEO_ID: (videoId: number) => ['video', videoId],
   VIDEO_HASH: (videoHash: string) => ['video', videoHash],
-  WORKBOOK_CATEGORY: (categoryId: number) => ['workbook_category', categoryId],
+  WORKBOOK_CATEGORY: (categoryId: string) => ['workbook_category', categoryId],
   WORKBOOK_ID: (workbookId: number) => ['workbook', workbookId],
   WORKBOOK_TITLE: ['workbookTitle'],
   QUESTION_WORKBOOK_ID: (workbookId: number) => [

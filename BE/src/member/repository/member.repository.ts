@@ -20,4 +20,8 @@ export class MemberRepository {
   async findByEmail(email: string) {
     return await this.memberRepository.findOneBy({ email: email });
   }
+
+  async query(query: string) {
+    return await this.memberRepository.query(query);
+  }
 }

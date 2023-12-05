@@ -47,16 +47,20 @@ export class WorkbookController {
   @ApiResponse(
     createApiResponseOption(201, '문제집 생성 완료', WorkbookIdResponse),
   )
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
+  @ApiResponse(createApiResponseOption(401, 'T01', null))
+  @ApiResponse(createApiResponseOption(404, 'C02', null))
+  @ApiResponse(createApiResponseOption(410, 'T02', null))
   async createAnswer(
     @Body() createWorkbookRequest: CreateWorkbookRequest,
     @Req() req: Request,
   ) {
-    const workbook = await this.workbookService.createWorkbook(
+    const workbookId = await this.workbookService.createWorkbook(
       createWorkbookRequest,
       req.user as Member,
     );
 
-    return WorkbookIdResponse.of(workbook);
+    return new WorkbookIdResponse(workbookId);
   }
 
   @Get()
@@ -70,6 +74,7 @@ export class WorkbookController {
       WorkbookResponse,
     ]),
   )
+  @ApiResponse(createApiResponseOption(404, 'C02', null))
   async findWorkbooks(@Query('category') categoryId: number) {
     return await this.workbookService.findWorkbooks(categoryId);
   }
@@ -85,6 +90,9 @@ export class WorkbookController {
       WorkbookTitleResponse,
     ]),
   )
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
+  @ApiResponse(createApiResponseOption(401, 'T01', null))
+  @ApiResponse(createApiResponseOption(410, 'T02', null))
   async findMembersWorkbook(@Req() req: Request) {
     const member = isEmpty(req) ? null : (req.user as Member);
     return await this.workbookService.findWorkbookTitles(member);
@@ -97,6 +105,7 @@ export class WorkbookController {
   @ApiResponse(
     createApiResponseOption(200, '문제집 단건 조회', WorkbookResponse),
   )
+  @ApiResponse(createApiResponseOption(404, 'W01', null))
   async findSingleWorkbook(@Param('workbookId') workbookId: number) {
     return await this.workbookService.findSingleWorkbook(workbookId);
   }
@@ -111,6 +120,9 @@ export class WorkbookController {
   @ApiResponse(
     createApiResponseOption(200, '문제집 수정 완료', WorkbookResponse),
   )
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
+  @ApiResponse(createApiResponseOption(404, 'C02, W01', null))
+  @ApiResponse(createApiResponseOption(403, 'W02', null))
   async updateAnswer(
     @Body() updateWorkbookRequest: UpdateWorkbookRequest,
     @Req() req: Request,
@@ -128,6 +140,9 @@ export class WorkbookController {
     summary: '문제집 삭제',
   })
   @ApiResponse(createApiResponseOption(204, '문제집 삭제 완료', null))
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
+  @ApiResponse(createApiResponseOption(404, 'W01', null))
+  @ApiResponse(createApiResponseOption(403, 'W02', null))
   async deleteAnswer(
     @Req() req: Request,
     @Param('workbookId') workbookId: number,
