@@ -37,6 +37,7 @@ import { CategoryRepository } from '../../category/repository/category.repositor
 import { CategoryModule } from '../../category/category.module';
 import { Category } from '../../category/entity/category';
 import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
+import { CopyQuestionRequest } from '../dto/copyQuestionRequest';
 
 describe('QuestionController', () => {
   let controller: QuestionController;
@@ -250,6 +251,39 @@ describe('QuestionController 통합테스트', () => {
         .delete(`/api/question/${question.id}`)
         .set('Cookie', [`accessToken=${token}`])
         .expect(403);
+    });
+  });
+
+  describe('문제집의 질문을 복제한다.', () => {
+    it('문제집을 복제하면 201코드를 반환한다.', async () => {
+      //given
+      await memberRepository.save(memberFixture);
+      const category = await categoryRepository.save(categoryFixtureWithId);
+      const workbook = await workbookRepository.save(workbookFixture);
+      const question = await questionRepository.save(
+        Question.of(workbook, null, 'tester'),
+      );
+
+      const token = await authService.login(oauthRequestFixture);
+      const requester = await memberRepository.findByEmail(
+        oauthRequestFixture.email,
+      );
+      const copyWorkbook = await workbookRepository.save(
+        Workbook.of('copy', 'copy', category, requester, true),
+      );
+
+      const copyRequest = new CopyQuestionRequest(copyWorkbook.id, [
+        question.id,
+      ]);
+
+      //when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent
+        .post('/api/question/copy')
+        .set('Cookie', [`accessToken=${token}`])
+        .send(copyRequest)
+        .expect(201)
+        .then(() => {});
     });
   });
 
