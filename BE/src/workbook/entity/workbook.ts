@@ -16,7 +16,6 @@ export class Workbook extends DefaultEntity {
 
   @ManyToOne(() => Category)
   @JoinColumn({ name: 'category' })
-  @Index('idx_categoryId')
   category: Category;
 
   @Column()
@@ -24,7 +23,6 @@ export class Workbook extends DefaultEntity {
 
   @ManyToOne(() => Member, { nullable: true, onDelete: 'CASCADE', eager: true })
   @JoinColumn({ name: 'member' })
-  @Index('idx_memberId')
   member: Member;
 
   @Column({ default: true })
