@@ -61,7 +61,7 @@ export class AnswerService {
     validateAnswer(answer);
 
     question.setDefaultAnswer(answer);
-    await this.questionRepository.save(question);
+    await this.questionRepository.update(question);
   }
 
   async deleteAnswer(id: number, member: Member) {

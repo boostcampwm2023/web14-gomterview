@@ -59,6 +59,10 @@ export class QuestionRepository {
     return this.fetchOrigin(question);
   }
 
+  async update(question: Question) {
+    await this.repository.update({ id: question.id }, question);
+  }
+
   async remove(question: Question) {
     await this.repository.remove(question);
   }
