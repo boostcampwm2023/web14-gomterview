@@ -32,6 +32,7 @@ export class MemberController {
       MemberResponse,
     ),
   )
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
   getMyInfo(@Req() req: Request) {
     validateManipulatedToken(req.user as Member);
     return MemberResponse.from(req.user as Member);
@@ -49,6 +50,8 @@ export class MemberController {
       MemberNicknameResponse,
     ),
   )
+  @ApiResponse(createApiResponseOption(401, 'T1', null))
+  @ApiResponse(createApiResponseOption(410, 'T2', null))
   async getNameForInterview(@Req() req: Request) {
     return await this.memberService.getNameForInterview(req);
   }
