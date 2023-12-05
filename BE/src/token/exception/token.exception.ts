@@ -1,4 +1,3 @@
-import { HttpException } from '@nestjs/common';
 import {
   HttpGoneException,
   HttpInternalServerError,
@@ -17,21 +16,15 @@ class TokenExpiredException extends HttpGoneException {
   }
 }
 
+class NeedToLoginException extends HttpUnauthorizedException {
+  constructor() {
+    super('다시 로그인해주세요.', 'T03');
+  }
+}
+
 class ManipulatedTokenNotFiltered extends HttpInternalServerError {
   constructor() {
     super('', 'SERVER');
-  }
-}
-
-class NeedToLoginException extends HttpException {
-  constructor() {
-    super('다시 로그인해주세요.', 401);
-  }
-}
-
-class ForbiddenException extends HttpException {
-  constructor() {
-    super('권한이 없습니다', 403);
   }
 }
 
@@ -40,5 +33,4 @@ export {
   TokenExpiredException,
   ManipulatedTokenNotFiltered,
   NeedToLoginException,
-  ForbiddenException,
 };
