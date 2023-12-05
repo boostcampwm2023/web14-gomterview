@@ -28,6 +28,9 @@ import {
 } from '../../util/test.util';
 import { Category } from '../../category/entity/category';
 import { MemberNicknameResponse } from '../dto/memberNicknameResponse';
+import { MemberRepository } from '../repository/member.repository';
+import { JwtService } from '@nestjs/jwt';
+import { TokenPayload } from 'src/token/interface/token.interface';
 
 describe('MemberController 단위 테스트', () => {
   let memberController: MemberController;
@@ -80,7 +83,7 @@ describe('MemberController 단위 테스트', () => {
   describe('getNameForInterview', () => {
     const nickname = 'fakeNickname';
 
-    it('면접 화면에 표출할 이름 반환 성공 시에는 MemberNicknameResponse 형태로 반환한다.', async () => {
+    it('면접 화면에 표출할 닉네임 반환 성공 시에는 MemberNicknameResponse 형태로 반환한다.', async () => {
       // given
       const mockReq = mockReqWithMemberFixture;
 
@@ -96,7 +99,7 @@ describe('MemberController 단위 테스트', () => {
       expect(result.nickname).toBe(nickname);
     });
 
-    it('면접 화면에 표출할 이름 반환 시 토큰이 만료되었으면 TokenExpiredException을 반환한다.', async () => {
+    it('면접 화면에 표출할 닉네임 반환 시 토큰이 만료되었으면 TokenExpiredException을 반환한다.', async () => {
       // given
       const mockReq = mockReqWithMemberFixture;
 
@@ -111,7 +114,7 @@ describe('MemberController 단위 테스트', () => {
       );
     });
 
-    it('면접 화면에 표출할 이름 반환 시 토큰이 유효하지 않으면 InvalidTokenException을 반환한다.', async () => {
+    it('면접 화면에 표출할 닉네임 반환 시 토큰이 유효하지 않으면 InvalidTokenException을 반환한다.', async () => {
       // given
       const mockReq = mockReqWithMemberFixture;
 
@@ -131,6 +134,8 @@ describe('MemberController 단위 테스트', () => {
 describe('MemberController 통합 테스트', () => {
   let app: INestApplication;
   let authService: AuthService;
+  let jwtService: JwtService;
+  let memberRepository: MemberRepository;
 
   beforeAll(async () => {
     const modules = [AuthModule, TokenModule, MemberModule];
@@ -146,6 +151,8 @@ describe('MemberController 통합 테스트', () => {
     await app.init();
 
     authService = moduleFixture.get<AuthService>(AuthService);
+    jwtService = moduleFixture.get<JwtService>(JwtService);
+    memberRepository = moduleFixture.get<MemberRepository>(MemberRepository);
   });
 
   describe('getMyInfo', () => {
@@ -165,17 +172,61 @@ describe('MemberController 통합 테스트', () => {
       });
     });
 
-    it('유효하지 않은 토큰으로 회원 정보 반환을 요청하면 401 상태코드가 반환된다.)', (done) => {
+    it('유효하지 않은 토큰으로 회원 정보 반환을 요청하면 401 상태코드가 반환된다.)', () => {
       const agent = request.agent(app.getHttpServer());
       agent
         .get('/api/member')
         .set('Cookie', [`accessToken=Bearer INVALID_TOKEN`])
-        .expect(401)
-        .then(() => done());
+        .expect(401);
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  describe('getNameForInterview', () => {
+    it('쿠키를 가지고 면접 화면에 표출할 닉네임 반환 요청을 하면 200 상태 코드와 회원 닉네임이 들어간 채로 반환된다.)', (done) => {
+      authService.login(oauthRequestFixture).then((validToken) => {
+        const agent = request.agent(app.getHttpServer());
+        agent
+          .get('/api/member/name')
+          .set('Cookie', [`accessToken=${validToken}`])
+          .expect(200)
+          .then((response) => {
+            expect(
+              response.body.nickname.endsWith(oauthRequestFixture.name),
+            ).toBeTruthy();
+            done();
+          });
+      });
+    });
+
+    it('유효하지 않은 토큰으로 면접 화면에 표출할 닉네임 반환을 요청하면 401 상태코드가 반환된다.)', () => {
+      const agent = request.agent(app.getHttpServer());
+      agent
+        .get('/api/member/name')
+        .set('Cookie', [`accessToken=Bearer INVALID_TOKEN`])
+        .expect(401);
+    });
+
+    it('만료된 토큰으로 면접 화면에 표출할 닉네임 반환을 요청하면 410 상태코드가 반환된다.)', async () => {
+      const expirationTime = Math.floor(Date.now() / 1000) - 1;
+      const expiredToken = await jwtService.signAsync(
+        { id: memberFixture.id } as TokenPayload,
+        {
+          expiresIn: expirationTime,
+        },
+      );
+
+      const agent = request.agent(app.getHttpServer());
+      agent
+        .get('/api/member/name')
+        .set('Cookie', [`accessToken=${expiredToken}`])
+        .expect(410);
+    });
   });
+
+  afterEach(async () => {
+    await memberRepository.query('delete from Member');
+    await memberRepository.query('delete from Token');
+  });
+
+  afterAll(async () => await app.close());
 });
