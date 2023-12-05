@@ -53,6 +53,9 @@ import { workbookFixtureWithId } from 'src/workbook/fixture/workbook.fixture';
 import { questionFixture } from 'src/question/fixture/question.fixture';
 import { QuestionModule } from 'src/question/question.module';
 import * as S3RequestPresigner from '@aws-sdk/s3-request-presigner';
+import { CreateVideoRequest } from '../dto/createVideoRequest';
+import { DEFAULT_THUMBNAIL } from '../../constant/constant';
+
 jest.mock('src/util/redis.util');
 jest.mock('@aws-sdk/s3-request-presigner');
 
@@ -408,6 +411,38 @@ describe('VideoService 단위 테스트', () => {
       result.forEach((element) => {
         expect(element).toBeInstanceOf(SingleVideoResponse);
       });
+    });
+
+    it('비디오 전체 조회 성공 시 SingleVideoResponse의 배열의 형태로 반환된다. 생성 요청에서 썸네일을 주지 않은 경우에는 기본 썸네일로 반환된다', async () => {
+      // give
+      const mockVideoList = videoListFixture;
+      mockVideoList.unshift(
+        Video.from(
+          member,
+          new CreateVideoRequest(
+            1,
+            'test',
+            'http://localhost:8080',
+            null,
+            '1000',
+          ),
+        ),
+      );
+
+      // when
+      mockVideoRepository.findAllVideosByMemberId.mockResolvedValue(
+        mockVideoList,
+      );
+
+      // then
+      const result = await videoService.getAllVideosByMemberId(member);
+
+      expect(result).toHaveLength(mockVideoList.length);
+      expect(result).toEqual(mockVideoList.map(SingleVideoResponse.from));
+      result.forEach((element) => {
+        expect(element).toBeInstanceOf(SingleVideoResponse);
+      });
+      expect(result[0].thumbnail).toBe(DEFAULT_THUMBNAIL);
     });
 
     it('비디오 전체 조회 시 저장된 비디오가 없으면 빈 배열이 반환된다.', async () => {
