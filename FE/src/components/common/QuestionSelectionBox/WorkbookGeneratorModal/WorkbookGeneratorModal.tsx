@@ -1,21 +1,20 @@
-import { Modal } from '@foundation/index';
 import { css } from '@emotion/react';
 import WorkbookEditForm from '@common/QuestionSelectionBox/WorkbookGeneratorModal/WorkbookEditForm';
 import WorkbookAddForm from '@common/QuestionSelectionBox/WorkbookGeneratorModal/WorkbookAddForm';
+import ModalHeader from '@foundation/Modal/ModalHeader';
+import { Modal } from '@foundation/index';
 
 type InterviewSetGeneratorModalProps = {
-  isOpen: boolean;
   closeModal: () => void;
   workbookId?: number;
 };
 const WorkbookGeneratorModal: React.FC<InterviewSetGeneratorModalProps> = ({
-  isOpen,
   closeModal,
   workbookId,
 }) => {
   return (
-    <Modal isOpen={isOpen} closeModal={closeModal}>
-      <Modal.header>새 면접 세트</Modal.header>
+    <Modal isOpen closeModal={closeModal}>
+      <ModalHeader closeModal={closeModal}>새 면접 세트</ModalHeader>
       <div
         css={css`
           min-width: 40vw;
