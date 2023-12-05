@@ -33,7 +33,7 @@ const WorkbookEditForm: React.FC<InterviewSetFormProps> = ({
     value: workbookContent,
     onChange: handleWorkbookContentChange,
     clearInput: clearWorkbookContent,
-  } = useInput<HTMLTextAreaElement>(workbookInfo?.title ?? '');
+  } = useInput<HTMLTextAreaElement>(workbookInfo?.content ?? '');
 
   const { mutate: patchInterviewSet } = useWorkbookPatchMutation();
 
