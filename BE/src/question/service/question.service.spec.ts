@@ -46,6 +46,7 @@ describe('QuestionService', () => {
 
   const mockQuestionRepository = {
     save: jest.fn(),
+    insert: jest.fn(),
     saveAll: jest.fn(),
     findByWorkbookId: jest.fn(),
     findById: jest.fn(),
@@ -80,7 +81,7 @@ describe('QuestionService', () => {
 
       //when
       mockWorkbookRepository.findById.mockResolvedValue(workbookFixture);
-      mockQuestionRepository.save.mockResolvedValue(questionFixture);
+      mockQuestionRepository.insert.mockResolvedValue(questionFixture);
 
       //then
       await expect(

@@ -35,7 +35,7 @@ export class QuestionService {
     validateWorkbook(workbook);
     validateWorkbookOwner(workbook, member);
 
-    const question = await this.questionRepository.save(
+    const question = await this.questionRepository.insert(
       Question.of(workbook, null, createQuestionRequest.content),
     );
 
