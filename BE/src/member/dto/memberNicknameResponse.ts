@@ -3,7 +3,7 @@ import { createPropertyOption } from 'src/util/swagger.util';
 
 export class MemberNicknameResponse {
   @ApiProperty(createPropertyOption('foobar', '회원의 닉네임', String))
-  private nickname: string;
+  nickname: string;
 
   constructor(nickname: string) {
     this.nickname = nickname;
