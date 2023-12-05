@@ -84,11 +84,14 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
       queryKey: QUERY_KEY.WORKBOOK_ID(workbook.workbookId),
     });
 
-    setSelectedQuestions({
-      isSuccess: true,
-      selectedData: settingPage.selectedData.filter(
+    setSelectedQuestions((prev) => {
+      const selectedQuestions = prev.selectedData.filter(
         (question) => !checkedQuestion.includes(question.questionId)
-      ),
+      );
+      return {
+        isSuccess: selectedQuestions.length >= 1,
+        selectedData: selectedQuestions,
+      };
     });
     handleCancelEditMode();
   };
