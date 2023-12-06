@@ -34,6 +34,7 @@
     "@nestjs/typeorm": "^10.0.0",
     "@types/bcrypt": "^5.0.1",
     "@types/cookie-parser": "^1.4.5",
+    "@types/fluent-ffmpeg": "^2.1.24",
     "@types/passport": "^1.0.14",
     "@types/passport-google-oauth20": "^2.0.13",
     "@types/passport-jwt": "^3.0.12",
