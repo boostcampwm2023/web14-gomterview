@@ -56,6 +56,17 @@ const colorChips = {
   red700: '#98382C',
   red800: '#742B22',
   red900: '#511E17',
+
+  yellow50: '#F9EFCB',
+  yellow100: '#F7EABC',
+  yellow200: '#F4E19E',
+  yellow300: '#F1D881',
+  yellow400: '#EDCF63',
+  yellow500: '#EAC645',
+  yellow600: '#C5A63A',
+  yellow700: '#9F872F',
+  yellow800: '#7A6724',
+  yellow900: '#544719',
 } as const;
 
 export const colors = {
@@ -102,5 +113,12 @@ export const colors = {
   },
   backdrop: {
     default: colorChips.shadow400,
+  },
+  toast: {
+    info: colorChips.blue500,
+    success: colorChips.green500,
+    warning: colorChips.yellow500,
+    error: colorChips.red500,
+    default: colorChips.blue500,
   },
 };

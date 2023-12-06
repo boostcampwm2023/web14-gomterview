@@ -1,15 +1,16 @@
 import {
   ToastPositionStyle,
-  ToastTypeStyle,
+  ToastProgressBarStyle,
 } from '@foundation/Toast/Toast.styles';
 
 export type ToastPosition = keyof typeof ToastPositionStyle;
+export type ToastType = keyof typeof ToastProgressBarStyle;
 export type ToastProps = {
   toastId: string;
   text: string;
   autoClose?: false | number;
   closeOnClick?: boolean;
-  type?: keyof typeof ToastTypeStyle;
+  type?: ToastType;
   pauseOnHover?: boolean;
   position?: ToastPosition;
 };

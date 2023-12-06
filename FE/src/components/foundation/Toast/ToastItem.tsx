@@ -1,9 +1,3 @@
-import {
-  ToastFadeOutUpAnimation,
-  ToastProgressBarAnimation,
-  ToastTypeIconName,
-  ToastTypeStyle,
-} from '@foundation/Toast/Toast.styles';
 import { useCallback, useRef, useState } from 'react';
 import { ToastEvent, ToastProps } from '@foundation/Toast/type';
 import { css } from '@emotion/react';
@@ -12,6 +6,12 @@ import { Box, Icon } from '@foundation/index';
 import { collapseToast } from '@foundation/Toast/collapseToast';
 import useAnimationEnd from '@hooks/useAnimationEnd';
 import { eventManager } from '@foundation/Toast/eventManger';
+import {
+  ToastFadeOutUpAnimation,
+  ToastProgressBarAnimation,
+  ToastProgressBarStyle,
+  ToastTypeIconName,
+} from '@foundation/Toast/Toast.styles';
 
 const ToastItem: React.FC<ToastProps> = ({
   toastId,
@@ -82,7 +82,6 @@ const ToastItem: React.FC<ToastProps> = ({
                 `
               : 'none'};
           `,
-          ToastTypeStyle[type],
         ]}
       >
         <div
@@ -98,21 +97,23 @@ const ToastItem: React.FC<ToastProps> = ({
         </div>
         <div
           ref={progressRef}
-          css={css`
-            position: absolute;
-            bottom: 0;
-            height: 0.3125rem;
-            width: 100%;
-            background-color: ${theme.colors.point.primary.default};
-            transform-origin: left;
-            animation: ${autoClose
-              ? css`
-                  ${ToastProgressBarAnimation} ${autoClose}ms linear
-              forwards
-                `
-              : 'none'};
-            animation-play-state: ${isPaused ? 'paused' : 'running'};
-          `}
+          css={[
+            css`
+              position: absolute;
+              bottom: 0;
+              height: 0.3125rem;
+              width: 100%;
+              transform-origin: left;
+              animation: ${autoClose
+                ? css`
+                    ${ToastProgressBarAnimation} ${autoClose}ms linear
+                        forwards
+                  `
+                : 'none'};
+              animation-play-state: ${isPaused ? 'paused' : 'running'};
+            `,
+            ToastProgressBarStyle[type],
+          ]}
         />
       </Box>
     </div>

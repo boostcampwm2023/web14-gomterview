@@ -1,12 +1,23 @@
 import { css, keyframes } from '@emotion/react';
+import { theme } from '@styles/theme';
 
 const TOAST_GAP = '0.75rem';
-export const ToastTypeStyle = {
-  info: css``,
-  success: css``,
-  warning: css``,
-  error: css``,
-  default: css``,
+export const ToastProgressBarStyle = {
+  info: css`
+    background-color: ${theme.colors.toast.info};
+  `,
+  success: css`
+    background-color: ${theme.colors.toast.success};
+  `,
+  warning: css`
+    background-color: ${theme.colors.toast.warning};
+  `,
+  error: css`
+    background-color: ${theme.colors.toast.error};
+  `,
+  default: css`
+    background-color: ${theme.colors.toast.default};
+  `,
 };
 
 export const ToastTypeIconName = {
