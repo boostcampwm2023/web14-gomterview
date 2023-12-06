@@ -31,6 +31,7 @@ import { MemberNotFoundException } from 'src/member/exception/member.exception';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import * as fs from 'fs';
 import { DIRECTORY_PATH } from '../../util/util';
+import * as ffmpeg from 'fluent-ffmpeg';
 
 @Injectable()
 export class VideoService {
@@ -41,8 +42,13 @@ export class VideoService {
   ) {}
 
   async uploadVideo(file: Express.Multer.File) {
+    const start = new Date();
+    console.log(
+      `${start.getHours()} : ${start.getMinutes()} : ${start.getSeconds()}`,
+    );
     await this.createDirectoryIfNotExist();
     await this.saveVideoInDirectory(file);
+    await this.encodeVideo(file.originalname);
   }
 
   private async createDirectoryIfNotExist() {
@@ -67,6 +73,19 @@ export class VideoService {
         }
       },
     );
+  }
+
+  private async encodeVideo(name: string) {
+    ffmpeg(`${DIRECTORY_PATH}/${name}`)
+      .output(`${DIRECTORY_PATH}/${name.replace('.webm', '.mp4')}`)
+      .on('end', function () {
+        const start = new Date();
+        console.log(
+          `${start.getHours()} : ${start.getMinutes()} : ${start.getSeconds()}`,
+        );
+        console.log('Finished processing');
+      })
+      .run();
   }
 
   async createVideo(member: Member, createVideoRequest: CreateVideoRequest) {
