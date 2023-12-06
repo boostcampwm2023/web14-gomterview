@@ -6,7 +6,7 @@ import { breakpoints } from '@styles/_breakpoints';
 import { theme } from '@styles/theme';
 import { RequestLoginModal } from '@components/workbookPage';
 import useModal from '@hooks/useModal';
-import WorkbookGeneratorModal from '@common/QuestionSelectionBox/WorkbookGeneratorModal/WorkbookGeneratorModal';
+import { WorkbookGeneratorModal } from '@common/index';
 
 const WorkbookPlusButton: React.FC = () => {
   const isLogin = useUserInfo();

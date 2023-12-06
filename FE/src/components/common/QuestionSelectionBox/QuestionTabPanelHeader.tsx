@@ -6,7 +6,7 @@ import { WorkbookTitleListResDto } from '@/types/workbook';
 import { useState } from 'react';
 import useWorkbookDeleteMutation from '@hooks/apis/mutations/useWorkbookDeleteMutation';
 import useModal from '@hooks/useModal';
-import WorkbookGeneratorModal from '@common/QuestionSelectionBox/WorkbookGeneratorModal/WorkbookGeneratorModal';
+import { WorkbookGeneratorModal } from '@common/index';
 
 type QuestionTabPanelHeaderProps = {
   workbook: ExcludeArray<WorkbookTitleListResDto>;
