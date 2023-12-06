@@ -29,6 +29,8 @@ import {
 import { SingleVideoResponse } from '../dto/singleVideoResponse';
 import { MemberNotFoundException } from 'src/member/exception/member.exception';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import * as fs from 'fs';
+import { DIRECTORY_PATH } from '../../util/util';
 
 @Injectable()
 export class VideoService {
@@ -37,6 +39,35 @@ export class VideoService {
     private questionRepository: QuestionRepository,
     private memberRepository: MemberRepository,
   ) {}
+
+  async uploadVideo(file: Express.Multer.File) {
+    await this.createDirectoryIfNotExist();
+    await this.saveVideoInDirectory(file);
+  }
+
+  private async createDirectoryIfNotExist() {
+    if (!fs.existsSync(DIRECTORY_PATH)) {
+      fs.mkdir(DIRECTORY_PATH, { recursive: true }, (err) => {
+        if (err) {
+          console.error('디렉토리 생성 에러:', err);
+          return;
+        }
+      });
+    }
+  }
+
+  private async saveVideoInDirectory(file: Express.Multer.File) {
+    fs.writeFile(
+      `${DIRECTORY_PATH}/${file.originalname}`,
+      file.buffer,
+      (err) => {
+        if (err) {
+          console.log(err);
+          throw new Error('영상 인코딩 실패');
+        }
+      },
+    );
+  }
 
   async createVideo(member: Member, createVideoRequest: CreateVideoRequest) {
     validateManipulatedToken(member);
