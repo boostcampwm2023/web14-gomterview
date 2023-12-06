@@ -5,7 +5,7 @@ import workbookHandlers from '@/mocks/handlers/default/workbook';
 import memberHandlers from '@/mocks/handlers/default/member';
 import videoHandlers from '@/mocks/handlers/M01Error/video';
 
-export const defaultHandlers = [
+export const M01Handlers = [
   ...memberHandlers,
   ...questionHandlers,
   ...answerHandlers,
