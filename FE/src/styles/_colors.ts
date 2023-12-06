@@ -8,6 +8,7 @@ const colorChips = {
   grayscaleBlack: '#000000',
 
   shadow100: 'rgba(0, 0, 0, 0.1)',
+  shadow400: 'rgba(0, 0, 0, 0.4)',
   shadow600: 'rgba(0, 0, 0, 0.6)',
 
   blackOpacity70: 'rgba(70, 70, 70, 0.7)',
@@ -98,5 +99,8 @@ export const colors = {
     boxShadow: colorChips.shadow100, // rgba(0, 0, 0, 0.1)
     modalShadow: colorChips.shadow600, // rgba(0, 0, 0, 0.6)
     buttonShadow: colorChips.blue700, // #3056A2
+  },
+  backdrop: {
+    default: colorChips.shadow400,
   },
 };

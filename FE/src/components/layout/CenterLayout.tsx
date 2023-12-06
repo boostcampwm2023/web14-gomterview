@@ -8,7 +8,7 @@ const CenterLayout: React.FC<PropsWithChildren> = ({ children }) => {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: calc(60vh + 4.25rem);
+        height: 70svh;
         margin: auto;
       `}
     >

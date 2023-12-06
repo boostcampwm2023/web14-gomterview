@@ -11,7 +11,7 @@ const InterviewWorkbookDetailPageLayout: React.FC<PropsWithChildren> = ({
       <Layout
         direction="column"
         css={css`
-          padding: 8rem 1rem 1rem 1rem;
+          padding: 1rem;
         `}
       >
         {children}

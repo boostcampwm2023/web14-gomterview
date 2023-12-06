@@ -18,7 +18,8 @@ const VideoPlayerFrame: React.FC<VideoItemProps> = ({
       css={css`
         display: flex;
         flex-direction: column;
-        row-gap: 0.75rem;
+        row-gap: 1rem;
+        width: 64svw;
       `}
     >
       {children}
@@ -27,15 +28,14 @@ const VideoPlayerFrame: React.FC<VideoItemProps> = ({
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          padding: 1rem;
-          height: 100%;
+          padding: 0 0.5rem;
           cursor: pointer;
         `}
       >
         <Typography
           variant="title3"
           css={css`
-            line-height: 1.25rem;
+            line-height: 1.7;
           `}
         >
           {videoName}

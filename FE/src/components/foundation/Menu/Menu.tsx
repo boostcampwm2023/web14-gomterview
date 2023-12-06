@@ -6,9 +6,16 @@ import { HTMLElementTypes } from '@/types/utils';
 type MenuProps = {
   open: boolean;
   closeMenu: () => void;
+  backdropColor?: string;
   children: React.ReactNode;
 } & HTMLElementTypes<HTMLDivElement>;
-const Menu: React.FC<MenuProps> = ({ open, closeMenu, children, ...args }) => {
+const Menu: React.FC<MenuProps> = ({
+  open,
+  closeMenu,
+  backdropColor,
+  children,
+  ...args
+}) => {
   if (!open) return null;
 
   return (
@@ -21,9 +28,9 @@ const Menu: React.FC<MenuProps> = ({ open, closeMenu, children, ...args }) => {
           left: 0;
           width: 100vw;
           height: 100svh;
+          background-color: ${backdropColor};
           z-index: 99;
         `}
-        {...args}
       />
       <div
         onClick={closeMenu}
@@ -37,6 +44,7 @@ const Menu: React.FC<MenuProps> = ({ open, closeMenu, children, ...args }) => {
           border-radius: 0.5rem;
           z-index: 999;
         `}
+        {...args}
       >
         {children}
       </div>
