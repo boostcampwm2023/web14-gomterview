@@ -1,6 +1,6 @@
-import { API } from '@/constants/api';
+import { API } from '@constants/api';
 import { HttpResponse, http } from 'msw';
-import workbookData from '../data/workbook.json';
+import workbookData from '../../data/workbook.json';
 import { WorkbookEntity } from '@/types/workbook';
 
 const workbookHandlers = [

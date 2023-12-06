@@ -1,4 +1,4 @@
-import { API } from '@/constants/api';
+import { API } from '@constants/api';
 import { HttpResponse, http } from 'msw';
 import answerData from '@/mocks/data/answer.json';
 import { AnswerEntity } from '@/types/answer';

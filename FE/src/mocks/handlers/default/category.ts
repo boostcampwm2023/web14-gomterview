@@ -1,6 +1,6 @@
-import { API } from '@/constants/api';
+import { API } from '@constants/api';
 import { HttpResponse, http } from 'msw';
-import categoryData from '../data/category.json';
+import categoryData from '../../data/category.json';
 
 const categoryHandlers = [
   http.get(API.CATEGORY, () => {

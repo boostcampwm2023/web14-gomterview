@@ -1,6 +1,6 @@
-import { API } from '@/constants/api';
+import { API } from '@constants/api';
 import { HttpResponse, http } from 'msw';
-import questionData from '../data/question.json';
+import questionData from '../../data/question.json';
 import { QuestionEntity } from '@/types/question';
 
 const questionHandlers = [

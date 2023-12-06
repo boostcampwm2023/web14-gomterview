@@ -1,4 +1,6 @@
 import { setupWorker } from 'msw/browser';
-import { handlers } from './handlers';
+import { scenarios } from '@/mocks/scenarios';
 
-export const worker = setupWorker(...handlers);
+export const worker = setupWorker();
+
+worker.use(...scenarios.default);

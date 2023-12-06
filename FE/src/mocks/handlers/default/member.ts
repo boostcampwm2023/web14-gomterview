@@ -1,6 +1,6 @@
-import { API } from '@/constants/api';
+import { API } from '@constants/api';
 import { http, HttpResponse } from 'msw';
-import memberData from '../data/member.json';
+import memberData from '../../data/member.json';
 
 const memberHandlers = [
   http.get(API.MEMBER, () => {

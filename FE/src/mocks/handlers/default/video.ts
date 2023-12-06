@@ -1,6 +1,6 @@
-import { API } from '@/constants/api';
+import { API } from '@constants/api';
 import { delay, http, HttpResponse } from 'msw';
-import videoData from '../data/video.json';
+import videoData from '../../data/video.json';
 
 const videoHandlers = [
   http.post(API.VIDEO, ({ request }) => {
