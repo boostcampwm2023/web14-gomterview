@@ -23,7 +23,6 @@ const Menu: React.FC<MenuProps> = ({ open, closeMenu, children, ...args }) => {
           height: 100svh;
           z-index: 99;
         `}
-        {...args}
       />
       <div
         onClick={closeMenu}
@@ -37,6 +36,7 @@ const Menu: React.FC<MenuProps> = ({ open, closeMenu, children, ...args }) => {
           border-radius: 0.5rem;
           z-index: 999;
         `}
+        {...args}
       >
         {children}
       </div>

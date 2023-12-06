@@ -1,8 +1,12 @@
 import { Logo } from '@common/index';
 import { css } from '@emotion/react';
-import Menu from './Header/Menu';
+import SideMenu from '@components/layout/Header/SideMenu';
+import Navigations from '@components/layout/Header/Navigations';
+import useBreakpoint from '@hooks/useBreakPoint';
 
 const Header: React.FC = () => {
+  const isDeviceBreakpoint = useBreakpoint();
+
   return (
     <div
       css={css`
@@ -19,7 +23,15 @@ const Header: React.FC = () => {
       `}
     >
       <Logo />
-      <Menu />
+      {isDeviceBreakpoint('tablet') ? (
+        <SideMenu>
+          <Navigations />
+        </SideMenu>
+      ) : (
+        <div>
+          <Navigations />
+        </div>
+      )}
     </div>
   );
 };
