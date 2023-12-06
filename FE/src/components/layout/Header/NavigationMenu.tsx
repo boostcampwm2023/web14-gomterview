@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
 import { css, keyframes } from '@emotion/react';
 import { Button, Icon, Menu } from '@foundation/index';
 
@@ -13,11 +13,7 @@ const dropDown = keyframes`
   }
 `;
 
-type SideMenuProps = {
-  children: React.ReactNode;
-};
-
-const SideMenu: React.FC<SideMenuProps> = ({ children }) => {
+const NavigationMenu: React.FC<PropsWithChildren> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -49,4 +45,4 @@ const SideMenu: React.FC<SideMenuProps> = ({ children }) => {
   );
 };
 
-export default SideMenu;
+export default NavigationMenu;

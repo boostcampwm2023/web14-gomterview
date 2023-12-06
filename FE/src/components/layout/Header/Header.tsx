@@ -1,12 +1,10 @@
 import { Logo } from '@common/index';
 import { css } from '@emotion/react';
-import SideMenu from '@components/layout/Header/SideMenu';
+import NavigationMenu from '@components/layout/Header/NavigationMenu';
+import { theme } from '@styles/theme';
 import Navigations from '@components/layout/Header/Navigations';
-import useBreakpoint from '@hooks/useBreakPoint';
 
 const Header: React.FC = () => {
-  const isDeviceBreakpoint = useBreakpoint();
-
   return (
     <div
       css={css`
@@ -23,15 +21,28 @@ const Header: React.FC = () => {
       `}
     >
       <Logo />
-      {isDeviceBreakpoint('tablet') ? (
-        <SideMenu>
+      <div
+        css={css`
+          display: none;
+          @media (max-width: ${theme.breakpoints.tablet}) {
+            display: block;
+          }
+        `}
+      >
+        <NavigationMenu>
           <Navigations />
-        </SideMenu>
-      ) : (
-        <div>
-          <Navigations />
-        </div>
-      )}
+        </NavigationMenu>
+      </div>
+      <div
+        css={css`
+          display: none;
+          @media (min-width: ${theme.breakpoints.tablet}) {
+            display: block;
+          }
+        `}
+      >
+        <Navigations />
+      </div>
     </div>
   );
 };
