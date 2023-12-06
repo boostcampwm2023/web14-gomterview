@@ -7,12 +7,11 @@ import {
 import { useCallback, useRef, useState } from 'react';
 import { ToastEvent, ToastProps } from '@foundation/Toast/type';
 import { css } from '@emotion/react';
-
-import { eventManager } from '@foundation/Toast/EventManger';
 import { theme } from '@styles/theme';
 import { Box, Icon } from '@foundation/index';
 import { collapseToast } from '@foundation/Toast/collapseToast';
 import useAnimationEnd from '@hooks/useAnimationEnd';
+import { eventManager } from '@foundation/Toast/eventManger';
 
 const Toast: React.FC<ToastProps> = ({
   toastId,

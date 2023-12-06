@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ToastEvent, ToastPosition, ToastProps } from '@foundation/Toast/type';
-import { eventManager } from '@foundation/Toast/EventManger';
+import { eventManager } from '@foundation/Toast/eventManger';
 
 const useToastContainer = () => {
   const [toastList, setToastList] = useState(new Map<string, ToastProps>());
