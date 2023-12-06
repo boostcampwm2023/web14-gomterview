@@ -13,15 +13,6 @@ const useToastContainer = () => {
     setToastList((prev) => new Map(prev).set(props.toastId, props));
   };
 
-  // 토스트 업데이트
-  const updateToast = (id: string, props: ToastProps) => {
-    setToastList((prev) => {
-      const newMap = new Map(prev);
-      newMap.set(id, { ...newMap.get(id), ...props });
-      return newMap;
-    });
-  };
-
   // 토스트 삭제
   const deleteToast = (id: string) => {
     setToastList((prev) => {
@@ -33,13 +24,11 @@ const useToastContainer = () => {
 
   useEffect(() => {
     eventManager.on(ToastEvent.Add, addToast);
-    eventManager.on(ToastEvent.Update, updateToast);
     eventManager.on(ToastEvent.Delete, deleteToast);
 
     // 컴포넌트 언마운트 시 리스너 해제
     return () => {
       eventManager.off(ToastEvent.Add, addToast);
-      eventManager.off(ToastEvent.Update, updateToast);
       eventManager.off(ToastEvent.Delete, deleteToast);
     };
   }, []);
