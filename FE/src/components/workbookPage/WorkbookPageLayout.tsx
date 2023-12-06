@@ -17,7 +17,7 @@ const WorkbookPageLayout: React.FC<WorkbookPageLayoutProps> = ({
         css={css`
           position: relative;
           height: auto;
-          padding: 4.5rem 0.25rem;
+          padding: 1rem;
           row-gap: 1.5rem;
         `}
       >
