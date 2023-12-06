@@ -11,7 +11,7 @@ const workbookHandlers = [
       { status: 500 }
     );
   }),
-  http.get(API.WORKBOOK_CATEGORY_ID(), ({ request }) => {
+  http.get(API.WORKBOOK, ({ request }) => {
     return HttpResponse.json(
       {
         message: '',

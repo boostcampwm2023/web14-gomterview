@@ -13,7 +13,7 @@ const workbookHandlers = [
       { status: 410 }
     );
   }),
-  http.get(API.WORKBOOK_CATEGORY_ID(), ({ request }) => {
+  http.get(API.WORKBOOK, ({ request }) => {
     const category = request.url.split('category=')[1];
     const categoryMap = new Map<number, WorkbookEntity[]>();
     workbookData.forEach((workbook) => {
