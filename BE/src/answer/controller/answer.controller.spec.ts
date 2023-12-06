@@ -32,7 +32,6 @@ import { AuthModule } from '../../auth/auth.module';
 import { TokenModule } from '../../token/token.module';
 import { QuestionRepository } from '../../question/repository/question.repository';
 import { CreateAnswerRequest } from '../dto/createAnswerRequest';
-import { Token } from '../../token/entity/token';
 import { AnswerRepository } from '../repository/answer.repository';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
@@ -123,15 +122,7 @@ describe('AnswerController 통합테스트', () => {
       TokenModule,
       WorkbookModule,
     ];
-    const entities = [
-      Answer,
-      Question,
-      Category,
-      Member,
-      Answer,
-      Token,
-      Workbook,
-    ];
+    const entities = [Answer, Question, Category, Member, Answer, Workbook];
 
     const moduleFixture = await createIntegrationTestModule(modules, entities);
     app = moduleFixture.createNestApplication();

@@ -41,7 +41,6 @@ import { Video } from '../entity/video';
 import { Member } from 'src/member/entity/member';
 import { Question } from 'src/question/entity/question';
 import { Workbook } from 'src/workbook/entity/workbook';
-import { Token } from 'src/token/entity/token';
 import { Category } from 'src/category/entity/category';
 import { addAppModules, createIntegrationTestModule } from 'src/util/test.util';
 import { INestApplication } from '@nestjs/common';
@@ -668,15 +667,7 @@ describe('VideoService 통합 테스트', () => {
 
   beforeAll(async () => {
     const modules = [VideoModule, QuestionModule];
-    const entities = [
-      Video,
-      Member,
-      Question,
-      Answer,
-      Workbook,
-      Token,
-      Category,
-    ];
+    const entities = [Video, Member, Question, Answer, Workbook, Category];
 
     const moduleFixture: TestingModule = await createIntegrationTestModule(
       modules,

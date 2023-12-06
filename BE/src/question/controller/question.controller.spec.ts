@@ -10,7 +10,6 @@ import {
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { TokenModule } from '../../token/token.module';
 import { Member } from '../../member/entity/member';
-import { Token } from '../../token/entity/token';
 import { createIntegrationTestModule } from '../../util/test.util';
 import { QuestionModule } from '../question.module';
 import { AuthModule } from '../../auth/auth.module';
@@ -132,7 +131,7 @@ describe('QuestionController 통합테스트', () => {
       WorkbookModule,
       CategoryModule,
     ];
-    const entities = [Member, Token, Workbook, Question, Answer, Category];
+    const entities = [Member, Workbook, Question, Answer, Category];
 
     const moduleFixture: TestingModule = await createIntegrationTestModule(
       modules,
@@ -380,7 +379,6 @@ describe('QuestionController 통합테스트', () => {
   });
 
   afterEach(async () => {
-    await workbookRepository.query('delete from token');
     await workbookRepository.query('delete from Question');
     await workbookRepository.query('delete from Workbook');
     await workbookRepository.query('delete from Member');

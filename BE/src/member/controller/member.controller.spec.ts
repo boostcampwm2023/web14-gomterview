@@ -21,7 +21,6 @@ import { TokenService } from '../../token/service/token.service';
 import { TokenModule } from '../../token/token.module';
 import { MemberModule } from '../member.module';
 import { Member } from '../entity/member';
-import { Token } from '../../token/entity/token';
 import {
   addAppModules,
   createIntegrationTestModule,
@@ -139,7 +138,7 @@ describe('MemberController 통합 테스트', () => {
 
   beforeAll(async () => {
     const modules = [AuthModule, TokenModule, MemberModule];
-    const entities = [Member, Token, Category];
+    const entities = [Member, Category];
 
     const moduleFixture: TestingModule = await createIntegrationTestModule(
       modules,
@@ -225,7 +224,6 @@ describe('MemberController 통합 테스트', () => {
 
   afterEach(async () => {
     await memberRepository.query('delete from Member');
-    await memberRepository.query('delete from Token');
     await memberRepository.query('DELETE FROM sqlite_sequence'); // Auto Increment 초기화
   });
 
