@@ -31,6 +31,7 @@ const InterviewPage: React.FC = () => {
     handleDownload,
     timeOverModalIsOpen,
     setTimeOverModalIsOpen,
+    reloadMedia,
   } = useInterview();
 
   const [interviewIntroModalIsOpen, setInterviewIntroModalIsOpen] =
@@ -47,6 +48,8 @@ const InterviewPage: React.FC = () => {
           isScriptInView={isScriptInView}
           question={currentQuestion.questionContent}
           answer={currentQuestion.answerContent}
+          connectStatus={connectStatus}
+          reloadMedia={reloadMedia}
         />
         <InterviewFooter
           isRecording={isRecording}

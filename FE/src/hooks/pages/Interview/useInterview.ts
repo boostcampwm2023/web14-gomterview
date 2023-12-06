@@ -77,9 +77,14 @@ const useInterview = () => {
   ]);
 
   useEffect(() => {
-    if (!media) void startMedia();
-    return () => stopMedia();
-  }, [media]);
+    if (!media && isAllSuccess) {
+      void startMedia();
+      return;
+    }
+    return () => {
+      if (media) stopMedia();
+    };
+  }, [media, startMedia, stopMedia, isAllSuccess]);
 
   useEffect(() => {
     if (isTimeOver) {
@@ -105,6 +110,7 @@ const useInterview = () => {
     handleDownload,
     timeOverModalIsOpen,
     setTimeOverModalIsOpen,
+    reloadMedia: () => void startMedia(),
   };
 };
 

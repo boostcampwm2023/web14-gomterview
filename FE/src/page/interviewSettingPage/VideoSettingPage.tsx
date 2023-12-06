@@ -1,6 +1,7 @@
 import { videoSetting } from '@/atoms/interviewSetting';
 import useMedia from '@/hooks/useMedia';
 import { theme } from '@/styles/theme';
+import { Mirror } from '@common/index';
 import { RecordStatus } from '@components/interviewPage/InterviewHeader';
 import {
   Description,
@@ -28,17 +29,21 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
   const {
     videoRef: mirrorVideoRef,
     connectStatus,
+    media,
     startMedia,
     stopMedia,
   } = useMedia();
 
   useEffect(() => {
-    if (isCurrentPage) void startMedia();
+    if (isCurrentPage && !media) {
+      void startMedia();
+      return;
+    }
 
     return () => {
-      stopMedia();
+      if (!isCurrentPage && media) stopMedia();
     };
-  }, [isCurrentPage]);
+  }, [isCurrentPage, media, startMedia, stopMedia]);
 
   useEffect(() => {
     if (connectStatus === 'connect') {
@@ -86,17 +91,14 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
         >
           <RecordStatus isRecording={connectStatus === 'connect'} />
         </div>
-        <video
-          ref={mirrorVideoRef}
-          autoPlay
-          muted
-          css={css`
-            height: 100%;
-            transform: scaleX(-1);
-            width: 100%;
-          `}
+        <Mirror
+          mirrorVideoRef={mirrorVideoRef}
+          connectStatus={connectStatus}
+          reloadMedia={() => void startMedia()}
+          isSetting
         />
       </div>
+
       <InterviewSettingFooter>
         <Button
           onClick={onPrevClick}
