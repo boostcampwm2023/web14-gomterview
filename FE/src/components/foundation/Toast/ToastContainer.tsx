@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
-import { ToastEvent, ToastProps } from '@foundation/Toast/type';
+import { useEffect, useState } from 'react';
+import { ToastEvent, ToastPosition, ToastProps } from '@foundation/Toast/type';
 import { eventManager } from '@foundation/Toast/EventManger';
 import Toast from '@foundation/Toast/Toast';
 import { css } from '@emotion/react';
+import { ToastPositionStyle } from '@foundation/Toast/Toast.styles';
 
 const useToastContainer = () => {
   const [toastList, setToastList] = useState(new Map<string, ToastProps>());
@@ -43,34 +44,46 @@ const useToastContainer = () => {
     };
   }, []);
 
-  const getToastToRender = () => {
+  const toastListToArray = () => {
     return Array.from(toastList);
   };
 
-  return { getToastToRender };
+  const getToastPositionGroupToRender = () => {
+    const list = toastListToArray();
+    const positionGroup = new Map<ToastPosition, ToastProps[]>();
+    list.forEach(([_, toastProps]) => {
+      const position = toastProps.position || 'topRight';
+      positionGroup.has(position)
+        ? positionGroup.get(position)!.push(toastProps)
+        : positionGroup.set(position, [toastProps]);
+    });
+    return positionGroup;
+  };
+
+  return { getToastPositionGroupToRender };
 };
 
 export const ToastContainer = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { getToastToRender } = useToastContainer();
+  const { getToastPositionGroupToRender } = useToastContainer();
+  const positionGroup = getToastPositionGroupToRender();
 
-  const list = getToastToRender();
-  return (
+  return Array.from(positionGroup).map(([position, toasts]) => (
     <div
-      ref={containerRef}
-      css={css`
-        position: fixed;
-        top: 0;
-        left: 0;
-        display: flex;
-        flex-direction: column;
-        row-gap: 0.5rem;
-        z-index: 99999;
-      `}
+      key={position}
+      css={[
+        css`
+          position: fixed;
+          display: flex;
+          flex-direction: column;
+          row-gap: 0.5rem;
+          z-index: 9999;
+        `,
+        ToastPositionStyle[position],
+      ]}
     >
-      {list.map(([toastId, toastProps]) => (
-        <Toast key={toastId} {...toastProps} />
+      {toasts.map((toastProps) => (
+        <Toast key={toastProps.toastId} {...toastProps} />
       ))}
     </div>
-  );
+  ));
 };

@@ -1,4 +1,7 @@
-import { ToastType, ToastTypeIcon } from '@foundation/Toast/Toast.styles';
+import {
+  ToastTypeIconName,
+  ToastTypeStyle,
+} from '@foundation/Toast/Toast.styles';
 import { useCallback, useEffect, useRef } from 'react';
 import { ToastEvent, ToastProps } from '@foundation/Toast/type';
 import { css } from '@emotion/react';
@@ -42,7 +45,7 @@ const Toast: React.FC<ToastProps> = ({
 
   const IconType = () =>
     type === 'default' ? null : (
-      <Icon id={ToastTypeIcon[type]} width="20" height="20" />
+      <Icon id={ToastTypeIconName[type]} width="20" height="20" />
     );
 
   return (
@@ -60,7 +63,7 @@ const Toast: React.FC<ToastProps> = ({
           border-radius: 0.5rem;
           background-color: ${theme.colors.surface.default};
         `,
-        ToastType[type],
+        ToastTypeStyle[type],
       ]}
     >
       <IconType />

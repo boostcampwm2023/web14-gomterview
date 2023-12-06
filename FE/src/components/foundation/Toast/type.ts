@@ -1,12 +1,17 @@
-import { ToastType } from '@foundation/Toast/Toast.styles';
+import {
+  ToastPositionStyle,
+  ToastTypeStyle,
+} from '@foundation/Toast/Toast.styles';
 
+export type ToastPosition = keyof typeof ToastPositionStyle;
 export type ToastProps = {
   toastId: string;
   text: string;
   autoClose?: boolean | number;
   closeOnClick?: boolean;
-  type?: keyof typeof ToastType;
+  type?: keyof typeof ToastTypeStyle;
   pauseOnHover?: boolean;
+  position?: ToastPosition;
 };
 
 export const enum ToastEvent {
