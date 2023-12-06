@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as ffmpeg from 'fluent-ffmpeg';
+import { HttpBadRequestException } from './exception.util';
 
 export const DIRECTORY_PATH = './uploads';
 
@@ -53,6 +54,19 @@ export const deleteWebm = async (name: string) => {
   fs.rm(createVideoPath(name), () => {
     console.log(`${name} : webm DELETED`);
   });
+};
+
+export const UPLOAD_UTIL = {
+  fileFilter: (req, file, callback) => {
+    const allowedPattern = /^[\w\d-]+\.(mp4|webm)$/; // 허용할 파일 이름 패턴 (예: 영문자, 숫자, 대시(-)로 이루어진 파일 이름, mp4 또는 webm 확장자)
+    if (!allowedPattern.test(file.originalname)) {
+      return callback(
+        new HttpBadRequestException('Invalid file name', 'V00'),
+        false,
+      );
+    }
+    callback(null, true);
+  },
 };
 
 const createVideoPath = (name: string) => `${DIRECTORY_PATH}/${name}`;

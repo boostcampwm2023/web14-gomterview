@@ -8,7 +8,9 @@ import {
   Post,
   Req,
   Res,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { VideoService } from '../service/video.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -27,11 +29,20 @@ import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { VideoDetailResponse } from '../dto/videoDetailResponse';
 import { VideoHashResponse } from '../dto/videoHashResponse';
 import { SingleVideoResponse } from '../dto/singleVideoResponse';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UPLOAD_UTIL } from '../../util/encoder.util';
 
 @Controller('/api/video')
 @ApiTags('video')
 export class VideoController {
   constructor(private videoService: VideoService) {}
+
+  @Post('encode')
+  @UseInterceptors(FileInterceptor('file', UPLOAD_UTIL))
+  async uploadFile(@UploadedFile() file: Express.Multer.File) {
+    await this.videoService.uploadVideo(file);
+    return { message: 'File uploaded successfully' };
+  }
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
