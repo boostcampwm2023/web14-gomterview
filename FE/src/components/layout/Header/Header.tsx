@@ -15,7 +15,7 @@ const Header: React.FC = () => {
         justify-content: space-between;
         align-items: center;
         padding: 1rem 1.5rem;
-        z-index: 999;
+        z-index: 1;
         background-color: rgba(255, 255, 255, 0.5);
         backdrop-filter: blur(10px); /* 10px 블러 효과 */
       `}

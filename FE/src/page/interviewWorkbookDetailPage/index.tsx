@@ -4,20 +4,21 @@ import {
   AddWorkbookListModal,
   InterviewWorkbookDetailPageLayout,
 } from '@components/interviewWorkbookDetailPage';
+import { PATH } from '@constants/path';
 import { css } from '@emotion/react';
 import { Box, Button, CheckBox } from '@foundation/index';
 import useQuestionWorkbookQuery from '@hooks/apis/queries/useQuestionWorkbookQuery';
 import useWorkbookQuery from '@hooks/apis/queries/useWorkbookQuery';
+import useModal from '@hooks/useModal';
 import useUserInfo from '@hooks/useUserInfo';
 import { theme } from '@styles/theme';
 import { useState } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useNavigate, useLoaderData } from 'react-router-dom';
 
 const InterviewWorkbookDetailPage = () => {
   const [selectedQuestionId, setSelectedQuestionId] = useState<number[]>([]);
   const [allSelected, setAllSelected] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
+  const navigate = useNavigate();
   const { workbookId } = useLoaderData() as { workbookId: number };
   const userInfo = useUserInfo();
   const { data: questionWorkbookData } = useQuestionWorkbookQuery({
@@ -25,6 +26,19 @@ const InterviewWorkbookDetailPage = () => {
   });
   const { data: workbookData } = useWorkbookQuery({ workbookId: workbookId });
 
+  const {
+    openModal: openAddWorkbookListModal,
+    closeModal: closeAddWorkbookListModal,
+  } = useModal(() => {
+    return (
+      <AddWorkbookListModal
+        closeModal={closeModal}
+        selectedQuestionIds={selectedQuestionId}
+        workbookData={workbookData}
+        moveToWorkbook={() => navigate(PATH.WORKBOOK)}
+      />
+    );
+  });
   const selectQuestion = (questionId: number) =>
     setSelectedQuestionId((prev) => prev.filter((id) => id !== questionId));
 
@@ -44,7 +58,7 @@ const InterviewWorkbookDetailPage = () => {
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
+    closeAddWorkbookListModal();
   };
 
   const openModal = () => {
@@ -52,19 +66,13 @@ const InterviewWorkbookDetailPage = () => {
     else
       selectedQuestionId.length < 1
         ? alert('질문을 선택해주세요')
-        : setIsModalOpen(true);
+        : openAddWorkbookListModal();
   };
 
   if (!workbookData) return;
 
   return (
     <>
-      <AddWorkbookListModal
-        isOpen={isModalOpen}
-        closeModal={closeModal}
-        selectedQuestionIds={selectedQuestionId}
-        workbookData={workbookData}
-      />
       <InterviewWorkbookDetailPageLayout>
         <WorkbookCard
           css={css`
