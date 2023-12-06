@@ -1,0 +1,22 @@
+[
+  {
+    "id":1,
+    "name":"FE"
+  },
+  {
+    "id":2,
+    "name":"BE"
+  },
+  {
+    "id":3,
+    "name":"CS"
+  },
+  {
+    "id":4,
+    "name":"Android"
+  },
+  {
+    "id":5,
+    "name":"iOS"
+  }
+]

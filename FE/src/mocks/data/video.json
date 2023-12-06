@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "memberId": 1,
+    "videoName": "CSS 선택자의 종류에 대해 설명해주세요.",
+    "thumbnail": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerBlazes.jpg",
+    "url": "https://u2e0.c18.e2-4.dev/videos/%EB%A3%A8%EC%9D%B4%EB%B7%94%ED%86%B5%ED%86%B5%ED%8A%80%EA%B8%B0%EB%84%A4_test_07ab3e8a-1a0a-453f-8d60-afacb57b0075.webm",
+    "videoLength": "03:00",
+    "isPublic": false,
+    "createdAt": "1699941626145"
+  },
+  {
+    "id": 2,
+    "memberId": 1,
+    "videoName": "Big Buck Bunny",
+    "thumbnail": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg",
+    "url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    "videoLength": "07:17",
+    "isPublic": true,
+    "createdAt": "1699941626145"
+  },
+  {
+    "id": 3,
+    "memberId": 1,
+    "videoName": "Elephant Dream",
+    "thumbnail": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg",
+    "url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    "videoLength": "10:53",
+    "isPublic": false,
+    "createdAt": "1699941626145"
+  }
+]

@@ -1,5 +1,6 @@
 import { API } from '@/constants/api';
 import { delay, http, HttpResponse } from 'msw';
+import videoData from '../data/video.json';
 
 const videoHandlers = [
   http.post(API.VIDEO, ({ request }) => {
@@ -16,62 +17,18 @@ const videoHandlers = [
     );
   }),
   http.get(API.VIDEO_ALL, () => {
-    return HttpResponse.json(
-      [
-        {
-          id: 1,
-          videoName: 'CSS 선택자의 종류에 대해 설명해주세요.',
-          thumbnail:
-            'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg',
-          videoLength: '10:53',
-          isPublic: false,
-          createdAt: '1699941626145',
-        },
-        {
-          id: 2,
-          videoName: 'Big Buck Bunny',
-          thumbnail:
-            'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg',
-          videoLength: '07:17',
-          isPublic: true,
-          createdAt: '1699941626145',
-        },
-        {
-          id: 3,
-          videoName: 'Elephant Dream',
-          thumbnail:
-            'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerBlazes.jpg',
-          videoLength: '03:00',
-          isPublic: false,
-          createdAt: '1699941626145',
-        },
-      ],
-      { status: 200 }
-    );
+    return HttpResponse.json(videoData, { status: 200 });
   }),
-  http.get(API.VIDEO_ID(), () => {
+  http.get(API.VIDEO_ID(), ({ params }) => {
+    const { id } = params;
+
     return HttpResponse.json(
-      {
-        id: 1,
-        url: 'https://u2e0.c18.e2-4.dev/videos/%EB%A3%A8%EC%9D%B4%EB%B7%94%ED%86%B5%ED%86%B5%ED%8A%80%EA%B8%B0%EB%84%A4_test_07ab3e8a-1a0a-453f-8d60-afacb57b0075.webm',
-        hash: null,
-        videoName: 'CSS 선택자의 종류에 대해 설명해주세요.',
-        createdAt: '1699941626145',
-      },
+      videoData.find((video) => video.id === Number(id)),
       { status: 200 }
     );
   }),
   http.get(API.VIDEO_HASH(), () => {
-    return HttpResponse.json(
-      {
-        id: 1,
-        url: 'https://u2e0.c18.e2-4.dev/videos/%EB%A3%A8%EC%9D%B4%EB%B7%94%ED%86%B5%ED%86%B5%ED%8A%80%EA%B8%B0%EB%84%A4_test_07ab3e8a-1a0a-453f-8d60-afacb57b0075.webm',
-        hash: 'asdfasdfasdfsfasdfasf',
-        videoName: 'CSS 선택자의 종류에 대해 설명해주세요.',
-        createdAt: '1699941626145',
-      },
-      { status: 200 }
-    );
+    return HttpResponse.json(videoData.at(0), { status: 200 });
   }),
   http.patch(API.VIDEO_ID(), async () => {
     await delay(1000);

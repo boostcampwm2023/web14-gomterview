@@ -1,0 +1,186 @@
+[
+  {
+    "answerId": 1,
+    "questionId": 1,
+    "content": "CSS 선택자에는 여러 종류가 있습니다. 기본적으로 태그 선택자, 클래스 선택자, ID 선택자가 있으며, 이 외에도 자식 선택자, 인접 형제 선택자, 속성 선택자 등이 있습니다. 각 선택자는 스타일을 적용할 HTML 요소를 다른 방식으로 지정합니다.",
+    "memberName": "admin",
+    "memberId": 1,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=4"
+  },
+  {
+    "answerId": 2,
+    "questionId": 2,
+    "content": "클로저는 함수와 그 함수가 선언된 렉시컬 환경의 조합입니다. 클로저를 통해 내부 함수는 외부 함수의 변수에 접근할 수 있습니다. 이는 데이터 은닉과 캡슐화에 유용합니다.",
+    "memberName": "박민지",
+    "memberId": 2,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=5"
+  },
+  {
+    "answerId": 3,
+    "questionId": 3,
+    "content": "반응형 웹 디자인은 하나의 HTML 코드에 CSS 미디어 쿼리를 사용하여 다양한 화면 크기와 해상도에 맞게 콘텐츠를 조정합니다. 적응형 웹 디자인은 여러 고정된 레이아웃을 만들고, 디바이스의 화면 크기에 따라 적절한 레이아웃을 제공합니다.",
+    "memberName": "이민지",
+    "memberId": 3,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=6"
+  },
+  {
+    "answerId": 4,
+    "questionId": 4,
+    "content": "반응형 웹 디자인과 적응형 웹 디자인은 다릅니다. 반응형 디자인은 하나의 레이아웃으로 모든 화면 크기에 대응합니다. 반면, 적응형 디자인은 여러 레이아웃을 준비하여 화면 크기에 맞게 선택적으로 사용합니다.",
+    "memberName": "김영희",
+    "memberId": 4,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=7"
+  },
+  {
+    "answerId": 5,
+    "questionId": 5,
+    "content": "CSS의 박스 모델은 웹 페이지의 각 요소를 박스로 보고, 그 안에 여백, 테두리, 패딩, 콘텐츠 등을 설정하는 방법입니다. 이는 웹 페이지 레이아웃을 정교하게 조정하는 데 중요합니다.",
+    "memberName": "최준호",
+    "memberId": 5,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=8"
+  },
+  {
+    "answerId": 6,
+    "questionId": 6,
+    "content": "CSS에서 position 속성은 요소의 위치를 결정합니다. static, relative, absolute, fixed, sticky 등 다양한 값으로 요소의 위치와 관련된 동작을 제어할 수 있습니다.",
+    "memberName": "정혜진",
+    "memberId": 6,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=9"
+  },
+  {
+    "answerId": 7,
+    "questionId": 7,
+    "content": "CSS의 float 속성은 요소를 좌우로 띄우게 하는 속성입니다. 이를 통해 텍스트나 이미지 등을 요소 주변에 둘러싸게 할 수 있습니다. left, right, none 값이 사용됩니다.",
+    "memberName": "이진수",
+    "memberId": 7,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=10"
+  },
+  {
+    "answerId": 8,
+    "questionId": 8,
+    "content": "CSS의 flexbox는 유연한 레이아웃을 구성할 수 있는 방법입니다. flex container와 flex item을 사용하여 복잡한 레이아웃도 손쉽게 구성할 수 있습니다.",
+    "memberName": "유정은",
+    "memberId": 8,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=11"
+  },
+  {
+    "answerId": 9,
+    "questionId": 9,
+    "content": "HTML5는 이전 버전의 HTML에 비해 여러 새로운 기능을 제공합니다. 구조적 태그, 오디오 및 비디오 태그, 폼 개선, 새로운 API들이 포함됩니다.",
+    "memberName": "박진영",
+    "memberId": 9,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=12"
+  },
+  {
+    "answerId": 10,
+    "questionId": 10,
+    "content": "자바스크립트의 프로미스는 비동기 작업의 결과를 나타내는 객체입니다. resolve(성공), reject(실패) 콜백을 통해 비동기 처리의 성공 또는 실패를 다룰 수 있습니다.",
+    "memberName": "김태현",
+    "memberId": 10,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=13"
+  },
+  {
+    "answerId": 11,
+    "questionId": 11,
+    "content": "async/await는 자바스크립트의 비동기 처리 패턴을 간결하게 만드는 문법입니다. 프로미스 기반 비동기 처리를 마치 동기적인 코드처럼 작성할 수 있게 해줍니다.",
+    "memberName": "장수민",
+    "memberId": 11,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=14"
+  },
+  {
+    "answerId": 12,
+    "questionId": 12,
+    "content": "자바스크립트의 이벤트 루프는 비동기 작업을 처리하는 기본 메커니즘입니다. 콜 스택, 이벤트 큐, 백그라운드 작업을 관리하여 비동기 이벤트를 처리합니다.",
+    "memberName": "홍길동",
+    "memberId": 12,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=15"
+  },
+  {
+    "answerId": 13,
+    "questionId": 13,
+    "content": "변수 스코프는 변수가 유효한 범위를 말합니다. 자바스크립트에서는 전역 스코프와 지역 스코프가 있으며, ES6 이후 블록 스코프가 추가되었습니다.",
+    "memberName": "서민지",
+    "memberId": 13,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=16"
+  },
+  {
+    "answerId": 14,
+    "questionId": 14,
+    "content": "CSS의 그리드 레이아웃은 2차원 레이아웃을 구성할 때 사용합니다. 행과 열로 구성되며, 복잡한 레이아웃도 쉽게 구현할 수 있습니다.",
+    "memberName": "김민수",
+    "memberId": 14,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=17"
+  },
+  {
+    "answerId": 15,
+    "questionId": 15,
+    "content": "자바스크립트의 객체 지향 프로그래밍은 클래스, 상속, 캡슐화 등의 개념을 포함합니다. ES6부터 클래스 문법을 사용하여 보다 쉽게 객체 지향 코드를 작성할 수 있습니다.",
+    "memberName": "이정훈",
+    "memberId": 15,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=18"
+  },
+  {
+    "answerId": 16,
+    "questionId": 16,
+    "content": "자바스크립트의 프로토타입은 객체의 상속을 구현하는 기본적인 방법입니다. 모든 객체는 프로토타입을 통해 메서드와 속성을 상속받을 수 있습니다.",
+    "memberName": "박지민",
+    "memberId": 16,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=19"
+  },
+  {
+    "answerId": 17,
+    "questionId": 17,
+    "content": "MVC 패턴은 웹 애플리케이션을 모델(Model), 뷰(View), 컨트롤러(Controller)로 구분하여 개발하는 방법입니다. 이를 통해 유지보수가 용이하고, 개발 효율성이 높아집니다.",
+    "memberName": "정민경",
+    "memberId": 17,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=20"
+  },
+  {
+    "answerId": 18,
+    "questionId": 18,
+    "content": "자바스크립트의 이벤트 위임은 하나의 부모 요소에 이벤트 리스너를 설정하여 여러 자식 요소의 이벤트를 관리하는 기술입니다. 이를 통해 불필요한 이벤트 리스너의 중복을 방지하고 성능을 개선할 수 있습니다.",
+    "memberName": "김현수",
+    "memberId": 18,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=21"
+  },
+  {
+    "answerId": 19,
+    "questionId": 19,
+    "content": "CSS 미디어 쿼리는 다양한 디스플레이 환경에 맞게 스타일을 조정할 수 있는 기능입니다. 이를 통해 반응형 웹 디자인을 구현할 수 있으며, 사용자의 화면 크기에 따라 다른 스타일을 적용할 수 있습니다.",
+    "memberName": "오정민",
+    "memberId": 19,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=22"
+  },
+  {
+    "answerId": 20,
+    "questionId": 20,
+    "content": "HTML의 시맨틱 태그는 웹 페이지의 구조와 의미를 명확하게 표현하기 위해 사용되는 태그입니다. 예를 들어 `<header>`, `<footer>`, `<article>`과 같은 태그들이 시맨틱 태그에 속합니다.",
+    "memberName": "이수진",
+    "memberId": 20,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=23"
+  },
+  {
+    "answerId": 21,
+    "questionId": 21,
+    "content": "자바스크립트의 모듈 시스템은 코드를 분리하고 재사용하기 위해 `import`와 `export` 문을 사용하여 모듈을 생성하고 사용하는 방법입니다. 이를 통해 코드의 관리와 유지보수가 용이해집니다.",
+    "memberName": "최윤정",
+    "memberId": 21,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=24"
+  },
+  {
+    "answerId": 22,
+    "questionId": 22,
+    "content": "CSS의 선택자 우선 순위는 스타일을 적용할 때 어떤 규칙이 우선적으로 적용될지 결정합니다. 이 순위는 인라인 스타일, ID 선택자, 클래스 선택자, 태그 선택자 순으로 결정됩니다.",
+    "memberName": "박진영",
+    "memberId": 22,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=25"
+  },
+  {
+    "answerId": 23,
+    "questionId": 23,
+    "content": "자바스크립트의 스코프 체인은 변수와 함수의 유효 범위를 결정하는 메커니즘입니다. 내부 함수는 외부 함수의 변수에 접근할 수 있으며, 이는 스코프 체인을 통해 가능합니다.",
+    "memberName": "한지원",
+    "memberId": 23,
+    "memberImage": "https://avatars.githubusercontent.com/u/66554167?v=26"
+  }
+]
