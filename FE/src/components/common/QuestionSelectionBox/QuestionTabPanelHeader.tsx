@@ -3,9 +3,10 @@ import { Button, Icon, Menu, MenuItem, Typography } from '@foundation/index';
 import { theme } from '@styles/theme';
 import { ExcludeArray } from '@/types/utils';
 import { WorkbookTitleListResDto } from '@/types/workbook';
-import InterviewSetGeneratorModal from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetGeneratorModal';
 import { useState } from 'react';
 import useWorkbookDeleteMutation from '@hooks/apis/mutations/useWorkbookDeleteMutation';
+import useModal from '@hooks/useModal';
+import { WorkbookGeneratorModal } from '@common/index';
 
 type QuestionTabPanelHeaderProps = {
   workbook: ExcludeArray<WorkbookTitleListResDto>;
@@ -19,12 +20,16 @@ const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
   onWorkbookDelete,
   onEditButtonClick,
 }) => {
-  const [
-    isInterviewSetGeneratorModalOpen,
-    setIsInterviewSetGeneratorModalOpen,
-  ] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { mutate: deleteWorkbook } = useWorkbookDeleteMutation();
+  const { openModal, closeModal } = useModal(() => {
+    return (
+      <WorkbookGeneratorModal
+        workbookId={workbook.workbookId}
+        closeModal={closeModal}
+      />
+    );
+  });
 
   const handleWorkbookDeleteClick = () => {
     deleteWorkbook(workbook.workbookId);
@@ -33,11 +38,6 @@ const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
 
   return (
     <>
-      <InterviewSetGeneratorModal
-        workbookId={workbook.workbookId}
-        isOpen={isInterviewSetGeneratorModalOpen}
-        closeModal={() => setIsInterviewSetGeneratorModalOpen(false)}
-      />
       <div
         css={css`
           display: flex;
@@ -63,7 +63,7 @@ const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
             <Button
               variants="secondary"
               size="sm"
-              onClick={() => setIsInterviewSetGeneratorModalOpen(true)}
+              onClick={openModal}
               css={css`
                 display: flex;
                 align-items: center;

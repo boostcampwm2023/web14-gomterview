@@ -1,21 +1,15 @@
 import { questionSetting } from '@atoms/interviewSetting';
 import { theme } from '@styles/theme';
 import { css } from '@emotion/react';
-import { useRef, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import useQuestionWorkbookQuery from '@hooks/apis/queries/useQuestionWorkbookQuery';
-import { Typography, Toggle, Tabs, CheckBox } from '@foundation/index';
+import { Typography, Toggle, Tabs } from '@foundation/index';
 import { WorkbookTitleListResDto } from '@/types/workbook';
 import { ExcludeArray } from '@/types/utils';
-import QuestionSelectionBoxAccordion from './QuestionSelectionBoxAccordion';
 import QuestionAddForm from '@common/QuestionSelectionBox/QuestionAddForm';
-import useUserInfo from '@hooks/useUserInfo';
 import QuestionTabPanelHeader from '@common/QuestionSelectionBox/QuestionTabPanelHeader';
-import WorkbookEditModeDialog from '@common/QuestionSelectionBox/WorkbookEditModeDialog';
-import useOutsideClick from '@hooks/useOutsideClick';
-import useDeleteQuestionMutation from '@hooks/apis/mutations/useDeleteQuestionMutation';
-import { QUERY_KEY } from '@constants/queryKey';
-import { useQueryClient } from '@tanstack/react-query';
+import QuestionAccordionList from '@common/QuestionSelectionBox/QuestionAccordionList';
 
 type TabPanelItemProps = {
   selectedTabIndex: string;
@@ -30,24 +24,13 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
   tabIndex,
   onWorkbookDelete,
 }) => {
-  const queryClient = useQueryClient();
-  const userInfo = useUserInfo();
   const settingPage = useRecoilValue(questionSetting);
   const selectedQuestions = settingPage.selectedData.filter(
     (question) => question.workbookId === workbook.workbookId
   );
-  // 비회원 로직 작성시 훅으로 분리할 것을 염두해서 위의 settingPage 변수와 통합하지 않았습니다.
-  const [, setSelectedQuestions] = useRecoilState(questionSetting);
 
   const [onlySelectedOption, setOnlySelectedOption] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [checkedQuestion, setCheckedQuestion] = useState<number[]>([]);
-
-  const tabContentRef = useRef<HTMLDivElement>(null);
-
-  useOutsideClick(tabContentRef, () => {
-    handleCancelEditMode();
-  });
 
   const toggleShowSelectionOption = () => {
     setOnlySelectedOption((prev) => !prev);
@@ -57,44 +40,6 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
     workbookId: workbook.workbookId,
     enabled: selectedTabIndex === tabIndex,
   });
-  const { mutateAsync: deleteQuestionAsync } = useDeleteQuestionMutation();
-
-  const handleQuestionChecked = (questionId: number) => {
-    isEditMode &&
-      setCheckedQuestion((prev) =>
-        prev.includes(questionId)
-          ? prev.filter((id) => id !== questionId)
-          : [...prev, questionId]
-      );
-  };
-
-  const handleCancelEditMode = () => {
-    setCheckedQuestion([]);
-    setIsEditMode(false);
-  };
-
-  //TODO 비회원 구현할 때 수정 로직 훅으로 분리하기
-  const handleDeleteQuestion = async () => {
-    await Promise.all(
-      checkedQuestion.map((questionId) => {
-        return deleteQuestionAsync(questionId);
-      })
-    );
-    void queryClient.invalidateQueries({
-      queryKey: QUERY_KEY.WORKBOOK_ID(workbook.workbookId),
-    });
-
-    setSelectedQuestions((prev) => {
-      const selectedQuestions = prev.selectedData.filter(
-        (question) => !checkedQuestion.includes(question.questionId)
-      );
-      return {
-        isSuccess: selectedQuestions.length >= 1,
-        selectedData: selectedQuestions,
-      };
-    });
-    handleCancelEditMode();
-  };
 
   const questionData = onlySelectedOption ? selectedQuestions : questionAPIData;
   if (!questionData) return;
@@ -108,7 +53,6 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
       `}
     >
       <div
-        ref={tabContentRef}
         css={css`
           position: relative;
           display: flex;
@@ -122,65 +66,19 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
           onWorkbookDelete={onWorkbookDelete}
           onEditButtonClick={() => setIsEditMode(true)}
         />
-        {userInfo && (
-          <div
-            css={css`
-              padding: 0 1rem;
-            `}
-          >
-            <QuestionAddForm workbookId={workbook.workbookId} />
-          </div>
-        )}
         <div
           css={css`
-            display: flex;
-            flex-direction: column;
-            row-gap: 1.2rem;
-            height: 100%;
-            overflow-y: auto;
-            flex: 1;
-            padding: 1rem;
+            padding: 0 1rem;
           `}
         >
-          {questionData.map((question) => (
-            <div
-              key={question.questionId}
-              onClick={() => handleQuestionChecked(question.questionId)}
-              css={css`
-                display: flex;
-                align-items: center;
-                column-gap: 0.5rem;
-              `}
-            >
-              {isEditMode && (
-                <CheckBox
-                  id={`question-${question.questionId}`}
-                  checked={
-                    !!checkedQuestion.find(
-                      (questionId) => question.questionId === questionId
-                    )
-                  }
-                  onInputChange={() =>
-                    handleQuestionChecked(question.questionId)
-                  }
-                />
-              )}
-              <QuestionSelectionBoxAccordion
-                key={question.questionId}
-                question={question}
-                workbookId={workbook.workbookId}
-                isSelectable={!isEditMode}
-              />
-            </div>
-          ))}
+          <QuestionAddForm workbookId={workbook.workbookId} />
         </div>
-        {isEditMode && (
-          <WorkbookEditModeDialog
-            count={checkedQuestion.length}
-            onCancelClick={handleCancelEditMode}
-            onDeleteClick={() => void handleDeleteQuestion()}
-          />
-        )}
+        <QuestionAccordionList
+          isEditMode={isEditMode}
+          cancelEditMode={() => setIsEditMode(false)}
+          questionData={questionData}
+          workbookId={workbook.workbookId}
+        />
         <div
           css={css`
             display: flex;

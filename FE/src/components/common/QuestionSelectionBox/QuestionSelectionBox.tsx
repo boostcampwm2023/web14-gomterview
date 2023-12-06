@@ -4,11 +4,11 @@ import TabPanelItem from './QuestionTabPanelItem';
 import { useRecoilState } from 'recoil';
 import { QuestionAnswerSelectionModal } from '@atoms/modal';
 import AnswerSelectionModal from './AnswerSelectionModal/AnswerSelectionModal';
-import { Box, Button, Icon, Tabs, Typography } from '@foundation/index';
+import { Box, Tabs } from '@foundation/index';
 import useWorkbookTitleListQuery from '@hooks/apis/queries/useWorkbookTitleListQuery';
 import { useState } from 'react';
 import QuestionTabList from '@common/QuestionSelectionBox/QuestionTabList';
-import InterviewSetGeneratorModal from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetGeneratorModal';
+import WorkbookAddButton from '@common/QuestionSelectionBox/WorkbookAddButton';
 
 const QuestionSelectionBox = () => {
   const [selectedTabIndex, setSelectedTabIndex] = useState('0');
@@ -18,11 +18,6 @@ const QuestionSelectionBox = () => {
     { isOpen: isQuestionAnswerSelectionModalOpen, workbookId, question },
     setModalState,
   ] = useRecoilState(QuestionAnswerSelectionModal);
-
-  const [
-    isInterviewSetGeneratorModalOpen,
-    setIsInterviewSetGeneratorModalOpen,
-  ] = useState(false);
 
   if (!workbookListData) return;
   return (
@@ -40,10 +35,6 @@ const QuestionSelectionBox = () => {
           }
         />
       )}
-      <InterviewSetGeneratorModal
-        isOpen={isInterviewSetGeneratorModalOpen}
-        closeModal={() => setIsInterviewSetGeneratorModalOpen(false)}
-      />
       <Box
         css={css`
           background-color: ${theme.colors.surface.inner};
@@ -72,24 +63,7 @@ const QuestionSelectionBox = () => {
               overflow-y: auto;
             `}
           >
-            <Button
-              size="md"
-              variants="secondary"
-              onClick={() => setIsInterviewSetGeneratorModalOpen(true)}
-              css={css`
-                display: flex;
-                align-items: center;
-                column-gap: 0.5rem;
-                align-self: center;
-                background-color: ${theme.colors.surface.inner};
-                border: none;
-              `}
-            >
-              <Icon id="plus" width="1.5rem" height="1.5rem" />
-              <Typography variant="body1" color={theme.colors.text.subStrong}>
-                새 면접세트 추가
-              </Typography>
-            </Button>
+            <WorkbookAddButton />
             <QuestionTabList
               workbookListData={workbookListData}
               onTabChange={(_, value) => setSelectedTabIndex(value)}

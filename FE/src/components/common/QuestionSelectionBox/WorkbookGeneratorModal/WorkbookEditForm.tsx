@@ -1,24 +1,25 @@
 import { Button, Input, InputArea } from '@foundation/index';
 import { css } from '@emotion/react';
 import { FormEventHandler, useState } from 'react';
-import LabelBox from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/LabelBox';
-import InterviewSetCategory from '@common/QuestionSelectionBox/InterviewSetGeneratorModal/InterviewSetCategory';
+import LabelBox from '@common/QuestionSelectionBox/WorkbookGeneratorModal/LabelBox';
+import WorkbookCategory from '@common/QuestionSelectionBox/WorkbookGeneratorModal/WorkbookCategory';
 import useInput from '@hooks/useInput';
 import { theme } from '@styles/theme';
 import useWorkbookQuery from '@hooks/apis/queries/useWorkbookQuery';
-import useWorkbookPatchMutation from '@hooks/apis/mutations/useWorkbookPatchMutation';
 import useCategoryQuery from '@hooks/apis/queries/useCategoryQuery';
+import useWorkbookEdit from '@hooks/useWorkbookEdit';
 
-type InterviewSetFormProps = {
+type WorkbookEditFormProps = {
   workbookId: number;
   closeModal: () => void;
 };
-const InterviewSetEditForm: React.FC<InterviewSetFormProps> = ({
+const WorkbookEditForm: React.FC<WorkbookEditFormProps> = ({
   workbookId,
   closeModal,
 }) => {
   const { data: workbookInfo } = useWorkbookQuery({
     workbookId: workbookId,
+    enabled: workbookId > 0,
   });
   const { data: categories } = useCategoryQuery();
   const [activeValidationError, setActiveValidationError] = useState(false);
@@ -27,15 +28,15 @@ const InterviewSetEditForm: React.FC<InterviewSetFormProps> = ({
     value: workbookTitle,
     onChange: handleWorkbookTitleChange,
     isEmpty: isWorkbookTitleEmpty,
-    clearInput: clearWorkbookTitle,
   } = useInput<HTMLInputElement>(workbookInfo?.title ?? '');
-  const {
-    value: workbookContent,
-    onChange: handleWorkbookContentChange,
-    clearInput: clearWorkbookContent,
-  } = useInput<HTMLTextAreaElement>(workbookInfo?.title ?? '');
+  const { value: workbookContent, onChange: handleWorkbookContentChange } =
+    useInput<HTMLTextAreaElement>(workbookInfo?.content ?? '');
 
-  const { mutate: patchInterviewSet } = useWorkbookPatchMutation();
+  const { editWorkbook } = useWorkbookEdit({
+    onSuccess: () => {
+      closeModal();
+    },
+  });
 
   const findSelectedCategoryId = () => {
     return categories?.find((_, index) => index === selectedCategoryIndex)?.id;
@@ -54,27 +55,18 @@ const InterviewSetEditForm: React.FC<InterviewSetFormProps> = ({
       return;
     }
 
-    patchInterviewSet({
-      body: {
-        workbookId: workbookId,
-        title: workbookTitle,
-        content: workbookContent,
-        categoryId: selectedCategoryId,
-      },
+    editWorkbook({
+      workbookId: workbookId,
+      title: workbookTitle,
+      content: workbookContent,
+      categoryId: selectedCategoryId,
     });
-    closeModal();
-  };
-
-  const handleReset = () => {
-    clearWorkbookTitle();
-    clearWorkbookContent();
-    closeModal();
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      onReset={handleReset}
+      onReset={closeModal}
       css={css`
         display: flex;
         flex-direction: column;
@@ -100,7 +92,7 @@ const InterviewSetEditForm: React.FC<InterviewSetFormProps> = ({
         />
       </LabelBox>
       <LabelBox labelName="카테고리">
-        <InterviewSetCategory
+        <WorkbookCategory
           categories={categories}
           selectedCategoryIndex={selectedCategoryIndex}
           onClick={handleCategoryClick}
@@ -131,4 +123,4 @@ const InterviewSetEditForm: React.FC<InterviewSetFormProps> = ({
   );
 };
 
-export default InterviewSetEditForm;
+export default WorkbookEditForm;

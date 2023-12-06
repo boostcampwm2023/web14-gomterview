@@ -38,7 +38,7 @@ const useQuestionAdd = (
       );
     } else {
       queryClient.setQueryData<Question[] | []>(
-        QUERY_KEY.QUESTION_CATEGORY(workbookId),
+        QUERY_KEY.QUESTION_WORKBOOK(workbookId),
         (prev) => {
           if (prev?.length === 0 || !prev) return [createNewQuestion(value)];
           return [createNewQuestion(value, prev[0].questionId), ...prev];

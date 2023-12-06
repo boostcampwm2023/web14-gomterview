@@ -16,7 +16,7 @@ const WorkbookEditModeDialog: React.FC<WorkbookEditModeDialogProps> = ({
     <Box
       css={css`
         position: absolute;
-        bottom: 4.5rem;
+        bottom: 4rem;
         display: flex;
         align-items: center;
         column-gap: 0.5rem;

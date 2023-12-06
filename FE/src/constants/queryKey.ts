@@ -1,6 +1,6 @@
 export const QUERY_KEY = {
   QUESTION_ANSWER: (questionId: number) => ['answer', questionId],
-  QUESTION_CATEGORY: (categoryId: number) => ['questions', categoryId],
+  QUESTION_WORKBOOK: (workbookId: number) => ['questions', workbookId],
   CATEGORY: ['categories'],
   MEMBER: ['member'],
   MEMBER_NICKNAME: ['member', 'nickname'],

@@ -5,20 +5,20 @@ import useUserInfo from '@hooks/useUserInfo';
 import { breakpoints } from '@styles/_breakpoints';
 import { theme } from '@styles/theme';
 import { RequestLoginModal } from '@components/workbookPage';
-import { InterviewSetGeneratorModal } from '@common/index';
+import useModal from '@hooks/useModal';
+import { WorkbookGeneratorModal } from '@common/index';
 
 const WorkbookPlusButton: React.FC = () => {
   const isLogin = useUserInfo();
-  const [
-    interviewSetGeneratorModalIsOpen,
-    setInterviewSetGeneratorModalIsOpen,
-  ] = useState<boolean>(false);
+  const { openModal, closeModal } = useModal(() => {
+    return <WorkbookGeneratorModal closeModal={closeModal} />;
+  });
 
   const [requestLoginModalIsOpen, setRequestLoginModalIsOpen] =
     useState<boolean>(false);
 
   const handleWorkbookPlusClick = () => {
-    if (isLogin) setInterviewSetGeneratorModalIsOpen(true);
+    if (isLogin) openModal();
     else setRequestLoginModalIsOpen(true);
   };
 
@@ -60,10 +60,6 @@ const WorkbookPlusButton: React.FC = () => {
       >
         <Icon id="white-plus" width="50px" height="50px" />
       </div>
-      <InterviewSetGeneratorModal
-        isOpen={interviewSetGeneratorModalIsOpen}
-        closeModal={() => setInterviewSetGeneratorModalIsOpen(false)}
-      />
       <RequestLoginModal
         isOpen={requestLoginModalIsOpen}
         closeModal={() => setRequestLoginModalIsOpen(false)}

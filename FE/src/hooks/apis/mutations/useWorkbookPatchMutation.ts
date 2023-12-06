@@ -13,7 +13,7 @@ import { QUERY_KEY } from '@constants/queryKey';
  * workbookId에 해당하는 문제집의 메타정보(title, category, content)를 수정하기 위한 api입니다.
  */
 const useWorkbookPatchMutation = (
-  options?: UseMutationOptions<null, Error, { body: WorkbookPatchReqDto }>
+  options?: UseMutationOptions<null, Error, WorkbookPatchReqDto>
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
