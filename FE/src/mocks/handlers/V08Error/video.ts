@@ -1,5 +1,5 @@
 import { API } from '@constants/api';
-import { http, HttpResponse } from 'msw';
+import { delay, http, HttpResponse } from 'msw';
 import videoData from '../../data/video.json';
 
 const videoHandlers = [
@@ -22,32 +22,21 @@ const videoHandlers = [
   http.get(API.VIDEO_ID(), ({ params }) => {
     return HttpResponse.json(
       {
-        message: '존재하지 않는 비디오입니다.',
-        errorCode: 'V03',
+        message: 'Md5 해시 생성 중 오류가 발생했습니다.',
+        errorCode: 'V08',
       },
-      { status: 404 }
+      { status: 500 }
     );
   }),
   http.get(API.VIDEO_HASH(), () => {
     return HttpResponse.json(videoData.at(0), { status: 200 });
   }),
-  http.patch(API.VIDEO_ID(), () => {
-    return HttpResponse.json(
-      {
-        message: '존재하지 않는 비디오입니다.',
-        errorCode: 'V03',
-      },
-      { status: 404 }
-    );
+  http.patch(API.VIDEO_ID(), async () => {
+    await delay(1000);
+    return HttpResponse.json(null, { status: 200 });
   }),
   http.delete(API.VIDEO_ID(), () => {
-    return HttpResponse.json(
-      {
-        message: '존재하지 않는 비디오입니다.',
-        errorCode: 'V03',
-      },
-      { status: 404 }
-    );
+    return new HttpResponse(null, { status: 204 });
   }),
 ];
 

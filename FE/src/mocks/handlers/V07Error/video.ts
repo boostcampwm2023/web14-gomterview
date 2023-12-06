@@ -20,12 +20,11 @@ const videoHandlers = [
     return HttpResponse.json(videoData, { status: 200 });
   }),
   http.get(API.VIDEO_ID(), ({ params }) => {
+    const { id } = params;
+
     return HttpResponse.json(
-      {
-        message: '존재하지 않는 비디오입니다.',
-        errorCode: 'V03',
-      },
-      { status: 404 }
+      videoData.find((video) => video.id === Number(id)),
+      { status: 200 }
     );
   }),
   http.get(API.VIDEO_HASH(), () => {
@@ -34,20 +33,14 @@ const videoHandlers = [
   http.patch(API.VIDEO_ID(), () => {
     return HttpResponse.json(
       {
-        message: '존재하지 않는 비디오입니다.',
-        errorCode: 'V03',
+        message: 'Redis에서 비디오 정보 저장 중 오류가 발생하였습니다.',
+        errorCode: 'V07',
       },
-      { status: 404 }
+      { status: 500 }
     );
   }),
   http.delete(API.VIDEO_ID(), () => {
-    return HttpResponse.json(
-      {
-        message: '존재하지 않는 비디오입니다.',
-        errorCode: 'V03',
-      },
-      { status: 404 }
-    );
+    return new HttpResponse(null, { status: 204 });
   }),
 ];
 

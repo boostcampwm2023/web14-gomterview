@@ -37,7 +37,7 @@ const videoHandlers = [
       { status: 403 }
     );
   }),
-  http.patch(API.VIDEO_ID(), async () => {
+  http.patch(API.VIDEO_ID(), () => {
     return HttpResponse.json(
       {
         message: '해당 비디오에 접근 권한이 없습니다.',
