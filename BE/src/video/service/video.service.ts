@@ -38,6 +38,8 @@ import {
 } from '../../util/encoder.util';
 import { PutObjectCommandInput, S3 } from '@aws-sdk/client-s3';
 import { IDRIVE_CONFIG } from '../../config/idrive.config';
+import { UploadVideoRequest } from '../dto/uploadVideoRequest';
+import { validateQuestion } from '../../question/util/question.util';
 
 @Injectable()
 export class VideoService {
@@ -47,12 +49,35 @@ export class VideoService {
     private memberRepository: MemberRepository,
   ) {}
 
+  async saveVideoOnCloud(
+    uploadVideoRequest: UploadVideoRequest,
+    member: Member,
+    file: Express.Multer.File,
+  ) {
+    await this.uploadVideo(file);
+    const videoUrl = await this.sendToBucket(file.originalname, '.mp4');
+    const thumbnail = await this.sendToBucket(file.originalname, '.png');
+    const videoTitle = await this.createVideoTitle(
+      member,
+      uploadVideoRequest.questionId,
+    );
+    await this.createVideo(
+      member,
+      new CreateVideoRequest(
+        uploadVideoRequest.questionId,
+        videoTitle,
+        videoUrl,
+        thumbnail,
+        uploadVideoRequest.videoLength,
+      ),
+    );
+  }
+
   async uploadVideo(file: Express.Multer.File) {
     logUploadStart(file.originalname);
     await createDirectoryIfNotExist();
     await saveVideoIfNotExists(file);
     await encodeToUpload(file.originalname);
-    return { success: true };
   }
 
   async sendToBucket(name: string, ext: string) {
@@ -66,15 +91,13 @@ export class VideoService {
       Body: await readFileAsBuffer(name.replace('.webm', ext)),
       ContentType: contentType,
     };
-
-    const result = await new Promise((resolve, reject) => {
-      s3.putObject(params as PutObjectCommandInput, (err, data) => {
+    await new Promise((resolve, reject) => {
+      s3.putObject(params as PutObjectCommandInput, (err) => {
         if (err) reject(err);
-        console.log(data);
         resolve(key);
       });
     });
-    console.log(result);
+    return `${process.env.IDRIVE_STORAGE_URL}/${key}`;
   }
 
   async createVideo(member: Member, createVideoRequest: CreateVideoRequest) {
@@ -147,6 +170,14 @@ export class VideoService {
     this.validateVideoOwnership(video, memberId);
 
     await this.videoRepository.remove(video);
+  }
+
+  private async createVideoTitle(member: Member, questionId: number) {
+    const question = await this.questionRepository.findById(questionId);
+    validateQuestion(question);
+    return `${member.nickname}_${question.content}_${uuidv4()
+      .split('-')
+      .pop()}`;
   }
 
   private validateVideoOwnership(video: Video, memberId: number) {
