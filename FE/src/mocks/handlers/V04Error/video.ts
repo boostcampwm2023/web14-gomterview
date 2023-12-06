@@ -1,5 +1,5 @@
 import { API } from '@constants/api';
-import { http, HttpResponse } from 'msw';
+import { delay, http, HttpResponse } from 'msw';
 import videoData from '../../data/video.json';
 
 const videoHandlers = [
@@ -20,34 +20,28 @@ const videoHandlers = [
     return HttpResponse.json(videoData, { status: 200 });
   }),
   http.get(API.VIDEO_ID(), ({ params }) => {
+    const { id } = params;
+
     return HttpResponse.json(
-      {
-        message: '존재하지 않는 비디오입니다.',
-        errorCode: 'V03',
-      },
-      { status: 404 }
+      videoData.find((video) => video.id === Number(id)),
+      { status: 200 }
     );
   }),
   http.get(API.VIDEO_HASH(), () => {
-    return HttpResponse.json(videoData.at(0), { status: 200 });
+    return HttpResponse.json(
+      {
+        message: '탈퇴한 회원의 비디오를 조회할 수 없습니다.',
+        errorCode: 'V04',
+      },
+      { status: 404 }
+    );
   }),
   http.patch(API.VIDEO_ID(), async () => {
-    return HttpResponse.json(
-      {
-        message: '존재하지 않는 비디오입니다.',
-        errorCode: 'V03',
-      },
-      { status: 404 }
-    );
+    await delay(1000);
+    return HttpResponse.json(null, { status: 200 });
   }),
   http.delete(API.VIDEO_ID(), () => {
-    return HttpResponse.json(
-      {
-        message: '존재하지 않는 비디오입니다.',
-        errorCode: 'V03',
-      },
-      { status: 404 }
-    );
+    return new HttpResponse(null, { status: 204 });
   }),
 ];
 
