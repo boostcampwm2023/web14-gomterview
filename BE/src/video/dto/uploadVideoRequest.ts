@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { createPropertyOption } from '../../util/swagger.util';
-import { IsNotEmpty, IsNumber, IsString, Matches } from 'class-validator';
+import { IsNotEmpty, IsNumberString, IsString, Matches } from 'class-validator';
 
 export class UploadVideoRequest {
   @ApiProperty(createPropertyOption(1, '문제 ID', Number))
-  @IsNumber()
+  @IsNumberString()
   @IsNotEmpty()
-  questionId: number;
+  questionId: string;
 
   @ApiProperty(createPropertyOption('03:29', '비디오 길이', String))
   @IsString()
@@ -17,7 +17,7 @@ export class UploadVideoRequest {
   videoLength: string;
 
   constructor(questionId: number, videoLength: string) {
-    this.questionId = questionId;
+    this.questionId = String(questionId);
     this.videoLength = videoLength;
   }
 }

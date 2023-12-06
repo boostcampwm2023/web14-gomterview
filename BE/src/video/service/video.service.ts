@@ -59,12 +59,12 @@ export class VideoService {
     const thumbnail = await this.sendToBucket(file.originalname, '.png');
     const videoTitle = await this.createVideoTitle(
       member,
-      uploadVideoRequest.questionId,
+      Number(uploadVideoRequest.questionId),
     );
     await this.createVideo(
       member,
       new CreateVideoRequest(
-        uploadVideoRequest.questionId,
+        Number(uploadVideoRequest.questionId),
         videoTitle,
         videoUrl,
         thumbnail,
@@ -92,12 +92,15 @@ export class VideoService {
       ContentType: contentType,
     };
     await new Promise((resolve, reject) => {
-      s3.putObject(params as PutObjectCommandInput, (err) => {
+      s3.putObject(params as PutObjectCommandInput, (err, data) => {
         if (err) reject(err);
+        console.log(data);
         resolve(key);
       });
     });
-    return `${process.env.IDRIVE_STORAGE_URL}/${key}`;
+    return `${process.env.IDRIVE_READ_URL}/${
+      ext === '.mp4' ? 'videos' : 'thumbnail'
+    }/${key}`;
   }
 
   async createVideo(member: Member, createVideoRequest: CreateVideoRequest) {
