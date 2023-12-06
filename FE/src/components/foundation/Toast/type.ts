@@ -7,7 +7,7 @@ export type ToastPosition = keyof typeof ToastPositionStyle;
 export type ToastProps = {
   toastId: string;
   text: string;
-  autoClose?: boolean | number;
+  autoClose?: false | number;
   closeOnClick?: boolean;
   type?: keyof typeof ToastTypeStyle;
   pauseOnHover?: boolean;
