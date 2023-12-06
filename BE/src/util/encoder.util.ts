@@ -1,4 +1,4 @@
-import fs from 'fs';
+import * as fs from 'fs';
 import * as ffmpeg from 'fluent-ffmpeg';
 
 export const DIRECTORY_PATH = './uploads';
@@ -6,14 +6,14 @@ export const DIRECTORY_PATH = './uploads';
 export const logUploadStart = (name: string) => {
   const start = new Date();
   console.log(
-    `Upload Start<${name}> : ${start.getHours()} : ${start.getMinutes()} : ${start.getSeconds()}`,
+    `${name} : Upload Started at ${start.getHours()} : ${start.getMinutes()} : ${start.getSeconds()}`,
   );
 };
 
 export const logEncodingDone = (name: string) => {
   const start = new Date();
   console.log(
-    `Encoded<${name}> : ${start.getHours()} : ${start.getMinutes()} : ${start.getSeconds()}`,
+    `${name} : Finished Encoding at ${start.getHours()} : ${start.getMinutes()} : ${start.getSeconds()}`,
   );
 };
 
@@ -32,20 +32,27 @@ export const saveVideoIfNotExists = async (file: Express.Multer.File) => {
   fs.writeFile(createVideoPath(file.originalname), file.buffer, (err) => {
     if (err) {
       console.log(err);
-      throw new Error('영상 인코딩 실패');
+      throw new Error('영상 저장 실패');
     }
   });
 };
 
-export const encodeVideo = async (name: string) => {
+export const encodeToUpload = async (name: string) => {
   ffmpeg(createVideoPath(name))
     .output(createVideoPath(name.replace('.webm', '.mp4')))
-    .on('end', function () {
+    .output(createVideoPath(name.replace('.webm', '.png')))
+    .outputOptions('-frames:v 1')
+    .on('end', async () => {
       logEncodingDone(name);
-      fs.rm(createVideoPath(name), () => {});
-      console.log('Finished processing');
+      await deleteWebm(name);
     })
     .run();
+};
+
+export const deleteWebm = async (name: string) => {
+  fs.rm(createVideoPath(name), () => {
+    console.log(`${name} : webm DELETED`);
+  });
 };
 
 const createVideoPath = (name: string) => `${DIRECTORY_PATH}/${name}`;
