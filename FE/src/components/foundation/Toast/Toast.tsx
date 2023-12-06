@@ -4,7 +4,7 @@ import {
   ToastTypeIconName,
   ToastTypeStyle,
 } from '@foundation/Toast/Toast.styles';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { ToastEvent, ToastProps } from '@foundation/Toast/type';
 import { css } from '@emotion/react';
 
@@ -23,37 +23,36 @@ const Toast: React.FC<ToastProps> = ({
   pauseOnHover = true,
 }) => {
   const toastRef = useRef<HTMLDivElement>(null);
-  const timerRef = useRef<number>();
+  const progressRef = useRef<HTMLDivElement>(null);
   const [isExiting, setIsExiting] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
-  const onClose = useCallback(() => setIsExiting(true), []);
+  const onProgressAnimationEnd = useCallback(() => setIsExiting(true), []);
 
-  const handleAnimationEnd = useCallback(() => {
+  const onExitingAnimationEnd = useCallback(() => {
     collapseToast(toastRef.current!, () => {
       eventManager.emit(ToastEvent.Delete, toastId);
     });
   }, [toastId]);
 
-  useAnimationEnd(toastRef, handleAnimationEnd, [toastId]);
+  useAnimationEnd(toastRef, onExitingAnimationEnd, [toastId]);
 
-  useEffect(() => {
-    if (autoClose) {
-      timerRef.current = window.setTimeout(onClose, Number(autoClose));
-      return () => clearTimeout(timerRef.current);
-    }
-  }, [autoClose, onClose]);
+  useAnimationEnd(progressRef, () => autoClose && onProgressAnimationEnd, [
+    autoClose,
+    onProgressAnimationEnd,
+  ]);
 
   const handleClick = () => {
-    closeOnClick && onClose();
+    closeOnClick && onProgressAnimationEnd();
   };
 
   const handleMouseEnter = () => {
-    pauseOnHover && autoClose && clearTimeout(timerRef.current);
+    pauseOnHover && autoClose && setIsPaused(true);
   };
 
   const handleMouseLeave = () => {
     if (pauseOnHover && autoClose) {
-      timerRef.current = window.setTimeout(onClose, Number(autoClose));
+      setIsPaused(false);
     }
   };
 
@@ -99,6 +98,7 @@ const Toast: React.FC<ToastProps> = ({
           {text}
         </div>
         <div
+          ref={progressRef}
           css={css`
             position: absolute;
             bottom: 0;
@@ -112,6 +112,7 @@ const Toast: React.FC<ToastProps> = ({
               forwards
                 `
               : 'none'};
+            animation-play-state: ${isPaused ? 'paused' : 'running'};
           `}
         />
       </Box>
