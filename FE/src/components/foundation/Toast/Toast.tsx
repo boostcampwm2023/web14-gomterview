@@ -11,6 +11,7 @@ import { eventManager } from '@foundation/Toast/EventManger';
 import { theme } from '@styles/theme';
 import { Box, Icon } from '@foundation/index';
 import { collapseToast } from '@foundation/Toast/collapseToast';
+import useAnimationEnd from '@hooks/useAnimationEnd';
 
 const Toast: React.FC<ToastProps> = ({
   toastId,
@@ -26,24 +27,13 @@ const Toast: React.FC<ToastProps> = ({
 
   const onClose = useCallback(() => setIsExiting(true), []);
 
-  useEffect(() => {
-    const handleAnimationEnd = () => {
-      collapseToast(toastRef.current!, () => {
-        eventManager.emit(ToastEvent.Delete, toastId);
-      });
-    };
+  const handleAnimationEnd = useCallback(() => {
+    collapseToast(toastRef.current!, () => {
+      eventManager.emit(ToastEvent.Delete, toastId);
+    });
+  }, [toastId]);
 
-    const toastElement = toastRef.current;
-    if (toastElement) {
-      toastElement.addEventListener('animationend', handleAnimationEnd);
-    }
-
-    return () => {
-      if (toastElement) {
-        toastElement.removeEventListener('animationend', handleAnimationEnd);
-      }
-    };
-  }, [onClose, toastId]);
+  useAnimationEnd(toastRef, handleAnimationEnd, [toastId]);
 
   useEffect(() => {
     if (autoClose) {
