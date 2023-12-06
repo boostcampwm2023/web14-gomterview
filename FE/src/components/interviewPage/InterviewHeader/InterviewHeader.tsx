@@ -1,7 +1,13 @@
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
 
-import { RecordStatus, IntervieweeName, RecordTimer } from './index';
+import {
+  RecordStatus,
+  IntervieweeName,
+  RecordTimer,
+  VolumeStatus,
+} from './index';
+
 type InterviewHeaderProps = {
   isRecording: boolean;
 };
@@ -22,7 +28,15 @@ const InterviewHeader: React.FC<InterviewHeaderProps> = ({ isRecording }) => {
     >
       <RecordStatus isRecording={isRecording} />
       <IntervieweeName />
-      <RecordTimer isRecording={isRecording} />
+      <div
+        css={css`
+          display: flex;
+          gap: 1.875rem;
+        `}
+      >
+        <RecordTimer isRecording={isRecording} />
+        <VolumeStatus />
+      </div>
     </div>
   );
 };
