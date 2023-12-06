@@ -29,9 +29,12 @@ import {
 import { SingleVideoResponse } from '../dto/singleVideoResponse';
 import { MemberNotFoundException } from 'src/member/exception/member.exception';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import * as fs from 'fs';
-import { DIRECTORY_PATH } from '../../util/util';
-import * as ffmpeg from 'fluent-ffmpeg';
+import {
+  createDirectoryIfNotExist,
+  encodeVideo,
+  logUploadStart,
+  saveVideoIfNotExists,
+} from '../../util/encoder.util';
 
 @Injectable()
 export class VideoService {
@@ -42,50 +45,10 @@ export class VideoService {
   ) {}
 
   async uploadVideo(file: Express.Multer.File) {
-    const start = new Date();
-    console.log(
-      `${start.getHours()} : ${start.getMinutes()} : ${start.getSeconds()}`,
-    );
-    await this.createDirectoryIfNotExist();
-    await this.saveVideoInDirectory(file);
-    await this.encodeVideo(file.originalname);
-  }
-
-  private async createDirectoryIfNotExist() {
-    if (!fs.existsSync(DIRECTORY_PATH)) {
-      fs.mkdir(DIRECTORY_PATH, { recursive: true }, (err) => {
-        if (err) {
-          console.error('디렉토리 생성 에러:', err);
-          return;
-        }
-      });
-    }
-  }
-
-  private async saveVideoInDirectory(file: Express.Multer.File) {
-    fs.writeFile(
-      `${DIRECTORY_PATH}/${file.originalname}`,
-      file.buffer,
-      (err) => {
-        if (err) {
-          console.log(err);
-          throw new Error('영상 인코딩 실패');
-        }
-      },
-    );
-  }
-
-  private async encodeVideo(name: string) {
-    ffmpeg(`${DIRECTORY_PATH}/${name}`)
-      .output(`${DIRECTORY_PATH}/${name.replace('.webm', '.mp4')}`)
-      .on('end', function () {
-        const start = new Date();
-        console.log(
-          `${start.getHours()} : ${start.getMinutes()} : ${start.getSeconds()}`,
-        );
-        console.log('Finished processing');
-      })
-      .run();
+    logUploadStart(file.originalname);
+    await createDirectoryIfNotExist();
+    await saveVideoIfNotExists(file);
+    await encodeVideo(file.originalname);
   }
 
   async createVideo(member: Member, createVideoRequest: CreateVideoRequest) {
