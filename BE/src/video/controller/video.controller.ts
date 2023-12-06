@@ -38,7 +38,7 @@ import { UploadVideoRequest } from '../dto/uploadVideoRequest';
 export class VideoController {
   constructor(private videoService: VideoService) {}
 
-  @Post('encode')
+  @Post('upload')
   @UseGuards(AuthGuard('jwt'))
   @ApiCookieAuth()
   @ApiBody({ type: UploadVideoRequest })
