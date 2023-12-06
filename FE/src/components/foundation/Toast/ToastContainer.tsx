@@ -1,7 +1,7 @@
-import Toast from '@foundation/Toast/Toast';
 import { css } from '@emotion/react';
 import { ToastPositionStyle } from '@foundation/Toast/Toast.styles';
 import useToastContainer from '@foundation/Toast/useToastContainer';
+import ToastItem from '@foundation/Toast/ToastItem';
 
 export const ToastContainer = () => {
   const { getToastPositionGroupToRender } = useToastContainer();
@@ -22,7 +22,7 @@ export const ToastContainer = () => {
       ]}
     >
       {toasts.map((toastProps) => (
-        <Toast key={toastProps.toastId} {...toastProps} />
+        <ToastItem key={toastProps.toastId} {...toastProps} />
       ))}
     </div>
   ));

@@ -13,7 +13,7 @@ import { collapseToast } from '@foundation/Toast/collapseToast';
 import useAnimationEnd from '@hooks/useAnimationEnd';
 import { eventManager } from '@foundation/Toast/eventManger';
 
-const Toast: React.FC<ToastProps> = ({
+const ToastItem: React.FC<ToastProps> = ({
   toastId,
   text,
   autoClose = 3000,
@@ -119,4 +119,4 @@ const Toast: React.FC<ToastProps> = ({
   );
 };
 
-export default Toast;
+export default ToastItem;
