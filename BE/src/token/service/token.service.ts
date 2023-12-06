@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { TokenRepository } from '../repository/token.repository';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { JwtService } from '@nestjs/jwt';
-import { Token } from '../entity/token';
 import { TokenPayload } from '../interface/token.interface';
 import {
   InvalidTokenException,
@@ -10,9 +9,16 @@ import {
   NeedToLoginException,
   TokenExpiredException,
 } from '../exception/token.exception';
-
-const ACCESS_TOKEN_EXPIRES_IN = '1h'; // 1 시간
-const REFRESH_TOKEN_EXPIRES_IN = '7d'; // 7 일
+import {
+  ACCESS_TOKEN_EXPIRES_IN,
+  REFRESH_TOKEN_EXPIRES_IN,
+} from 'src/constant/constant';
+import {
+  deleteFromRedis,
+  getValueFromRedis,
+  saveToRedis,
+} from 'src/util/redis.util';
+import { isEmpty } from 'class-validator';
 
 @Injectable()
 export class TokenService {
@@ -28,27 +34,22 @@ export class TokenService {
 
   async removeToken(accessToken: string) {
     const memberId = (await this.getPayload(accessToken)).id;
-    const token = await this.findByAccessToken(accessToken);
 
-    if (
-      !token ||
-      !memberId ||
-      !(await this.memberRepository.findById(memberId))
-    ) {
+    if (!memberId || !(await this.memberRepository.findById(memberId))) {
       throw new ManipulatedTokenNotFiltered();
     }
-
-    await this.tokenRepository.remove(token);
+    await deleteFromRedis(accessToken);
   }
 
   async reissue(accessToken: string) {
-    const token = await this.findByAccessToken(accessToken);
+    const refreshToken = await getValueFromRedis(accessToken);
 
-    if (!token) {
-      throw new ManipulatedTokenNotFiltered();
+    // Redis에 accessToken으로 조회 할 수 있는 것이 없다면, refreshToken에 대한 정보도 알 수 없는 것이므로 재로그인이 필요
+    if (isEmpty(refreshToken)) {
+      throw new NeedToLoginException();
     }
 
-    return this.updateToken(token);
+    return this.updateToken(accessToken, refreshToken);
   }
 
   async getPayload(singleToken: string) {
@@ -73,24 +74,19 @@ export class TokenService {
     return this.createToken(1); // 1번은 developndd 이메일로 가입한 개발자용 회원임
   }
 
-  private async findByAccessToken(accessToken: string) {
-    return await this.tokenRepository.findByAccessToken(accessToken);
-  }
-
-  private async updateToken(token: Token) {
-    await this.validateRefreshToken(token.refreshToken);
-    const payload = await this.getPayload(token.accessToken);
+  private async updateToken(accessToken: string, refreshToken: string) {
+    const payload = await this.validateRefreshToken(refreshToken);
+    await this.getPayload(accessToken);
     const newToken = await this.signToken(payload.id, ACCESS_TOKEN_EXPIRES_IN);
-    token.updateAccessToken(newToken);
-    await this.tokenRepository.save(token);
+    await deleteFromRedis(accessToken); // 기존 토큰 삭제
+    await saveToRedis(newToken, refreshToken); // 새로운 토큰 저장
     return newToken;
   }
 
   private async validateRefreshToken(refreshToken: string) {
     try {
-      await this.jwtService.verify(refreshToken);
+      return (await this.jwtService.verify(refreshToken)) as TokenPayload;
     } catch (e) {
-      this.tokenRepository.deleteByRefreshToken(refreshToken);
       throw new NeedToLoginException();
     }
   }
@@ -112,14 +108,13 @@ export class TokenService {
       memberId,
       REFRESH_TOKEN_EXPIRES_IN,
     );
-    const token = new Token(refreshToken, accessToken);
-    await this.tokenRepository.save(token);
+    await saveToRedis(accessToken, refreshToken);
     return accessToken;
   }
 
   private async signToken(memberId: number, expiresIn: string) {
     return await this.jwtService.signAsync({ id: memberId } as TokenPayload, {
-      expiresIn: expiresIn,
+      expiresIn,
     });
   }
 }
