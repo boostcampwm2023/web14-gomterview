@@ -31,7 +31,7 @@ import { MemberNotFoundException } from 'src/member/exception/member.exception';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import {
   createDirectoryIfNotExist,
-  encodeVideo,
+  encodeToUpload,
   logUploadStart,
   saveVideoIfNotExists,
 } from '../../util/encoder.util';
@@ -48,7 +48,7 @@ export class VideoService {
     logUploadStart(file.originalname);
     await createDirectoryIfNotExist();
     await saveVideoIfNotExists(file);
-    await encodeVideo(file.originalname);
+    await encodeToUpload(file.originalname);
   }
 
   async createVideo(member: Member, createVideoRequest: CreateVideoRequest) {
