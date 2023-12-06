@@ -58,3 +58,12 @@ export const ToastFadeOutUpAnimation = keyframes`
     transform: translateY(-1.5rem);
   }
 `;
+
+export const ToastProgressBarAnimation = keyframes`
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+`;

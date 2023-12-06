@@ -1,5 +1,6 @@
 import {
   ToastFadeOutUpAnimation,
+  ToastProgressBarAnimation,
   ToastTypeIconName,
   ToastTypeStyle,
 } from '@foundation/Toast/Toast.styles';
@@ -69,12 +70,13 @@ const Toast: React.FC<ToastProps> = ({
         onMouseLeave={handleMouseLeave}
         css={[
           css`
+            position: relative;
             display: flex;
-            align-items: center;
-            column-gap: 1rem;
-            padding: 1rem;
+            flex-direction: column;
+            row-gap: 0.5rem;
             min-width: 20rem;
             border-radius: 0.5rem;
+            overflow: hidden;
             background-color: ${theme.colors.surface.default};
             animation: ${isExiting
               ? css`
@@ -85,8 +87,33 @@ const Toast: React.FC<ToastProps> = ({
           ToastTypeStyle[type],
         ]}
       >
-        <IconType />
-        {text}
+        <div
+          css={css`
+            display: flex;
+            align-items: center;
+            column-gap: 1rem;
+            padding: 1rem;
+          `}
+        >
+          <IconType />
+          {text}
+        </div>
+        <div
+          css={css`
+            position: absolute;
+            bottom: 0;
+            height: 0.3125rem;
+            width: 100%;
+            background-color: ${theme.colors.point.primary.default};
+            transform-origin: left;
+            animation: ${autoClose
+              ? css`
+                  ${ToastProgressBarAnimation} ${autoClose}ms linear
+              forwards
+                `
+              : 'none'};
+          `}
+        />
       </Box>
     </div>
   );
