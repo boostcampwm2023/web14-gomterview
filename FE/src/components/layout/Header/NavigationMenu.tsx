@@ -1,6 +1,7 @@
 import React, { PropsWithChildren, useState } from 'react';
 import { css, keyframes } from '@emotion/react';
 import { Button, Icon, Menu } from '@foundation/index';
+import { theme } from '@styles/theme';
 
 const dropDown = keyframes`
   from {
@@ -31,6 +32,7 @@ const NavigationMenu: React.FC<PropsWithChildren> = ({ children }) => {
       <Menu
         open={isOpen}
         closeMenu={() => setIsOpen(false)}
+        backdropColor={theme.colors.backdrop.default}
         css={css`
           right: 0.25rem;
           margin-top: -3rem;
