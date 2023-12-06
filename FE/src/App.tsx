@@ -7,6 +7,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import GlobalSVGProvider from '@/GlobalSvgProvider';
 import AppRouter from '@/AppRouter';
 import ModalProvider from './modalProvider';
+import { ToastContainer } from '@foundation/Toast/ToastContainer';
 
 function App() {
   const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ function App() {
           <AppRouter queryClient={queryClient} />
           <GlobalSVGProvider />
           <ModalProvider />
+          <ToastContainer />
         </ThemeProvider>
       </RecoilRoot>
     </QueryClientProvider>

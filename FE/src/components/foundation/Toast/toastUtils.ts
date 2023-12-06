@@ -1,0 +1,10 @@
+import { ToastEvent, ToastProps } from '@foundation/Toast/type';
+import { eventManager } from '@foundation/Toast/EventManger';
+
+const generateUniqueId = () => {
+  return Date.now().toString(36) + Math.random().toString(36).substring(4);
+};
+export const showToast = (toastProps: Omit<ToastProps, 'toastId'>) => {
+  const id = generateUniqueId();
+  eventManager.emit(ToastEvent.Add, { ...toastProps, toastId: id });
+};
