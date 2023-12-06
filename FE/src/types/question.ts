@@ -1,3 +1,11 @@
+export type QuestionEntity = {
+  workbookId: number;
+  questionId: number;
+  questionContent: string;
+  answerId: number;
+  answerContent: string;
+};
+
 export type Question = {
   questionId: number;
   questionContent: string;

@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es5", // 결과 파일 형식
     "module": "es2020", // module 형식
+    "resolveJsonModule": true,
     "esModuleInterop": true, // import시 namespace alias 가능
     "moduleResolution": "node",
     "jsx": "react-jsx",

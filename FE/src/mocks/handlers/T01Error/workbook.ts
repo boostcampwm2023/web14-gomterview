@@ -1,0 +1,57 @@
+import { API } from '@constants/api';
+import { HttpResponse, http } from 'msw';
+import workbookData from '../../data/workbook.json';
+import { WorkbookEntity } from '@/types/workbook';
+
+const workbookHandlers = [
+  http.post(API.WORKBOOK, ({ request }) => {
+    return HttpResponse.json(
+      {
+        message: '유효하지 않은 토큰입니다',
+        errorCode: 'T01',
+      },
+      { status: 401 }
+    );
+  }),
+  http.get(API.WORKBOOK, ({ request }) => {
+    const category = request.url.split('category=')[1];
+    const categoryMap = new Map<number, WorkbookEntity[]>();
+    workbookData.forEach((workbook) => {
+      categoryMap.has(workbook.categoryId)
+        ? categoryMap.get(workbook.categoryId)!.push(workbook)
+        : categoryMap.set(workbook.categoryId, [workbook]);
+    });
+    return HttpResponse.json(
+      !category ? workbookData : categoryMap.get(Number(category)),
+      {
+        status: 200,
+      }
+    );
+  }),
+  http.get(API.WORKBOOK_TITLE, () => {
+    return HttpResponse.json(
+      {
+        message: '유효하지 않은 토큰입니다',
+        errorCode: 'T01',
+      },
+      { status: 401 }
+    );
+  }),
+  http.get(API.WORKBOOK_ID(), ({ params }) => {
+    const { id: workbookId } = params;
+    return HttpResponse.json(
+      workbookData.find(
+        (workbook) => workbook.workbookId === Number(workbookId)
+      ),
+      { status: 200 }
+    );
+  }),
+  http.patch(API.WORKBOOK_ID(), ({ request }) => {
+    return new HttpResponse(null, { status: 204 });
+  }),
+  http.delete(API.WORKBOOK_ID(), () => {
+    return new HttpResponse(null, { status: 204 });
+  }),
+];
+
+export default workbookHandlers;
