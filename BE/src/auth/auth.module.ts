@@ -5,7 +5,6 @@ import { MemberRepository } from 'src/member/repository/member.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Member } from 'src/member/entity/member';
 import { GoogleStrategy } from './strategy/google.strategy';
-import { Token } from '../token/entity/token';
 import { TokenModule } from '../token/token.module';
 import { Category } from '../category/entity/category';
 import { Question } from '../question/entity/question';
@@ -17,7 +16,7 @@ import { QuestionModule } from '../question/question.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Member, Token, Category, Question, Answer]),
+    TypeOrmModule.forFeature([Member, Category, Question, Answer]),
     TokenModule,
     CategoryModule,
     QuestionModule,

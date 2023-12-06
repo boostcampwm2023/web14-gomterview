@@ -17,13 +17,12 @@ import { Category } from './category/entity/category';
 import { Member } from './member/entity/member';
 import { Question } from './question/entity/question';
 import { Answer } from './answer/entity/answer';
-import { Token } from './token/entity/token';
 import { WorkbookModule } from './workbook/workbook.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(MYSQL_OPTION),
-    TypeOrmModule.forFeature([Category, Member, Question, Answer, Token]),
+    TypeOrmModule.forFeature([Category, Member, Question, Answer]),
     MemberModule,
     AuthModule,
     TokenModule,

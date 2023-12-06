@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { TokenRepository } from '../repository/token.repository';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { JwtService } from '@nestjs/jwt';
 import { TokenPayload } from '../interface/token.interface';
@@ -23,7 +22,6 @@ import { isEmpty } from 'class-validator';
 @Injectable()
 export class TokenService {
   constructor(
-    readonly tokenRepository: TokenRepository,
     readonly memberRepository: MemberRepository,
     readonly jwtService: JwtService,
   ) {}
