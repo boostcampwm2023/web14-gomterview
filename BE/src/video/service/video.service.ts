@@ -58,11 +58,13 @@ export class VideoService {
   async sendToBucket(name: string, ext: string) {
     const key = `${uuidv4()}${ext}`;
     const s3 = new S3(IDRIVE_CONFIG);
+    const contentType = ext === '.mp4' ? 'video/mp4' : 'image/png';
     const params = {
-      Bucket: 'videos',
-      ACL: 'private',
+      Bucket: ext === '.mp4' ? 'videos' : 'thumbnail',
+      ACL: 'public',
       Key: key,
       Body: await readFileAsBuffer(name.replace('.webm', ext)),
+      ContentType: contentType,
     };
 
     const result = await new Promise((resolve, reject) => {
