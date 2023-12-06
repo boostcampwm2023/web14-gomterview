@@ -31,11 +31,11 @@ const Toast: React.FC<ToastProps> = ({
   };
 
   const handleMouseEnter = () => {
-    pauseOnHover && clearTimeout(timerRef.current);
+    pauseOnHover && autoClose && clearTimeout(timerRef.current);
   };
 
   const handleMouseLeave = () => {
-    if (pauseOnHover) {
+    if (pauseOnHover && autoClose) {
       timerRef.current = window.setTimeout(onClose, Number(autoClose));
     }
   };
@@ -45,7 +45,6 @@ const Toast: React.FC<ToastProps> = ({
       <Icon id={ToastTypeIcon[type]} width="20" height="20" />
     );
 
-  console.log(IconType);
   return (
     <Box
       onClick={handleClick}
