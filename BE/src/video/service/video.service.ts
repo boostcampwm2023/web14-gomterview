@@ -33,8 +33,11 @@ import {
   createDirectoryIfNotExist,
   encodeToUpload,
   logUploadStart,
+  readFileAsBuffer,
   saveVideoIfNotExists,
 } from '../../util/encoder.util';
+import { PutObjectCommandInput, S3 } from '@aws-sdk/client-s3';
+import { IDRIVE_CONFIG } from '../../config/idrive.config';
 
 @Injectable()
 export class VideoService {
@@ -49,6 +52,27 @@ export class VideoService {
     await createDirectoryIfNotExist();
     await saveVideoIfNotExists(file);
     await encodeToUpload(file.originalname);
+    return { success: true };
+  }
+
+  async sendToBucket(name: string, ext: string) {
+    const key = `${uuidv4()}${ext}`;
+    const s3 = new S3(IDRIVE_CONFIG);
+    const params = {
+      Bucket: 'videos',
+      ACL: 'private',
+      Key: key,
+      Body: await readFileAsBuffer(name.replace('.webm', ext)),
+    };
+
+    const result = await new Promise((resolve, reject) => {
+      s3.putObject(params as PutObjectCommandInput, (err, data) => {
+        if (err) reject(err);
+        console.log(data);
+        resolve(key);
+      });
+    });
+    console.log(result);
   }
 
   async createVideo(member: Member, createVideoRequest: CreateVideoRequest) {
