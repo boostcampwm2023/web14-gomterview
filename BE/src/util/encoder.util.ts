@@ -29,25 +29,29 @@ export const createDirectoryIfNotExist = async () => {
   }
 };
 
-export const saveVideoIfNotExists = async (file: Express.Multer.File) => {
-  fs.writeFile(createVideoPath(file.originalname), file.buffer, (err) => {
-    if (err) {
-      console.log(err);
-      throw new Error('영상 저장 실패');
-    }
+export const saveVideoIfNotExists = (file: Express.Multer.File) => {
+  return new Promise((resolve, reject) => {
+    fs.writeFile(createVideoPath(file.originalname), file.buffer, (err) => {
+      if (err) reject(err);
+      resolve(true);
+    });
   });
 };
 
-export const encodeToUpload = async (name: string) => {
-  ffmpeg(createVideoPath(name))
-    .output(createVideoPath(name.replace('.webm', '.mp4')))
-    .output(createVideoPath(name.replace('.webm', '.png')))
-    .outputOptions('-frames:v 1')
-    .on('end', async () => {
-      logEncodingDone(name);
-      await deleteWebm(name);
-    })
-    .run();
+export const encodeToUpload = (name: string) => {
+  return new Promise((resolve, reject) => {
+    ffmpeg(createVideoPath(name))
+      .output(createVideoPath(name.replace('.webm', '.mp4')))
+      .output(createVideoPath(name.replace('.webm', '.png')))
+      .outputOptions('-frames:v 1')
+      .on('end', async () => {
+        logEncodingDone(name);
+        await deleteWebm(name);
+        resolve(null);
+      })
+      .on('error', reject)
+      .run();
+  });
 };
 
 export const deleteWebm = async (name: string) => {
@@ -67,6 +71,18 @@ export const UPLOAD_UTIL = {
     }
     callback(null, true);
   },
+};
+
+export const readFileAsBuffer = (name: string) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(createVideoPath(name), (err, data) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(data);
+    });
+  });
 };
 
 const createVideoPath = (name: string) => `${DIRECTORY_PATH}/${name}`;
