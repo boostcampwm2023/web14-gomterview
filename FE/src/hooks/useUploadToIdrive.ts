@@ -2,6 +2,7 @@ import { SelectedQuestion } from '@/atoms/interviewSetting';
 import useGetPreSignedUrlMutation from '@/hooks/apis/mutations/useGetPreSignedUrlMutation';
 import { putVideoToIdrive } from '@/apis/idrive';
 import useAddVideoMutation from '@/hooks/apis/mutations/useAddVideoMutation';
+import { toast } from '@foundation/Toast/toast';
 
 type UploadParams = {
   blob: Blob;
@@ -19,6 +20,7 @@ export const useUploadToIDrive = () => {
     recordTime,
   }: UploadParams): Promise<void> => {
     try {
+      toast.success('성공적으로 서버에 업로드를 준비합니다.');
       const preSignedResponse = await getPreSignedUrl();
       // response를 받습니다
 
@@ -34,10 +36,11 @@ export const useUploadToIDrive = () => {
         thumbnail: null,
         videoLength: recordTime,
       });
+      toast.success('성공적으로 서버에 업로드 되었습니다😊');
 
       // 추가적인 로직은 아직 구현되지 않았습니다.
     } catch (error) {
-      console.error('업로드 중 오류 발생:', error);
+      toast.error('업로드 중 오류 발생');
       throw error; // 오류를 다시 throw하여 호출자에게 전파
     }
   };
