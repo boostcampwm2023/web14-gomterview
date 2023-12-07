@@ -5,6 +5,7 @@ const WelcomeBlurb: React.FC = () => {
   return (
     <Typography
       paragraph
+      component="h3"
       variant={'title3'}
       css={css`
         font-size: 3rem;

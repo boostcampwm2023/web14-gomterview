@@ -29,7 +29,7 @@ const LandingPageLayout: React.FC<LandingPageLayoutProps> = ({ children }) => {
             gap: 2rem;
             padding: 2rem;
             margin: auto 0;
-            > *:nth-child(3) {
+            div:nth-of-type(2) {
               grid-area: 1 / 2 / 3 / 3;
             }
           `,
@@ -47,20 +47,20 @@ const LandingPageResponsiveStyles = css`
     grid-template-columns: 1fr;
     justify-items: start;
 
-    > *:nth-child(1) {
+    h3:nth-of-type(1) {
       grid-area: 1 / 1 / 1 / 2;
     }
 
-    > *:nth-child(2) {
+    div:nth-of-type(1) {
       grid-area: 2 / 1 / 2 / 2;
     }
 
-    > *:nth-child(3) {
+    div:nth-of-type(2) {
       grid-area: 1 / 1 / 3 / 3;
     }
   }
   @media (max-width: ${theme.breakpoints.tablet}) {
-    > *:nth-child(3) {
+    div:nth-of-type(2) {
       opacity: 20%;
     }
   }
@@ -69,7 +69,7 @@ const LandingPageResponsiveStyles = css`
     justify-items: center;
     gap: 0;
 
-    > *:nth-child(3) {
+    div:nth-of-type(2) {
       align-self: center;
       justify-self: center;
     }
