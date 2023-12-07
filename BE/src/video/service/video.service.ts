@@ -31,6 +31,7 @@ import { MemberNotFoundException } from 'src/member/exception/member.exception';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import {
   createDirectoryIfNotExist,
+  deleteFile,
   encodeToUpload,
   logUploadStart,
   readFileAsBuffer,
@@ -98,6 +99,7 @@ export class VideoService {
         resolve(key);
       });
     });
+    await deleteFile(name.replace('.webm', ext));
     return `${process.env.IDRIVE_READ_URL}/${
       ext === '.mp4' ? 'videos' : 'thumbnail'
     }/${key}`;

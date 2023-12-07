@@ -46,7 +46,7 @@ export const encodeToUpload = (name: string) => {
       .outputOptions('-frames:v 1')
       .on('end', async () => {
         logEncodingDone(name);
-        await deleteWebm(name);
+        await deleteFile(name);
         resolve(null);
       })
       .on('error', reject)
@@ -54,9 +54,9 @@ export const encodeToUpload = (name: string) => {
   });
 };
 
-export const deleteWebm = async (name: string) => {
+export const deleteFile = async (name: string) => {
   fs.rm(createVideoPath(name), () => {
-    console.log(`${name} : webm DELETED`);
+    console.log(`${name} : FILE DELETED`);
   });
 };
 
