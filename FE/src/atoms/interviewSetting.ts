@@ -5,14 +5,17 @@ import { atom } from 'recoil';
 export type RecordMethod = 'local' | 'idrive' | 'none' | undefined;
 
 export type SelectedQuestion = Question & Pick<WorkbookEntity, 'workbookId'>;
+
 export const questionSetting = atom<{
   isSuccess: boolean;
   selectedData: SelectedQuestion[];
+  from?: 'workbook' | undefined;
 }>({
   key: 'questionSetting',
   default: {
     isSuccess: false,
     selectedData: [],
+    from: undefined,
   },
 });
 

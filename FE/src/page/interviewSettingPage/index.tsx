@@ -1,12 +1,12 @@
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
-import { SETTING_PATH } from '@/constants/path';
+import { PATH, SETTING_PATH } from '@/constants/path';
 import {
   questionSetting,
   recordSetting,
   serviceTerms,
   videoSetting,
 } from '@/atoms/interviewSetting';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import QuestionSettingPage from './QuestionSettingPage';
 import { css } from '@emotion/react';
 import RecordSettingPage from './RecordSettingPage';
@@ -22,6 +22,7 @@ const PREV_PAGE_INDEX = -1;
 const InterviewSettingPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [questionSettingState] = useRecoilState(questionSetting);
 
   const currentPage = searchParams.get('page');
 
@@ -54,7 +55,13 @@ const InterviewSettingPage: React.FC = () => {
       page: (
         <VideoSettingPage
           isCurrentPage={currentPage === SETTING_PATH.CONNECTION}
-          onPrevClick={() => changeSearchParams(SETTING_PATH.QUESTION)}
+          onPrevClick={() => {
+            if (questionSettingState.from !== 'workbook')
+              changeSearchParams(SETTING_PATH.QUESTION);
+            else {
+              navigate(PATH.ROOT);
+            }
+          }}
           onNextClick={() => changeSearchParams(SETTING_PATH.RECORD)}
         />
       ),
