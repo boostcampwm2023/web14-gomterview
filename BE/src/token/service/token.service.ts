@@ -79,7 +79,6 @@ export class TokenService {
 
   private async updateToken(accessToken: string, refreshToken: string) {
     const payload = await this.validateRefreshToken(refreshToken);
-    await this.getPayload(accessToken);
     const newToken = await this.signToken(payload.id, ACCESS_TOKEN_EXPIRES_IN);
     await deleteFromRedis(accessToken); // 기존 토큰 삭제
     await saveToRedis(newToken, refreshToken); // 새로운 토큰 저장
