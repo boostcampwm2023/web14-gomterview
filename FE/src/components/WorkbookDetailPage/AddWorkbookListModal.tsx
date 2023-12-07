@@ -50,6 +50,11 @@ const AddWorkbookListModal = ({
     );
   };
 
+  const handleNavigate = () => {
+    closeModal();
+    navigate(PATH.MYPAGE, { state: { tabIndex: '1' } });
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (selectedWorkbook.length === 0) {
@@ -59,8 +64,7 @@ const AddWorkbookListModal = ({
 
     try {
       void mutateAllQuestionCopy();
-      closeModal();
-      navigate(PATH.MYPAGE);
+      handleNavigate();
     } catch (error) {
       console.error('문제집 복사 중 오류 발생', error);
 
@@ -97,6 +101,7 @@ const AddWorkbookListModal = ({
             <NewWorkbookListButton
               selectedQuestionIds={selectedQuestionIds}
               workbookData={workbookData}
+              onAddNewWorkbook={handleNavigate}
             />
           </div>
         </Modal.content>

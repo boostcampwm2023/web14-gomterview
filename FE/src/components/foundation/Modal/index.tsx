@@ -4,9 +4,9 @@ import ModalHeader from './ModalHeader';
 import ModalLayout, { ModalLayoutProps } from './ModalLayout';
 import enhanceChildElement from '@/utils/enhanceChildElement';
 
-const Modal = ({ children, isOpen, closeModal }: ModalLayoutProps) => {
+const Modal = ({ children, isOpen, closeModal, ...args }: ModalLayoutProps) => {
   return (
-    <ModalLayout isOpen={isOpen} closeModal={closeModal}>
+    <ModalLayout isOpen={isOpen} closeModal={closeModal} {...args}>
       {enhanceChildElement({
         children: children,
         component: ModalHeader,

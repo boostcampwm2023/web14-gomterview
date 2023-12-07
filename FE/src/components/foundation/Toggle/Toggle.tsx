@@ -1,9 +1,9 @@
-import { HTMLElementTypes } from '@/types/utils';
 import {
   ToggleInputStyle,
   ToggleLabelStyle,
 } from '@foundation/Toggle/Toggle.styles';
 import { useId } from 'react';
+import { HTMLElementTypes } from '@/types/utils';
 
 type ToggleProps = {
   isToggled: boolean;
@@ -21,7 +21,7 @@ const Toggle: React.FC<ToggleProps> = ({ isToggled, onClick, ...args }) => {
         css={ToggleInputStyle}
         {...args}
       />
-      <label htmlFor="toggle" onClick={onClick} css={ToggleLabelStyle} />
+      <label htmlFor={toggleId} onClick={onClick} css={ToggleLabelStyle} />
     </>
   );
 };

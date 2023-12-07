@@ -1,6 +1,6 @@
 import { Button, Input, InputArea } from '@foundation/index';
 import { css } from '@emotion/react';
-import { FormEventHandler, useCallback, useState } from 'react';
+import { FormEventHandler, useCallback, useEffect, useState } from 'react';
 import LabelBox from '@common/QuestionSelectionBox/WorkbookGeneratorModal/LabelBox';
 import WorkbookCategory from '@common/QuestionSelectionBox/WorkbookGeneratorModal/WorkbookCategory';
 import useInput from '@hooks/useInput';
@@ -18,10 +18,11 @@ const WorkbookEditForm: React.FC<WorkbookEditFormProps> = ({
   workbookId,
   closeModal,
 }) => {
-  const { data: workbookInfo } = useWorkbookQuery({
-    workbookId: workbookId,
-    enabled: workbookId > 0,
-  });
+  const { data: workbookInfo, isFetching: isWorkbookFetching } =
+    useWorkbookQuery({
+      workbookId: workbookId,
+      enabled: workbookId > 0,
+    });
   const { data: categories } = useCategoryQuery();
   const [activeValidationError, setActiveValidationError] = useState(false);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
@@ -33,6 +34,22 @@ const WorkbookEditForm: React.FC<WorkbookEditFormProps> = ({
   } = useInput<HTMLInputElement>(workbookInfo?.title ?? '');
   const { value: workbookContent, onChange: handleWorkbookContentChange } =
     useInput<HTMLTextAreaElement>(workbookInfo?.content ?? '');
+
+  const findCategoryIndex = useCallback(
+    (categoryId?: number) => {
+      return (
+        categories?.findIndex((category) => category.id === categoryId) ?? 0
+      );
+    },
+    [categories]
+  );
+
+  useEffect(() => {
+    if (!workbookInfo) return;
+
+    setSelectedCategoryIndex(findCategoryIndex(workbookInfo.categoryId));
+    setIsPublic(workbookInfo.isPublic);
+  }, [findCategoryIndex, isWorkbookFetching, workbookInfo]);
 
   const { editWorkbook } = useWorkbookEdit({
     onSuccess: () => {
@@ -129,7 +146,7 @@ const WorkbookEditForm: React.FC<WorkbookEditFormProps> = ({
           취소
         </Button>
         <Button variants="primary" type="submit">
-          만들기
+          수정하기
         </Button>
       </div>
     </form>

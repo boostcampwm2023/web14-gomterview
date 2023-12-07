@@ -4,9 +4,9 @@ import { theme } from '@styles/theme';
 import { ExcludeArray } from '@/types/utils';
 import { WorkbookTitleListResDto } from '@/types/workbook';
 import { useState } from 'react';
-import useWorkbookDeleteMutation from '@hooks/apis/mutations/useWorkbookDeleteMutation';
 import useModal from '@hooks/useModal';
 import { WorkbookGeneratorModal } from '@common/index';
+import useWorkbookDelete from '@hooks/useWorkbookDelete';
 
 type QuestionTabPanelHeaderProps = {
   workbook: ExcludeArray<WorkbookTitleListResDto>;
@@ -21,7 +21,7 @@ const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
   onEditButtonClick,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { mutate: deleteWorkbook } = useWorkbookDeleteMutation();
+  const { deleteWorkbook } = useWorkbookDelete();
   const { openModal, closeModal } = useModal(() => {
     return (
       <WorkbookGeneratorModal

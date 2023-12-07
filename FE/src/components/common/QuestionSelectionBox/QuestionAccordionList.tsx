@@ -50,6 +50,7 @@ const QuestionAccordionList: React.FC<QuestionAccordionListProps> = ({
   return (
     <>
       <div
+        ref={listRef}
         css={css`
           display: flex;
           flex-direction: column;
@@ -58,12 +59,9 @@ const QuestionAccordionList: React.FC<QuestionAccordionListProps> = ({
           overflow-y: auto;
           padding: 1rem;
           height: 100%;
-          div:nth-last-of-type(2) {
-            margin-bottom: ${isEditMode ? '2.5rem' : '0'};
-          }
         `}
       >
-        {questionData.map((question) => (
+        {questionData.map((question, index) => (
           <div
             key={question.questionId}
             onClick={() => handleQuestionChecked(question.questionId)}
@@ -71,6 +69,9 @@ const QuestionAccordionList: React.FC<QuestionAccordionListProps> = ({
               display: flex;
               align-items: center;
               column-gap: 0.5rem;
+              margin-bottom: ${index === questionData.length - 1
+                ? '2.5rem'
+                : '0'};
             `}
           >
             {isEditMode && (

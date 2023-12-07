@@ -20,7 +20,7 @@ const WorkbookGeneratorModal: React.FC<WorkbookGeneratorModalProps> = ({
       css={css`
         width: 30rem;
         @media (max-width: ${theme.breakpoints.tablet}) {
-          width: 20rem;
+          width: 25rem;
         }
         @media (max-width: ${theme.breakpoints.mobileL}) {
           width: 100%;
@@ -28,7 +28,9 @@ const WorkbookGeneratorModal: React.FC<WorkbookGeneratorModalProps> = ({
         }
       `}
     >
-      <ModalHeader closeModal={closeModal}>새 면접 세트</ModalHeader>
+      <ModalHeader closeModal={closeModal}>
+        {workbookId !== undefined ? '면접 세트 수정' : '새 면접 세트'}
+      </ModalHeader>
       <div
         css={css`
           max-height: 80vh;

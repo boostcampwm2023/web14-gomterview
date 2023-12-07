@@ -2,11 +2,15 @@ import { css } from '@emotion/react';
 import { Box, SelectionBox, Tabs, Typography } from '@foundation/index';
 import QuestionSelectTabPanel from './TabPanel/QuestionSelectTabPanel';
 import VideoListTabPanel from './TabPanel/VideoListTabPanel';
+import { useLocation } from 'react-router-dom';
+import { Location } from '@remix-run/router';
 
 const MyPageTabs: React.FC = () => {
+  const location = useLocation() as Location<{ tabIndex: string }>;
+
   return (
     <Tabs
-      initialValue={'2'}
+      initialValue={location?.state?.tabIndex ?? '2'}
       css={css`
         display: flex;
         flex-direction: column;
