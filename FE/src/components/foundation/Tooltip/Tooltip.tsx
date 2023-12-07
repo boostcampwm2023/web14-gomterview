@@ -38,6 +38,7 @@ const Tooltip: React.FC<TooltipProps> = ({
             color: ${theme.colors.text.white};
             border-radius: 0.5rem;
             display: block;
+            z-index: ${theme.zIndex.tooltip.content};
           }
         `,
         positionStyles[position],
