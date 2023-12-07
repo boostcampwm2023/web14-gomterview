@@ -1,5 +1,6 @@
 import { SelectedQuestion } from '@/atoms/interviewSetting';
 import React, { MutableRefObject } from 'react';
+import { toast } from '@foundation/Toast/toast';
 
 type StartRecordingProps = {
   media: MediaStream | null;
@@ -15,7 +16,7 @@ export const startRecording = ({
   setRecordedBlobs,
 }: StartRecordingProps) => {
   if (!media) {
-    console.log('미디어 스트림이 제공되지 않았습니다.');
+    toast.error('미디어 스트림이 연결되지 않았습니다.');
     return;
   }
 
@@ -31,8 +32,9 @@ export const startRecording = ({
     };
 
     mediaRecorderRef.current.start();
+    toast.success('녹화를 시작합니다');
   } catch (error) {
-    console.error('미디어 레코딩 시작 중 오류 발생:', error);
+    toast.error('미디어 레코딩 중 오류가 발생했습니다.');
   }
 };
 
@@ -41,6 +43,7 @@ export const stopRecording = (
 ) => {
   if (mediaRecorderRef.current) {
     mediaRecorderRef.current.stop();
+    toast.success('녹화를 종료합니다');
   }
 };
 
@@ -58,4 +61,5 @@ export const localDownload = (
   a.click();
   window.URL.revokeObjectURL(url);
   document.body.removeChild(a);
+  toast.success('성공적으로 컴퓨터에 저장되었습니다.');
 };

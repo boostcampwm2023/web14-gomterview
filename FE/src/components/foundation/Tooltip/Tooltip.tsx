@@ -17,12 +17,14 @@ type TooltipProps = {
   children: React.ReactNode;
   title: string;
   position?: 'top' | 'bottom' | 'left' | 'right';
+  disabled?: boolean;
 };
 
 const Tooltip: React.FC<TooltipProps> = ({
   title,
   children,
   position = 'top',
+  disabled = false,
 }) => {
   return (
     <div
@@ -37,7 +39,8 @@ const Tooltip: React.FC<TooltipProps> = ({
 
             color: ${theme.colors.text.white};
             border-radius: 0.5rem;
-            display: block;
+            display: ${!disabled && 'block'};
+            z-index: ${theme.zIndex.tooltip.content};
           }
         `,
         positionStyles[position],

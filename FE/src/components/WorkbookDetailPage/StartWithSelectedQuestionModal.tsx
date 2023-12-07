@@ -2,14 +2,13 @@ import { WorkbookEntity } from '@/types/workbook';
 import { css } from '@emotion/react';
 import Modal from '@foundation/Modal';
 import { Button, CheckBox } from '@foundation/index';
-
 import { useNavigate } from 'react-router-dom';
-
 import { useRecoilState } from 'recoil';
 import { questionSetting, serviceTerms } from '@atoms/interviewSetting';
 import { Question } from '@/types/question';
 import { PATH } from '@constants/path';
 import { Description } from '@components/interviewSettingPage';
+import { toast } from '@foundation/Toast/toast';
 
 const StartWithSelectedQuestionModal = ({
   isOpen,
@@ -41,6 +40,7 @@ const StartWithSelectedQuestionModal = ({
       })),
       from: 'workbook',
     });
+    toast.success('선택한 문제집으로 면접을 시작합니다!');
   };
 
   const handleStartInterview = () => {

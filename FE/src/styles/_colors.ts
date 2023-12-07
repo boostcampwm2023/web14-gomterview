@@ -11,7 +11,7 @@ const colorChips = {
   shadow400: 'rgba(0, 0, 0, 0.4)',
   shadow600: 'rgba(0, 0, 0, 0.6)',
 
-  blackOpacity70: 'rgba(70, 70, 70, 0.7)',
+  blackOpacity80: 'rgba(90, 90, 90, 0.9)',
 
   blue50: '#CBDBFA',
   blue100: '#BDD1F9',
@@ -90,7 +90,7 @@ export const colors = {
     weakHover: colorChips.grayscale500,
     black100: colorChips.grayscaleBlack, // #000000
     active: colorChips.green50,
-    tooltip: colorChips.blackOpacity70,
+    tooltip: colorChips.blackOpacity80,
   },
   point: {
     primary: {

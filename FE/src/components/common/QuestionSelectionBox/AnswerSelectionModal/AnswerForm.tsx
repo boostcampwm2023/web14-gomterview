@@ -2,6 +2,7 @@ import useQuestionAnswerMutation from '@/hooks/apis/mutations/useQuestionAnswerM
 import useInput from '@hooks/useInput';
 import { css } from '@emotion/react';
 import { Box, Button, InputArea, Typography } from '@foundation/index';
+import { toast } from '@foundation/Toast/toast';
 
 type AnswerFormProps = {
   questionId: number;
@@ -20,13 +21,19 @@ const AnswerForm: React.FC<AnswerFormProps> = ({ questionId, question }) => {
   const handleCustomAnswerSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isCustomAnswerEmpty()) return;
+
     mutate(
       {
         questionId,
         content: customAnswer,
       },
       {
-        onSuccess: () => clearCustomAnswer(),
+        onSuccess: () => {
+          clearCustomAnswer();
+          toast.success('답변 추가에 성공했습니다.', {
+            position: 'bottomRight',
+          });
+        },
       }
     );
   };

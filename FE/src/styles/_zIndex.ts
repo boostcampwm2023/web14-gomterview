@@ -15,6 +15,9 @@ export const zIndex = {
     content: 100,
     backdrop: 99,
   },
+  tooltip: {
+    content: 50,
+  },
   /**
    * 헤더 메뉴 오픈시 backdrop 메뉴를 사용하고 있음
    */

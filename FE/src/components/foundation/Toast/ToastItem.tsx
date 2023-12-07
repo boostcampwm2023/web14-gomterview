@@ -35,7 +35,7 @@ const ToastItem: React.FC<ToastProps> = ({
   };
 
   const handleClick = () => {
-    closeOnClick && handleProgressAnimationEnd();
+    closeOnClick && setIsExiting(true);
   };
 
   const handleMouseEnter = () => {
@@ -59,17 +59,20 @@ const ToastItem: React.FC<ToastProps> = ({
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        onAnimationEnd={handleExitingAnimationEnd}
+        onAnimationEnd={() => handleExitingAnimationEnd}
         css={[
           css`
             position: relative;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             row-gap: 0.5rem;
             min-width: 20rem;
+            height: 4rem;
             border-radius: 0.5rem;
             overflow: hidden;
             background-color: ${theme.colors.surface.default};
+            cursor: pointer;
             animation: ${isExiting
               ? css`
                   ${ToastFadeOutUpAnimation} 0.8s forwards

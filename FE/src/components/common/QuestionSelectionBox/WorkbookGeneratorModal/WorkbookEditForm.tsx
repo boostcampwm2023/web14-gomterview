@@ -9,6 +9,7 @@ import useWorkbookQuery from '@hooks/apis/queries/useWorkbookQuery';
 import useCategoryQuery from '@hooks/apis/queries/useCategoryQuery';
 import useWorkbookEdit from '@hooks/useWorkbookEdit';
 import { ShareRangeToggle } from '@common/index';
+import { toast } from '@foundation/Toast/toast';
 
 type WorkbookEditFormProps = {
   workbookId: number;
@@ -81,6 +82,7 @@ const WorkbookEditForm: React.FC<WorkbookEditFormProps> = ({
       categoryId: selectedCategoryId,
       isPublic: isPublic,
     });
+    toast.success('성공적으로 문제집이 수정되었습니다.');
   };
 
   return (

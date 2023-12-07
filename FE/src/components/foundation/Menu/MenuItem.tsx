@@ -14,6 +14,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ children, ...args }) => {
       variants="secondary"
       css={css`
         border: none;
+        background-color: transparent;
       `}
       {...args}
     >

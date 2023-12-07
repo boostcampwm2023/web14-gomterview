@@ -16,6 +16,7 @@ import StepPage from '@foundation/StepPages';
 import { InterviewSettingPageLayout } from '@components/interviewSettingPage';
 import ServiceTermsPage from './ServiceTermsPage';
 import { theme } from '@styles/theme';
+import { toast } from '@foundation/Toast/toast';
 
 const FIRST_PAGE_INDEX = 0;
 const PREV_PAGE_INDEX = -1;
@@ -61,6 +62,7 @@ const InterviewSettingPage: React.FC = () => {
               changeSearchParams(SETTING_PATH.QUESTION);
             else {
               navigate(PATH.ROOT);
+              toast.info('랜딩 페이지로 이동합니다.');
             }
           }}
           onNextClick={() => changeSearchParams(SETTING_PATH.RECORD)}

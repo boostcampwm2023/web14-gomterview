@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { css } from '@emotion/react';
-import { Icon } from '@foundation/index';
+import { Icon, Tooltip } from '@foundation/index';
 import useUserInfo from '@hooks/useUserInfo';
 import { breakpoints } from '@styles/_breakpoints';
 import { theme } from '@styles/theme';
@@ -58,7 +58,9 @@ const WorkbookPlusButton: React.FC = () => {
         `}
         onClick={handleWorkbookPlusClick}
       >
-        <Icon id="white-plus" width="50px" height="50px" />
+        <Tooltip title="나만의 면접 세트를 만들어보세요">
+          <Icon id="white-plus" width="50px" height="50px" />
+        </Tooltip>
       </div>
       <RequestLoginModal
         isOpen={requestLoginModalIsOpen}

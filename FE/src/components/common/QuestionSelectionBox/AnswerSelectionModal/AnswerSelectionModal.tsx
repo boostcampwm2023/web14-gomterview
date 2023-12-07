@@ -7,6 +7,7 @@ import AnswerForm from './AnswerForm';
 import useAnswerDefaultMutation from '@/hooks/apis/mutations/useAnswerDefaultMutation';
 import { Question } from '@/types/question';
 import { Typography } from '@foundation/index';
+import { toast } from '@foundation/Toast/toast';
 
 type AnswerSelectionModalProps = {
   isOpen: boolean;
@@ -28,12 +29,24 @@ const AnswerSelectionModal: React.FC<AnswerSelectionModalProps> = ({
   if (!data) return;
 
   return (
-    <Modal isOpen={isOpen} closeModal={closeModal}>
+    <Modal
+      isOpen={isOpen}
+      closeModal={closeModal}
+      css={css`
+        width: 40rem;
+        @media (max-width: ${theme.breakpoints.tablet}) {
+          width: 30rem;
+        }
+        @media (max-width: ${theme.breakpoints.mobileL}) {
+          width: 100%;
+          margin: 0 1rem;
+        }
+      `}
+    >
       <Modal.header closeButtonVisible>답변 변경하기</Modal.header>
       <Modal.content>
         <div
           css={css`
-            max-width: 40rem;
             width: 100%;
             max-height: 80vh;
             overflow-y: auto;
@@ -64,7 +77,12 @@ const AnswerSelectionModal: React.FC<AnswerSelectionModalProps> = ({
                       answerId: answer.answerId,
                     },
                     {
-                      onSuccess: () => closeModal(),
+                      onSuccess: () => {
+                        closeModal();
+                        toast.success('대표 답변이 변경되었습니다.', {
+                          position: 'bottomRight',
+                        });
+                      },
                     }
                   )
                 }
