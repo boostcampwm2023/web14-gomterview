@@ -30,7 +30,6 @@ import { Category } from '../../category/entity/category';
 import { createIntegrationTestModule } from '../../util/test.util';
 import * as cookieParser from 'cookie-parser';
 import { TokenModule } from '../../token/token.module';
-import { Token } from '../../token/entity/token';
 import { AuthService } from '../../auth/service/auth.service';
 import {
   categoryFixtureWithId,
@@ -306,7 +305,7 @@ describe('WorkbookController 통합테스트', () => {
 
   beforeAll(async () => {
     const modules = [AuthModule, WorkbookModule, CategoryModule, TokenModule];
-    const entities = [Member, Workbook, Category, Token];
+    const entities = [Member, Workbook, Category];
 
     const moduleFixture: TestingModule = await createIntegrationTestModule(
       modules,

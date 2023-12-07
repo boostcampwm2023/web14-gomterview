@@ -17,14 +17,13 @@ import { Category } from './category/entity/category';
 import { Member } from './member/entity/member';
 import { Question } from './question/entity/question';
 import { Answer } from './answer/entity/answer';
-import { Token } from './token/entity/token';
 import { WorkbookModule } from './workbook/workbook.module';
 import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(MYSQL_OPTION),
-    TypeOrmModule.forFeature([Category, Member, Question, Answer, Token]),
+    TypeOrmModule.forFeature([Category, Member, Question, Answer]),
     MulterModule.register({
       dest: './uploads', // 파일이 저장될 경로 설정
     }),

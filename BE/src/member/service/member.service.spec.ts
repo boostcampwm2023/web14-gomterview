@@ -12,7 +12,6 @@ import {
 import { INestApplication } from '@nestjs/common';
 import { MemberModule } from '../member.module';
 import { Member } from '../entity/member';
-import { Token } from 'src/token/entity/token';
 import { addAppModules, createIntegrationTestModule } from 'src/util/test.util';
 import { AuthModule } from 'src/auth/auth.module';
 import { AuthService } from 'src/auth/service/auth.service';
@@ -133,7 +132,7 @@ describe('MemberService 통합 테스트', () => {
 
   beforeAll(async () => {
     const modules = [MemberModule, AuthModule];
-    const entities = [Member, Token];
+    const entities = [Member];
 
     const moduleFixture: TestingModule = await createIntegrationTestModule(
       modules,
@@ -220,7 +219,6 @@ describe('MemberService 통합 테스트', () => {
 
   afterEach(async () => {
     await memberRepository.query('delete from Member');
-    await memberRepository.query('delete from Token');
     await memberRepository.query('DELETE FROM sqlite_sequence'); // Auto Increment 초기화
   });
 });

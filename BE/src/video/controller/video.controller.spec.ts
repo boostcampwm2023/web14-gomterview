@@ -42,7 +42,6 @@ import { Workbook } from 'src/workbook/entity/workbook';
 import { Answer } from 'src/answer/entity/answer';
 import { AuthService } from 'src/auth/service/auth.service';
 import { AuthModule } from 'src/auth/auth.module';
-import { Token } from 'src/token/entity/token';
 import * as request from 'supertest';
 import { QuestionRepository } from 'src/question/repository/question.repository';
 import { questionFixture } from 'src/question/fixture/question.fixture';
@@ -595,15 +594,7 @@ describe('VideoController 통합 테스트', () => {
 
   beforeAll(async () => {
     const modules = [VideoModule, AuthModule];
-    const entities = [
-      Video,
-      Member,
-      Question,
-      Workbook,
-      Answer,
-      Token,
-      Category,
-    ];
+    const entities = [Video, Member, Question, Workbook, Answer, Category];
 
     const moduleFixture: TestingModule = await createIntegrationTestModule(
       modules,
@@ -988,7 +979,6 @@ describe('VideoController 통합 테스트', () => {
   });
 
   afterEach(async () => {
-    await questionRepository.query('delete from token');
     await questionRepository.query('delete from Member');
     await questionRepository.query('delete from Category');
     await questionRepository.query('delete from Workbook');
