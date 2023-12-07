@@ -26,6 +26,7 @@ const SelectionBox: React.FC<SelectionButtonProps> = ({
   return (
     <div>
       <input
+        readOnly
         id={id}
         name={name}
         type={name ? 'radio' : 'checkbox'}
