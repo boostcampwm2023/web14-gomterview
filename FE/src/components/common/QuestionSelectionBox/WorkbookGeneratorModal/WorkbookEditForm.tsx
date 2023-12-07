@@ -146,7 +146,7 @@ const WorkbookEditForm: React.FC<WorkbookEditFormProps> = ({
           취소
         </Button>
         <Button variants="primary" type="submit">
-          만들기
+          수정하기
         </Button>
       </div>
     </form>
