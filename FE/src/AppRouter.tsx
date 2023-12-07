@@ -12,7 +12,6 @@ import InterviewVideoPublicLoader from '@routes/interviewVideoPublicLoader';
 import rootLoader from '@routes/rootLoader';
 import WorkbookDetailPage from '@page/WorkbookDetailPage';
 import LoaderErrorPage from '@page/errorPage/Loader';
-import InterviewWorkbookDetailPage from '@page/interviewWorkbookDetailPage';
 import interviewWorkbookDetailLoader from '@routes/interviewWorkbookDetailLoader';
 import WorkbookPage from '@page/workbookPage';
 import UnknownErrorBoundary from './UnknownErrorBoundary';
