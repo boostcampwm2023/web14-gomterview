@@ -1,5 +1,6 @@
-import React, { SyntheticEvent, useContext } from 'react';
-import { TabContext } from '.';
+import React, { SyntheticEvent } from 'react';
+import useTabs from '@foundation/Tabs/useTabs';
+import enhanceChildElement from '@/utils/enhanceChildElement';
 
 type TabProps = {
   children?: React.ReactNode;
@@ -8,13 +9,23 @@ type TabProps = {
   onTabChange?: (e: SyntheticEvent, value: string) => void;
 };
 
-const Tab: React.FC<TabProps> = ({ children, value, onTabChange }) => {
-  const { handleTabChange } = useContext(TabContext);
-  const handleClick = (e: SyntheticEvent) => {
-    handleTabChange(value);
-    onTabChange && onTabChange(e, value);
+const Tab: React.FC<TabProps> = ({ children, value }) => {
+  const { currentValue, setCurrentValue } = useTabs();
+  const handleClick = () => {
+    setCurrentValue(value);
   };
-  return <div onClick={handleClick}>{children}</div>;
+
+  return (
+    <div onClick={handleClick}>
+      {enhanceChildElement({
+        children: children,
+        newProps: {
+          value: value,
+          checked: currentValue === value,
+        },
+      })}
+    </div>
+  );
 };
 
 export default Tab;

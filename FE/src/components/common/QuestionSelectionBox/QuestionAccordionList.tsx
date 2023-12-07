@@ -58,7 +58,7 @@ const QuestionAccordionList: React.FC<QuestionAccordionListProps> = ({
           overflow-y: auto;
           padding: 1rem;
           height: 100%;
-          & > :nth-last-child(2) {
+          div:nth-last-of-type(2) {
             margin-bottom: ${isEditMode ? '2.5rem' : '0'};
           }
         `}

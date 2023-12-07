@@ -1,40 +1,30 @@
-import React, { createContext, useEffect, useState } from 'react';
-import TabList from '@foundation/Tabs/TabList';
-import TabPanel from '@foundation/Tabs/TabPanel';
-import Tab from '@foundation/Tabs/Tab';
+import React, { createContext, useState } from 'react';
 import { HTMLElementTypes } from '@/types/utils';
+import TabPanel from './TabPanel';
+import Tab from '@foundation/Tabs/Tab';
 
 type TabProviderProps = {
   children: React.ReactNode;
-  value: string;
+  initialValue?: string;
 } & HTMLElementTypes<HTMLDivElement>;
 
 const initialContext = {
-  selectedValue: '',
-  handleTabChange: (value: string) => {},
+  currentValue: '0',
+  setCurrentValue: (value: string) => {},
 };
 
 export const TabContext = createContext(initialContext);
 
-const Tabs = ({ children, value, ...args }: TabProviderProps) => {
-  const [selectedValue, setSelectedValue] = useState(value);
-
-  useEffect(() => {
-    setSelectedValue(value);
-  }, [value]);
-
-  const handleTabChange = (newValue: string) => {
-    setSelectedValue(newValue);
-  };
+const Tabs = ({ children, initialValue = '0', ...args }: TabProviderProps) => {
+  const [currentValue, setCurrentValue] = useState(initialValue);
 
   return (
-    <TabContext.Provider value={{ selectedValue, handleTabChange }}>
+    <TabContext.Provider value={{ currentValue, setCurrentValue }}>
       <div {...args}>{children}</div>
     </TabContext.Provider>
   );
 };
 
-Tabs.TabList = TabList;
 Tabs.Tab = Tab;
 Tabs.TabPanel = TabPanel;
 

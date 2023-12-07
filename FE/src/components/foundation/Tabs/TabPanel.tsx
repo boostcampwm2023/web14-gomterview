@@ -1,7 +1,5 @@
-import { useContext } from 'react';
-import { TabContext } from '@foundation/Tabs/index';
-import { css } from '@emotion/react';
 import { HTMLElementTypes } from '@/types/utils';
+import useTabs from '@foundation/Tabs/useTabs';
 
 type TabPanelProps = {
   children: React.ReactNode;
@@ -9,17 +7,10 @@ type TabPanelProps = {
 } & HTMLElementTypes<HTMLDivElement>;
 
 const TabPanel: React.FC<TabPanelProps> = ({ children, value, ...args }) => {
-  const { selectedValue } = useContext(TabContext);
-  return (
-    <div
-      css={css`
-        display: ${selectedValue === value ? 'block' : 'none'};
-      `}
-      {...args}
-    >
-      {children}
-    </div>
-  );
+  const { currentValue } = useTabs();
+
+  if (currentValue !== value) return null;
+  return <div {...args}>{children}</div>;
 };
 
 export default TabPanel;

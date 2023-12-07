@@ -2,7 +2,7 @@ import { setupWorker } from 'msw/browser';
 import { scenarios } from '@/mocks/scenarios';
 
 const isScenarioName = (str: string): str is keyof typeof scenarios => {
-  return scenarioName in scenarios;
+  return str in scenarios;
 };
 
 const scenarioName =

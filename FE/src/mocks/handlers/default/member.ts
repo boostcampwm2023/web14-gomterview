@@ -4,7 +4,11 @@ import memberData from '../../data/member.json';
 
 const memberHandlers = [
   http.get(API.MEMBER, () => {
-    return HttpResponse.json(memberData, { status: 200 });
+    const isLogin =
+      new URLSearchParams(window.location.search).get('login') || 'true';
+    return HttpResponse.json(memberData, {
+      status: isLogin === 'true' ? 200 : 401,
+    });
   }),
   http.get(API.MEMBER_NAME, () => {
     return HttpResponse.json({

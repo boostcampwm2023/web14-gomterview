@@ -4,19 +4,18 @@ import { ResponsiveMenu } from '@common/index';
 import { Tabs } from '@foundation/index';
 import useCategoryQuery from '@hooks/apis/queries/useCategoryQuery';
 import useBreakpoint from '@hooks/useBreakPoint';
-import { SyntheticEvent } from 'react';
 
 type CategoryMenuProps = {
-  handleTabChange: (_: SyntheticEvent, v: string) => void;
+  onTabChange: (v: string) => void;
 };
 
-const CategoryMenu: React.FC<CategoryMenuProps> = ({ handleTabChange }) => {
+const CategoryMenu: React.FC<CategoryMenuProps> = ({ onTabChange }) => {
   const { data: categories } = useCategoryQuery();
 
   const isDeviceBreakpoint = useBreakpoint();
 
   return (
-    <Tabs value="0">
+    <Tabs initialValue="">
       <ResponsiveMenu
         css={css`
           margin-bottom: 1.25rem;
@@ -31,20 +30,18 @@ const CategoryMenu: React.FC<CategoryMenuProps> = ({ handleTabChange }) => {
               : '1rem 0rem'};
           `}
         >
-          <Tabs.TabList
-            name="my-page"
-            gap="1rem"
+          <div
             css={css`
               display: ${isDeviceBreakpoint('laptop') ? 'flex' : 'block'};
+              gap: 1rem'
             `}
-            onTabChange={handleTabChange}
           >
             <Tabs.Tab value="" key="0">
               <SelectionBox
                 id={`category-all`}
                 name="category-list"
                 lineDirection={isDeviceBreakpoint('laptop') ? 'bottom' : 'left'}
-                defaultChecked={true}
+                onClick={() => onTabChange('')}
                 css={css`
                   padding: 0.5rem 1rem;
                 `}
@@ -60,6 +57,7 @@ const CategoryMenu: React.FC<CategoryMenuProps> = ({ handleTabChange }) => {
                   lineDirection={
                     isDeviceBreakpoint('laptop') ? 'bottom' : 'left'
                   }
+                  onClick={() => onTabChange(category.id.toString())}
                   css={css`
                     padding: 0.5rem 1rem;
                   `}
@@ -68,7 +66,7 @@ const CategoryMenu: React.FC<CategoryMenuProps> = ({ handleTabChange }) => {
                 </SelectionBox>
               </Tabs.Tab>
             ))}
-          </Tabs.TabList>
+          </div>
         </Box>
       </ResponsiveMenu>
     </Tabs>

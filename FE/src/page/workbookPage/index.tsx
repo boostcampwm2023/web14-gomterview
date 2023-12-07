@@ -8,12 +8,12 @@ import { css } from '@emotion/react';
 
 import { Typography } from '@foundation/index';
 
-import { SyntheticEvent, useState } from 'react';
+import { useState } from 'react';
 
 const WorkbookPage: React.FC = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
 
-  const handleTabChange = (_: SyntheticEvent, v: string) => {
+  const handleTabChange = (v: string) => {
     setSelectedCategoryId(v);
   };
 
@@ -22,12 +22,12 @@ const WorkbookPage: React.FC = () => {
       <Typography
         variant="title1"
         css={css`
-          margin: 0rem 0.5rem;
+          margin: 0 0.5rem;
         `}
       >
         면접 세트 목록
       </Typography>
-      <CategoryMenu handleTabChange={handleTabChange} />
+      <CategoryMenu onTabChange={handleTabChange} />
       <WorkbookList selectedCategoryId={selectedCategoryId} />
       <WorkbookPlusButton />
     </WorkbookPageLayout>

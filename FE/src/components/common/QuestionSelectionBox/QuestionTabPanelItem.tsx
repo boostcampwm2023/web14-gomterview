@@ -9,26 +9,21 @@ import { WorkbookTitleListResDto } from '@/types/workbook';
 import { ExcludeArray } from '@/types/utils';
 import QuestionAddForm from '@common/QuestionSelectionBox/QuestionAddForm';
 import QuestionTabPanelHeader from '@common/QuestionSelectionBox/QuestionTabPanelHeader';
+import useTabs from '@foundation/Tabs/useTabs';
 import QuestionAccordionList from '@common/QuestionSelectionBox/QuestionAccordionList';
 
 type TabPanelItemProps = {
-  selectedTabIndex: string;
   tabIndex: string;
   workbook: ExcludeArray<WorkbookTitleListResDto>;
-  onWorkbookDelete: () => void;
 };
 
-const TabPanelItem: React.FC<TabPanelItemProps> = ({
-  selectedTabIndex,
-  workbook,
-  tabIndex,
-  onWorkbookDelete,
-}) => {
+const TabPanelItem: React.FC<TabPanelItemProps> = ({ workbook, tabIndex }) => {
   const settingPage = useRecoilValue(questionSetting);
   const selectedQuestions = settingPage.selectedData.filter(
     (question) => question.workbookId === workbook.workbookId
   );
 
+  const { currentValue, setCurrentValue } = useTabs();
   const [onlySelectedOption, setOnlySelectedOption] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
@@ -38,7 +33,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
 
   const { data: questionAPIData } = useQuestionWorkbookQuery({
     workbookId: workbook.workbookId,
-    enabled: selectedTabIndex === tabIndex,
+    enabled: currentValue === tabIndex,
   });
 
   const questionData = onlySelectedOption ? selectedQuestions : questionAPIData;
@@ -62,8 +57,8 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
       >
         <QuestionTabPanelHeader
           workbook={workbook}
-          questionLength={questionData.length}
-          onWorkbookDelete={onWorkbookDelete}
+          questionLength={questionData?.length || 0}
+          onWorkbookDelete={() => setCurrentValue('0')}
           onEditButtonClick={() => setIsEditMode(true)}
         />
         <div
