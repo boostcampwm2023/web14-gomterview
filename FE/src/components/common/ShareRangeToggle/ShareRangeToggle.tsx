@@ -21,11 +21,11 @@ const ShareRangeToggle: React.FC<ShareRangeToggleProps> = ({
   onClick,
   publicText = {
     text: '링크가 있는 모든 사용자',
-    description: '링크가 있는 인터넷상의 모든 사용자가 볼 수 있음',
+    description: '링크가 있는 인터넷상의 모든 사용자가 볼 수 있습니다.',
   },
   privateText = {
     text: '비공개',
-    description: '나만 볼 수 있음',
+    description: '나만 볼 수 있습니다.',
   },
 }) => {
   return (
@@ -47,7 +47,7 @@ const ShareRangeToggle: React.FC<ShareRangeToggleProps> = ({
           css={css`
             display: flex;
             flex-direction: column;
-            row-gap: 0.25rem;
+            //row-gap: 0.125rem;
           `}
         >
           <Typography variant="body3">
