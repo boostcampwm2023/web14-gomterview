@@ -76,7 +76,6 @@ export class AuthController {
   }
 
   @Patch('reissue')
-  @UseGuards(TokenHardGuard)
   @ApiResponse(
     createApiResponseOptionWithHeaders(
       200,
