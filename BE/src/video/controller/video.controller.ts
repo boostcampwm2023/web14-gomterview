@@ -8,7 +8,9 @@ import {
   Post,
   Req,
   Res,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { VideoService } from '../service/video.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -27,11 +29,42 @@ import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { VideoDetailResponse } from '../dto/videoDetailResponse';
 import { VideoHashResponse } from '../dto/videoHashResponse';
 import { SingleVideoResponse } from '../dto/singleVideoResponse';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UPLOAD_UTIL } from '../../util/encoder.util';
+import { UploadVideoRequest } from '../dto/uploadVideoRequest';
 
 @Controller('/api/video')
 @ApiTags('video')
 export class VideoController {
   constructor(private videoService: VideoService) {}
+
+  @Post('upload')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiCookieAuth()
+  @ApiBody({ type: UploadVideoRequest })
+  @ApiOperation({
+    summary: '비디오를 인코딩/클라우드 저장/테이블 저장',
+  })
+  @ApiResponse(
+    createApiResponseOption(
+      201,
+      '비디오 인코딩/클라우드 저장/테이블 저장 완료',
+      null,
+    ),
+  )
+  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
+  @UseInterceptors(FileInterceptor('file', UPLOAD_UTIL))
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Req() req: Request,
+    @Body() uploadVideoRequest: UploadVideoRequest,
+  ) {
+    await this.videoService.saveVideoOnCloud(
+      uploadVideoRequest,
+      req.user as Member,
+      file,
+    );
+  }
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
