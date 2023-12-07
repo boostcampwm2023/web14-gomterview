@@ -2,11 +2,13 @@ import ErrorPageLayout from '@components/errorPage/ErrorPageLayout';
 import ErrorBear from '@assets/images/error-bear.png';
 import { css } from '@emotion/react';
 import { Typography } from '@foundation/index';
-import { Location, useLocation, useRouteError } from 'react-router-dom';
+import { useRouteError } from 'react-router-dom';
+import { AxiosError } from 'axios';
 
-const ErrorPage = () => {
-  const error = useRouteError() as Response;
-  const location = useLocation() as Location<Response>;
+const LoaderErrorPage = () => {
+  const error = useRouteError() as AxiosError;
+
+  if (process.env.NODE_ENV === 'development') console.log(error);
 
   return (
     <ErrorPageLayout>
@@ -24,15 +26,10 @@ const ErrorPage = () => {
           align-items: center;
         `}
       >
-        <Typography variant="title1">{`${
-          error?.status || location.state?.status
-        } error`}</Typography>
-        <Typography variant="body1">
-          {error?.statusText || location.state?.statusText}
-        </Typography>
+        <Typography variant="title1">{`${error.response?.status} error`}</Typography>
       </div>
     </ErrorPageLayout>
   );
 };
 
-export default ErrorPage;
+export default LoaderErrorPage;

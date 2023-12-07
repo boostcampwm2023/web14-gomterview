@@ -7,6 +7,7 @@ import { Navigate } from 'react-router-dom';
 import logAPIErrorToSentry from './utils/logAPIErrorToSentry';
 import { API } from '@constants/api';
 import api from './apis/axios';
+import SomethingWrongErrorPage from '@page/errorPage/SomethingWrong';
 
 const APIErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
   if (
@@ -168,7 +169,7 @@ const APIErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
         });
         break;
     }
-    return <Navigate to={PATH.NOT_FOUND} />;
+    return <SomethingWrongErrorPage />;
   } else {
     throw error;
     // 제어된 예외가 아닌 경우, 에러를 다시 던져서 UnknownBoundary로 넘어간다.

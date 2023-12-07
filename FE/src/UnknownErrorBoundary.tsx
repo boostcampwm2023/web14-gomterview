@@ -1,12 +1,12 @@
-import ErrorPage from '@page/errorPage';
 import { PropsWithChildren } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import * as Sentry from '@sentry/react';
+import SomethingWrongErrorPage from '@page/errorPage/SomethingWrong';
 
 const UnknownErrorBoundary: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <ErrorBoundary
-      FallbackComponent={ErrorPage}
+      FallbackComponent={SomethingWrongErrorPage}
       onError={(error) => {
         Sentry.withScope((scope) => {
           scope.setLevel('fatal');
