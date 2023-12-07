@@ -50,6 +50,7 @@ const QuestionAccordionList: React.FC<QuestionAccordionListProps> = ({
   return (
     <>
       <div
+        ref={listRef}
         css={css`
           display: flex;
           flex-direction: column;
