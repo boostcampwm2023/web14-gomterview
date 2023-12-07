@@ -6,19 +6,20 @@ import {
 
 type ToggleProps = {
   isToggled: boolean;
+  onClick: () => void;
 } & HTMLElementTypes<HTMLInputElement>;
-const Toggle: React.FC<ToggleProps> = ({ isToggled, ...args }) => {
+const Toggle: React.FC<ToggleProps> = ({ id, isToggled, onClick, ...args }) => {
   return (
     <>
       <input
         readOnly
-        id="toggle"
+        id={id}
         type="checkbox"
         checked={isToggled}
         css={ToggleInputStyle}
         {...args}
       />
-      <label htmlFor="toggle" css={ToggleLabelStyle} />
+      <label htmlFor="toggle" onClick={onClick} css={ToggleLabelStyle} />
     </>
   );
 };
