@@ -1,4 +1,4 @@
-import { SelectionBox, Tabs2, Typography } from '@foundation/index';
+import { SelectionBox, Tabs, Typography } from '@foundation/index';
 import { WorkbookTitleListResDto } from '@/types/workbook';
 import { css } from '@emotion/react';
 import { truncateText } from '@/utils/textUtils';
@@ -18,7 +18,7 @@ const QuestionTabList: React.FC<QuestionTabListProps> = ({
       `}
     >
       {workbookListData.map((workbook, index) => (
-        <Tabs2.Tab value={index.toString()} key={workbook.workbookId}>
+        <Tabs.Tab value={index.toString()} key={workbook.workbookId}>
           <SelectionBox
             id={`workbook-${workbook.workbookId.toString()}`}
             name="workbook"
@@ -27,7 +27,7 @@ const QuestionTabList: React.FC<QuestionTabListProps> = ({
               {truncateText(workbook.title, 12)}
             </Typography>
           </SelectionBox>
-        </Tabs2.Tab>
+        </Tabs.Tab>
       ))}
     </div>
   );

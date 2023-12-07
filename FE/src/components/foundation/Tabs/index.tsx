@@ -1,7 +1,7 @@
 import React, { createContext, useState } from 'react';
 import { HTMLElementTypes } from '@/types/utils';
-import TabPanel2 from './TabPanel2';
-import Tab2 from '@foundation/Tabs2/Tab2';
+import TabPanel from './TabPanel';
+import Tab from '@foundation/Tabs/Tab';
 
 type TabProviderProps = {
   children: React.ReactNode;
@@ -15,7 +15,7 @@ const initialContext = {
 
 export const TabContext = createContext(initialContext);
 
-const Tabs2 = ({ children, initialValue = '0', ...args }: TabProviderProps) => {
+const Tabs = ({ children, initialValue = '0', ...args }: TabProviderProps) => {
   const [currentValue, setCurrentValue] = useState(initialValue);
 
   return (
@@ -25,7 +25,7 @@ const Tabs2 = ({ children, initialValue = '0', ...args }: TabProviderProps) => {
   );
 };
 
-Tabs2.Tab = Tab2;
-Tabs2.TabPanel = TabPanel2;
+Tabs.Tab = Tab;
+Tabs.TabPanel = TabPanel;
 
-export default Tabs2;
+export default Tabs;

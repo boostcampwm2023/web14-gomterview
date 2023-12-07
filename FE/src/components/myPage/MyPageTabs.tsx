@@ -1,11 +1,11 @@
 import { css } from '@emotion/react';
-import { Box, SelectionBox, Tabs2, Typography } from '@foundation/index';
+import { Box, SelectionBox, Tabs, Typography } from '@foundation/index';
 import QuestionSelectTabPanel from './TabPanel/QuestionSelectTabPanel';
 import VideoListTabPanel from './TabPanel/VideoListTabPanel';
 
 const MyPageTabs: React.FC = () => {
   return (
-    <Tabs2
+    <Tabs
       initialValue={'2'}
       css={css`
         display: flex;
@@ -21,7 +21,7 @@ const MyPageTabs: React.FC = () => {
           padding: 0.5rem 1.5rem;
         `}
       >
-        <Tabs2.Tab value="1">
+        <Tabs.Tab value="1">
           <SelectionBox
             id="add-question"
             name="my-page"
@@ -32,8 +32,8 @@ const MyPageTabs: React.FC = () => {
           >
             <Typography variant="title4">질문 추가</Typography>
           </SelectionBox>
-        </Tabs2.Tab>
-        <Tabs2.Tab value="2">
+        </Tabs.Tab>
+        <Tabs.Tab value="2">
           <SelectionBox
             id="replay"
             name="my-page"
@@ -44,15 +44,15 @@ const MyPageTabs: React.FC = () => {
           >
             <Typography variant="title4">영상 다시보기</Typography>
           </SelectionBox>
-        </Tabs2.Tab>
+        </Tabs.Tab>
       </Box>
-      <Tabs2.TabPanel value="1">
+      <Tabs.TabPanel value="1">
         <QuestionSelectTabPanel />
-      </Tabs2.TabPanel>
-      <Tabs2.TabPanel value="2">
+      </Tabs.TabPanel>
+      <Tabs.TabPanel value="2">
         <VideoListTabPanel />
-      </Tabs2.TabPanel>
-    </Tabs2>
+      </Tabs.TabPanel>
+    </Tabs>
   );
 };
 

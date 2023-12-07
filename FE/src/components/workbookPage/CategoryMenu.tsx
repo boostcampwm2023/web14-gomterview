@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { Box, SelectionBox, Typography } from '@foundation/index';
 import { ResponsiveMenu } from '@common/index';
-import { Tabs2 } from '@foundation/index';
+import { Tabs } from '@foundation/index';
 import useCategoryQuery from '@hooks/apis/queries/useCategoryQuery';
 import useBreakpoint from '@hooks/useBreakPoint';
 
@@ -15,7 +15,7 @@ const CategoryMenu: React.FC<CategoryMenuProps> = ({ onTabChange }) => {
   const isDeviceBreakpoint = useBreakpoint();
 
   return (
-    <Tabs2 initialValue="">
+    <Tabs initialValue="">
       <ResponsiveMenu
         css={css`
           margin-bottom: 1.25rem;
@@ -36,7 +36,7 @@ const CategoryMenu: React.FC<CategoryMenuProps> = ({ onTabChange }) => {
               gap: 1rem'
             `}
           >
-            <Tabs2.Tab value="" key="0">
+            <Tabs.Tab value="" key="0">
               <SelectionBox
                 id={`category-all`}
                 name="category-list"
@@ -48,9 +48,9 @@ const CategoryMenu: React.FC<CategoryMenuProps> = ({ onTabChange }) => {
               >
                 <Typography variant="title4">ALL</Typography>
               </SelectionBox>
-            </Tabs2.Tab>
+            </Tabs.Tab>
             {categories?.map((category) => (
-              <Tabs2.Tab value={category.id.toString()} key={category.id}>
+              <Tabs.Tab value={category.id.toString()} key={category.id}>
                 <SelectionBox
                   id={`category-${category.id.toString()}`}
                   name="category-list"
@@ -64,12 +64,12 @@ const CategoryMenu: React.FC<CategoryMenuProps> = ({ onTabChange }) => {
                 >
                   <Typography variant="title4">{category.name}</Typography>
                 </SelectionBox>
-              </Tabs2.Tab>
+              </Tabs.Tab>
             ))}
           </div>
         </Box>
       </ResponsiveMenu>
-    </Tabs2>
+    </Tabs>
   );
 };
 

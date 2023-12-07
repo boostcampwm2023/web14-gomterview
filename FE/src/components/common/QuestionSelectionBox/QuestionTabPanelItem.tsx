@@ -4,12 +4,12 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import useQuestionWorkbookQuery from '@hooks/apis/queries/useQuestionWorkbookQuery';
-import { Typography, Toggle, Tabs2 } from '@foundation/index';
+import { Typography, Toggle, Tabs } from '@foundation/index';
 import { WorkbookTitleListResDto } from '@/types/workbook';
 import { ExcludeArray } from '@/types/utils';
 import QuestionAddForm from '@common/QuestionSelectionBox/QuestionAddForm';
 import QuestionTabPanelHeader from '@common/QuestionSelectionBox/QuestionTabPanelHeader';
-import useTabs from '@foundation/Tabs2/useTabs';
+import useTabs from '@foundation/Tabs/useTabs';
 import QuestionAccordionList from '@common/QuestionSelectionBox/QuestionAccordionList';
 
 type TabPanelItemProps = {
@@ -40,7 +40,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({ workbook, tabIndex }) => {
   if (!questionData) return;
 
   return (
-    <Tabs2.TabPanel
+    <Tabs.TabPanel
       key={`workbook.id-${workbook.workbookId}`}
       value={tabIndex}
       css={css`
@@ -104,7 +104,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({ workbook, tabIndex }) => {
           </div>
         </div>
       </div>
-    </Tabs2.TabPanel>
+    </Tabs.TabPanel>
   );
 };
 

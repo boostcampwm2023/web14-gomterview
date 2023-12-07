@@ -4,7 +4,7 @@ import TabPanelItem from './QuestionTabPanelItem';
 import { useRecoilState } from 'recoil';
 import { QuestionAnswerSelectionModal } from '@atoms/modal';
 import AnswerSelectionModal from './AnswerSelectionModal/AnswerSelectionModal';
-import { Box, Tabs2 } from '@foundation/index';
+import { Box, Tabs } from '@foundation/index';
 import useWorkbookTitleListQuery from '@hooks/apis/queries/useWorkbookTitleListQuery';
 import QuestionTabList from '@common/QuestionSelectionBox/QuestionTabList';
 import WorkbookAddButton from '@common/QuestionSelectionBox/WorkbookAddButton';
@@ -39,7 +39,7 @@ const QuestionSelectionBox = () => {
           height: 40rem;
         `}
       >
-        <Tabs2
+        <Tabs
           css={css`
             display: flex;
             width: 100%;
@@ -76,7 +76,7 @@ const QuestionSelectionBox = () => {
               />
             ))}
           </div>
-        </Tabs2>
+        </Tabs>
       </Box>
     </>
   );

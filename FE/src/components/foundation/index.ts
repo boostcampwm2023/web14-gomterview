@@ -9,7 +9,7 @@ export { default as LeadingDot } from './LeadingDot/LeadingDot';
 export { default as Modal } from './Modal';
 export { default as SelectionBox } from './SelectionBox/SelectionBox';
 export { default as StepPages } from './StepPages';
-export { default as Tabs2 } from './Tabs2';
+export { default as Tabs } from './Tabs';
 export { default as Typography } from './Typography/Typography';
 export { default as Toggle } from './Toggle/Toggle';
 export { default as CheckBox } from './CheckBox/CheckBox';
