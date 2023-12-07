@@ -35,7 +35,6 @@ const ModalLayout: React.FC<ModalLayoutProps> = ({
       onClick={() => {
         closeModal();
       }}
-      {...args}
     >
       <Box
         css={css`
@@ -45,6 +44,7 @@ const ModalLayout: React.FC<ModalLayoutProps> = ({
           width: auto;
         `}
         onClick={(e) => e.stopPropagation()}
+        {...args}
       >
         {children}
       </Box>

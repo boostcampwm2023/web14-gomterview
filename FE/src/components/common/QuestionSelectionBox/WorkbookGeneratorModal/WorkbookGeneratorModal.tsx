@@ -20,7 +20,7 @@ const WorkbookGeneratorModal: React.FC<WorkbookGeneratorModalProps> = ({
       css={css`
         width: 30rem;
         @media (max-width: ${theme.breakpoints.tablet}) {
-          width: 20rem;
+          width: 25rem;
         }
         @media (max-width: ${theme.breakpoints.mobileL}) {
           width: 100%;
