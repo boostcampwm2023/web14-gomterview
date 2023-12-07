@@ -16,17 +16,7 @@ const APIErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
       message: string;
     }>(error)
   ) {
-    if (error.code === 'ECONNABORTED') {
-      logAPIErrorToSentry(error, {
-        name: 'TimeoutException',
-        level: 'fatal',
-      });
-    }
-    // TODO: 요거는 어떻게 처리하지?
-
     const responseBody = error.response?.data;
-
-    //TODO: 각 핸들러로 분리
 
     switch (responseBody?.errorCode) {
       case 'W01':
@@ -169,6 +159,11 @@ const APIErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
           level: 'fatal',
         });
         break;
+      default:
+        logAPIErrorToSentry(error, {
+          name: 'ServerException',
+          level: 'fatal',
+        });
     }
     return <SomethingWrongErrorPage />;
   } else {
