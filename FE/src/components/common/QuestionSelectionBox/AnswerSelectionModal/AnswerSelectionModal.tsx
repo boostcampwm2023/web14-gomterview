@@ -7,6 +7,7 @@ import AnswerForm from './AnswerForm';
 import useAnswerDefaultMutation from '@/hooks/apis/mutations/useAnswerDefaultMutation';
 import { Question } from '@/types/question';
 import { Typography } from '@foundation/index';
+import { toast } from '@foundation/Toast/toast';
 
 type AnswerSelectionModalProps = {
   isOpen: boolean;
@@ -64,7 +65,12 @@ const AnswerSelectionModal: React.FC<AnswerSelectionModalProps> = ({
                       answerId: answer.answerId,
                     },
                     {
-                      onSuccess: () => closeModal(),
+                      onSuccess: () => {
+                        closeModal();
+                        toast.success('대표 답변이 변경되었습니다.', {
+                          position: 'bottomRight',
+                        });
+                      },
                     }
                   )
                 }
