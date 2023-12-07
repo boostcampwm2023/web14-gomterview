@@ -29,6 +29,7 @@ const NewWorkbookListButton = ({
       title: `${workbookData.title} 복사본`,
       content: workbookData.content,
       categoryId: workbookData.categoryId,
+      isPublic: workbookData.isPublic,
     });
 
     await newQuestionCopyMutate({
@@ -58,7 +59,7 @@ const NewWorkbookListButton = ({
           margin-left: 1rem;
         `}
       >
-        새로운 재생 목록 만들기
+        새로운 면접 세트 만들기
       </Typography>
     </button>
   );
