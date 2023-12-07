@@ -21,10 +21,7 @@ const interviewVideoPublicLoader = async ({
     .catch((e) => {
       if (axios.isAxiosError(e)) {
         process.env.NODE_ENV === 'development' && console.error(e.toJSON());
-        throw new Response(null, {
-          status: e.response?.status ?? 500,
-          statusText: e.message,
-        });
+        throw e;
       }
     });
   const queryState = queryClient.getQueryState(QUERY_KEY.VIDEO_HASH(videoHash));
