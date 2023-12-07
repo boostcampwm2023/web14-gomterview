@@ -130,9 +130,8 @@ const WorkbookDetailPage = () => {
           css={css`
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 1rem;
             padding: 1rem;
-
             background-color: ${theme.colors.border.weak};
             height: auto;
           `}
