@@ -25,7 +25,7 @@ const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
       element: (
         <UnknownErrorBoundary>
           <APIErrorBoundary>
-            <Outlet />,
+            <Outlet />
           </APIErrorBoundary>
         </UnknownErrorBoundary>
       ),
