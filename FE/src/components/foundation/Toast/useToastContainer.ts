@@ -38,7 +38,7 @@ const useToastContainer = () => {
     const list = toastListToArray();
     const positionGroup = new Map<ToastPosition, ToastProps[]>();
     list.forEach(([_, toastProps]) => {
-      const position = toastProps.position || 'topRight';
+      const position = toastProps.position || 'bottomRight';
       positionGroup.has(position)
         ? positionGroup.get(position)!.push(toastProps)
         : positionGroup.set(position, [toastProps]);
