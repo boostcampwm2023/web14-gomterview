@@ -1,12 +1,19 @@
 import { QueryClient } from '@tanstack/react-query';
 import { QUERY_KEY } from '@constants/queryKey';
 import { getMemberInfo } from '@/apis/member';
+import axios from 'axios';
 
 const rootLoader = async ({ queryClient }: { queryClient: QueryClient }) => {
-  await queryClient.ensureQueryData({
-    queryKey: QUERY_KEY.MEMBER,
-    queryFn: getMemberInfo,
-  });
+  await queryClient
+    .ensureQueryData({
+      queryKey: QUERY_KEY.MEMBER,
+      queryFn: getMemberInfo,
+    })
+    .catch((e) => {
+      if (axios.isAxiosError(e)) {
+        process.env.NODE_ENV === 'development' && console.error(e.toJSON());
+      }
+    });
 
   return true;
 };
