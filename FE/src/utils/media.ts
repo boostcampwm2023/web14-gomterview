@@ -17,7 +17,7 @@ export const getMedia = async (): Promise<MediaStream | null> => {
         height: 720,
       },
     });
-    toast.success('성공적으로 카메라에 연결되었습니다.');
+
     return media;
   } catch (error) {
     throw new Error();
