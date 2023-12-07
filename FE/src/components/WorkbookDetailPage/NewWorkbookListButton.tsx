@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import { Icon, Typography } from '@foundation/index';
 import useQuestionCopyMutation from '@hooks/apis/mutations/useQuestionCopyMutation';
 import useWorkbookPostMutation from '@hooks/apis/mutations/useWorkbookPostMutation';
+import { toast } from '@foundation/Toast/toast';
 
 const NewWorkbookListButton = ({
   selectedQuestionIds,
@@ -39,6 +40,8 @@ const NewWorkbookListButton = ({
       workbookId: result.workbookId,
       questionIds: selectedQuestionIds,
     });
+
+    toast.success('새로운 문제집에 선택된 질문들이 추가되었습니다.');
   };
 
   return (

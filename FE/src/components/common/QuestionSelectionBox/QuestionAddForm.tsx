@@ -2,7 +2,7 @@ import useInput from '@hooks/useInput';
 import useQuestionAdd from '@hooks/useQuestionAdd';
 import { css } from '@emotion/react';
 import { Button, Input } from '@foundation/index';
-
+import { toast } from '@foundation/Toast/toast';
 type QuestionAddFormProps = {
   workbookId: number;
 };
@@ -25,6 +25,7 @@ const QuestionAddForm: React.FC<QuestionAddFormProps> = ({ workbookId }) => {
       workbookId,
       value,
     });
+    toast.success('성공적으로 질문이 추가되었습니다.');
   };
 
   return (

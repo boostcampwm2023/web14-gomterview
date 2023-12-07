@@ -7,6 +7,7 @@ import { useState } from 'react';
 import useModal from '@hooks/useModal';
 import { WorkbookGeneratorModal } from '@common/index';
 import useWorkbookDelete from '@hooks/useWorkbookDelete';
+import { toast } from '@foundation/Toast/toast';
 
 type QuestionTabPanelHeaderProps = {
   workbook: ExcludeArray<WorkbookTitleListResDto>;
@@ -33,6 +34,7 @@ const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
 
   const handleWorkbookDeleteClick = () => {
     deleteWorkbook(workbook.workbookId);
+    toast.success('성공적으로 문제집이 삭제되었습니다.');
     onWorkbookDelete();
   };
 

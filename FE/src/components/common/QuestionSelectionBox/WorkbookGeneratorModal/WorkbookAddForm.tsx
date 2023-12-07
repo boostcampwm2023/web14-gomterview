@@ -8,7 +8,7 @@ import { theme } from '@styles/theme';
 import useCategoryQuery from '@hooks/apis/queries/useCategoryQuery';
 import useWorkbookAdd from '@hooks/useWorkbookAdd';
 import { ShareRangeToggle } from '@common/index';
-
+import { toast } from '@foundation/Toast/toast';
 type WorkbookAddFormProps = {
   closeModal: () => void;
 };
@@ -63,6 +63,9 @@ const WorkbookAddForm: React.FC<WorkbookAddFormProps> = ({ closeModal }) => {
       categoryId: selectedCategoryId,
       isPublic: isPublic,
     });
+
+    toast.success('성공적으로 문제집이 추가되었습니다.');
+
     resetState();
     closeModal();
   };

@@ -8,6 +8,7 @@ import { useState } from 'react';
 import NewWorkbookListButton from './NewWorkbookListButton';
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '@constants/path';
+import { toast } from '@foundation/Toast/toast';
 
 const AddWorkbookListModal = ({
   isOpen,
@@ -48,6 +49,8 @@ const AddWorkbookListModal = ({
         });
       })
     );
+    toast.success('모든 질문들이 복사되었습니다.');
+    toast.success('마이페이지에서 확인하실 수 있습니다');
   };
 
   const handleNavigate = () => {

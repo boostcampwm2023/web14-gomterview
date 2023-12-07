@@ -14,6 +14,7 @@ import useUserInfo from '@hooks/useUserInfo';
 import { theme } from '@styles/theme';
 import { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
+import { toast } from '@foundation/Toast/toast';
 
 const WorkbookDetailPage = () => {
   const [selectedQuestion, setSelectedQuestion] = useState<Question[]>([]);
@@ -41,10 +42,12 @@ const WorkbookDetailPage = () => {
     setSelectedQuestion((prev) => [...prev, question]);
   };
 
-  const allSelectQuestion = () =>
+  const allSelectQuestion = () => {
     setSelectedQuestion(
       questionWorkbookData?.map((question) => question) || []
     );
+    toast.success('모든 질문이 선택 되었습니다.');
+  };
 
   const allUnSelectQuestion = () => setSelectedQuestion([]);
 
