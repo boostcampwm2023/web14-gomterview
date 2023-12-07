@@ -29,6 +29,21 @@ export const saveToRedis = async (
   }
 };
 
+export const saveToRedisWithExpireIn = async (
+  key: string,
+  value: string,
+  ttl: number,
+) => {
+  const redis = new Redis(process.env.REDIS_URL as string);
+  try {
+    await redis.set(key, value, 'EX', ttl);
+  } catch (error) {
+    throw new RedisSaveException();
+  } finally {
+    await redis.quit();
+  }
+};
+
 export const deleteFromRedis = async (
   key: string,
   redis: Redis = getNewRedis(),
