@@ -47,7 +47,6 @@ const WorkbookEditForm: React.FC<WorkbookEditFormProps> = ({
   useEffect(() => {
     if (!workbookInfo) return;
 
-    console.log(workbookInfo);
     setSelectedCategoryIndex(findCategoryIndex(workbookInfo.categoryId));
     setIsPublic(workbookInfo.isPublic);
   }, [findCategoryIndex, isWorkbookFetching, workbookInfo]);
