@@ -8,9 +8,10 @@ import { QuestionRepository } from 'src/question/repository/question.repository'
 import { Question } from 'src/question/entity/question';
 import { Member } from 'src/member/entity/member';
 import { MemberRepository } from 'src/member/repository/member.repository';
+import { TokenModule } from 'src/token/token.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Video, Question, Member])],
+  imports: [TypeOrmModule.forFeature([Video, Question, Member]), TokenModule],
   controllers: [VideoController],
   providers: [
     VideoService,
