@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { HTMLElementTypes } from '@/types/utils';
+import { theme } from '@styles/theme';
 
 type CardCoverProps = {
   children: React.ReactNode;
@@ -26,7 +27,7 @@ const CardCover: React.FC<CardCoverProps> = ({
           bottom: 0;
           background-color: rgba(0, 0, 0, 0.3);
           border-radius: ${borderRadius};
-          z-index: 1;
+          z-index: ${theme.zIndex.contentOverlay.overlay1};
         }
       `}
       {...args}

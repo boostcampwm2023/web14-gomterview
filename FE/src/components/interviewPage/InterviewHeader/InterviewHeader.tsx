@@ -23,7 +23,7 @@ const InterviewHeader: React.FC<InterviewHeaderProps> = ({ isRecording }) => {
         width: 100%;
         height: 3.125rem;
         background-color: ${theme.colors.surface.black100};
-        z-index: 10;
+        z-index: ${theme.zIndex.header.content};
       `}
     >
       <RecordStatus isRecording={isRecording} />

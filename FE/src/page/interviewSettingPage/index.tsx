@@ -15,6 +15,7 @@ import { ProgressStepBar } from '@common/index';
 import StepPage from '@foundation/StepPages';
 import { InterviewSettingPageLayout } from '@components/interviewSettingPage';
 import ServiceTermsPage from './ServiceTermsPage';
+import { theme } from '@styles/theme';
 
 const FIRST_PAGE_INDEX = 0;
 const PREV_PAGE_INDEX = -1;
@@ -109,7 +110,7 @@ const InterviewSettingPage: React.FC = () => {
           width: 100%;
           background-color: rgba(255, 255, 255, 0.5);
           backdrop-filter: blur(10px); /* 10px 블러 효과 */
-          z-index: 10;
+          z-index: ${theme.zIndex.header.content};
         `}
       >
         <ProgressStepBar>

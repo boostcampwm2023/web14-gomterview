@@ -29,7 +29,7 @@ const Menu: React.FC<MenuProps> = ({
           width: 100vw;
           height: 100svh;
           background-color: ${backdropColor};
-          z-index: 99;
+          z-index: ${theme.zIndex.menu.backdrop};
         `}
       />
       <div
@@ -42,7 +42,7 @@ const Menu: React.FC<MenuProps> = ({
           padding: 0.25rem 0;
           background-color: ${theme.colors.surface.default};
           border-radius: 0.5rem;
-          z-index: 999;
+          z-index: ${theme.zIndex.menu.content};
         `}
         {...args}
       >

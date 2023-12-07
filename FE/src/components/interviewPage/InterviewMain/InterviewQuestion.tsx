@@ -16,7 +16,7 @@ const InterviewQuestion: React.FC<InterviewQuestionProps> = ({ question }) => {
         top: 3.125rem;
         left: 50%;
         transform: translateX(-50%);
-        z-index: 1;
+        z-index: ${theme.zIndex.contentOverlay.overlay5};
         width: 62.5rem;
         height: 5rem;
         background-color: ${theme.colors.surface.black100};

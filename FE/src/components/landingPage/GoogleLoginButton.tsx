@@ -24,7 +24,7 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ ...args }) => {
         border: 0.0625rem solid ${theme.colors.border.default};
         transition: transform 0.15s ease-in-out;
         background-color: ${theme.colors.surface.default};
-        z-index: 1;
+        z-index: ${theme.zIndex.contentOverlay.overlay5};
 
         &:hover {
           transform: translateY(-0.25rem);

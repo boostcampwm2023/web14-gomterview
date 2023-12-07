@@ -61,7 +61,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
             padding: 0.25rem;
             border-radius: 1rem;
             background-color: ${theme.colors.surface.default};
-            z-index: 1000;
+            z-index: ${theme.zIndex.contentOverlay.overlay5};
           `}
         >
           <Icon id="trash" width="20" height="20" />

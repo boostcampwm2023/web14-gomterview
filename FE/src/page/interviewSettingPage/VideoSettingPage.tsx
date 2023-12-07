@@ -83,7 +83,7 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
             position: absolute;
             top: 1rem;
             left: 1rem;
-            z-index: 1;
+            z-index: ${theme.zIndex.contentOverlay.overlay5};
             padding: 0.5rem;
             border-radius: 0.5rem;
             background-color: ${theme.colors.shadow.modalShadow};
