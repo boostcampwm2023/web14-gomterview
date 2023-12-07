@@ -5,6 +5,7 @@ import { Member } from 'src/member/entity/member';
 import { isEmpty } from 'class-validator';
 import { TokenService } from '../../token/service/token.service';
 import { BEARER_PREFIX } from 'src/constant/constant';
+import { getValueFromRedis } from 'src/util/redis.util';
 
 @Injectable()
 export class AuthService {
@@ -20,10 +21,14 @@ export class AuthService {
       member = await this.createMember(oauthRequest);
     }
 
-    return (
-      BEARER_PREFIX +
-      (await this.tokenService.assignToken(member.id, member.email))
-    );
+    const savedAccessToken = getValueFromRedis(member.email);
+    if (isEmpty(savedAccessToken)) {
+      return (
+        BEARER_PREFIX +
+        (await this.tokenService.assignToken(member.id, member.email))
+      );
+    }
+    return savedAccessToken;
   }
 
   async logout(accessToken: string) {
