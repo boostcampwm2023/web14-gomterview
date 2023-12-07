@@ -8,6 +8,7 @@ import { theme } from '@styles/theme';
 import useWorkbookQuery from '@hooks/apis/queries/useWorkbookQuery';
 import useCategoryQuery from '@hooks/apis/queries/useCategoryQuery';
 import useWorkbookEdit from '@hooks/useWorkbookEdit';
+import { ShareRangeToggle } from '@common/index';
 
 type WorkbookEditFormProps = {
   workbookId: number;
@@ -24,6 +25,7 @@ const WorkbookEditForm: React.FC<WorkbookEditFormProps> = ({
   const { data: categories } = useCategoryQuery();
   const [activeValidationError, setActiveValidationError] = useState(false);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
+  const [isPublic, setIsPublic] = useState(true);
   const {
     value: workbookTitle,
     onChange: handleWorkbookTitleChange,
@@ -97,6 +99,17 @@ const WorkbookEditForm: React.FC<WorkbookEditFormProps> = ({
           categories={categories}
           selectedCategoryIndex={selectedCategoryIndex}
           onClick={handleCategoryClick}
+        />
+      </LabelBox>
+      <LabelBox labelName="공개 범위">
+        <ShareRangeToggle
+          id="workbook-add-form-sharge-range"
+          isPublic={isPublic}
+          onClick={() => setIsPublic((prev) => !prev)}
+          publicText={{
+            text: '곰터뷰의 모든 사용자',
+            description: '비회원을 포함한 곰터뷰의 모든 사용자에게 공개됩니다.',
+          }}
         />
       </LabelBox>
       <LabelBox labelName="설명">

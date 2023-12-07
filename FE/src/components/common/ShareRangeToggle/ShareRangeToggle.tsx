@@ -49,7 +49,6 @@ const ShareRangeToggle: React.FC<ShareRangeToggleProps> = ({
           css={css`
             display: flex;
             flex-direction: column;
-            //row-gap: 0.125rem;
           `}
         >
           <Typography variant="body3">
