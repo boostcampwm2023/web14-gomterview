@@ -70,6 +70,7 @@ const ToastItem: React.FC<ToastProps> = ({
             border-radius: 0.5rem;
             overflow: hidden;
             background-color: ${theme.colors.surface.default};
+            cursor: pointer;
             animation: ${isExiting
               ? css`
                   ${ToastFadeOutUpAnimation} 0.8s forwards
