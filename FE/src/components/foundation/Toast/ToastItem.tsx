@@ -65,8 +65,10 @@ const ToastItem: React.FC<ToastProps> = ({
             position: relative;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             row-gap: 0.5rem;
             min-width: 20rem;
+            height: 4rem;
             border-radius: 0.5rem;
             overflow: hidden;
             background-color: ${theme.colors.surface.default};
