@@ -78,5 +78,6 @@ export class Workbook extends DefaultEntity {
     this.title = updateWorkbookRequest.title;
     this.content = updateWorkbookRequest.content;
     this.category = category;
+    this.isPublic = updateWorkbookRequest.isPublic;
   }
 }
