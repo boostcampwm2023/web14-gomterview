@@ -1,8 +1,8 @@
-import { Logo } from '@common/index';
 import Layout from '@components/layout/Layout';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
-import MyPageHeader from './MyPageHeader';
+import { Header } from '@components/layout';
+import { MyPageHeader } from '@components/myPage/index';
 
 type MyPageLayoutProps = {
   children: React.ReactNode;
@@ -11,13 +11,7 @@ type MyPageLayoutProps = {
 const MyPageLayout: React.FC<MyPageLayoutProps> = ({ children }) => {
   return (
     <div>
-      <div
-        css={css`
-          padding: 1.5rem;
-        `}
-      >
-        <Logo />
-      </div>
+      <Header />
       <Layout
         direction="column"
         css={css`
