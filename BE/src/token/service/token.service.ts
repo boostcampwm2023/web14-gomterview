@@ -58,12 +58,17 @@ export class TokenService {
     }
   }
 
-  async findMemberByToken(singleToken: string) {
+  async findMemberByToken(
+    singleToken: string,
+    throwException: boolean = false,
+  ) {
     try {
-      return await this.memberRepository.findById(
-        (await this.getPayload(singleToken)).id,
-      );
+      const payload = await this.getPayload(singleToken);
+      const memberId = payload.id;
+
+      return await this.memberRepository.findById(memberId);
     } catch (error) {
+      if (throwException) throw error;
       return null;
     }
   }

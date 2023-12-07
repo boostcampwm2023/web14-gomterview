@@ -2,14 +2,10 @@ import { ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { TokenService } from '../service/token.service';
 import { getTokenValue } from 'src/util/token.util';
-import { MemberRepository } from 'src/member/repository/member.repository';
 
 @Injectable()
 export class TokenHardGuard extends AuthGuard('jwt') {
-  constructor(
-    private tokenService: TokenService,
-    private memberRepository: MemberRepository,
-  ) {
+  constructor(private tokenService: TokenService) {
     super();
   }
 
@@ -26,7 +22,6 @@ export class TokenHardGuard extends AuthGuard('jwt') {
   }
 
   private async validateToken(token: string) {
-    const payload = await this.tokenService.getPayload(token);
-    return this.memberRepository.findById(payload.id);
+    return this.tokenService.findMemberByToken(token, true);
   }
 }
