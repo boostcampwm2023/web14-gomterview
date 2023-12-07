@@ -7,9 +7,11 @@ import useWorkbookPostMutation from '@hooks/apis/mutations/useWorkbookPostMutati
 const NewWorkbookListButton = ({
   selectedQuestionIds,
   workbookData,
+  onAddNewWorkbook,
 }: {
   selectedQuestionIds: number[];
   workbookData: WorkbookEntity;
+  onAddNewWorkbook: () => void;
 }) => {
   const { mutateAsync: newWorkbookMutate } = useWorkbookPostMutation();
   const { mutateAsync: newQuestionCopyMutate } = useQuestionCopyMutation();
@@ -17,7 +19,8 @@ const NewWorkbookListButton = ({
   const handleNewWorkbook = () => {
     try {
       void createNewWorkbook();
-      //TODO: 이 다음에는 어떻게 해줄까...?
+      onAddNewWorkbook();
+      //TODO: (해민)이 다음에는 어떻게 해줄까...? (수민)일단 마이페이지로 보낼게요
     } catch (err) {
       console.log(err);
       throw err;
