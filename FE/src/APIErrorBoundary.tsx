@@ -60,11 +60,11 @@ const APIErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
           url: API.REISSUE,
           withCredentials: true,
         })
-          .then((data) => {
+          .then(() => {
             return api.request(error.config!);
             // TODO: 타입 처리 필요
           })
-          .catch((err) => {
+          .catch(() => {
             alert('세션이 만료되었습니다. 다시 로그인해 주시기 바랍니다.');
             return <Navigate to={PATH.ROOT} />;
           });

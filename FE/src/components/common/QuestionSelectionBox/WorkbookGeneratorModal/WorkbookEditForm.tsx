@@ -56,13 +56,7 @@ const WorkbookEditForm: React.FC<WorkbookEditFormProps> = ({
       setActiveValidationError(true);
       return;
     }
-    console.log({
-      workbookId: workbookId,
-      title: workbookTitle,
-      content: workbookContent,
-      categoryId: selectedCategoryId,
-      isPublic: isPublic,
-    });
+
     editWorkbook({
       workbookId: workbookId,
       title: workbookTitle,
