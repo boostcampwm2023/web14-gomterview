@@ -3,6 +3,7 @@ import WorkbookEditForm from '@common/QuestionSelectionBox/WorkbookGeneratorModa
 import WorkbookAddForm from '@common/QuestionSelectionBox/WorkbookGeneratorModal/WorkbookAddForm';
 import ModalHeader from '@foundation/Modal/ModalHeader';
 import { Modal } from '@foundation/index';
+import { theme } from '@styles/theme';
 
 type WorkbookGeneratorModalProps = {
   closeModal: () => void;
@@ -13,13 +14,23 @@ const WorkbookGeneratorModal: React.FC<WorkbookGeneratorModalProps> = ({
   workbookId,
 }) => {
   return (
-    <Modal isOpen closeModal={closeModal}>
+    <Modal
+      isOpen
+      closeModal={closeModal}
+      css={css`
+        width: 30rem;
+        @media (max-width: ${theme.breakpoints.tablet}) {
+          width: 20rem;
+        }
+        @media (max-width: ${theme.breakpoints.mobileL}) {
+          width: 100%;
+          margin: 0 0.5rem;
+        }
+      `}
+    >
       <ModalHeader closeModal={closeModal}>새 면접 세트</ModalHeader>
       <div
         css={css`
-          min-width: 40vw;
-          max-width: 40rem;
-          width: 100%;
           max-height: 80vh;
           padding: 1.5rem;
         `}

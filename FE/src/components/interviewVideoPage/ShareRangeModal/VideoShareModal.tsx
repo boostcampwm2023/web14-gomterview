@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import Modal from '@foundation/Modal';
 import { Typography } from '@foundation/index';
 import useToggleVideoPublicMutation from '@hooks/apis/mutations/useToggleVideoPublicMutation';
-import ShareRangeSetting from './ShareRangeSetting';
+import ShareRangeToggle from '@common/ShareRangeToggle/ShareRangeToggle';
 import VideoShareModalFooter from './VideoShareModalFooter';
 
 type VideoShareModalProps = {
@@ -42,10 +42,19 @@ const VideoShareModal: React.FC<VideoShareModalProps> = ({
         {isPending ? (
           '로딩중' //TODO 디자인은 임시입니다.
         ) : (
-          <ShareRangeSetting
-            isPublic={!!hash}
-            onClick={handleVideoShareToggleClick}
-          />
+          <div
+            css={css`
+              display: flex;
+              flex-direction: column;
+              row-gap: 0.75rem;
+            `}
+          >
+            <Typography variant="body2">공개 범위</Typography>
+            <ShareRangeToggle
+              isPublic={!!hash}
+              onClick={handleVideoShareToggleClick}
+            />
+          </div>
         )}
         <VideoShareModalFooter hash={hash} closeModal={closeModal} />
       </div>
