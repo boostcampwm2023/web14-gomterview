@@ -7,6 +7,7 @@ import useWorkbookTitleListQuery from '@hooks/apis/queries/useWorkbookTitleListQ
 import { useState } from 'react';
 import NewWorkbookListButton from './NewWorkbookListButton';
 import { useNavigate } from 'react-router-dom';
+import { PATH } from '@constants/path';
 
 const AddWorkbookListModal = ({
   isOpen,
@@ -58,7 +59,7 @@ const AddWorkbookListModal = ({
     try {
       void mutateAllQuestionCopy();
       closeModal();
-      // TODO: 문제집 리스트가 있는 페이지로 이동해야함
+      navigate(PATH.WORKBOOK);
     } catch (error) {
       console.error('문제집 복사 중 오류 발생', error);
       throw error;
