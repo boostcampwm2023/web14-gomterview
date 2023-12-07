@@ -4,7 +4,6 @@ import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
 import { Box, Icon } from '@foundation/index';
 import { collapseToast } from '@foundation/Toast/collapseToast';
-import useAnimationEnd from '@hooks/useAnimationEnd';
 import { eventManager } from '@foundation/Toast/eventManger';
 import {
   ToastFadeOutUpAnimation,
@@ -22,7 +21,6 @@ const ToastItem: React.FC<ToastProps> = ({
   pauseOnHover = true,
 }) => {
   const toastRef = useRef<HTMLDivElement>(null);
-  const progressRef = useRef<HTMLDivElement>(null);
   const [isExiting, setIsExiting] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
@@ -33,13 +31,6 @@ const ToastItem: React.FC<ToastProps> = ({
       eventManager.emit(ToastEvent.Delete, toastId);
     });
   }, [toastId]);
-
-  useAnimationEnd(toastRef, onExitingAnimationEnd, [toastId]);
-
-  useAnimationEnd(progressRef, () => autoClose && onProgressAnimationEnd, [
-    autoClose,
-    onProgressAnimationEnd,
-  ]);
 
   const handleClick = () => {
     closeOnClick && onProgressAnimationEnd();
@@ -66,6 +57,7 @@ const ToastItem: React.FC<ToastProps> = ({
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        onAnimationEnd={onExitingAnimationEnd}
         css={[
           css`
             position: relative;
@@ -96,7 +88,7 @@ const ToastItem: React.FC<ToastProps> = ({
           {text}
         </div>
         <div
-          ref={progressRef}
+          onAnimationEnd={() => autoClose && onProgressAnimationEnd}
           css={[
             css`
               position: absolute;
