@@ -6,6 +6,7 @@ export type WorkbookEntity = {
   copyCount: number;
   title: string;
   content: string;
+  isPublic: boolean;
 };
 
 /**
@@ -14,7 +15,7 @@ export type WorkbookEntity = {
  */
 export type WorkbookAddReqDto = Pick<
   WorkbookEntity,
-  'title' | 'content' | 'categoryId'
+  'title' | 'content' | 'categoryId' | 'isPublic'
 >;
 
 /**
@@ -50,5 +51,5 @@ export type WorkbookResDto = WorkbookEntity;
  */
 export type WorkbookPatchReqDto = Pick<
   WorkbookEntity,
-  'workbookId' | 'title' | 'content' | 'categoryId'
+  'workbookId' | 'title' | 'content' | 'categoryId' | 'isPublic'
 >;

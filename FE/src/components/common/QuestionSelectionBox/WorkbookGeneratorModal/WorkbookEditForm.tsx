@@ -60,6 +60,7 @@ const WorkbookEditForm: React.FC<WorkbookEditFormProps> = ({
       title: workbookTitle,
       content: workbookContent,
       categoryId: selectedCategoryId,
+      isPublic: true,
     });
   };
 

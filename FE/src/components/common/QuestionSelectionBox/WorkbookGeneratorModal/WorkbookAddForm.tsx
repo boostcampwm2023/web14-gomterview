@@ -59,6 +59,7 @@ const WorkbookAddForm: React.FC<WorkbookAddFormProps> = ({ closeModal }) => {
       title: workbookTitle,
       content: workbookContent,
       categoryId: selectedCategoryId,
+      isPublic: true,
     });
     resetState();
     closeModal();
