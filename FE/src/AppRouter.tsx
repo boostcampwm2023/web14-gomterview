@@ -11,7 +11,7 @@ import InterviewVideoPublicPage from '@page/interviewVideoPublicPage';
 import InterviewVideoPublicLoader from '@routes/interviewVideoPublicLoader';
 import rootLoader from '@routes/rootLoader';
 import ErrorPage from '@page/errorPage';
-import InterviewWorkbookDetailPage from '@page/interviewWorkbookDetailPage';
+import WorkbookDetailPage from '@page/WorkbookDetailPage';
 import interviewWorkbookDetailLoader from '@routes/interviewWorkbookDetailLoader';
 import WorkbookPage from '@page/workbookPage';
 
@@ -59,7 +59,7 @@ const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
         },
         {
           path: PATH.INTERVIEW_WORKBOOK_DETAIL(),
-          element: <InterviewWorkbookDetailPage />,
+          element: <WorkbookDetailPage />,
           loader: ({ params }) => interviewWorkbookDetailLoader(params),
         },
         {

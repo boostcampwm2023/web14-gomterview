@@ -3,9 +3,9 @@ import QuestionAccordion from '@common/QuestionAccordion/QuestionAccordion';
 import { WorkbookCard } from '@common/index';
 import {
   AddWorkbookListModal,
-  InterviewWorkbookDetailPageLayout,
+  WorkbookDetailPageLayout,
   StartWithSelectedQuestionModal,
-} from '@components/interviewWorkbookDetailPage';
+} from '@components/WorkbookDetailPage';
 import { css } from '@emotion/react';
 import { Box, Button, CheckBox } from '@foundation/index';
 import useQuestionWorkbookQuery from '@hooks/apis/queries/useQuestionWorkbookQuery';
@@ -15,7 +15,7 @@ import { theme } from '@styles/theme';
 import { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
 
-const InterviewWorkbookDetailPage = () => {
+const WorkbookDetailPage = () => {
   const [selectedQuestionId, setSelectedQuestionId] = useState<number[]>([]);
   const [selectedQuestion, setSelectedQuestion] = useState<Question[]>([]);
   const [allSelected, setAllSelected] = useState<boolean>(false);
@@ -86,7 +86,7 @@ const InterviewWorkbookDetailPage = () => {
         selectedQuestionIds={selectedQuestionId}
         workbookData={workbookData}
       />
-      <InterviewWorkbookDetailPageLayout>
+      <WorkbookDetailPageLayout>
         <WorkbookCard
           css={css`
             height: auto;
@@ -144,9 +144,9 @@ const InterviewWorkbookDetailPage = () => {
             );
           })}
         </Box>
-      </InterviewWorkbookDetailPageLayout>
+      </WorkbookDetailPageLayout>
     </>
   );
 };
 
-export default InterviewWorkbookDetailPage;
+export default WorkbookDetailPage;

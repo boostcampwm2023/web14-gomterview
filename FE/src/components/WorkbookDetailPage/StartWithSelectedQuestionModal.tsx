@@ -46,7 +46,6 @@ const StartWithSelectedQuestionModal = ({
   const handleStartInterview = () => {
     try {
       addNewWorkbook();
-
       closeModal();
 
       navigate(PATH.INTERVIEW_SETTING_CONNECTION);
