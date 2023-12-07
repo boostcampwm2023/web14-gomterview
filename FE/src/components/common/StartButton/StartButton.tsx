@@ -21,7 +21,7 @@ const InterviewStartButton: React.FC = () => {
             background: ${theme.gradient.linear.blue};
             box-shadow: ${theme.shadow.buttonLargeDefaultShadow};
             width: 100%;
-            z-index: 2;
+            z-index: ${theme.zIndex.contentOverlay.overlay5};
 
             &:hover {
               transform: translateY(0.25rem);

@@ -1,5 +1,6 @@
 import Layout from '@/components/layout/Layout';
 import { css } from '@emotion/react';
+import { theme } from '@styles/theme';
 
 type InterviewPageLayoutProps = {
   children: React.ReactNode;
@@ -15,7 +16,7 @@ const InterviewPageLayout: React.FC<InterviewPageLayoutProps> = ({
           width: 100vw;
           height: 100vh;
           position: fixed;
-          z-index: -100;
+          z-index: ${theme.zIndex.bottom.default};
           background-color: black;
         `}
       />

@@ -24,7 +24,7 @@ const ModalLayout: React.FC<ModalLayoutProps> = ({
         align-items: center;
         top: 0;
         left: 0;
-        z-index: 100;
+        z-index: ${theme.zIndex.modal.backdrop};
         width: 100%;
         height: 100%;
         background-color: ${theme.colors.shadow.modalShadow};
@@ -36,7 +36,7 @@ const ModalLayout: React.FC<ModalLayoutProps> = ({
     >
       <Box
         css={css`
-          z-index: 101;
+          z-index: ${theme.zIndex.modal.content};
           background-color: ${theme.colors.text.white};
           height: auto;
           width: auto;

@@ -38,7 +38,6 @@ const NavigationMenu: React.FC<PropsWithChildren> = ({ children }) => {
           margin-top: -3rem;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
           animation: ${dropDown} 300ms ease-out;
-          z-index: 999;
         `}
       >
         {children}

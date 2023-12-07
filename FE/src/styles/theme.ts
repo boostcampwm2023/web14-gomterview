@@ -3,8 +3,16 @@ import { typography } from './_typography';
 import { shadow } from '@styles/_shadow';
 import { gradient } from '@styles/_gradient';
 import { breakpoints } from '@styles/_breakpoints';
+import { zIndex } from '@styles/_zIndex';
 
-export const theme = { colors, typography, shadow, gradient, breakpoints };
+export const theme = {
+  colors,
+  typography,
+  shadow,
+  gradient,
+  breakpoints,
+  zIndex,
+};
 export type ThemeType = typeof theme;
 
 /*
