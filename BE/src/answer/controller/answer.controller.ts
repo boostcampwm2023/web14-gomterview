@@ -24,6 +24,7 @@ import { createApiResponseOption } from '../../util/swagger.util';
 import { Member } from '../../member/entity/member';
 import { AnswerResponse } from '../dto/answerResponse';
 import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
+import { TokenHardGuard } from 'src/token/guard/token.hard.guard';
 
 @ApiTags('answer')
 @Controller('/api/answer')
@@ -31,7 +32,7 @@ export class AnswerController {
   constructor(private answerService: AnswerService) {}
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(TokenHardGuard)
   @ApiCookieAuth()
   @ApiBody({ type: CreateAnswerRequest })
   @ApiOperation({
@@ -53,7 +54,7 @@ export class AnswerController {
   }
 
   @Post('default')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(TokenHardGuard)
   @ApiCookieAuth()
   @ApiBody({ type: DefaultAnswerRequest })
   @ApiOperation({
@@ -88,7 +89,7 @@ export class AnswerController {
   }
 
   @Delete(':answerId')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(TokenHardGuard)
   @ApiCookieAuth()
   @ApiOperation({
     summary: '답변 삭제',

@@ -31,6 +31,7 @@ import { OptionalGuard } from '../../util/decorator.util';
 import { TokenSoftGuard } from '../../token/guard/token.soft.guard';
 import { isEmpty } from 'class-validator';
 import { UpdateWorkbookRequest } from '../dto/updateWorkbookRequest';
+import { TokenHardGuard } from 'src/token/guard/token.hard.guard';
 
 @ApiTags('workbook')
 @Controller('/api/workbook')
@@ -38,7 +39,7 @@ export class WorkbookController {
   constructor(private workbookService: WorkbookService) {}
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(TokenHardGuard)
   @ApiCookieAuth()
   @ApiBody({ type: CreateWorkbookRequest })
   @ApiOperation({
@@ -111,7 +112,7 @@ export class WorkbookController {
   }
 
   @Patch()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(TokenHardGuard)
   @ApiCookieAuth()
   @ApiBody({ type: UpdateWorkbookRequest })
   @ApiOperation({
@@ -134,7 +135,7 @@ export class WorkbookController {
   }
 
   @Delete('/:workbookId')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(TokenHardGuard)
   @ApiCookieAuth()
   @ApiOperation({
     summary: '문제집 삭제',

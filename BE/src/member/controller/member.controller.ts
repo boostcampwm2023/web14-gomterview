@@ -1,5 +1,4 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { MemberResponse } from '../dto/memberResponse';
 import {
@@ -13,6 +12,7 @@ import { createApiResponseOption } from 'src/util/swagger.util';
 import { MemberService } from '../service/member.service';
 import { validateManipulatedToken } from 'src/util/token.util';
 import { MemberNicknameResponse } from '../dto/memberNicknameResponse';
+import { TokenHardGuard } from 'src/token/guard/token.hard.guard';
 
 @Controller('/api/member')
 @ApiTags('member')
@@ -20,7 +20,7 @@ export class MemberController {
   constructor(private memberService: MemberService) {}
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(TokenHardGuard)
   @ApiCookieAuth() // 문서 상에 자물쇠 아이콘을 표시하여 쿠키가 필요하다는 것을 나타냄
   @ApiOperation({
     summary: '회원 정보를 반환하는 메서드',
@@ -39,7 +39,6 @@ export class MemberController {
   }
 
   @Get('/name')
-  @ApiCookieAuth()
   @ApiOperation({
     summary: '면접 화면에 표출할 이름을 반환하는 메서드',
   })

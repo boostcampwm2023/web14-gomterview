@@ -32,6 +32,7 @@ import { SingleVideoResponse } from '../dto/singleVideoResponse';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UPLOAD_UTIL } from '../../util/encoder.util';
 import { UploadVideoRequest } from '../dto/uploadVideoRequest';
+import { TokenHardGuard } from 'src/token/guard/token.hard.guard';
 
 @Controller('/api/video')
 @ApiTags('video')
@@ -39,7 +40,7 @@ export class VideoController {
   constructor(private videoService: VideoService) {}
 
   @Post('upload')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(TokenHardGuard)
   @ApiCookieAuth()
   @ApiBody({ type: UploadVideoRequest })
   @ApiOperation({
@@ -67,7 +68,7 @@ export class VideoController {
   }
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(TokenHardGuard)
   @ApiCookieAuth()
   @ApiBody({ type: CreateVideoRequest })
   @ApiOperation({
@@ -83,7 +84,7 @@ export class VideoController {
   }
 
   @Post('/pre-signed')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(TokenHardGuard)
   @ApiCookieAuth()
   @ApiOperation({
     summary: 'Pre-Signed URL을 발급',
@@ -101,7 +102,7 @@ export class VideoController {
   }
 
   @Get('/all')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(TokenHardGuard)
   @ApiCookieAuth()
   @ApiOperation({
     summary: '자신의 모든 비디오 정보를 반환',
@@ -135,7 +136,7 @@ export class VideoController {
   }
 
   @Get(':videoId')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(TokenHardGuard)
   @ApiCookieAuth()
   @ApiOperation({
     summary: '비디오 상세 정보를 반환',
@@ -155,7 +156,7 @@ export class VideoController {
   }
 
   @Patch(':videoId')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(TokenHardGuard)
   @ApiCookieAuth()
   @ApiOperation({
     summary: '비디오 공개/비공개 상태를 전환',
@@ -177,7 +178,7 @@ export class VideoController {
   }
 
   @Delete(':videoId')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(TokenHardGuard)
   @ApiCookieAuth()
   @ApiOperation({
     summary: '비디오 삭제',
