@@ -27,6 +27,7 @@ const APIErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
     const responseBody = error.response?.data;
 
     //TODO: 각 핸들러로 분리
+
     switch (responseBody?.errorCode) {
       case 'W01':
         logAPIErrorToSentry(error, {
@@ -51,7 +52,8 @@ const APIErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
           name: 'InvalidTokenException',
           level: 'warning',
         });
-        break;
+        return;
+      // 페이지 이동은 하지 않는다.
       case 'T02':
         axios({
           method: 'patch',
@@ -98,7 +100,6 @@ const APIErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
         });
         break;
 
-      // TODO: C01 어디갔지?
       case 'C02':
         logAPIErrorToSentry(error, {
           name: 'CategoryNotFoundException',
