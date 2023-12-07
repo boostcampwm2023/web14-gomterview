@@ -10,18 +10,28 @@ import myPageLoader from '@routes/myPageLoader';
 import InterviewVideoPublicPage from '@page/interviewVideoPublicPage';
 import InterviewVideoPublicLoader from '@routes/interviewVideoPublicLoader';
 import rootLoader from '@routes/rootLoader';
-import ErrorPage from '@page/errorPage';
 import WorkbookDetailPage from '@page/WorkbookDetailPage';
+import LoaderErrorPage from '@page/errorPage/Loader';
+import InterviewWorkbookDetailPage from '@page/interviewWorkbookDetailPage';
 import interviewWorkbookDetailLoader from '@routes/interviewWorkbookDetailLoader';
 import WorkbookPage from '@page/workbookPage';
+import UnknownErrorBoundary from './UnknownErrorBoundary';
+import APIErrorBoundary from './APIErrorBoundary';
+import SomethingWrongErrorPage from '@page/errorPage/SomethingWrong';
 
 const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
   const routes = createBrowserRouter([
     {
       path: PATH.ROOT,
-      element: <Outlet />,
+      element: (
+        <UnknownErrorBoundary>
+          <APIErrorBoundary>
+            <Outlet />,
+          </APIErrorBoundary>
+        </UnknownErrorBoundary>
+      ),
       loader: () => rootLoader({ queryClient: queryClient }),
-      errorElement: <ErrorPage />,
+      errorElement: <LoaderErrorPage />,
       children: [
         {
           index: true,
@@ -64,7 +74,7 @@ const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
         },
         {
           path: '*',
-          element: <ErrorPage />,
+          element: <SomethingWrongErrorPage />,
         },
       ],
     },
