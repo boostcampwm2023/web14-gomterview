@@ -41,6 +41,7 @@ const AddWorkbookListModal = ({
     await Promise.all(
       selectedWorkbook.map((item) => {
         const workbookId = parseInt(item);
+
         return mutateAsync({
           workbookId: workbookId,
           questionIds: selectedQuestionIds,
@@ -59,9 +60,10 @@ const AddWorkbookListModal = ({
     try {
       void mutateAllQuestionCopy();
       closeModal();
-      navigate(PATH.WORKBOOK);
+      navigate(PATH.MYPAGE);
     } catch (error) {
       console.error('문제집 복사 중 오류 발생', error);
+
       throw error;
     }
   };

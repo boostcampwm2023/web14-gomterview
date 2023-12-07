@@ -16,7 +16,6 @@ import { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
 
 const WorkbookDetailPage = () => {
-  const [selectedQuestionId, setSelectedQuestionId] = useState<number[]>([]);
   const [selectedQuestion, setSelectedQuestion] = useState<Question[]>([]);
   const [allSelected, setAllSelected] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -33,25 +32,21 @@ const WorkbookDetailPage = () => {
   const { data: workbookData } = useWorkbookQuery({ workbookId: workbookId });
 
   const selectQuestion = (question: Question) => {
-    setSelectedQuestionId((prev) =>
-      prev.filter((id) => id !== question.questionId)
-    );
     setSelectedQuestion((prev) =>
       prev.filter((prev) => prev.questionId !== question.questionId)
     );
   };
 
   const unSelectQuestion = (question: Question) => {
-    setSelectedQuestionId((prev) => [...prev, question.questionId]);
     setSelectedQuestion((prev) => [...prev, question]);
   };
 
   const allSelectQuestion = () =>
-    setSelectedQuestionId(
-      questionWorkbookData?.map((question) => question.questionId) || []
+    setSelectedQuestion(
+      questionWorkbookData?.map((question) => question) || []
     );
 
-  const allUnSelectQuestion = () => setSelectedQuestionId([]);
+  const allUnSelectQuestion = () => setSelectedQuestion([]);
 
   const handleAllSelected = () => {
     allSelected ? allUnSelectQuestion() : allSelectQuestion();
@@ -65,7 +60,7 @@ const WorkbookDetailPage = () => {
   const openModal = () => {
     if (!userInfo) alert('로그인이 필요합니다.');
     else
-      selectedQuestionId.length < 1
+      selectedQuestion.length < 1
         ? alert('질문을 선택해주세요')
         : setIsModalOpen(true);
   };
@@ -83,7 +78,9 @@ const WorkbookDetailPage = () => {
       <AddWorkbookListModal
         isOpen={isModalOpen}
         closeModal={closeModal}
-        selectedQuestionIds={selectedQuestionId}
+        selectedQuestionIds={selectedQuestion.map(
+          (question) => question.questionId
+        )}
         workbookData={workbookData}
       />
       <WorkbookDetailPageLayout>
@@ -141,7 +138,7 @@ const WorkbookDetailPage = () => {
           `}
         >
           {questionWorkbookData?.map((question) => {
-            const isSelected = selectedQuestionId.includes(question.questionId);
+            const isSelected = selectedQuestion.includes(question);
             return (
               <QuestionAccordion
                 question={question}
