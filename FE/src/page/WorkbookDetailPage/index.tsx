@@ -1,9 +1,11 @@
+import { Question } from '@/types/question';
 import QuestionAccordion from '@common/QuestionAccordion/QuestionAccordion';
 import { WorkbookCard } from '@common/index';
 import {
   AddWorkbookListModal,
-  InterviewWorkbookDetailPageLayout,
-} from '@components/interviewWorkbookDetailPage';
+  WorkbookDetailPageLayout,
+  StartWithSelectedQuestionModal,
+} from '@components/WorkbookDetailPage';
 import { css } from '@emotion/react';
 import { Box, Button, CheckBox } from '@foundation/index';
 import useQuestionWorkbookQuery from '@hooks/apis/queries/useQuestionWorkbookQuery';
@@ -13,10 +15,14 @@ import { theme } from '@styles/theme';
 import { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
 
-const InterviewWorkbookDetailPage = () => {
-  const [selectedQuestionId, setSelectedQuestionId] = useState<number[]>([]);
+const WorkbookDetailPage = () => {
+  const [selectedQuestion, setSelectedQuestion] = useState<Question[]>([]);
   const [allSelected, setAllSelected] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [
+    isStartWithSelectedQuestionModalOpen,
+    setIsStartWithSelectedQuestionModalOpen,
+  ] = useState<boolean>(false);
 
   const { workbookId } = useLoaderData() as { workbookId: number };
   const userInfo = useUserInfo();
@@ -25,18 +31,22 @@ const InterviewWorkbookDetailPage = () => {
   });
   const { data: workbookData } = useWorkbookQuery({ workbookId: workbookId });
 
-  const selectQuestion = (questionId: number) =>
-    setSelectedQuestionId((prev) => prev.filter((id) => id !== questionId));
+  const selectQuestion = (question: Question) => {
+    setSelectedQuestion((prev) =>
+      prev.filter((prev) => prev.questionId !== question.questionId)
+    );
+  };
 
-  const unSelectQuestion = (questionId: number) =>
-    setSelectedQuestionId((prev) => [...prev, questionId]);
+  const unSelectQuestion = (question: Question) => {
+    setSelectedQuestion((prev) => [...prev, question]);
+  };
 
   const allSelectQuestion = () =>
-    setSelectedQuestionId(
-      questionWorkbookData?.map((question) => question.questionId) || []
+    setSelectedQuestion(
+      questionWorkbookData?.map((question) => question) || []
     );
 
-  const allUnSelectQuestion = () => setSelectedQuestionId([]);
+  const allUnSelectQuestion = () => setSelectedQuestion([]);
 
   const handleAllSelected = () => {
     allSelected ? allUnSelectQuestion() : allSelectQuestion();
@@ -50,7 +60,7 @@ const InterviewWorkbookDetailPage = () => {
   const openModal = () => {
     if (!userInfo) alert('로그인이 필요합니다.');
     else
-      selectedQuestionId.length < 1
+      selectedQuestion.length < 1
         ? alert('질문을 선택해주세요')
         : setIsModalOpen(true);
   };
@@ -59,13 +69,21 @@ const InterviewWorkbookDetailPage = () => {
 
   return (
     <>
+      <StartWithSelectedQuestionModal
+        isOpen={isStartWithSelectedQuestionModalOpen}
+        closeModal={() => setIsStartWithSelectedQuestionModalOpen(false)}
+        workbookData={workbookData}
+        questions={selectedQuestion}
+      />
       <AddWorkbookListModal
         isOpen={isModalOpen}
         closeModal={closeModal}
-        selectedQuestionIds={selectedQuestionId}
+        selectedQuestionIds={selectedQuestion.map(
+          (question) => question.questionId
+        )}
         workbookData={workbookData}
       />
-      <InterviewWorkbookDetailPageLayout>
+      <WorkbookDetailPageLayout>
         <WorkbookCard
           css={css`
             height: auto;
@@ -92,18 +110,35 @@ const InterviewWorkbookDetailPage = () => {
           >
             전체 선택하기
           </CheckBox>
-          <Button onClick={openModal}>질문 가져오기</Button>
+          <div
+            css={css`
+              display: flex;
+              gap: 0.3125rem;
+            `}
+          >
+            <Button
+              variants="secondary"
+              onClick={() => setIsStartWithSelectedQuestionModalOpen(true)}
+            >
+              인터뷰 시작하기
+            </Button>
+            <Button onClick={openModal}>질문 가져오기</Button>
+          </div>
         </div>
 
         <Box
           css={css`
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
             padding: 1rem;
+
             background-color: ${theme.colors.border.weak};
             height: auto;
           `}
         >
           {questionWorkbookData?.map((question) => {
-            const isSelected = selectedQuestionId.includes(question.questionId);
+            const isSelected = selectedQuestion.includes(question);
             return (
               <QuestionAccordion
                 question={question}
@@ -112,17 +147,17 @@ const InterviewWorkbookDetailPage = () => {
                 isEditable={false}
                 toggleSelected={() =>
                   isSelected
-                    ? selectQuestion(question.questionId)
-                    : unSelectQuestion(question.questionId)
+                    ? selectQuestion(question)
+                    : unSelectQuestion(question)
                 }
                 key={question.questionId}
               />
             );
           })}
         </Box>
-      </InterviewWorkbookDetailPageLayout>
+      </WorkbookDetailPageLayout>
     </>
   );
 };
 
-export default InterviewWorkbookDetailPage;
+export default WorkbookDetailPage;

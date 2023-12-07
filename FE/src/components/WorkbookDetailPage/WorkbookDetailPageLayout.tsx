@@ -2,7 +2,7 @@ import { Header, Layout } from '@components/layout';
 import { css } from '@emotion/react';
 import React, { PropsWithChildren } from 'react';
 
-const InterviewWorkbookDetailPageLayout: React.FC<PropsWithChildren> = ({
+const WorkbookDetailPageLayout: React.FC<PropsWithChildren> = ({
   children,
 }) => {
   return (
@@ -20,4 +20,4 @@ const InterviewWorkbookDetailPageLayout: React.FC<PropsWithChildren> = ({
   );
 };
 
-export default InterviewWorkbookDetailPageLayout;
+export default WorkbookDetailPageLayout;
