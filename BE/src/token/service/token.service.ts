@@ -26,8 +26,8 @@ export class TokenService {
     readonly jwtService: JwtService,
   ) {}
 
-  async assignToken(memberId: number) {
-    return await this.createToken(memberId);
+  async assignToken(memberId: number, email: string) {
+    return await this.createToken(memberId, email);
   }
 
   async removeToken(accessToken: string) {
@@ -74,7 +74,7 @@ export class TokenService {
   }
 
   async getDevToken() {
-    return this.createToken(1); // 1번은 developndd 이메일로 가입한 개발자용 회원임
+    return this.createToken(1, 'developndd@gmail.com'); // 1번은 developndd 이메일로 가입한 개발자용 회원임
   }
 
   private async updateToken(accessToken: string, refreshToken: string) {
@@ -104,12 +104,13 @@ export class TokenService {
     }
   }
 
-  private async createToken(memberId: number) {
+  private async createToken(memberId: number, email: string) {
     const accessToken = await this.signToken(memberId, ACCESS_TOKEN_EXPIRES_IN);
     const refreshToken = await this.signToken(
       memberId,
       REFRESH_TOKEN_EXPIRES_IN,
     );
+    await saveToRedis(email, accessToken);
     await saveToRedis(accessToken, refreshToken);
     return accessToken;
   }
