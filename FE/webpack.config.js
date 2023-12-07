@@ -28,7 +28,7 @@ module.exports = (env) => {
       static: path.resolve(__dirname, 'dist'),
       proxy: {
         '/api': {
-          target: 'https://api.gomterview.com',
+          target: 'https://dev.gomterview.com',
           changeOrigin: true,
         },
       },
