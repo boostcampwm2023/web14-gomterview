@@ -40,7 +40,6 @@ import {
 import { PutObjectCommandInput, S3 } from '@aws-sdk/client-s3';
 import { IDRIVE_CONFIG } from '../../config/idrive.config';
 import { UploadVideoRequest } from '../dto/uploadVideoRequest';
-import { validateQuestion } from '../../question/util/question.util';
 
 @Injectable()
 export class VideoService {
@@ -179,10 +178,10 @@ export class VideoService {
 
   private async createVideoTitle(member: Member, questionId: number) {
     const question = await this.questionRepository.findById(questionId);
-    validateQuestion(question);
-    return `${member.nickname}_${question.content}_${uuidv4()
-      .split('-')
-      .pop()}`;
+
+    return `${member.nickname}_${
+      question ? question.content : '삭제된 질문입니다'
+    }_${uuidv4().split('-').pop()}`;
   }
 
   private validateVideoOwnership(video: Video, memberId: number) {
