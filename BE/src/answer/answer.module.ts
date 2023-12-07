@@ -14,6 +14,7 @@ import { Category } from '../category/entity/category';
 import { Workbook } from '../workbook/entity/workbook';
 import { WorkbookRepository } from '../workbook/repository/workbook.repository';
 import { WorkbookModule } from '../workbook/workbook.module';
+import { TokenModule } from 'src/token/token.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { WorkbookModule } from '../workbook/workbook.module';
     QuestionModule,
     CategoryModule,
     WorkbookModule,
+    TokenModule,
   ],
   providers: [
     AnswerRepository,

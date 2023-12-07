@@ -12,7 +12,6 @@ import {
 import { QuestionService } from '../service/question.service';
 import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 import { Request, Response } from 'express';
-import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBody,
   ApiCookieAuth,
@@ -25,6 +24,7 @@ import { QuestionResponse } from '../dto/questionResponse';
 import { Member } from '../../member/entity/member';
 import { CopyQuestionRequest } from '../dto/copyQuestionRequest';
 import { WorkbookIdResponse } from '../../workbook/dto/workbookIdResponse';
+import { TokenHardGuard } from 'src/token/guard/token.hard.guard';
 
 @ApiTags('question')
 @Controller('/api/question')
@@ -32,7 +32,7 @@ export class QuestionController {
   constructor(private questionService: QuestionService) {}
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(TokenHardGuard)
   @ApiCookieAuth()
   @ApiBody({ type: CreateQuestionRequest })
   @ApiOperation({
@@ -57,7 +57,7 @@ export class QuestionController {
   }
 
   @Post('/copy')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(TokenHardGuard)
   @ApiCookieAuth()
   @ApiBody({ type: CopyQuestionRequest })
   @ApiOperation({
@@ -95,7 +95,7 @@ export class QuestionController {
   }
 
   @Delete(':questionId')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(TokenHardGuard)
   @ApiCookieAuth()
   @ApiOperation({
     summary: '질문 삭제',

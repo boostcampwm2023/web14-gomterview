@@ -17,6 +17,7 @@ import {
   createApiResponseOption,
   createApiResponseOptionWithHeaders,
 } from 'src/util/swagger.util';
+import { TokenHardGuard } from 'src/token/guard/token.hard.guard';
 
 @Controller('/api/auth')
 @ApiTags('auth')
@@ -61,7 +62,7 @@ export class AuthController {
   }
 
   @Delete('logout')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(TokenHardGuard)
   @ApiResponse(
     createApiResponseOption(
       200,
@@ -75,7 +76,7 @@ export class AuthController {
   }
 
   @Patch('reissue')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(TokenHardGuard)
   @ApiResponse(
     createApiResponseOptionWithHeaders(
       200,
