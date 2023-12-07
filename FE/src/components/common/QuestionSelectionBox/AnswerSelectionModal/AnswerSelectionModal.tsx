@@ -29,12 +29,24 @@ const AnswerSelectionModal: React.FC<AnswerSelectionModalProps> = ({
   if (!data) return;
 
   return (
-    <Modal isOpen={isOpen} closeModal={closeModal}>
+    <Modal
+      isOpen={isOpen}
+      closeModal={closeModal}
+      css={css`
+        width: 40rem;
+        @media (max-width: ${theme.breakpoints.tablet}) {
+          width: 30rem;
+        }
+        @media (max-width: ${theme.breakpoints.mobileL}) {
+          width: 100%;
+          margin: 0 1rem;
+        }
+      `}
+    >
       <Modal.header closeButtonVisible>답변 변경하기</Modal.header>
       <Modal.content>
         <div
           css={css`
-            max-width: 40rem;
             width: 100%;
             max-height: 80vh;
             overflow-y: auto;
