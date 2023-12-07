@@ -1,6 +1,6 @@
 import { Button, Input, InputArea } from '@foundation/index';
 import { css } from '@emotion/react';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useCallback, useState } from 'react';
 import LabelBox from '@common/QuestionSelectionBox/WorkbookGeneratorModal/LabelBox';
 import WorkbookCategory from '@common/QuestionSelectionBox/WorkbookGeneratorModal/WorkbookCategory';
 import useInput from '@hooks/useInput';
@@ -56,13 +56,19 @@ const WorkbookEditForm: React.FC<WorkbookEditFormProps> = ({
       setActiveValidationError(true);
       return;
     }
-
+    console.log({
+      workbookId: workbookId,
+      title: workbookTitle,
+      content: workbookContent,
+      categoryId: selectedCategoryId,
+      isPublic: isPublic,
+    });
     editWorkbook({
       workbookId: workbookId,
       title: workbookTitle,
       content: workbookContent,
       categoryId: selectedCategoryId,
-      isPublic: true,
+      isPublic: isPublic,
     });
   };
 

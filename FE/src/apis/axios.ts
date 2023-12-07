@@ -1,5 +1,5 @@
-import { BASE_URL } from '@/constants/api';
-import axios from 'axios';
+import { API, BASE_URL } from '@/constants/api';
+import axios, { AxiosError } from 'axios';
 
 const api = (() => {
   const axiosInstance = axios.create({
@@ -15,5 +15,28 @@ const api = (() => {
 
   return axiosInstance;
 })();
+
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error: AxiosError) => {
+    if (error.response?.status === 410) {
+      try {
+        await api({
+          method: 'patch',
+          url: API.REISSUE,
+          withCredentials: true,
+        });
+
+        return api.request(error.config!);
+      } catch (err) {
+        return Promise.reject(err);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export default api;
