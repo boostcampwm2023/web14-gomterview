@@ -1,8 +1,10 @@
+import { Question } from '@/types/question';
 import QuestionAccordion from '@common/QuestionAccordion/QuestionAccordion';
 import { WorkbookCard } from '@common/index';
 import {
   AddWorkbookListModal,
   InterviewWorkbookDetailPageLayout,
+  StartWithSelectedQuestionModal,
 } from '@components/interviewWorkbookDetailPage';
 import { css } from '@emotion/react';
 import { Box, Button, CheckBox } from '@foundation/index';
@@ -15,8 +17,13 @@ import { useLoaderData } from 'react-router-dom';
 
 const InterviewWorkbookDetailPage = () => {
   const [selectedQuestionId, setSelectedQuestionId] = useState<number[]>([]);
+  const [selectedQuestion, setSelectedQuestion] = useState<Question[]>([]);
   const [allSelected, setAllSelected] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [
+    isStartWithSelectedQuestionModalOpen,
+    setIsStartWithSelectedQuestionModalOpen,
+  ] = useState<boolean>(false);
 
   const { workbookId } = useLoaderData() as { workbookId: number };
   const userInfo = useUserInfo();
@@ -25,11 +32,19 @@ const InterviewWorkbookDetailPage = () => {
   });
   const { data: workbookData } = useWorkbookQuery({ workbookId: workbookId });
 
-  const selectQuestion = (questionId: number) =>
-    setSelectedQuestionId((prev) => prev.filter((id) => id !== questionId));
+  const selectQuestion = (question: Question) => {
+    setSelectedQuestionId((prev) =>
+      prev.filter((id) => id !== question.questionId)
+    );
+    setSelectedQuestion((prev) =>
+      prev.filter((prev) => prev.questionId !== question.questionId)
+    );
+  };
 
-  const unSelectQuestion = (questionId: number) =>
-    setSelectedQuestionId((prev) => [...prev, questionId]);
+  const unSelectQuestion = (question: Question) => {
+    setSelectedQuestionId((prev) => [...prev, question.questionId]);
+    setSelectedQuestion((prev) => [...prev, question]);
+  };
 
   const allSelectQuestion = () =>
     setSelectedQuestionId(
@@ -59,6 +74,12 @@ const InterviewWorkbookDetailPage = () => {
 
   return (
     <>
+      <StartWithSelectedQuestionModal
+        isOpen={isStartWithSelectedQuestionModalOpen}
+        closeModal={() => setIsStartWithSelectedQuestionModalOpen(false)}
+        workbookData={workbookData}
+        questions={selectedQuestion}
+      />
       <AddWorkbookListModal
         isOpen={isModalOpen}
         closeModal={closeModal}
@@ -92,6 +113,9 @@ const InterviewWorkbookDetailPage = () => {
           >
             전체 선택하기
           </CheckBox>
+          <Button onClick={() => setIsStartWithSelectedQuestionModalOpen(true)}>
+            선택된 질문으로 인터뷰 시작하기
+          </Button>
           <Button onClick={openModal}>질문 가져오기</Button>
         </div>
 
@@ -112,8 +136,8 @@ const InterviewWorkbookDetailPage = () => {
                 isEditable={false}
                 toggleSelected={() =>
                   isSelected
-                    ? selectQuestion(question.questionId)
-                    : unSelectQuestion(question.questionId)
+                    ? selectQuestion(question)
+                    : unSelectQuestion(question)
                 }
                 key={question.questionId}
               />
