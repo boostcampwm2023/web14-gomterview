@@ -45,6 +45,7 @@ const useWorkbookAdd = ({ onSuccess }: useWorkbookAddProps) => {
       copyCount: 0,
       title: workbook.title,
       content: workbook.content,
+      isPublic: workbook.isPublic,
     };
   };
 
