@@ -10,7 +10,18 @@ import ModalProvider from './modalProvider';
 import { ToastContainer } from '@foundation/Toast/ToastContainer';
 
 function App() {
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 1,
+        throwOnError: true,
+      },
+      mutations: {
+        retry: 1,
+        throwOnError: true,
+      },
+    },
+  });
 
   return (
     <QueryClientProvider client={queryClient}>

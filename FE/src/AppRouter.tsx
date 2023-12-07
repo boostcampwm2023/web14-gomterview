@@ -14,12 +14,20 @@ import ErrorPage from '@page/errorPage';
 import WorkbookDetailPage from '@page/WorkbookDetailPage';
 import interviewWorkbookDetailLoader from '@routes/interviewWorkbookDetailLoader';
 import WorkbookPage from '@page/workbookPage';
+import UnknownErrorBoundary from './UnknownErrorBoundary';
+import APIErrorBoundary from './APIErrorBoundary';
 
 const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
   const routes = createBrowserRouter([
     {
       path: PATH.ROOT,
-      element: <Outlet />,
+      element: (
+        <UnknownErrorBoundary>
+          <APIErrorBoundary>
+            <Outlet />,
+          </APIErrorBoundary>
+        </UnknownErrorBoundary>
+      ),
       loader: () => rootLoader({ queryClient: queryClient }),
       errorElement: <ErrorPage />,
       children: [
