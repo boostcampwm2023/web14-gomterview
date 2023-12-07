@@ -17,14 +17,14 @@ const emitToast = (type: ToastType, toastProps: ToastFunctionProps) => {
 };
 
 export const toast = {
-  default: (text: string, toastOptions: ToastOptions) =>
+  default: (text: string, toastOptions?: ToastOptions) =>
     emitToast('default', { text: text, ...toastOptions }),
-  info: (text: string, toastOptions: ToastOptions) =>
+  info: (text: string, toastOptions?: ToastOptions) =>
     emitToast('info', { text: text, ...toastOptions }),
-  success: (text: string, toastOptions: ToastOptions) =>
+  success: (text: string, toastOptions?: ToastOptions) =>
     emitToast('success', { text: text, ...toastOptions }),
-  warning: (text: string, toastOptions: ToastOptions) =>
+  warning: (text: string, toastOptions?: ToastOptions) =>
     emitToast('warning', { text: text, ...toastOptions }),
-  error: (text: string, toastOptions: ToastOptions) =>
+  error: (text: string, toastOptions?: ToastOptions) =>
     emitToast('error', { text: text, ...toastOptions }),
 };
