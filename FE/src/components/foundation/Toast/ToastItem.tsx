@@ -35,7 +35,7 @@ const ToastItem: React.FC<ToastProps> = ({
   };
 
   const handleClick = () => {
-    closeOnClick && handleProgressAnimationEnd();
+    closeOnClick && setIsExiting(true);
   };
 
   const handleMouseEnter = () => {
@@ -59,7 +59,7 @@ const ToastItem: React.FC<ToastProps> = ({
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        onAnimationEnd={handleExitingAnimationEnd}
+        onAnimationEnd={() => handleExitingAnimationEnd}
         css={[
           css`
             position: relative;
