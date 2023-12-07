@@ -51,7 +51,6 @@ const VideoShareModal: React.FC<VideoShareModalProps> = ({
           >
             <Typography variant="body2">공개 범위</Typography>
             <ShareRangeToggle
-              id="video-sharge-range"
               isPublic={!!hash}
               onClick={handleVideoShareToggleClick}
             />

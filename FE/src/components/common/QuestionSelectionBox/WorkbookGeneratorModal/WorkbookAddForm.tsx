@@ -109,7 +109,6 @@ const WorkbookAddForm: React.FC<WorkbookAddFormProps> = ({ closeModal }) => {
       </LabelBox>
       <LabelBox labelName="공개 범위">
         <ShareRangeToggle
-          id="workbook-add-form-sharge-range"
           isPublic={isPublic}
           onClick={() => setIsPublic((prev) => !prev)}
           publicText={{

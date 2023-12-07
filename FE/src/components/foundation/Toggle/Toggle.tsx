@@ -3,17 +3,19 @@ import {
   ToggleInputStyle,
   ToggleLabelStyle,
 } from '@foundation/Toggle/Toggle.styles';
+import { useId } from 'react';
 
 type ToggleProps = {
   isToggled: boolean;
   onClick: () => void;
 } & HTMLElementTypes<HTMLInputElement>;
-const Toggle: React.FC<ToggleProps> = ({ id, isToggled, onClick, ...args }) => {
+const Toggle: React.FC<ToggleProps> = ({ isToggled, onClick, ...args }) => {
+  const toggleId = useId();
   return (
     <>
       <input
         readOnly
-        id={id}
+        id={toggleId}
         type="checkbox"
         checked={isToggled}
         css={ToggleInputStyle}

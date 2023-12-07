@@ -97,7 +97,6 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({ workbook, tabIndex }) => {
               css={css`
                 margin-left: auto;
               `}
-              id="selected-question-toggle"
               onClick={toggleShowSelectionOption}
               isToggled={onlySelectedOption}
             />

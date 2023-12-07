@@ -7,7 +7,6 @@ import ShareRangeIcon from '../../interviewVideoPage/ShareRangeModal/ShareRangeI
 type ShareRangeToggleProps = {
   isPublic: boolean;
   onClick: () => void;
-  id: string;
   publicText?: {
     text: string;
     description: string;
@@ -20,7 +19,6 @@ type ShareRangeToggleProps = {
 const ShareRangeToggle: React.FC<ShareRangeToggleProps> = ({
   isPublic,
   onClick,
-  id,
   publicText = {
     text: '링크가 있는 모든 사용자',
     description: '링크가 있는 인터넷상의 모든 사용자가 볼 수 있습니다.',
@@ -59,7 +57,7 @@ const ShareRangeToggle: React.FC<ShareRangeToggleProps> = ({
           </Typography>
         </div>
       </div>
-      <Toggle id={id} isToggled={isPublic} onClick={onClick} />
+      <Toggle isToggled={isPublic} onClick={onClick} />
     </div>
   );
 };
