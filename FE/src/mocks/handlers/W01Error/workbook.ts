@@ -35,7 +35,7 @@ const workbookHandlers = [
     return HttpResponse.json(
       {
         message: '문제집을 찾을 수 없습니다.',
-        errorCode: 'W01Error',
+        errorCode: 'W01',
       },
       { status: 404 }
     );
@@ -44,7 +44,7 @@ const workbookHandlers = [
     return HttpResponse.json(
       {
         message: '문제집을 찾을 수 없습니다.',
-        errorCode: 'W01Error',
+        errorCode: 'W01',
       },
       { status: 404 }
     );
@@ -53,7 +53,7 @@ const workbookHandlers = [
     return HttpResponse.json(
       {
         message: '문제집을 찾을 수 없습니다.',
-        errorCode: 'W01Error',
+        errorCode: 'W01',
       },
       { status: 404 }
     );
