@@ -113,15 +113,29 @@ const WorkbookDetailPage = () => {
           >
             전체 선택하기
           </CheckBox>
-          <Button onClick={() => setIsStartWithSelectedQuestionModalOpen(true)}>
-            선택된 질문으로 인터뷰 시작하기
-          </Button>
-          <Button onClick={openModal}>질문 가져오기</Button>
+          <div
+            css={css`
+              display: flex;
+              gap: 0.3125rem;
+            `}
+          >
+            <Button
+              variants="secondary"
+              onClick={() => setIsStartWithSelectedQuestionModalOpen(true)}
+            >
+              인터뷰 시작하기
+            </Button>
+            <Button onClick={openModal}>질문 가져오기</Button>
+          </div>
         </div>
 
         <Box
           css={css`
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
             padding: 1rem;
+
             background-color: ${theme.colors.border.weak};
             height: auto;
           `}

@@ -60,7 +60,7 @@ const StartWithSelectedQuestionModal = ({
       <Modal.content>
         <div
           css={css`
-            max-width: 400px;
+            max-width: 600px;
           `}
         >
           <Description title="서비스 이용약관 동의">
