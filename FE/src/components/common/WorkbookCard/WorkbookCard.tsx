@@ -6,7 +6,7 @@ import { HTMLElementTypes } from '@/types/utils';
 
 export type WorkbookCardProps = Omit<
   WorkbookEntity,
-  'categoryId' | 'workbookId'
+  'categoryId' | 'workbookId' | 'isPublic'
 > &
   HTMLElementTypes<HTMLDivElement>;
 
