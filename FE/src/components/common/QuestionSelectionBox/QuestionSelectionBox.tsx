@@ -4,16 +4,13 @@ import TabPanelItem from './QuestionTabPanelItem';
 import { useRecoilState } from 'recoil';
 import { QuestionAnswerSelectionModal } from '@atoms/modal';
 import AnswerSelectionModal from './AnswerSelectionModal/AnswerSelectionModal';
-import { Box, Tabs } from '@foundation/index';
+import { Box, Tabs2 } from '@foundation/index';
 import useWorkbookTitleListQuery from '@hooks/apis/queries/useWorkbookTitleListQuery';
-import { useState } from 'react';
 import QuestionTabList from '@common/QuestionSelectionBox/QuestionTabList';
 import WorkbookAddButton from '@common/QuestionSelectionBox/WorkbookAddButton';
 
 const QuestionSelectionBox = () => {
-  const [selectedTabIndex, setSelectedTabIndex] = useState('0');
   const { data: workbookListData } = useWorkbookTitleListQuery();
-
   const [
     { isOpen: isQuestionAnswerSelectionModalOpen, workbookId, question },
     setModalState,
@@ -42,8 +39,7 @@ const QuestionSelectionBox = () => {
           height: 40rem;
         `}
       >
-        <Tabs
-          value={selectedTabIndex}
+        <Tabs2
           css={css`
             display: flex;
             width: 100%;
@@ -64,10 +60,7 @@ const QuestionSelectionBox = () => {
             `}
           >
             <WorkbookAddButton />
-            <QuestionTabList
-              workbookListData={workbookListData}
-              onTabChange={(_, value) => setSelectedTabIndex(value)}
-            />
+            <QuestionTabList workbookListData={workbookListData} />
           </div>
           <div
             css={css`
@@ -78,14 +71,12 @@ const QuestionSelectionBox = () => {
             {workbookListData.map((workbook, index) => (
               <TabPanelItem
                 key={workbook.workbookId}
-                selectedTabIndex={selectedTabIndex}
                 tabIndex={index.toString()}
                 workbook={workbook}
-                onWorkbookDelete={() => setSelectedTabIndex('0')}
               />
             ))}
           </div>
-        </Tabs>
+        </Tabs2>
       </Box>
     </>
   );

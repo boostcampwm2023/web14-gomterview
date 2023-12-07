@@ -1,5 +1,6 @@
 import React, { SyntheticEvent } from 'react';
 import useTabs from '@foundation/Tabs2/useTabs';
+import enhanceChildElement from '@/utils/enhanceChildElement';
 
 type TabProps = {
   children?: React.ReactNode;
@@ -9,12 +10,22 @@ type TabProps = {
 };
 
 const Tab2: React.FC<TabProps> = ({ children, value }) => {
-  const { setCurrentValue } = useTabs();
+  const { currentValue, setCurrentValue } = useTabs();
   const handleClick = () => {
     setCurrentValue(value);
   };
 
-  return <div onClick={handleClick}>{children}</div>;
+  return (
+    <div onClick={handleClick}>
+      {enhanceChildElement({
+        children: children,
+        newProps: {
+          value: value,
+          checked: currentValue === value,
+        },
+      })}
+    </div>
+  );
 };
 
 export default Tab2;
