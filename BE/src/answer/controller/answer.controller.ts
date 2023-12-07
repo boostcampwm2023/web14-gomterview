@@ -19,7 +19,6 @@ import {
 import { AnswerService } from '../service/answer.service';
 import { CreateAnswerRequest } from '../dto/createAnswerRequest';
 import { Request, Response } from 'express';
-import { AuthGuard } from '@nestjs/passport';
 import { createApiResponseOption } from '../../util/swagger.util';
 import { Member } from '../../member/entity/member';
 import { AnswerResponse } from '../dto/answerResponse';

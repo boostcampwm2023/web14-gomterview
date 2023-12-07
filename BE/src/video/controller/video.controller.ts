@@ -13,7 +13,6 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { VideoService } from '../service/video.service';
-import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { Member } from 'src/member/entity/member';
 import { CreateVideoRequest } from '../dto/createVideoRequest';

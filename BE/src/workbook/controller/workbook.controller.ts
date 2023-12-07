@@ -12,7 +12,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { WorkbookService } from '../service/workbook.service';
-import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBody,
   ApiCookieAuth,
