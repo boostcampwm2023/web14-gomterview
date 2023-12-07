@@ -21,14 +21,14 @@ export class AuthService {
       member = await this.createMember(oauthRequest);
     }
 
-    const savedAccessToken = getValueFromRedis(member.email);
+    const savedAccessToken = await getValueFromRedis(member.email);
     if (isEmpty(savedAccessToken)) {
       return (
         BEARER_PREFIX +
         (await this.tokenService.assignToken(member.id, member.email))
       );
     }
-    return savedAccessToken;
+    return BEARER_PREFIX + savedAccessToken;
   }
 
   async logout(accessToken: string) {
