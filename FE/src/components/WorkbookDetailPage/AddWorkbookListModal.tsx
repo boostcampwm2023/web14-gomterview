@@ -11,12 +11,10 @@ import { PATH } from '@constants/path';
 import { toast } from '@foundation/Toast/toast';
 
 const AddWorkbookListModal = ({
-  isOpen,
   closeModal,
   selectedQuestionIds,
   workbookData,
 }: {
-  isOpen: boolean;
   closeModal: () => void;
   selectedQuestionIds: number[];
   workbookData: WorkbookEntity;
@@ -76,7 +74,7 @@ const AddWorkbookListModal = ({
   };
 
   return (
-    <Modal isOpen={isOpen} closeModal={closeModal}>
+    <Modal isOpen={true} closeModal={closeModal}>
       <form onSubmit={handleSubmit}>
         <ModalHeader />
         <Modal.content>

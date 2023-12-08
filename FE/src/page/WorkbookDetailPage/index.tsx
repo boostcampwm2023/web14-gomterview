@@ -7,7 +7,7 @@ import {
   StartWithSelectedQuestionModal,
 } from '@components/WorkbookDetailPage';
 import { css } from '@emotion/react';
-import { Box, Button, CheckBox } from '@foundation/index';
+import { Box, Button, CheckBox, Modal } from '@foundation/index';
 import useQuestionWorkbookQuery from '@hooks/apis/queries/useQuestionWorkbookQuery';
 import useWorkbookQuery from '@hooks/apis/queries/useWorkbookQuery';
 import useUserInfo from '@hooks/useUserInfo';
@@ -15,15 +15,11 @@ import { theme } from '@styles/theme';
 import { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
 import { toast } from '@foundation/Toast/toast';
+import useModal from '@hooks/useModal';
 
 const WorkbookDetailPage = () => {
   const [selectedQuestion, setSelectedQuestion] = useState<Question[]>([]);
   const [allSelected, setAllSelected] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [
-    isStartWithSelectedQuestionModalOpen,
-    setIsStartWithSelectedQuestionModalOpen,
-  ] = useState<boolean>(false);
 
   const { workbookId } = useLoaderData() as { workbookId: number };
   const userInfo = useUserInfo();
@@ -31,6 +27,44 @@ const WorkbookDetailPage = () => {
     workbookId,
   });
   const { data: workbookData } = useWorkbookQuery({ workbookId: workbookId });
+
+  const {
+    openModal: openStartWithSelectedQuestionModal,
+    closeModal: closeStartWithSelectedQuestionModal,
+  } = useModal(
+    () =>
+      workbookData && (
+        <StartWithSelectedQuestionModal
+          closeModal={closeStartWithSelectedQuestionModal}
+          workbookData={workbookData}
+          questions={selectedQuestion}
+        />
+      )
+  );
+
+  const {
+    openModal: openAddWorkbookListModal,
+    closeModal: closeAddWorkbookListModal,
+  } = useModal(
+    () =>
+      workbookData && (
+        <AddWorkbookListModal
+          closeModal={closeAddWorkbookListModal}
+          selectedQuestionIds={selectedQuestion.map(
+            (question) => question.questionId
+          )}
+          workbookData={workbookData}
+        />
+      )
+  );
+
+  const { closeModal, openModal } = useModal(() => {
+    return (
+      <Modal closeModal={closeModal} isOpen={true}>
+        이것은 모달입니다.
+      </Modal>
+    );
+  });
 
   const selectQuestion = (question: Question) => {
     setSelectedQuestion((prev) =>
@@ -56,36 +90,22 @@ const WorkbookDetailPage = () => {
     setAllSelected((prev) => !prev);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const openModal = () => {
-    if (!userInfo) alert('로그인이 필요합니다.');
-    else
-      selectedQuestion.length < 1
-        ? alert('질문을 선택해주세요')
-        : setIsModalOpen(true);
+  const validateAddWorkbookListModal = () => {
+    if (!userInfo) {
+      alert('로그인이 필요합니다.');
+      return false;
+    }
+    if (selectedQuestion.length < 1) {
+      alert('질문을 선택해주세요');
+      return false;
+    }
+    return true;
   };
 
   if (!workbookData) return;
 
   return (
     <>
-      <StartWithSelectedQuestionModal
-        isOpen={isStartWithSelectedQuestionModalOpen}
-        closeModal={() => setIsStartWithSelectedQuestionModalOpen(false)}
-        workbookData={workbookData}
-        questions={selectedQuestion}
-      />
-      <AddWorkbookListModal
-        isOpen={isModalOpen}
-        closeModal={closeModal}
-        selectedQuestionIds={selectedQuestion.map(
-          (question) => question.questionId
-        )}
-        workbookData={workbookData}
-      />
       <WorkbookDetailPageLayout>
         <WorkbookCard
           css={css`
@@ -106,6 +126,7 @@ const WorkbookDetailPage = () => {
             padding: 1rem;
           `}
         >
+          <Button onClick={openModal}>테스트</Button>
           <CheckBox
             id="allSelect"
             checked={allSelected}
@@ -121,11 +142,17 @@ const WorkbookDetailPage = () => {
           >
             <Button
               variants="secondary"
-              onClick={() => setIsStartWithSelectedQuestionModalOpen(true)}
+              onClick={openStartWithSelectedQuestionModal}
             >
               인터뷰 시작하기
             </Button>
-            <Button onClick={openModal}>질문 가져오기</Button>
+            <Button
+              onClick={() => {
+                validateAddWorkbookListModal() && openAddWorkbookListModal();
+              }}
+            >
+              질문 가져오기
+            </Button>
           </div>
         </div>
 
