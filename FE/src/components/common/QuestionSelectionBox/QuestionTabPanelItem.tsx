@@ -82,6 +82,9 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({ workbook, tabIndex }) => {
             padding: 1rem;
             background-color: ${theme.colors.surface.default};
             border-radius: 0 0 1rem 0;
+            @media (max-width: ${theme.breakpoints.tablet}) {
+              border-radius: 0 0 1rem 1rem;
+            }
           `}
         >
           <div
