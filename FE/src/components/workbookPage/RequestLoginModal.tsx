@@ -5,18 +5,16 @@ import { useNavigate } from 'react-router-dom';
 import { PATH } from '@constants/path';
 
 type RequestLoginModalProps = {
-  isOpen: boolean;
   closeModal: () => void;
 };
 
 const RequestLoginModal: React.FC<RequestLoginModalProps> = ({
-  isOpen,
   closeModal,
 }) => {
   const navigate = useNavigate();
 
   return (
-    <Modal isOpen={isOpen} closeModal={closeModal}>
+    <Modal isOpen={true} closeModal={closeModal}>
       <Modal.content>
         <div
           css={css`

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { css } from '@emotion/react';
 import { Icon, Tooltip } from '@foundation/index';
 import useUserInfo from '@hooks/useUserInfo';
@@ -14,12 +13,16 @@ const WorkbookPlusButton: React.FC = () => {
     return <WorkbookGeneratorModal closeModal={closeModal} />;
   });
 
-  const [requestLoginModalIsOpen, setRequestLoginModalIsOpen] =
-    useState<boolean>(false);
+  const {
+    openModal: openRequestLoginModal,
+    closeModal: closeRequestLoginModal,
+  } = useModal(() => {
+    return <RequestLoginModal closeModal={closeRequestLoginModal} />;
+  });
 
   const handleWorkbookPlusClick = () => {
     if (isLogin) openModal();
-    else setRequestLoginModalIsOpen(true);
+    else openRequestLoginModal();
   };
 
   return (
@@ -62,10 +65,6 @@ const WorkbookPlusButton: React.FC = () => {
           <Icon id="white-plus" width="50px" height="50px" />
         </Tooltip>
       </div>
-      <RequestLoginModal
-        isOpen={requestLoginModalIsOpen}
-        closeModal={() => setRequestLoginModalIsOpen(false)}
-      />
     </>
   );
 };
