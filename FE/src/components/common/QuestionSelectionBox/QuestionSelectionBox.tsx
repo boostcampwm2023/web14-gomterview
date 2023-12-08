@@ -5,20 +5,26 @@ import AnswerSelectionModal from './AnswerSelectionModal/AnswerSelectionModal';
 import useWorkbookTitleListQuery from '@hooks/apis/queries/useWorkbookTitleListQuery';
 import QuestionTabList from '@common/QuestionSelectionBox/QuestionTabList';
 import WorkbookAddButton from '@common/QuestionSelectionBox/WorkbookAddButton';
-import { Box, Tabs } from '@foundation/index';
+import { Box, Button, Icon, Tabs } from '@foundation/index';
 import { theme } from '@styles/theme';
 import {
   hideSidebar,
   showSidebar,
 } from '@common/QuestionSelectionBox/QuestionSelectionBox.styles';
 import { css } from '@emotion/react';
+import { useState } from 'react';
+import useBreakpoint from '@hooks/useBreakPoint';
 
 const QuestionSelectionBox = () => {
+  const isDeviceBreakpoint = useBreakpoint();
+
   const { data: workbookListData } = useWorkbookTitleListQuery();
   const [
     { isOpen: isQuestionAnswerSelectionModalOpen, workbookId, question },
     setModalState,
   ] = useRecoilState(QuestionAnswerSelectionModal);
+
+  const [isSideBarOpen, setIsSideBarOpen] = useState(false);
 
   if (!workbookListData) return;
   return (
@@ -45,7 +51,6 @@ const QuestionSelectionBox = () => {
       >
         <Tabs
           css={css`
-            position: relative;
             display: flex;
             width: 100%;
             height: 100%;
@@ -62,18 +67,41 @@ const QuestionSelectionBox = () => {
               background-color: ${theme.colors.surface.default};
               overflow-y: auto;
               flex: 1 1 15rem;
-
-              @media (max-width: ${theme.breakpoints.tablet}) {
-                animation: ${hideSidebar} 0.3s ease-in-out forwards;
-              }
-              @media (min-width: ${theme.breakpoints.tablet}) {
-                animation: ${showSidebar} 0.3s ease-in-out forwards;
-              }
+              animation: ${!isSideBarOpen && isDeviceBreakpoint('tablet')
+                ? css`
+                    ${hideSidebar} 0.3s ease-in-out forwards
+                  `
+                : css`
+                    ${showSidebar} 0.3s ease-in-out forwards
+                  `};
             `}
           >
             <WorkbookAddButton />
             <QuestionTabList workbookListData={workbookListData} />
           </div>
+          {isDeviceBreakpoint('tablet') && (
+            <div
+              css={css`
+                position: relative;
+              `}
+            >
+              <Button
+                variants="secondary"
+                onClick={() => setIsSideBarOpen((prev) => !prev)}
+                css={css`
+                  position: absolute;
+                  bottom: 0.5rem;
+                  display: flex;
+                  align-items: center;
+                  border: none;
+                  border-radius: 1rem;
+                  z-index: ${theme.zIndex.contentOverlay.overlay5};
+                `}
+              >
+                <Icon id="menu" width="24" height="24" />
+              </Button>
+            </div>
+          )}
           <div
             css={css`
               flex: 1 1 calc(100% - 15rem);
