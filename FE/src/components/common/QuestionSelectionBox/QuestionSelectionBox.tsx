@@ -1,13 +1,17 @@
-import { theme } from '@styles/theme';
-import { css } from '@emotion/react';
 import TabPanelItem from './QuestionTabPanelItem';
 import { useRecoilState } from 'recoil';
 import { QuestionAnswerSelectionModal } from '@atoms/modal';
 import AnswerSelectionModal from './AnswerSelectionModal/AnswerSelectionModal';
-import { Box, Tabs } from '@foundation/index';
 import useWorkbookTitleListQuery from '@hooks/apis/queries/useWorkbookTitleListQuery';
 import QuestionTabList from '@common/QuestionSelectionBox/QuestionTabList';
 import WorkbookAddButton from '@common/QuestionSelectionBox/WorkbookAddButton';
+import { Box, Tabs } from '@foundation/index';
+import { theme } from '@styles/theme';
+import {
+  hideSidebar,
+  showSidebar,
+} from '@common/QuestionSelectionBox/QuestionSelectionBox.styles';
+import { css } from '@emotion/react';
 
 const QuestionSelectionBox = () => {
   const { data: workbookListData } = useWorkbookTitleListQuery();
@@ -41,6 +45,7 @@ const QuestionSelectionBox = () => {
       >
         <Tabs
           css={css`
+            position: relative;
             display: flex;
             width: 100%;
             height: 100%;
@@ -51,12 +56,19 @@ const QuestionSelectionBox = () => {
             css={css`
               display: flex;
               flex-direction: column;
-              width: 15rem;
               row-gap: 2rem;
-              padding-top: 1.5rem;
+              padding: 1.5rem 0;
               border-radius: 1rem 0 0 1rem;
               background-color: ${theme.colors.surface.default};
               overflow-y: auto;
+              flex: 1 1 15rem;
+
+              @media (max-width: ${theme.breakpoints.tablet}) {
+                animation: ${hideSidebar} 0.3s ease-in-out forwards;
+              }
+              @media (min-width: ${theme.breakpoints.tablet}) {
+                animation: ${showSidebar} 0.3s ease-in-out forwards;
+              }
             `}
           >
             <WorkbookAddButton />
@@ -64,8 +76,8 @@ const QuestionSelectionBox = () => {
           </div>
           <div
             css={css`
-              width: 100%;
-              max-width: calc(100% - 15rem);
+              flex: 1 1 calc(100% - 15rem);
+              overflow-x: hidden;
             `}
           >
             {workbookListData.map((workbook, index) => (
