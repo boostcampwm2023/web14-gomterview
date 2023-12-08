@@ -1,7 +1,5 @@
 import TabPanelItem from './QuestionTabPanelItem';
-import { useRecoilState } from 'recoil';
-import { QuestionAnswerSelectionModal } from '@atoms/modal';
-import AnswerSelectionModal from './AnswerSelectionModal/AnswerSelectionModal';
+import { Box, Tabs } from '@foundation/index';
 import useWorkbookTitleListQuery from '@hooks/apis/queries/useWorkbookTitleListQuery';
 import QuestionTabList from '@common/QuestionSelectionBox/QuestionTabList';
 import WorkbookAddButton from '@common/QuestionSelectionBox/WorkbookAddButton';
@@ -19,29 +17,12 @@ const QuestionSelectionBox = () => {
   const isDeviceBreakpoint = useBreakpoint();
 
   const { data: workbookListData } = useWorkbookTitleListQuery();
-  const [
-    { isOpen: isQuestionAnswerSelectionModalOpen, workbookId, question },
-    setModalState,
-  ] = useRecoilState(QuestionAnswerSelectionModal);
 
   const [isSideBarOpen, setIsSideBarOpen] = useState(true);
 
   if (!workbookListData) return;
   return (
     <>
-      {workbookId && question && (
-        <AnswerSelectionModal
-          isOpen={isQuestionAnswerSelectionModalOpen}
-          workbookId={workbookId}
-          question={question}
-          closeModal={() =>
-            setModalState((pre) => ({
-              ...pre,
-              isOpen: false,
-            }))
-          }
-        />
-      )}
       <Box
         css={css`
           background-color: ${theme.colors.surface.inner};

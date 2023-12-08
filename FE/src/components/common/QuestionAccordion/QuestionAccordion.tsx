@@ -1,4 +1,3 @@
-import { QuestionAnswerSelectionModal } from '@atoms/modal';
 import {
   Accordion,
   AccordionDetails,
@@ -9,9 +8,10 @@ import Typography from '@foundation/Typography/Typography';
 import { theme } from '@styles/theme';
 import { Question } from '@/types/question';
 import { css } from '@emotion/react';
-import { useSetRecoilState } from 'recoil';
 import { LeadingDot } from '@foundation/index';
 import useUserInfo from '@hooks/useUserInfo';
+import useModal from '@hooks/useModal';
+import AnswerSelectionModal from '@common/QuestionSelectionBox/AnswerSelectionModal/AnswerSelectionModal';
 
 type QuestionAccordionProps = {
   question: Question;
@@ -35,15 +35,22 @@ const QuestionAccordion: React.FC<QuestionAccordionProps> = ({
 }) => {
   const userInfo = useUserInfo();
 
-  const setModal = useSetRecoilState(QuestionAnswerSelectionModal);
+  const { openModal, closeModal } = useModal(() => {
+    return (
+      workbookId &&
+      question && (
+        <AnswerSelectionModal
+          workbookId={workbookId}
+          question={question}
+          closeModal={closeModal}
+        />
+      )
+    );
+  });
 
   const handleEditModal = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setModal({
-      isOpen: true,
-      question: question,
-      workbookId: workbookId,
-    });
+    openModal();
   };
 
   const handleEditGuestUser = (e: React.MouseEvent) => {
