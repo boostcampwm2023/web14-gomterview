@@ -9,21 +9,33 @@ import { useState } from 'react';
 import DeleteCheckModal from '../DeleteCheckModal';
 import Thumbnail from '../Thumbnail';
 import { VideoItem } from '../VideoItem';
+import useModal from '@hooks/useModal';
 
 const VideoListTabPanel: React.FC = () => {
   const { data } = useVideoListQuery();
   const { mutate } = useDeleteVideoMutation();
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   const [selectedVideoId, setSelectVideoId] = useState<number | null>(null);
 
+  const { openModal: openDeleteCheckModal, closeModal: closeDeleteCheckModal } =
+    useModal(() => {
+      return (
+        <DeleteCheckModal
+          content="영상을 삭제 하시겠습니까?"
+          closeModal={closeDeleteCheckModal}
+          confirmModal={handleConfirmModal}
+        />
+      );
+    });
+
   const handleDeleteIconClick = (videoId: number) => {
-    setIsDeleteModalOpen(true);
+    openDeleteCheckModal();
     setSelectVideoId(videoId);
   };
 
   const handleConfirmModal = () => {
     selectedVideoId && mutate(selectedVideoId);
-    setIsDeleteModalOpen(false);
+    closeDeleteCheckModal();
   };
 
   if (!data) return <div>로딩중</div>;
@@ -57,12 +69,6 @@ const VideoListTabPanel: React.FC = () => {
           />
         </VideoItem>
       ))}
-      <DeleteCheckModal
-        isOpen={isDeleteModalOpen}
-        content="영상을 삭제 하시겠습니까?"
-        closeModal={() => setIsDeleteModalOpen(false)}
-        confirmModal={handleConfirmModal}
-      />
     </Box>
   );
 };
