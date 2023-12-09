@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Member } from '../entity/member';
+import { HOUR_IN_SECONDS } from '../../constant/constant';
 
 @Injectable()
 export class MemberRepository {
@@ -14,11 +15,17 @@ export class MemberRepository {
   }
 
   async findById(id: number) {
-    return await this.memberRepository.findOneBy({ id });
+    return await this.memberRepository.findOne({
+      where: { id },
+      cache: HOUR_IN_SECONDS,
+    });
   }
 
   async findByEmail(email: string) {
-    return await this.memberRepository.findOneBy({ email });
+    return await this.memberRepository.findOne({
+      where: { email },
+      cache: HOUR_IN_SECONDS,
+    });
   }
 
   async query(query: string) {
