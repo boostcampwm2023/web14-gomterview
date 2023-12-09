@@ -26,7 +26,7 @@ const useMedia = () => {
       setConnectStatus('fail');
       openModal();
     }
-  }, [openModal]);
+  }, []);
 
   const stopMedia = useCallback(() => {
     if (media) {
