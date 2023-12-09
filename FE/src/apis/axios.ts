@@ -26,7 +26,6 @@ api.interceptors.response.use(
         await api({
           method: 'patch',
           url: API.REISSUE,
-          withCredentials: true,
         });
 
         return api.request(error.config!);
