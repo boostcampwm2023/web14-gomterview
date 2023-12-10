@@ -17,7 +17,9 @@ export const ToastContainer = () => {
           display: flex;
           flex-direction: column;
           row-gap: 0.5rem;
-          z-index: 9999;
+          pointer-events: none;
+          touch-action: none;
+          z-index: ${theme.zIndex.toast.content};
           @media (max-width: ${theme.breakpoints.mobileL}) {
             left: 0.25rem;
             right: 0.25rem;

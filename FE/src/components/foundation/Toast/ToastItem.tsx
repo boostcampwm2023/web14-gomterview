@@ -54,7 +54,13 @@ const ToastItem: React.FC<ToastProps> = ({
     );
 
   return (
-    <div ref={toastRef}>
+    <div
+      ref={toastRef}
+      css={css`
+        pointer-events: ${isExiting ? 'none' : 'auto'};
+        touch-action: ${isExiting ? 'none' : 'auto'};
+      `}
+    >
       <Box
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
