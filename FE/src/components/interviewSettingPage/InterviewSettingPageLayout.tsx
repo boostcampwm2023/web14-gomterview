@@ -15,7 +15,7 @@ const InterviewSettingPageLayout: React.FC<InterviewSettingPageLayoutProps> = ({
       <Layout
         direction="column"
         css={css`
-          row-gap: 1rem;
+          row-gap: 1.5rem;
           padding: 1rem;
           height: auto;
         `}

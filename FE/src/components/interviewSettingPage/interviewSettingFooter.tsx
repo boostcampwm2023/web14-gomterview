@@ -13,5 +13,4 @@ export const InterviewSettingFooter = styled.div`
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-top: 2rem;
 `;

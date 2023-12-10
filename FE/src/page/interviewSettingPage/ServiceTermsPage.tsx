@@ -1,11 +1,9 @@
 import { serviceTerms } from '@atoms/interviewSetting';
-import {
-  Description,
-  InterviewSettingFooter,
-} from '@components/interviewSettingPage';
+import { Description } from '@components/interviewSettingPage';
 import { css } from '@emotion/react';
-import { Button, CheckBox } from '@foundation/index';
+import { CheckBox } from '@foundation/index';
 import { useRecoilState } from 'recoil';
+import InterviewSettingContentLayout from '@components/interviewSettingPage/InterviewSettingContentLayout';
 
 type ServiceTermsPageProps = {
   onNextClick?: () => void;
@@ -24,7 +22,11 @@ const ServiceTermsPage: React.FC<ServiceTermsPageProps> = ({
       ...args,
     }));
   return (
-    <>
+    <InterviewSettingContentLayout
+      onPrevClick={onPrevClick}
+      onNextClick={onNextClick}
+      disabledNext={!isSuccess}
+    >
       <Description title="서비스 이용약관 동의">
         본 서비스는 사용자의 면접 과정을 녹화해주는 서비스로 해당 과정을
         촬영하기 위해서 카메라 및 음성에 대한 권한이 필요합니다.
@@ -49,29 +51,7 @@ const ServiceTermsPage: React.FC<ServiceTermsPageProps> = ({
       >
         동의 하시겠습니까?
       </CheckBox>
-
-      <InterviewSettingFooter>
-        <Button
-          onClick={onPrevClick}
-          size="lg"
-          css={css`
-            padding: 0.6rem 2rem;
-          `}
-        >
-          이전
-        </Button>
-        <Button
-          onClick={onNextClick}
-          size="lg"
-          css={css`
-            padding: 0.6rem 2rem;
-          `}
-          disabled={!isSuccess}
-        >
-          다음
-        </Button>
-      </InterviewSettingFooter>
-    </>
+    </InterviewSettingContentLayout>
   );
 };
 

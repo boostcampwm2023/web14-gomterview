@@ -1,13 +1,12 @@
 import { RecordMethod, recordSetting } from '@/atoms/interviewSetting';
 import {
   Description,
-  InterviewSettingFooter,
   RecordRadio,
 } from '@components/interviewSettingPage';
 import { css } from '@emotion/react';
-import { Button } from '@foundation/index';
 import useUserInfo from '@hooks/useUserInfo';
 import { useRecoilState } from 'recoil';
+import InterviewSettingContentLayout from '@components/interviewSettingPage/InterviewSettingContentLayout';
 
 type RecordSettingPageProps = {
   onNextClick?: () => void;
@@ -28,7 +27,11 @@ const RecordSettingPage: React.FC<RecordSettingPageProps> = ({
   };
 
   return (
-    <>
+    <InterviewSettingContentLayout
+      onPrevClick={onPrevClick}
+      onNextClick={onNextClick}
+      disabledNext={!setting.isSuccess}
+    >
       <Description title="녹화 설정">
         - 면접 시작 전, 사용하시는 장치의 화면 및 소리가 정상적으로 연결되어
         있는지 확인해 주세요.
@@ -78,28 +81,7 @@ const RecordSettingPage: React.FC<RecordSettingPageProps> = ({
           저장하지 않음
         </RecordRadio>
       </div>
-      <InterviewSettingFooter>
-        <Button
-          onClick={onPrevClick}
-          size="lg"
-          css={css`
-            padding: 0.6rem 2rem;
-          `}
-        >
-          이전
-        </Button>
-        <Button
-          onClick={onNextClick}
-          size="lg"
-          css={css`
-            padding: 0.6rem 2rem;
-          `}
-          disabled={!setting.isSuccess}
-        >
-          다음
-        </Button>
-      </InterviewSettingFooter>
-    </>
+    </InterviewSettingContentLayout>
   );
 };
 export default RecordSettingPage;
