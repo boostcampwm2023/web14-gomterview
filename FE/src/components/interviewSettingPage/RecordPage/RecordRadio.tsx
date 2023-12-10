@@ -47,6 +47,14 @@ const RecordRadio: React.FC<RecordRadioProps> = ({
             align-items: center;
             padding: 0.8rem 3rem;
             gap: 3rem;
+            transition: background-color 0.15s ease-in-out;
+
+            &:hover {
+              background-color: ${theme.colors.surface.inner};
+            }
+            &:active {
+              transform: translateY(0.25rem);
+            }
           `}
         >
           <Icon id={IconId} width="3rem" height="3rem" />
