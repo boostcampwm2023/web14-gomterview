@@ -9,13 +9,7 @@ type DescriptionProps = {
 const Description: React.FC<DescriptionProps> = ({ title, children }) => {
   return (
     <>
-      <Typography
-        variant="title3"
-        component="p"
-        css={css`
-          margin-bottom: 2rem;
-        `}
-      >
+      <Typography variant="title3" component="p">
         {title}
       </Typography>
       <Typography

@@ -20,7 +20,15 @@ const InterviewSettingContentLayout: React.FC<
         row-gap: 1rem;
       `}
     >
-      <div>{children}</div>
+      <div
+        css={css`
+          display: flex;
+          flex-direction: column;
+          row-gap: 1rem;
+        `}
+      >
+        {children}
+      </div>
       <InterviewSettingFooter>
         <div
           css={css`

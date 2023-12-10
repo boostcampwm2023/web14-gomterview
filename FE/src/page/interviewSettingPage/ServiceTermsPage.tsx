@@ -1,6 +1,5 @@
 import { serviceTerms } from '@atoms/interviewSetting';
 import { Description } from '@components/interviewSettingPage';
-import { css } from '@emotion/react';
 import { CheckBox } from '@foundation/index';
 import { useRecoilState } from 'recoil';
 import InterviewSettingContentLayout from '@components/interviewSettingPage/InterviewSettingContentLayout';
@@ -40,11 +39,7 @@ const ServiceTermsPage: React.FC<ServiceTermsPageProps> = ({
         참여자는 해당 약관에 대해서 거부할 수 있지만 거부시에 해당 서비스를
         이용하지 못합니다.
       </Description>
-
       <CheckBox
-        css={css`
-          margin-top: 2rem;
-        `}
         id="terms-checkbox"
         checked={isSuccess}
         onInputChange={toggleIsChecked}

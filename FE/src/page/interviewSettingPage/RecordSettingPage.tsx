@@ -48,8 +48,7 @@ const RecordSettingPage: React.FC<RecordSettingPageProps> = ({
       <div
         css={css`
           max-width: 30rem;
-          margin: 5rem auto;
-
+          margin: 4rem auto;
           display: flex;
           flex-direction: column;
           gap: 2rem;
