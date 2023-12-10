@@ -5,10 +5,16 @@ import { Button } from '@foundation/index';
 
 type MenuItemProps = {
   children: ReactNode;
+  visible?: boolean;
 } & HTMLElementTypes<HTMLButtonElement> &
   React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-const MenuItem: React.FC<MenuItemProps> = ({ children, ...args }) => {
+const MenuItem: React.FC<MenuItemProps> = ({
+  children,
+  visible = true,
+  ...args
+}) => {
+  if (!visible) return null;
   return (
     <Button
       variants="secondary"

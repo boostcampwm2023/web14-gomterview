@@ -6,6 +6,7 @@ import { buttonSize, buttonVariants } from '@foundation/Button/Button.styles';
 type ButtonProps = {
   size?: keyof typeof buttonSize;
   variants?: keyof typeof buttonVariants;
+  visible?: boolean;
 } & HTMLElementTypes<HTMLButtonElement> &
   React.ButtonHTMLAttributes<HTMLButtonElement>;
 
@@ -13,8 +14,10 @@ const Button: React.FC<ButtonProps> = ({
   children,
   size = 'md',
   variants = 'primary',
+  visible = true,
   ...args
 }) => {
+  if (!visible) return null;
   return (
     <button
       css={[
