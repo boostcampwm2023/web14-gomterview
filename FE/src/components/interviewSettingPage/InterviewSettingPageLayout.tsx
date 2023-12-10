@@ -10,13 +10,21 @@ const InterviewSettingPageLayout: React.FC<InterviewSettingPageLayoutProps> = ({
   children,
 }) => {
   return (
-    <div>
+    <div
+      css={css`
+        display: flex;
+        flex-direction: column;
+        height: 100svh;
+      `}
+    >
       <Header />
       <Layout
         direction="column"
         css={css`
+          flex-grow: 1;
           row-gap: 1.5rem;
           padding: 1rem;
+          width: 100%;
           height: auto;
         `}
       >

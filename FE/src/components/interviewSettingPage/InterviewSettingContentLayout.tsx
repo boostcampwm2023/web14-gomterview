@@ -18,6 +18,8 @@ const InterviewSettingContentLayout: React.FC<
         display: flex;
         flex-direction: column;
         row-gap: 1rem;
+        flex-grow: 1;
+        height: 100%;
       `}
     >
       <div
@@ -25,6 +27,7 @@ const InterviewSettingContentLayout: React.FC<
           display: flex;
           flex-direction: column;
           row-gap: 1rem;
+          flex-grow: 1;
         `}
       >
         {children}

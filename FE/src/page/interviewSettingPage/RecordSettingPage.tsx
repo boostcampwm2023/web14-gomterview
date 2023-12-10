@@ -47,38 +47,47 @@ const RecordSettingPage: React.FC<RecordSettingPageProps> = ({
       {/* TODO: 엔터 인식해서 자동으로 줄바꿈 해주는 기능 추가 */}
       <div
         css={css`
-          max-width: 30rem;
-          margin: 4rem auto;
           display: flex;
-          flex-direction: column;
-          gap: 2rem;
+          justify-content: center;
+          align-items: center;
+          flex-grow: 1;
+          width: 100%;
         `}
       >
-        <RecordRadio
-          group="record"
-          IconId="save-idrive"
-          onChange={() => handleRecordChange('idrive')}
-          disabled={!userInfo}
-          defaultChecked={setting.method === 'idrive'}
+        <div
+          css={css`
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            width: 30rem;
+          `}
         >
-          서버에 저장
-        </RecordRadio>
-        <RecordRadio
-          group="record"
-          IconId="save-local"
-          onChange={() => handleRecordChange('local')}
-          defaultChecked={setting.method === 'local'}
-        >
-          로컬에 저장
-        </RecordRadio>
-        <RecordRadio
-          group="record"
-          IconId="save-not"
-          onChange={() => handleRecordChange('none')}
-          defaultChecked={setting.method === 'none'}
-        >
-          저장하지 않음
-        </RecordRadio>
+          <RecordRadio
+            group="record"
+            IconId="save-idrive"
+            onChange={() => handleRecordChange('idrive')}
+            disabled={!userInfo}
+            defaultChecked={setting.method === 'idrive'}
+          >
+            서버에 저장
+          </RecordRadio>
+          <RecordRadio
+            group="record"
+            IconId="save-local"
+            onChange={() => handleRecordChange('local')}
+            defaultChecked={setting.method === 'local'}
+          >
+            로컬에 저장
+          </RecordRadio>
+          <RecordRadio
+            group="record"
+            IconId="save-not"
+            onChange={() => handleRecordChange('none')}
+            defaultChecked={setting.method === 'none'}
+          >
+            저장하지 않음
+          </RecordRadio>
+        </div>
       </div>
     </InterviewSettingContentLayout>
   );
