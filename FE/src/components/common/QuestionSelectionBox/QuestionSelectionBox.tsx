@@ -8,8 +8,8 @@ import WorkbookAddButton from '@common/QuestionSelectionBox/WorkbookAddButton';
 import { Box, Button, Icon, Tabs } from '@foundation/index';
 import { theme } from '@styles/theme';
 import {
-  hideSidebar,
-  showSidebar,
+  QuestionSelectionBoxSidebarAreaDiv,
+  QuestionSelectionBoxTabPanelAreaDiv,
 } from '@common/QuestionSelectionBox/QuestionSelectionBox.styles';
 import { css } from '@emotion/react';
 import { useState } from 'react';
@@ -57,28 +57,13 @@ const QuestionSelectionBox = () => {
             row-gap: 1.5rem;
           `}
         >
-          <div
-            css={css`
-              display: flex;
-              flex-direction: column;
-              row-gap: 2rem;
-              padding: 1.5rem 0;
-              border-radius: 1rem 0 0 1rem;
-              background-color: ${theme.colors.surface.default};
-              overflow-y: auto;
-              flex: 1 1 15rem;
-              animation: ${!isSideBarOpen && isDeviceBreakpoint('tablet')
-                ? css`
-                    ${hideSidebar} 0.3s ease-in-out forwards
-                  `
-                : css`
-                    ${showSidebar} 0.3s ease-in-out forwards
-                  `};
-            `}
+          <QuestionSelectionBoxSidebarAreaDiv
+            isSidebarOpen={isSideBarOpen}
+            isTabletWidth={isDeviceBreakpoint('tablet')}
           >
             <WorkbookAddButton />
             <QuestionTabList workbookListData={workbookListData} />
-          </div>
+          </QuestionSelectionBoxSidebarAreaDiv>
           {isDeviceBreakpoint('tablet') && (
             <div
               css={css`
@@ -102,12 +87,7 @@ const QuestionSelectionBox = () => {
               </Button>
             </div>
           )}
-          <div
-            css={css`
-              flex: 1 1 calc(100% - 15rem);
-              overflow-x: hidden;
-            `}
-          >
+          <QuestionSelectionBoxTabPanelAreaDiv>
             {workbookListData.map((workbook, index) => (
               <TabPanelItem
                 key={workbook.workbookId}
@@ -115,7 +95,7 @@ const QuestionSelectionBox = () => {
                 workbook={workbook}
               />
             ))}
-          </div>
+          </QuestionSelectionBoxTabPanelAreaDiv>
         </Tabs>
       </Box>
     </>
