@@ -52,12 +52,20 @@ export class QuestionService {
     validateWorkbook(workbook);
     validateWorkbookOwner(workbook, member);
 
-    const questions = (
-      await this.questionRepository.findAllByIds(
-        copyQuestionRequest.questionIds,
-      )
-    ).map((question) => this.createCopy(question, workbook));
-    await this.questionRepository.saveAll(questions);
+    const questions = await this.questionRepository.findAllByIds(
+      copyQuestionRequest.questionIds,
+    );
+
+    Array.from(new Set(questions.map((question) => question.workbook))).forEach(
+      async (workbook) => {
+        workbook.increaseCopyCount();
+        await this.workbookRepository.update(workbook);
+      },
+    );
+
+    await this.questionRepository.saveAll(
+      questions.map((question) => this.createCopy(question, workbook)),
+    );
     return WorkbookIdResponse.of(workbook);
   }
 

@@ -1,5 +1,7 @@
 FROM node:20-alpine
 
+RUN apk update && apk add ffmpeg
+
 RUN mkdir -p /var/app/
 WORKDIR /var/app/
 

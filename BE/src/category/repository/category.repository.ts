@@ -14,10 +14,13 @@ export class CategoryRepository {
   }
 
   async findByCategoryId(categoryId: number) {
-    return await this.repository.findOneBy({ id: categoryId });
+    return await this.repository.findOne({
+      where: { id: categoryId },
+      cache: true,
+    });
   }
 
   async findAll() {
-    return await this.repository.find({});
+    return await this.repository.find({ cache: true });
   }
 }

@@ -18,6 +18,7 @@ import {
   createApiResponseOptionWithHeaders,
 } from 'src/util/swagger.util';
 import { TokenHardGuard } from 'src/token/guard/token.hard.guard';
+import { UNAUTHORIZED } from '../../constant/constant';
 
 @Controller('/api/auth')
 @ApiTags('auth')
@@ -89,13 +90,19 @@ export class AuthController {
     ),
   )
   async reissue(@Req() request: Request, @Res() res: Response) {
-    res
-      .cookie(
-        'accessToken',
-        await this.authService.reissue(getTokenValue(request)),
-        COOKIE_OPTIONS,
-      )
-      .send();
+    try {
+      res
+        .cookie(
+          'accessToken',
+          await this.authService.reissue(getTokenValue(request)),
+          COOKIE_OPTIONS,
+        )
+        .send();
+    } catch (e) {
+      if (e.status === UNAUTHORIZED) {
+        res.clearCookie('accessToken', COOKIE_OPTIONS).send();
+      }
+    }
   }
 }
 
