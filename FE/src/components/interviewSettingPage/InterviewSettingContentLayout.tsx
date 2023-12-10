@@ -22,26 +22,33 @@ const InterviewSettingContentLayout: React.FC<
     >
       <div>{children}</div>
       <InterviewSettingFooter>
-        <Button
-          onClick={onPrevClick}
-          size="lg"
+        <div
           css={css`
-            padding: 0.6rem 2rem;
+            display: flex;
+            column-gap: 1rem;
           `}
-          disabled={disabledPrev}
         >
-          이전
-        </Button>
-        <Button
-          onClick={onNextClick}
-          size="lg"
-          css={css`
-            padding: 0.6rem 2rem;
-          `}
-          disabled={disabledNext}
-        >
-          다음
-        </Button>
+          <Button
+            onClick={onPrevClick}
+            size="lg"
+            css={css`
+              padding: 0.6rem 2rem;
+            `}
+            disabled={disabledPrev}
+          >
+            이전
+          </Button>
+          <Button
+            onClick={onNextClick}
+            size="lg"
+            css={css`
+              padding: 0.6rem 2rem;
+            `}
+            disabled={disabledNext}
+          >
+            다음
+          </Button>
+        </div>
       </InterviewSettingFooter>
     </div>
   );
