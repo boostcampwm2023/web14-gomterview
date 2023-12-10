@@ -56,6 +56,7 @@ describe('QuestionService', () => {
 
   const mockWorkbookRepository = {
     findById: jest.fn(),
+    update: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -216,6 +217,7 @@ describe('QuestionService', () => {
         questionFixture,
       ]);
       mockQuestionRepository.saveAll.mockResolvedValue(undefined);
+      mockWorkbookRepository.update.mockResolvedValue(undefined);
       mockWorkbookRepository.findById.mockResolvedValue(workbookFixtureWithId);
 
       //then
@@ -236,6 +238,7 @@ describe('QuestionService', () => {
         questionFixture,
       ]);
       mockQuestionRepository.saveAll.mockResolvedValue(undefined);
+      mockWorkbookRepository.update.mockResolvedValue(undefined);
       mockWorkbookRepository.findById.mockResolvedValue(null);
 
       //then
@@ -253,6 +256,7 @@ describe('QuestionService', () => {
         questionFixture,
       ]);
       mockQuestionRepository.saveAll.mockResolvedValue(undefined);
+      mockWorkbookRepository.update.mockResolvedValue(undefined);
       mockWorkbookRepository.findById.mockResolvedValue(workbookFixtureWithId);
 
       //then
