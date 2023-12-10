@@ -5,7 +5,7 @@ import AnswerSelectionModal from './AnswerSelectionModal/AnswerSelectionModal';
 import useWorkbookTitleListQuery from '@hooks/apis/queries/useWorkbookTitleListQuery';
 import QuestionTabList from '@common/QuestionSelectionBox/QuestionTabList';
 import WorkbookAddButton from '@common/QuestionSelectionBox/WorkbookAddButton';
-import { Box, Button, Icon, Tabs } from '@foundation/index';
+import { Box, Tabs } from '@foundation/index';
 import { theme } from '@styles/theme';
 import {
   QuestionSelectionBoxSidebarAreaDiv,
@@ -64,35 +64,14 @@ const QuestionSelectionBox = () => {
             <WorkbookAddButton />
             <QuestionTabList workbookListData={workbookListData} />
           </QuestionSelectionBoxSidebarAreaDiv>
-          {isDeviceBreakpoint('tablet') && (
-            <div
-              css={css`
-                position: relative;
-              `}
-            >
-              <Button
-                variants="secondary"
-                onClick={() => setIsSideBarOpen((prev) => !prev)}
-                css={css`
-                  position: absolute;
-                  bottom: 0.5rem;
-                  display: flex;
-                  align-items: center;
-                  border: none;
-                  border-radius: 1rem;
-                  z-index: ${theme.zIndex.contentOverlay.overlay5};
-                `}
-              >
-                <Icon id="menu" width="24" height="24" />
-              </Button>
-            </div>
-          )}
           <QuestionSelectionBoxTabPanelAreaDiv>
             {workbookListData.map((workbook, index) => (
               <TabPanelItem
                 key={workbook.workbookId}
                 tabIndex={index.toString()}
                 workbook={workbook}
+                isSidebarOpen={isSideBarOpen}
+                onSidebarToggleClick={() => setIsSideBarOpen((prev) => !prev)}
               />
             ))}
           </QuestionSelectionBoxTabPanelAreaDiv>
