@@ -113,7 +113,7 @@ export class VideoService {
 
   async getPreSignedUrl(member: Member) {
     validateManipulatedToken(member);
-    const key = `${uuidv4()}.webm`;
+    const key = `${uuidv4()}.mp4`;
     const s3 = getIdriveS3Client();
     const command = getPutCommandObject(key);
     const expiresIn = 10;
