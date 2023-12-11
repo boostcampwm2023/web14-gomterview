@@ -1,20 +1,30 @@
-import { theme } from '@styles/theme';
-import { css } from '@emotion/react';
 import TabPanelItem from './QuestionTabPanelItem';
 import { useRecoilState } from 'recoil';
 import { QuestionAnswerSelectionModal } from '@atoms/modal';
 import AnswerSelectionModal from './AnswerSelectionModal/AnswerSelectionModal';
-import { Box, Tabs } from '@foundation/index';
 import useWorkbookTitleListQuery from '@hooks/apis/queries/useWorkbookTitleListQuery';
 import QuestionTabList from '@common/QuestionSelectionBox/QuestionTabList';
 import WorkbookAddButton from '@common/QuestionSelectionBox/WorkbookAddButton';
+import { Box, Tabs } from '@foundation/index';
+import { theme } from '@styles/theme';
+import {
+  QuestionSelectionBoxSidebarAreaDiv,
+  QuestionSelectionBoxTabPanelAreaDiv,
+} from '@common/QuestionSelectionBox/QuestionSelectionBox.styles';
+import { css } from '@emotion/react';
+import { useState } from 'react';
+import useBreakpoint from '@hooks/useBreakPoint';
 
 const QuestionSelectionBox = () => {
+  const isDeviceBreakpoint = useBreakpoint();
+
   const { data: workbookListData } = useWorkbookTitleListQuery();
   const [
     { isOpen: isQuestionAnswerSelectionModalOpen, workbookId, question },
     setModalState,
   ] = useRecoilState(QuestionAnswerSelectionModal);
+
+  const [isSideBarOpen, setIsSideBarOpen] = useState(true);
 
   if (!workbookListData) return;
   return (
@@ -47,35 +57,24 @@ const QuestionSelectionBox = () => {
             row-gap: 1.5rem;
           `}
         >
-          <div
-            css={css`
-              display: flex;
-              flex-direction: column;
-              width: 15rem;
-              row-gap: 2rem;
-              padding-top: 1.5rem;
-              border-radius: 1rem 0 0 1rem;
-              background-color: ${theme.colors.surface.default};
-              overflow-y: auto;
-            `}
+          <QuestionSelectionBoxSidebarAreaDiv
+            isSidebarOpen={isSideBarOpen}
+            isTabletWidth={isDeviceBreakpoint('tablet')}
           >
             <WorkbookAddButton />
             <QuestionTabList workbookListData={workbookListData} />
-          </div>
-          <div
-            css={css`
-              width: 100%;
-              max-width: calc(100% - 15rem);
-            `}
-          >
+          </QuestionSelectionBoxSidebarAreaDiv>
+          <QuestionSelectionBoxTabPanelAreaDiv>
             {workbookListData.map((workbook, index) => (
               <TabPanelItem
                 key={workbook.workbookId}
                 tabIndex={index.toString()}
                 workbook={workbook}
+                isSidebarOpen={isSideBarOpen}
+                onSidebarToggleClick={() => setIsSideBarOpen((prev) => !prev)}
               />
             ))}
-          </div>
+          </QuestionSelectionBoxTabPanelAreaDiv>
         </Tabs>
       </Box>
     </>

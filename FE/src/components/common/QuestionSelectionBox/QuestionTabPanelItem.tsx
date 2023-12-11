@@ -4,20 +4,30 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import useQuestionWorkbookQuery from '@hooks/apis/queries/useQuestionWorkbookQuery';
-import { Typography, Toggle, Tabs } from '@foundation/index';
+import { Button, Icon, Tabs, Toggle, Typography } from '@foundation/index';
 import { WorkbookTitleListResDto } from '@/types/workbook';
 import { ExcludeArray } from '@/types/utils';
 import QuestionAddForm from '@common/QuestionSelectionBox/QuestionAddForm';
 import QuestionTabPanelHeader from '@common/QuestionSelectionBox/QuestionTabPanelHeader';
 import useTabs from '@foundation/Tabs/useTabs';
 import QuestionAccordionList from '@common/QuestionSelectionBox/QuestionAccordionList';
+import useBreakpoint from '@hooks/useBreakPoint';
 
 type TabPanelItemProps = {
   tabIndex: string;
   workbook: ExcludeArray<WorkbookTitleListResDto>;
+  isSidebarOpen: boolean;
+  onSidebarToggleClick: () => void;
 };
 
-const TabPanelItem: React.FC<TabPanelItemProps> = ({ workbook, tabIndex }) => {
+const TabPanelItem: React.FC<TabPanelItemProps> = ({
+  workbook,
+  tabIndex,
+  isSidebarOpen,
+  onSidebarToggleClick,
+}) => {
+  const isDeviceBreakpoint = useBreakpoint();
+
   const settingPage = useRecoilValue(questionSetting);
   const selectedQuestions = settingPage.selectedData.filter(
     (question) => question.workbookId === workbook.workbookId
@@ -77,26 +87,43 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({ workbook, tabIndex }) => {
         <div
           css={css`
             display: flex;
-            justify-content: flex-end;
-            width: 100%;
+            justify-content: ${isDeviceBreakpoint('tablet')
+              ? 'space-between'
+              : 'flex-end'};
+            align-items: center;
+            column-gap: 0.5rem;
             padding: 1rem;
+            border-radius: ${isSidebarOpen && isDeviceBreakpoint('tablet')
+              ? '0 0 1rem 1rem'
+              : '0 0 1rem 0'};
             background-color: ${theme.colors.surface.default};
-            border-radius: 0 0 1rem 0;
           `}
         >
+          <Button
+            variants="secondary"
+            onClick={onSidebarToggleClick}
+            visible={isDeviceBreakpoint('tablet')}
+            css={css`
+              bottom: 0.5rem;
+              display: flex;
+              align-items: center;
+              border: none;
+              border-radius: 1rem;
+              padding: 0.5rem;
+            `}
+          >
+            <Icon id="menu" width="24" height="24" />
+          </Button>
           <div
             onClick={toggleShowSelectionOption}
             css={css`
               display: flex;
+              flex-wrap: wrap;
+              gap: 0.25rem;
               cursor: pointer;
-              align-items: center;
-              column-gap: 0.25rem;
             `}
           >
             <Toggle
-              css={css`
-                margin-left: auto;
-              `}
               onClick={toggleShowSelectionOption}
               isToggled={onlySelectedOption}
             />

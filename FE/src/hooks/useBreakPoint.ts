@@ -2,13 +2,7 @@ import useWindowSize from './useWindowSize';
 import { breakpoints } from '@styles/_breakpoints';
 
 type Breakpoints = {
-  mobileXS: string;
-  mobileS: string;
-  mobileM: string;
-  mobileL: string;
-  tablet: string;
-  laptop: string;
-  laptopL: string;
+  [K in keyof typeof breakpoints]: string;
 };
 
 const parseBreakpoint = (value: string) => parseInt(value, 10);

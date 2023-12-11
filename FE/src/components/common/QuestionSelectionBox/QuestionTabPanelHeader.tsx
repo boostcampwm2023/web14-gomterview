@@ -8,6 +8,7 @@ import useModal from '@hooks/useModal';
 import { WorkbookGeneratorModal } from '@common/index';
 import useWorkbookDelete from '@hooks/useWorkbookDelete';
 import { toast } from '@foundation/Toast/toast';
+import useBreakpoint from '@hooks/useBreakPoint';
 
 type QuestionTabPanelHeaderProps = {
   workbook: ExcludeArray<WorkbookTitleListResDto>;
@@ -21,6 +22,7 @@ const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
   onWorkbookDelete,
   onEditButtonClick,
 }) => {
+  const isDeviceBreakpoint = useBreakpoint();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { deleteWorkbook } = useWorkbookDelete();
   const { openModal, closeModal } = useModal(() => {
@@ -53,6 +55,9 @@ const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
           css={css`
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            row-gap: 0.5rem;
           `}
         >
           <div
@@ -65,7 +70,8 @@ const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
             <Button
               variants="secondary"
               size="sm"
-              onClick={openModal}
+              onClick={onEditButtonClick}
+              visible={!isDeviceBreakpoint('mobile')}
               css={css`
                 display: flex;
                 align-items: center;
@@ -75,7 +81,7 @@ const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
               `}
             >
               <Icon id="edit-outline" width="20" height="20" />
-              면접 세트 수정
+              면접 질문 수정
             </Button>
             <div
               css={css`
@@ -96,8 +102,14 @@ const QuestionTabPanelHeader: React.FC<QuestionTabPanelHeaderProps> = ({
                 <Icon id="ellipsis-vertical" />
               </Button>
               <Menu open={isMenuOpen} closeMenu={() => setIsMenuOpen(false)}>
-                <MenuItem onClick={onEditButtonClick}>
+                <MenuItem
+                  onClick={onEditButtonClick}
+                  visible={isDeviceBreakpoint('mobile')}
+                >
                   <Typography noWrap>면접 질문 수정</Typography>
+                </MenuItem>
+                <MenuItem onClick={openModal}>
+                  <Typography noWrap>면접 세트 편집</Typography>
                 </MenuItem>
                 <MenuItem onClick={handleWorkbookDeleteClick}>
                   <Typography noWrap>면접 세트 삭제</Typography>

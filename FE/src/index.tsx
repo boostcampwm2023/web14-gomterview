@@ -5,7 +5,7 @@ import App from '@/App';
 import * as Sentry from '@sentry/react';
 
 async function deferRender() {
-  if (process.env.NODE_ENV !== 'local') {
+  if (process.env.REACT_APP_MSW_ENABLE !== 'true') {
     return;
   }
   return worker.start({
