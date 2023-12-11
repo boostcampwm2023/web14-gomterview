@@ -1,6 +1,4 @@
 import { RecordMethod, recordSetting } from '@/atoms/interviewSetting';
-import { QUERY_KEY } from '@/constants/queryKey';
-import { MemberEntity } from '@/types/user';
 import {
   Description,
   InterviewSettingFooter,
@@ -8,7 +6,7 @@ import {
 } from '@components/interviewSettingPage';
 import { css } from '@emotion/react';
 import { Button } from '@foundation/index';
-import { useQueryClient } from '@tanstack/react-query';
+import useUserInfo from '@hooks/useUserInfo';
 import { useRecoilState } from 'recoil';
 
 type RecordSettingPageProps = {
@@ -21,11 +19,7 @@ const RecordSettingPage: React.FC<RecordSettingPageProps> = ({
   onPrevClick,
 }) => {
   const [setting, setSetting] = useRecoilState(recordSetting);
-  const queryClient = useQueryClient();
-  const userInfo = queryClient.getQueryData<MemberEntity | undefined>(
-    QUERY_KEY.MEMBER
-  );
-
+  const userInfo = useUserInfo();
   const handleRecordChange = (name: RecordMethod) => {
     setSetting({
       isSuccess: true,

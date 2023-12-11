@@ -3,19 +3,17 @@ import Modal from '@foundation/Modal';
 import { Typography, Button } from '@foundation/index';
 
 type DeleteCheckModalProps = {
-  isOpen: boolean;
   content: string;
   closeModal: () => void;
   confirmModal: () => void;
 };
 const DeleteCheckModal: React.FC<DeleteCheckModalProps> = ({
-  isOpen,
   content,
   closeModal,
   confirmModal,
 }) => {
   return (
-    <Modal isOpen={isOpen} closeModal={closeModal}>
+    <Modal isOpen={true} closeModal={closeModal}>
       <Modal.content>
         <Typography variant="title4">{content}</Typography>
       </Modal.content>

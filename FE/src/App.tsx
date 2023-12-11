@@ -6,7 +6,6 @@ import { RecoilRoot } from 'recoil';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import GlobalSVGProvider from '@/GlobalSvgProvider';
 import AppRouter from '@/AppRouter';
-import ModalProvider from './modalProvider';
 import { ToastContainer } from '@foundation/Toast/ToastContainer';
 
 function App() {
@@ -31,7 +30,6 @@ function App() {
           <Global styles={_global} />
           <AppRouter queryClient={queryClient} />
           <GlobalSVGProvider />
-          <ModalProvider />
           <ToastContainer />
         </ThemeProvider>
       </RecoilRoot>

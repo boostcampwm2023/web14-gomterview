@@ -11,12 +11,10 @@ import { Description } from '@components/interviewSettingPage';
 import { toast } from '@foundation/Toast/toast';
 
 const StartWithSelectedQuestionModal = ({
-  isOpen,
   closeModal,
   questions,
   workbookData,
 }: {
-  isOpen: boolean;
   closeModal: () => void;
   questions: Question[];
   workbookData: WorkbookEntity;
@@ -56,7 +54,7 @@ const StartWithSelectedQuestionModal = ({
   };
 
   return (
-    <Modal isOpen={isOpen} closeModal={closeModal}>
+    <Modal closeModal={closeModal} isOpen={true}>
       <Modal.content>
         <div
           css={css`

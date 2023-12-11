@@ -17,6 +17,7 @@ import WorkbookPage from '@page/workbookPage';
 import UnknownErrorBoundary from './UnknownErrorBoundary';
 import APIErrorBoundary from './APIErrorBoundary';
 import SomethingWrongErrorPage from '@page/errorPage/SomethingWrong';
+import ModalProvider from './modalProvider';
 
 const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
   const routes = createBrowserRouter([
@@ -26,6 +27,7 @@ const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
         <UnknownErrorBoundary>
           <APIErrorBoundary>
             <Outlet />
+            <ModalProvider />
           </APIErrorBoundary>
         </UnknownErrorBoundary>
       ),

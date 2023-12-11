@@ -10,14 +10,12 @@ import { Typography } from '@foundation/index';
 import { toast } from '@foundation/Toast/toast';
 
 type AnswerSelectionModalProps = {
-  isOpen: boolean;
   workbookId: number;
   closeModal: () => void;
   question: Question;
 };
 
 const AnswerSelectionModal: React.FC<AnswerSelectionModalProps> = ({
-  isOpen,
   workbookId,
   closeModal,
   question,
@@ -30,7 +28,7 @@ const AnswerSelectionModal: React.FC<AnswerSelectionModalProps> = ({
 
   return (
     <Modal
-      isOpen={isOpen}
+      isOpen={true}
       closeModal={closeModal}
       css={css`
         width: 40rem;
