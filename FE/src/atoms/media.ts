@@ -1,11 +1,9 @@
 import { atom } from 'recoil';
 
 const mediaConnectStatus = [
-  'setup', //스트림 초기상태 설정. 비디오는 연결 전
-  'connect', //비디오 연결 완료 상태
-  'disconnect', //비디오 연결 해제. 스트림은 초기화된 상태
-  'initial', //스트림 x, 비디오 연결도 x
-  'fail', //위 과정중 어디선가 오류가 발생했을 대
+  'connect', //스트림 생성, 비디오 연결 완료 상태
+  'initial', //초기상태
+  'fail', //위 과정중 어디선가 오류가 발생했을 때
 ] as const;
 export type ConnectStatus = (typeof mediaConnectStatus)[number];
 

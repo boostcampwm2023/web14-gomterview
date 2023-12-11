@@ -36,15 +36,11 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
       toast.success('성공적으로 카메라에 연결되었습니다😊');
       return;
     }
-
-    return () => {
-      stopMedia();
-    };
   }, [isCurrentPage, media, startMedia, stopMedia]);
 
   useEffect(() => {
     setVideoSettingState({
-      isSuccess: connectStatus === 'connect' || connectStatus === 'setup',
+      isSuccess: connectStatus === 'connect',
     });
   }, [connectStatus, setVideoSettingState]);
 

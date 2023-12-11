@@ -1,15 +1,14 @@
-import useMedia from '@hooks/useMedia';
 import { createMicrophoneVolumeMonitor } from '@/utils/media';
 import { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
+import useGlobalMediaStream from '@hooks/useGlobalMediaStream';
 
 const VolumeStatus: React.FC = () => {
-  const { media, startMedia, stopMedia } = useMedia();
+  const { media } = useGlobalMediaStream();
   const [audioVolume, setAudioVolume] = useState<number>(0);
 
   useEffect(() => {
     if (!media) {
-      void startMedia();
       return;
     }
 
@@ -22,9 +21,8 @@ const VolumeStatus: React.FC = () => {
 
     return () => {
       stopMonitoring();
-      stopMedia();
     };
-  }, [media, startMedia, stopMedia]);
+  }, [media]);
 
   const getVolumeDivColor = () => {
     const green = Math.floor(Math.random() * 256)

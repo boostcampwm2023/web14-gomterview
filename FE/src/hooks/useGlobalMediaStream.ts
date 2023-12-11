@@ -15,41 +15,24 @@ const useGlobalMediaStream = () => {
   );
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const initStream = useCallback(async () => {
+  const startMedia = useCallback(async () => {
     try {
-      //init 로직
       const newMedia = await getMedia();
       setMedia(newMedia);
-      setConnectStatus('setup');
-      return newMedia;
+      if (videoRef.current) videoRef.current.srcObject = newMedia;
+      setConnectStatus('connect');
     } catch (e) {
       setConnectStatus('fail');
-      return null;
     }
   }, [setConnectStatus, setMedia]);
-
-  const getStream = useCallback(async () => {
-    if (media) return media;
-    return await initStream();
-  }, [initStream, media]);
-
-  const startMedia = useCallback(async () => {
-    const mediaStream = await getStream();
-    if (videoRef.current) videoRef.current.srcObject = mediaStream;
-    setConnectStatus('connect');
-  }, [getStream, setConnectStatus]);
 
   const stopMedia = useCallback(() => {
     if (media) {
       closeMedia(media);
-      setConnectStatus('setup');
+      setMedia(null);
+      setConnectStatus('initial');
     }
-  }, [media, setConnectStatus]);
-
-  const clearMedia = () => {
-    setMedia(null);
-    setConnectStatus('initial');
-  };
+  }, [media, setConnectStatus, setMedia]);
 
   useEffect(() => {
     const mimeTypes = getSupportedMimeTypes();
@@ -61,11 +44,7 @@ const useGlobalMediaStream = () => {
     if (mediaStream instanceof MediaStream) {
       const checkStream = () => {
         if (!mediaStream.active) {
-          if (media) {
-            setConnectStatus('setup');
-          } else {
-            setConnectStatus('initial');
-          }
+          setConnectStatus('initial');
           mediaStream.removeEventListener('inactive', checkStream);
         }
       };
@@ -74,6 +53,10 @@ const useGlobalMediaStream = () => {
     }
   }, [videoRef, media, setConnectStatus]);
 
+  useEffect(() => {
+    console.log(connectStatus);
+  }, [connectStatus]);
+
   return {
     media,
     videoRef,
@@ -81,7 +64,6 @@ const useGlobalMediaStream = () => {
     selectedMimeType,
     startMedia,
     stopMedia,
-    clearMedia,
   };
 };
 
