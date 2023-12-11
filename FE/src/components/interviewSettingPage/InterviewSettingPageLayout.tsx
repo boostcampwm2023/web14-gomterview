@@ -23,7 +23,7 @@ const InterviewSettingPageLayout: React.FC<InterviewSettingPageLayoutProps> = ({
         css={css`
           flex-grow: 1;
           row-gap: 1.5rem;
-          padding: 1rem;
+          padding: 1rem 1rem 0 1rem;
           width: 100%;
           height: auto;
         `}

@@ -37,6 +37,7 @@ const InterviewSettingContentLayout: React.FC<
           css={css`
             display: flex;
             column-gap: 1rem;
+            margin-bottom: 1rem;
           `}
         >
           <Button
