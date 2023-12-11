@@ -87,5 +87,6 @@ module.exports = (env) => {
         },
       ],
     },
+    ignoreWarnings: [/Critical dependency:/],
   };
 };
