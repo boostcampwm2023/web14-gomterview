@@ -12,6 +12,7 @@ import {
   Md5HashException,
   VideoAccessForbiddenException,
   VideoNotFoundException,
+  VideoNotFoundWithHashException,
   VideoOfWithdrawnMemberException,
 } from '../exception/video.exception';
 import { CreateVideoRequest } from '../dto/createVideoRequest';
@@ -138,8 +139,10 @@ export class VideoService {
   }
 
   async getVideoDetailByHash(hash: string) {
+    if (hash.length != 32) throw new InvalidHashException();
+
     const originUrl = await getValueFromRedis(hash);
-    if (isEmpty(originUrl)) throw new InvalidHashException();
+    if (isEmpty(originUrl)) throw new VideoNotFoundWithHashException();
 
     const video = await this.videoRepository.findByUrl(originUrl);
     if (!video.isPublic) throw new VideoAccessForbiddenException();

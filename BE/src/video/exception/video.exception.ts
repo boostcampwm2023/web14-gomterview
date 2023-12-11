@@ -1,4 +1,5 @@
 import {
+  HttpBadRequestException,
   HttpForbiddenException,
   HttpInternalServerError,
   HttpNotFoundException,
@@ -58,7 +59,7 @@ export class VideoNotFoundWithHashException extends HttpNotFoundException {
   }
 }
 
-export class InvalidHashException extends HttpNotFoundException {
+export class InvalidHashException extends HttpBadRequestException {
   constructor() {
     super('유효하지 않은 해시값입니다.', 'V10');
   }
