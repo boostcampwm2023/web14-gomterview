@@ -8,7 +8,9 @@ import { initializeTransactionalContext } from 'typeorm-transactional';
 
 async function bootstrap() {
   initializeTransactionalContext();
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    abortOnError: true,
+  });
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors(CORS_CONFIG);
