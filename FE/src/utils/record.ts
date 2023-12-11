@@ -23,6 +23,7 @@ export const startRecording = ({
   try {
     mediaRecorderRef.current = new MediaRecorder(media, {
       mimeType: selectedMimeType,
+      videoBitsPerSecond: 300000,
     });
 
     mediaRecorderRef.current.ondataavailable = (event: BlobEvent) => {
