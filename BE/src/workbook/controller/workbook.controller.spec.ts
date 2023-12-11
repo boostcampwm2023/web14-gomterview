@@ -24,9 +24,7 @@ import { MemberRepository } from '../../member/repository/member.repository';
 import { AuthModule } from '../../auth/auth.module';
 import { WorkbookModule } from '../workbook.module';
 import { CategoryModule } from '../../category/category.module';
-import { Member } from '../../member/entity/member';
 import { Workbook } from '../entity/workbook';
-import { Category } from '../../category/entity/category';
 import { createIntegrationTestModule } from '../../util/test.util';
 import * as cookieParser from 'cookie-parser';
 import { TokenModule } from '../../token/token.module';
@@ -305,12 +303,9 @@ describe('WorkbookController 통합테스트', () => {
 
   beforeAll(async () => {
     const modules = [AuthModule, WorkbookModule, CategoryModule, TokenModule];
-    const entities = [Member, Workbook, Category];
 
-    const moduleFixture: TestingModule = await createIntegrationTestModule(
-      modules,
-      entities,
-    );
+    const moduleFixture: TestingModule =
+      await createIntegrationTestModule(modules);
 
     app = moduleFixture.createNestApplication();
     app.use(cookieParser());

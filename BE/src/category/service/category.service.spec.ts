@@ -7,6 +7,7 @@ import { INestApplication } from '@nestjs/common';
 import {
   addAppModules,
   createIntegrationTestModule,
+  createTypeOrmModuleForTest,
 } from '../../util/test.util';
 import { CategoryModule } from '../category.module';
 
@@ -24,6 +25,7 @@ describe('CategoryService 단위 테스트', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [await createTypeOrmModuleForTest()],
       providers: [CategoryService, CategoryRepository],
     })
       .overrideProvider(CategoryRepository)
