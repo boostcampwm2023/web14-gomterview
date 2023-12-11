@@ -3,12 +3,11 @@ import { PATH } from '@constants/path';
 import Button from '@foundation/Button/Button';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
-import { useQueryClient } from '@tanstack/react-query';
-import { QUERY_KEY } from '@constants/queryKey';
 import { Tooltip } from '@foundation/index';
+import useUserInfo from '@hooks/useUserInfo';
 
 const InterviewStartButton: React.FC = () => {
-  const data = useQueryClient().getQueryState(QUERY_KEY.MEMBER);
+  const data = useUserInfo();
 
   return (
     <div>
