@@ -27,7 +27,10 @@ import { WorkbookModule } from '../workbook.module';
 import { CategoryModule } from '../../category/category.module';
 import { Member } from '../../member/entity/member';
 import { Workbook } from '../entity/workbook';
-import { createIntegrationTestModule } from '../../util/test.util';
+import {
+  createIntegrationTestModule,
+  createTypeOrmModuleForTest,
+} from '../../util/test.util';
 import * as cookieParser from 'cookie-parser';
 import { Category } from '../../category/entity/category';
 import { CreateWorkbookRequest } from '../dto/createWorkbookRequest';
@@ -38,8 +41,10 @@ import {
 } from '../exception/workbook.exception';
 import { WorkbookTitleResponse } from '../dto/workbookTitleResponse';
 import { UpdateWorkbookRequest } from '../dto/updateWorkbookRequest';
+import { TokenModule } from '../../token/token.module';
 
 describe('WorkbookService 단위테스트', () => {
+  let module: TestingModule;
   let service: WorkbookService;
   const mockCategoryRepository = {
     findByCategoryId: jest.fn(),
@@ -58,8 +63,13 @@ describe('WorkbookService 단위테스트', () => {
     findByIdWithoutJoin: jest.fn(),
   };
 
+  jest.mock('typeorm-transactional', () => ({
+    Transactional: () => () => ({}),
+  }));
+
   beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
+      imports: [await createTypeOrmModuleForTest([])],
       providers: [WorkbookService, CategoryRepository, WorkbookRepository],
     })
       .overrideProvider(CategoryRepository)
@@ -67,9 +77,10 @@ describe('WorkbookService 단위테스트', () => {
       .overrideProvider(WorkbookRepository)
       .useValue(mockWorkbookRepository)
       .compile();
-
     service = module.get<WorkbookService>(WorkbookService);
   });
+
+  beforeEach(() => {});
 
   it('should be defined', () => {
     expect(service).toBeDefined();
@@ -352,7 +363,7 @@ describe('WorkbookService 통합테스트', () => {
   let workbookRepository: WorkbookRepository;
 
   beforeAll(async () => {
-    const modules = [AuthModule, WorkbookModule, CategoryModule];
+    const modules = [AuthModule, WorkbookModule, CategoryModule, TokenModule];
     const entities = [Member, Workbook, Category];
 
     const moduleFixture: TestingModule = await createIntegrationTestModule(
