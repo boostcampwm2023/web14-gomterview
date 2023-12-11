@@ -57,13 +57,15 @@ const useInterview = () => {
 
   const handleDownload = useCallback(() => {
     const blob = new Blob(recordedBlobs, { type: selectedMimeType });
+
     const recordTime = calculateDuration();
+
     switch (method) {
       case 'idrive':
         void uploadToDrive({ blob, currentQuestion, recordTime });
         break;
       case 'local':
-        localDownload(blob, currentQuestion);
+        void localDownload(blob, currentQuestion, recordTime);
         break;
     }
     setRecordedBlobs([]);

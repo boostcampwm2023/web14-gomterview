@@ -51,15 +51,17 @@ export const stopRecording = (
   }
 };
 
-export const localDownload = (
+export const localDownload = async (
   blob: Blob,
-  currentQuestion: SelectedQuestion
+  currentQuestion: SelectedQuestion,
+  recordTime: string
 ) => {
-  const url = window.URL.createObjectURL(blob);
+  const mp4Blob = await EncodingWebmToMp4(blob, recordTime);
+  const url = window.URL.createObjectURL(mp4Blob);
   const a = document.createElement('a');
   a.style.display = 'none';
   a.href = url;
-  a.download = `${currentQuestion.questionContent}.webm`;
+  a.download = `${currentQuestion.questionContent}.mp4`;
 
   document.body.appendChild(a);
   a.click();
