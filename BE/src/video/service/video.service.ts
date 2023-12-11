@@ -51,60 +51,60 @@ export class VideoService {
     private memberRepository: MemberRepository,
   ) {}
 
-  async saveVideoOnCloud(
-    uploadVideoRequest: UploadVideoRequest,
-    member: Member,
-    file: Express.Multer.File,
-  ) {
-    await this.uploadVideo(file);
-    const videoUrl = await this.sendToBucket(file.originalname, '.mp4');
-    const thumbnail = await this.sendToBucket(file.originalname, '.png');
-    const videoTitle = await this.createVideoTitle(
-      member,
-      Number(uploadVideoRequest.questionId),
-    );
-    await this.createVideo(
-      member,
-      new CreateVideoRequest(
-        Number(uploadVideoRequest.questionId),
-        videoTitle,
-        videoUrl,
-        thumbnail,
-        uploadVideoRequest.videoLength,
-      ),
-    );
-  }
+  // async saveVideoOnCloud(
+  //   uploadVideoRequest: UploadVideoRequest,
+  //   member: Member,
+  //   file: Express.Multer.File,
+  // ) {
+  //   await this.uploadVideo(file);
+  //   const videoUrl = await this.sendToBucket(file.originalname, '.mp4');
+  //   const thumbnail = await this.sendToBucket(file.originalname, '.png');
+  //   const videoTitle = await this.createVideoTitle(
+  //     member,
+  //     Number(uploadVideoRequest.questionId),
+  //   );
+  //   await this.createVideo(
+  //     member,
+  //     new CreateVideoRequest(
+  //       Number(uploadVideoRequest.questionId),
+  //       videoTitle,
+  //       videoUrl,
+  //       thumbnail,
+  //       uploadVideoRequest.videoLength,
+  //     ),
+  //   );
+  // }
 
-  async uploadVideo(file: Express.Multer.File) {
-    logUploadStart(file.originalname);
-    await createDirectoryIfNotExist();
-    await saveVideoIfNotExists(file);
-    await encodeToUpload(file.originalname);
-  }
+  // async uploadVideo(file: Express.Multer.File) {
+  //   logUploadStart(file.originalname);
+  //   await createDirectoryIfNotExist();
+  //   await saveVideoIfNotExists(file);
+  //   await encodeToUpload(file.originalname);
+  // }
 
-  async sendToBucket(name: string, ext: string) {
-    const key = `${uuidv4()}${ext}`;
-    const s3 = new S3(IDRIVE_CONFIG);
-    const contentType = ext === '.mp4' ? 'video/mp4' : 'image/png';
-    const params = {
-      Bucket: ext === '.mp4' ? 'videos' : 'thumbnail',
-      ACL: 'public',
-      Key: key,
-      Body: await readFileAsBuffer(name.replace('.webm', ext)),
-      ContentType: contentType,
-    };
-    await new Promise((resolve, reject) => {
-      s3.putObject(params as PutObjectCommandInput, (err, data) => {
-        if (err) reject(err);
-        console.log(data);
-        resolve(key);
-      });
-    });
-    await deleteFile(name.replace('.webm', ext));
-    return `${process.env.IDRIVE_READ_URL}/${
-      ext === '.mp4' ? 'videos' : 'thumbnail'
-    }/${key}`;
-  }
+  // async sendToBucket(name: string, ext: string) {
+  //   const key = `${uuidv4()}${ext}`;
+  //   const s3 = new S3(IDRIVE_CONFIG);
+  //   const contentType = ext === '.mp4' ? 'video/mp4' : 'image/png';
+  //   const params = {
+  //     Bucket: ext === '.mp4' ? 'videos' : 'thumbnail',
+  //     ACL: 'public',
+  //     Key: key,
+  //     Body: await readFileAsBuffer(name.replace('.webm', ext)),
+  //     ContentType: contentType,
+  //   };
+  //   await new Promise((resolve, reject) => {
+  //     s3.putObject(params as PutObjectCommandInput, (err, data) => {
+  //       if (err) reject(err);
+  //       console.log(data);
+  //       resolve(key);
+  //     });
+  //   });
+  //   await deleteFile(name.replace('.webm', ext));
+  //   return `${process.env.IDRIVE_READ_URL}/${
+  //     ext === '.mp4' ? 'videos' : 'thumbnail'
+  //   }/${key}`;
+  // }
 
   async createVideo(member: Member, createVideoRequest: CreateVideoRequest) {
     validateManipulatedToken(member);
