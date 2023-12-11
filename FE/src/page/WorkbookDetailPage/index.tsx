@@ -7,7 +7,7 @@ import {
   StartWithSelectedQuestionModal,
 } from '@components/WorkbookDetailPage';
 import { css } from '@emotion/react';
-import { Box, Button, CheckBox, Modal } from '@foundation/index';
+import { Box, Button, CheckBox } from '@foundation/index';
 import useQuestionWorkbookQuery from '@hooks/apis/queries/useQuestionWorkbookQuery';
 import useWorkbookQuery from '@hooks/apis/queries/useWorkbookQuery';
 import useUserInfo from '@hooks/useUserInfo';
@@ -57,14 +57,6 @@ const WorkbookDetailPage = () => {
         />
       )
   );
-
-  const { closeModal, openModal } = useModal(() => {
-    return (
-      <Modal closeModal={closeModal} isOpen={true}>
-        이것은 모달입니다.
-      </Modal>
-    );
-  });
 
   const selectQuestion = (question: Question) => {
     setSelectedQuestion((prev) =>
@@ -126,7 +118,6 @@ const WorkbookDetailPage = () => {
             padding: 1rem;
           `}
         >
-          <Button onClick={openModal}>테스트</Button>
           <CheckBox
             id="allSelect"
             checked={allSelected}
