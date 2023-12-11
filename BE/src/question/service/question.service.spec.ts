@@ -7,7 +7,10 @@ import {
   questionFixture,
 } from '../fixture/question.fixture';
 import { QuestionResponse } from '../dto/questionResponse';
-import { createIntegrationTestModule } from '../../util/test.util';
+import {
+  createIntegrationTestModule,
+  createTypeOrmModuleForTest,
+} from '../../util/test.util';
 import { QuestionModule } from '../question.module';
 import { Question } from '../entity/question';
 import { INestApplication } from '@nestjs/common';
@@ -63,6 +66,7 @@ describe('QuestionService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [await createTypeOrmModuleForTest()],
       providers: [QuestionService, QuestionRepository, WorkbookRepository],
     })
       .overrideProvider(QuestionRepository)
