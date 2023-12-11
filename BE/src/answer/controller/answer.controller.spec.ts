@@ -20,8 +20,6 @@ import { AnswerModule } from '../answer.module';
 import { QuestionModule } from '../../question/question.module';
 import { Answer } from '../entity/answer';
 import { Question } from '../../question/entity/question';
-import { Category } from '../../category/entity/category';
-import { Member } from '../../member/entity/member';
 import {
   addAppModules,
   createIntegrationTestModule,
@@ -38,7 +36,6 @@ import { DefaultAnswerRequest } from '../dto/defaultAnswerRequest';
 import { workbookFixture } from '../../workbook/fixture/workbook.fixture';
 import { WorkbookRepository } from '../../workbook/repository/workbook.repository';
 import { WorkbookModule } from '../../workbook/workbook.module';
-import { Workbook } from '../../workbook/entity/workbook';
 import { CategoryRepository } from '../../category/repository/category.repository';
 import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 
@@ -122,9 +119,8 @@ describe('AnswerController 통합테스트', () => {
       TokenModule,
       WorkbookModule,
     ];
-    const entities = [Answer, Question, Category, Member, Answer, Workbook];
 
-    const moduleFixture = await createIntegrationTestModule(modules, entities);
+    const moduleFixture = await createIntegrationTestModule(modules);
     app = moduleFixture.createNestApplication();
     addAppModules(app);
     await app.init();

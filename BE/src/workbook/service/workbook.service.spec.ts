@@ -69,7 +69,7 @@ describe('WorkbookService 단위테스트', () => {
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      imports: [await createTypeOrmModuleForTest([])],
+      imports: [await createTypeOrmModuleForTest()],
       providers: [WorkbookService, CategoryRepository, WorkbookRepository],
     })
       .overrideProvider(CategoryRepository)

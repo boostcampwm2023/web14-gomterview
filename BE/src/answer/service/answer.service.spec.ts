@@ -39,7 +39,6 @@ import { WorkbookModule } from '../../workbook/workbook.module';
 import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { CategoryRepository } from '../../category/repository/category.repository';
 import { CategoryModule } from '../../category/category.module';
-import { Category } from '../../category/entity/category';
 import { QuestionResponse } from '../../question/dto/questionResponse';
 
 describe('AnswerService 단위 테스트', () => {
@@ -193,9 +192,8 @@ describe('AnswerService 통합테스트', () => {
       WorkbookModule,
       CategoryModule,
     ];
-    const entities = [Answer, Question, Member, Answer, Workbook, Category];
 
-    const moduleFixture = await createIntegrationTestModule(modules, entities);
+    const moduleFixture = await createIntegrationTestModule(modules);
     app = moduleFixture.createNestApplication();
     await app.init();
 

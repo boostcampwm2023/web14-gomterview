@@ -20,12 +20,10 @@ import { MemberService } from '../service/member.service';
 import { TokenService } from '../../token/service/token.service';
 import { TokenModule } from '../../token/token.module';
 import { MemberModule } from '../member.module';
-import { Member } from '../entity/member';
 import {
   addAppModules,
   createIntegrationTestModule,
 } from '../../util/test.util';
-import { Category } from '../../category/entity/category';
 import { MemberNicknameResponse } from '../dto/memberNicknameResponse';
 import { MemberRepository } from '../repository/member.repository';
 import { JwtService } from '@nestjs/jwt';
@@ -138,12 +136,9 @@ describe('MemberController 통합 테스트', () => {
 
   beforeAll(async () => {
     const modules = [AuthModule, TokenModule, MemberModule];
-    const entities = [Member, Category];
 
-    const moduleFixture: TestingModule = await createIntegrationTestModule(
-      modules,
-      entities,
-    );
+    const moduleFixture: TestingModule =
+      await createIntegrationTestModule(modules);
 
     app = moduleFixture.createNestApplication();
     addAppModules(app);

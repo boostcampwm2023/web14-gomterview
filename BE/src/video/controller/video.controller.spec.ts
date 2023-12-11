@@ -33,13 +33,8 @@ import { VideoHashResponse } from '../dto/videoHashResponse';
 import { SingleVideoResponse } from '../dto/singleVideoResponse';
 import { MemberNotFoundException } from 'src/member/exception/member.exception';
 import { INestApplication } from '@nestjs/common';
-import { Video } from '../entity/video';
 import { VideoModule } from '../video.module';
 import { addAppModules, createIntegrationTestModule } from 'src/util/test.util';
-import { Member } from 'src/member/entity/member';
-import { Question } from 'src/question/entity/question';
-import { Workbook } from 'src/workbook/entity/workbook';
-import { Answer } from 'src/answer/entity/answer';
 import { AuthService } from 'src/auth/service/auth.service';
 import { AuthModule } from 'src/auth/auth.module';
 import * as request from 'supertest';
@@ -51,7 +46,6 @@ import 'dotenv/config';
 import { VideoRepository } from '../repository/video.repository';
 import * as crypto from 'crypto';
 import { MemberRepository } from 'src/member/repository/member.repository';
-import { Category } from 'src/category/entity/category';
 import { CategoryRepository } from 'src/category/repository/category.repository';
 import { categoryFixtureWithId } from 'src/category/fixture/category.fixture';
 
@@ -594,12 +588,9 @@ describe('VideoController 통합 테스트', () => {
 
   beforeAll(async () => {
     const modules = [VideoModule, AuthModule];
-    const entities = [Video, Member, Question, Workbook, Answer, Category];
 
-    const moduleFixture: TestingModule = await createIntegrationTestModule(
-      modules,
-      entities,
-    );
+    const moduleFixture: TestingModule =
+      await createIntegrationTestModule(modules);
 
     app = moduleFixture.createNestApplication();
     addAppModules(app);

@@ -19,10 +19,7 @@ import { Question } from '../question/entity/question';
 import { Answer } from '../answer/entity/answer';
 import { Video } from '../video/entity/video';
 
-export const createIntegrationTestModule = async (
-  modules: unknown[],
-  entities: unknown[],
-) => {
+export const createIntegrationTestModule = async (modules: unknown[]) => {
   const ormModule = await createTypeOrmModuleForTest();
   modules.push(ormModule);
 
@@ -58,5 +55,6 @@ export const ormModuleForTest = (): DataSourceOptions => {
     database: ':memory:',
     entities: [Member, Category, Workbook, Question, Answer, Video],
     synchronize: true,
+    logging: true,
   };
 };

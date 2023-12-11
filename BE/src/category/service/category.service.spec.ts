@@ -18,6 +18,10 @@ describe('CategoryService 단위 테스트', () => {
     save: jest.fn(),
   };
 
+  jest.mock('typeorm-transactional', () => ({
+    Transactional: () => () => ({}),
+  }));
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [CategoryService, CategoryRepository],
@@ -56,12 +60,9 @@ describe('CategoryService 통합 테스트', () => {
 
   beforeAll(async () => {
     const modules = [CategoryModule];
-    const entities = [Category];
 
-    const moduleFixture: TestingModule = await createIntegrationTestModule(
-      modules,
-      entities,
-    );
+    const moduleFixture: TestingModule =
+      await createIntegrationTestModule(modules);
 
     app = moduleFixture.createNestApplication();
     addAppModules(app);
