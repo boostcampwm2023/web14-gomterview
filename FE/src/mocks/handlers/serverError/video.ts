@@ -47,7 +47,7 @@ const videoHandlers = [
       { status: 500 }
     );
   }),
-  http.patch(API.VIDEO_ID(), async () => {
+  http.patch(API.VIDEO_ID(), () => {
     return HttpResponse.json(
       {
         message: '',

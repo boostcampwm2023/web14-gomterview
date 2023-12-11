@@ -1,5 +1,3 @@
-import { toast } from '@foundation/Toast/toast';
-
 export const closeMedia = (media: MediaStream | null) => {
   if (media) {
     media.getTracks().forEach((track) => track.stop());

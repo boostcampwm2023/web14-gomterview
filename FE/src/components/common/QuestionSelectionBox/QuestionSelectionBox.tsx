@@ -3,7 +3,6 @@ import { Box, Tabs } from '@foundation/index';
 import useWorkbookTitleListQuery from '@hooks/apis/queries/useWorkbookTitleListQuery';
 import QuestionTabList from '@common/QuestionSelectionBox/QuestionTabList';
 import WorkbookAddButton from '@common/QuestionSelectionBox/WorkbookAddButton';
-import { Box, Tabs } from '@foundation/index';
 import { theme } from '@styles/theme';
 import {
   QuestionSelectionBoxSidebarAreaDiv,

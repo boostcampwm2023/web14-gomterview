@@ -1,5 +1,5 @@
 import getAPIResponseData from '@/utils/getAPIResponseData';
-import { MemberItemResDto, MemberNameResDto } from '@/types/user';
+import { MemberItemResDto, MemberNameResDto } from '@/types/member';
 import { API } from '@constants/api';
 
 export const getMemberInfo = async () => {
