@@ -52,8 +52,14 @@ export class Md5HashException extends HttpInternalServerError {
   }
 }
 
+export class VideoNotFoundWithHashException extends HttpNotFoundException {
+  constructor() {
+    super('해당 해시값으로 등록된 비디오를 조회할 수 없습니다.', 'V09');
+  }
+}
+
 export class InvalidHashException extends HttpNotFoundException {
   constructor() {
-    super('유효하지 않은 해시값입니다.', 'V09');
+    super('유효하지 않은 해시값입니다.', 'V10');
   }
 }
