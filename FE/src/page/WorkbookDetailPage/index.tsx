@@ -92,11 +92,11 @@ const WorkbookDetailPage = () => {
 
   const validateAddWorkbookListModal = () => {
     if (!userInfo) {
-      alert('로그인이 필요합니다.');
+      toast.warning('로그인이 필요합니다.');
       return false;
     }
     if (selectedQuestion.length < 1) {
-      alert('질문을 선택해주세요');
+      toast.warning('질문을 선택해주세요');
       return false;
     }
     return true;
