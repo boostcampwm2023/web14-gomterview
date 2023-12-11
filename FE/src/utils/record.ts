@@ -116,3 +116,31 @@ export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
 
   return newBlob;
 };
+
+const compareProgress = (logMessage: string, recordTime: string) => {
+  const timeMatch = logMessage.match(
+    /time=([0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{2})/
+  );
+  if (!timeMatch) return null;
+
+  const currentTimeStr = timeMatch[1];
+  const currentTime = convertTimeToSeconds(currentTimeStr);
+  const targetTime = convertTimeToMinutes(recordTime);
+
+  if (currentTime >= targetTime) {
+    return '녹화가 완료되었습니다.';
+  } else {
+    const progressPercent = ((currentTime / targetTime) * 100).toFixed(2);
+    return `인코딩 ${progressPercent}% 진행중`;
+  }
+};
+
+const convertTimeToSeconds = (timeStr: string) => {
+  const [hours, minutes, seconds] = timeStr.split(':').map(Number);
+  return hours * 3600 + minutes * 60 + seconds;
+};
+
+const convertTimeToMinutes = (timeStr: string) => {
+  const [minutes, seconds] = timeStr.split(':').map(Number);
+  return minutes * 60 + seconds;
+};
