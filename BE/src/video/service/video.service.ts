@@ -8,6 +8,7 @@ import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { QuestionRepository } from 'src/question/repository/question.repository';
 import {
   IDriveException,
+  InvalidHashException,
   Md5HashException,
   VideoAccessForbiddenException,
   VideoNotFoundException,
@@ -138,6 +139,8 @@ export class VideoService {
 
   async getVideoDetailByHash(hash: string) {
     const originUrl = await getValueFromRedis(hash);
+    if (isEmpty(originUrl)) throw new InvalidHashException();
+
     const video = await this.videoRepository.findByUrl(originUrl);
     if (!video.isPublic) throw new VideoAccessForbiddenException();
     if (isEmpty(video.memberId)) throw new VideoOfWithdrawnMemberException();
