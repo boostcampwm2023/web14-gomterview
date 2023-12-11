@@ -6,8 +6,16 @@ import {
   WelcomeBlurb,
 } from '@components/landingPage';
 import { css } from '@emotion/react';
+import useMedia from '@hooks/useMedia';
+import { useEffect } from 'react';
 
 const LandingPage: React.FC = () => {
+  const { media, stopMedia } = useMedia();
+
+  useEffect(() => {
+    if (media) stopMedia();
+  }, [media, stopMedia]);
+
   return (
     <LandingPageLayout>
       <WelcomeBlurb />
