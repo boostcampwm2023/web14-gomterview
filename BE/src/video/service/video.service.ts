@@ -31,17 +31,6 @@ import {
 import { SingleVideoResponse } from '../dto/singleVideoResponse';
 import { MemberNotFoundException } from 'src/member/exception/member.exception';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import {
-  createDirectoryIfNotExist,
-  deleteFile,
-  encodeToUpload,
-  logUploadStart,
-  readFileAsBuffer,
-  saveVideoIfNotExists,
-} from '../../util/encoder.util';
-import { PutObjectCommandInput, S3 } from '@aws-sdk/client-s3';
-import { IDRIVE_CONFIG } from '../../config/idrive.config';
-import { UploadVideoRequest } from '../dto/uploadVideoRequest';
 
 @Injectable()
 export class VideoService {
@@ -182,13 +171,13 @@ export class VideoService {
     await this.videoRepository.remove(video);
   }
 
-  private async createVideoTitle(member: Member, questionId: number) {
-    const question = await this.questionRepository.findById(questionId);
+  // private async createVideoTitle(member: Member, questionId: number) {
+  //   const question = await this.questionRepository.findById(questionId);
 
-    return `${member.nickname}_${
-      question ? question.content : '삭제된 질문입니다'
-    }_${uuidv4().split('-').pop()}`;
-  }
+  //   return `${member.nickname}_${
+  //     question ? question.content : '삭제된 질문입니다'
+  //   }_${uuidv4().split('-').pop()}`;
+  // }
 
   private validateVideoOwnership(video: Video, memberId: number) {
     if (isEmpty(video)) throw new VideoNotFoundException();

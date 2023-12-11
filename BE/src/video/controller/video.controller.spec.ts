@@ -12,12 +12,14 @@ import { Request, Response } from 'express';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import {
   IDriveException,
+  InvalidHashException,
   Md5HashException,
   RedisDeleteException,
   RedisRetrieveException,
   RedisSaveException,
   VideoAccessForbiddenException,
   VideoNotFoundException,
+  VideoNotFoundWithHashException,
   VideoOfWithdrawnMemberException,
 } from '../exception/video.exception';
 import {
@@ -235,6 +237,20 @@ describe('VideoController 단위 테스트', () => {
       expect(result).toBe(mockVideoDetailWithHash);
     });
 
+    it('해시로 비디오 조회 시 해시의 길이가 32자가 아니라면 InvalidHashException을 반환한다.', async () => {
+      // given
+
+      // when
+      mockVideoService.getVideoDetailByHash.mockRejectedValue(
+        new InvalidHashException(),
+      );
+
+      // then
+      expect(controller.getVideoDetailByHash(hash)).rejects.toThrow(
+        InvalidHashException,
+      );
+    });
+
     it('해시로 비디오 조회 시 비디오가 private이라면 VideoAccessForbiddenException을 반환한다.', async () => {
       // given
 
@@ -260,6 +276,20 @@ describe('VideoController 단위 테스트', () => {
       // then
       expect(controller.getVideoDetailByHash(hash)).rejects.toThrow(
         VideoOfWithdrawnMemberException,
+      );
+    });
+
+    it('해시로 비디오 조회 시 유효한 해시지만 조회되는 비디오가 없다면 VideoNotFoundWithHashException을 반환한다.', async () => {
+      // given
+
+      // when
+      mockVideoService.getVideoDetailByHash.mockRejectedValue(
+        new VideoNotFoundWithHashException(),
+      );
+
+      // then
+      expect(controller.getVideoDetailByHash(hash)).rejects.toThrow(
+        VideoNotFoundWithHashException,
       );
     });
 
