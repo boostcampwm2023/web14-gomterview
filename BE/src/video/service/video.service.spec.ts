@@ -19,11 +19,13 @@ import { ManipulatedTokenNotFiltered } from 'src/token/exception/token.exception
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import {
   IDriveException,
+  InvalidHashException,
   Md5HashException,
   RedisDeleteException,
   RedisRetrieveException,
   VideoAccessForbiddenException,
   VideoNotFoundException,
+  VideoNotFoundWithHashException,
   VideoOfWithdrawnMemberException,
 } from '../exception/video.exception';
 import { VideoDetailResponse } from '../dto/videoDetailResponse';
@@ -282,7 +284,7 @@ describe('VideoService 단위 테스트', () => {
   });
 
   describe('getVideoDetailByHash', () => {
-    const hash = 'fakeHash';
+    const hash = 'fakeHashfakeHashfakeHashfakeHash'; // 32자
     const url = 'fakeUrl';
     const member = memberFixture;
 
@@ -312,21 +314,15 @@ describe('VideoService 단위 테스트', () => {
       mockedGetValueFromRedis.mockRestore();
     });
 
-    it('해시로 비디오 상세 정보 조회 시 redis에서 오류가 발생하면 RedisRetrieveException을 반환한다.', async () => {
+    it('해시로 비디오 상세 정보 조회 시 해시가 유효하지 않은 형태라면 InvalidHashExceptino을 반환한다.', async () => {
       // given
-
+      const hash = 'fakeHash';
       // when
-      const mockedGetValueFromRedis =
-        getValueFromRedis as unknown as jest.MockedFunction<
-          typeof getValueFromRedis
-        >;
-      mockedGetValueFromRedis.mockRejectedValue(new RedisRetrieveException());
 
       // then
       await expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
-        RedisRetrieveException,
+        InvalidHashException,
       );
-      mockedGetValueFromRedis.mockRestore();
     });
 
     it('해시로 비디오 상세 정보 조회 시 비디오가 공개 상태가 아니라면 VideoAccessForbiddenException을 반환한다.', async () => {
@@ -369,6 +365,23 @@ describe('VideoService 단위 테스트', () => {
       mockedGetValueFromRedis.mockRestore();
     });
 
+    it('해시로 비디오 상세 정보 조회 시 해시로 조회되는 비디오가 없다면 VideoNotFoundWithHashException을 반환한다.', async () => {
+      // given
+
+      // when
+      const mockedGetValueFromRedis =
+        getValueFromRedis as unknown as jest.MockedFunction<
+          typeof getValueFromRedis
+        >;
+      mockedGetValueFromRedis.mockResolvedValue(null);
+
+      // then
+      await expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
+        VideoNotFoundWithHashException,
+      );
+      mockedGetValueFromRedis.mockRestore();
+    });
+
     it('해시로 비디오 상세 정보 조회 시 비디오가 삭제된 회원의 비디오라면 MemberNotFoundException을 반환한다.', async () => {
       // given
       const video = videoFixture;
@@ -385,6 +398,23 @@ describe('VideoService 단위 테스트', () => {
       // then
       await expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
         MemberNotFoundException,
+      );
+      mockedGetValueFromRedis.mockRestore();
+    });
+
+    it('해시로 비디오 상세 정보 조회 시 redis에서 오류가 발생하면 RedisRetrieveException을 반환한다.', async () => {
+      // given
+
+      // when
+      const mockedGetValueFromRedis =
+        getValueFromRedis as unknown as jest.MockedFunction<
+          typeof getValueFromRedis
+        >;
+      mockedGetValueFromRedis.mockRejectedValue(new RedisRetrieveException());
+
+      // then
+      await expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
+        RedisRetrieveException,
       );
       mockedGetValueFromRedis.mockRestore();
     });
@@ -829,6 +859,7 @@ describe('VideoService 통합 테스트', () => {
       const video = await videoRepository.save(videoFixture);
       const member = await memberRepository.findById(video.memberId);
       const hash = crypto.createHash('md5').update(video.url).digest('hex');
+      await saveToRedis(hash, video.url);
 
       //when
       const result = await videoService.getVideoDetailByHash(hash);
@@ -862,6 +893,7 @@ describe('VideoService 통합 테스트', () => {
       //given
       const video = await videoRepository.save(videoOfWithdrawnMemberFixture);
       const hash = crypto.createHash('md5').update(video.url).digest('hex');
+      await saveToRedis(hash, video.url);
 
       //when
 

@@ -805,11 +805,12 @@ describe('VideoController 통합 테스트', () => {
 
     it('해시로 private인 비디오 조회를 요청하면 403 상태 코드가 반환된다.', async () => {
       // given
-      await videoRepository.save(privateVideoFixture);
+      const video = await videoRepository.save(privateVideoFixture);
       const hash = crypto
         .createHash('md5')
         .update(privateVideoFixture.url)
         .digest('hex');
+      await saveToRedis(hash, video.url);
 
       // when & then
       const agent = request.agent(app.getHttpServer());
