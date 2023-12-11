@@ -4,6 +4,7 @@ import { Mirror } from '@common/index';
 import { RecordStatus } from '@components/interviewPage/InterviewHeader';
 import { Description } from '@components/interviewSettingPage';
 import { css } from '@emotion/react';
+import { Button } from '@foundation/index';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { toast } from '@foundation/Toast/toast';
@@ -34,7 +35,6 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
   useEffect(() => {
     if (isCurrentPage && !media) {
       void startMedia();
-      toast.success('성공적으로 카메라에 연결되었습니다😊');
       return;
     }
   }, [isCurrentPage, media, startMedia, stopMedia]);

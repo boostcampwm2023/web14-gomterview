@@ -8,6 +8,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { closeMedia, getMedia, getSupportedMimeTypes } from '@/utils/media';
 import useModal from '@hooks/useModal';
 import { MediaDisconnectedModal } from '@components/interviewPage/InterviewModal';
+import { toast } from '@foundation/Toast/toast';
 
 const useMedia = () => {
   const [media, setMedia] = useRecoilState(mediaState);
@@ -28,11 +29,12 @@ const useMedia = () => {
       setMedia(newMedia);
       setConnectStatus('connect');
       if (videoRef.current) videoRef.current.srcObject = newMedia;
+      toast.success('성공적으로 카메라에 연결되었습니다😊');
     } catch (e) {
       setConnectStatus('fail');
       openModal();
     }
-  }, [openModal, setConnectStatus, setMedia]);
+  }, [setConnectStatus, setMedia]);
 
   const connectVideo = useCallback(() => {
     if (videoRef.current) videoRef.current.srcObject = media;
