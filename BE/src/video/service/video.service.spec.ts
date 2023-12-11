@@ -147,7 +147,7 @@ describe('VideoService 단위 테스트', () => {
 
       // then
       expect(response).toBeInstanceOf(PreSignedUrlResponse);
-      expect(response.key.endsWith('.webm')).toBeTruthy(); // 파일 확장자는 반드시 webm이어야 함
+      expect(response.key.endsWith('.mp4')).toBeTruthy(); // 파일 확장자는 반드시 mp4이어야 함
       expect(response.preSignedUrl).toBe(url);
 
       // restore
