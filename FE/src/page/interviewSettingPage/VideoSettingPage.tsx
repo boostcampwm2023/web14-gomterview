@@ -7,7 +7,11 @@ import { css } from '@emotion/react';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { toast } from '@foundation/Toast/toast';
+<<<<<<< HEAD
 import InterviewSettingContentLayout from '@components/interviewSettingPage/InterviewSettingContentLayout';
+=======
+import useMedia from '@hooks/useMedia';
+>>>>>>> 50bf6a6 (refactor: 전역 상태로 스트림을 관리하는 useMedia 모두 적용)
 type VideoSettingPageProps = {
   onNextClick?: () => void;
   onPrevClick?: () => void;

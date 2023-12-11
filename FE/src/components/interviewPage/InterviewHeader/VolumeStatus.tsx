@@ -1,10 +1,10 @@
 import { createMicrophoneVolumeMonitor } from '@/utils/media';
 import { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
-import useGlobalMediaStream from '@hooks/useGlobalMediaStream';
+import useMedia from '@hooks/useMedia';
 
 const VolumeStatus: React.FC = () => {
-  const { media } = useGlobalMediaStream();
+  const { media } = useMedia();
   const [audioVolume, setAudioVolume] = useState<number>(0);
 
   useEffect(() => {
