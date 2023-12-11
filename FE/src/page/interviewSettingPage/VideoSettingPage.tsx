@@ -1,5 +1,4 @@
 import { videoSetting } from '@/atoms/interviewSetting';
-import useMedia from '@/hooks/useMedia';
 import { theme } from '@/styles/theme';
 import { Mirror } from '@common/index';
 import { RecordStatus } from '@components/interviewPage/InterviewHeader';
@@ -39,20 +38,14 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
     }
 
     return () => {
-      if (!isCurrentPage && media) stopMedia();
+      stopMedia();
     };
   }, [isCurrentPage, media, startMedia, stopMedia]);
 
   useEffect(() => {
-    if (connectStatus === 'connect') {
-      setVideoSettingState({
-        isSuccess: true,
-      });
-    } else {
-      setVideoSettingState({
-        isSuccess: false,
-      });
-    }
+    setVideoSettingState({
+      isSuccess: connectStatus === 'connect' || connectStatus === 'setup',
+    });
   }, [connectStatus, setVideoSettingState]);
 
   return (
