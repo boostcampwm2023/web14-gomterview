@@ -17,7 +17,10 @@ import { MemberModule } from '../../member/member.module';
 import { AnswerModule } from '../answer.module';
 import { Question } from '../../question/entity/question';
 import { Member } from '../../member/entity/member';
-import { createIntegrationTestModule } from '../../util/test.util';
+import {
+  createIntegrationTestModule,
+  createTypeOrmModuleForTest,
+} from '../../util/test.util';
 import { QuestionModule } from '../../question/question.module';
 import {
   answerFixture,
@@ -59,8 +62,13 @@ describe('AnswerService 단위 테스트', () => {
     findById: jest.fn(),
   };
 
+  jest.mock('typeorm-transactional', () => ({
+    Transactional: () => () => ({}),
+  }));
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [await createTypeOrmModuleForTest()],
       providers: [
         AnswerService,
         AnswerRepository,

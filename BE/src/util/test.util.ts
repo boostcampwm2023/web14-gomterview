@@ -55,6 +55,5 @@ export const ormModuleForTest = (): DataSourceOptions => {
     database: ':memory:',
     entities: [Member, Category, Workbook, Question, Answer, Video],
     synchronize: true,
-    logging: true,
   };
 };
