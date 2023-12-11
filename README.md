@@ -6,6 +6,13 @@
 
 곰터뷰는 `무료`로 `로그인 없이` 사용할 수 있는 면접 연습 서비스입니다.
 
+## 곰터뷰는 이런 기술을 사용했어요
+### Frontend
+![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/ea076b5e-b826-4389-ad42-38c491b62796)
+
+## 곰터뷰의 서비스 요청 흐름도
+![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/ff5719a8-2727-429d-9c34-7be2099a87d6)
+
 ## 링크
 
 - [곰터뷰 서비스 바로가기](https://www.gomterview.com)
