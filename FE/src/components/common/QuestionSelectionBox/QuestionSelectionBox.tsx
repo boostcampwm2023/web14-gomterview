@@ -24,7 +24,7 @@ const QuestionSelectionBox = () => {
     setModalState,
   ] = useRecoilState(QuestionAnswerSelectionModal);
 
-  const [isSideBarOpen, setIsSideBarOpen] = useState(false);
+  const [isSideBarOpen, setIsSideBarOpen] = useState(true);
 
   if (!workbookListData) return;
   return (

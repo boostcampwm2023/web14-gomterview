@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import useQuestionWorkbookQuery from '@hooks/apis/queries/useQuestionWorkbookQuery';
-import { Typography, Toggle, Tabs, Button, Icon } from '@foundation/index';
+import { Button, Icon, Tabs, Toggle, Typography } from '@foundation/index';
 import { WorkbookTitleListResDto } from '@/types/workbook';
 import { ExcludeArray } from '@/types/utils';
 import QuestionAddForm from '@common/QuestionSelectionBox/QuestionAddForm';
@@ -93,7 +93,9 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
             align-items: center;
             column-gap: 0.5rem;
             padding: 1rem;
-            border-radius: ${isSidebarOpen ? '0 0 1rem 1rem' : '0 0 1rem 0'};
+            border-radius: ${isSidebarOpen && isDeviceBreakpoint('tablet')
+              ? '0 0 1rem 1rem'
+              : '0 0 1rem 0'};
             background-color: ${theme.colors.surface.default};
           `}
         >
