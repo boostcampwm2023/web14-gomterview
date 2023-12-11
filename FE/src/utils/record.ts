@@ -1,6 +1,9 @@
 import { SelectedQuestion } from '@/atoms/interviewSetting';
 import React, { MutableRefObject } from 'react';
 import { toast } from '@foundation/Toast/toast';
+import { FFmpeg } from '@ffmpeg/ffmpeg';
+import { toBlobURL } from '@ffmpeg/util';
+const ffmpeg = new FFmpeg();
 
 type StartRecordingProps = {
   media: MediaStream | null;
@@ -63,4 +66,51 @@ export const localDownload = (
   window.URL.revokeObjectURL(url);
   document.body.removeChild(a);
   toast.success('성공적으로 컴퓨터에 저장되었습니다.');
+};
+
+export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
+  const baseURL = 'https://unpkg.com/@ffmpeg/core-mt@0.12.4/dist/umd';
+  toast.info(
+    '영상 인코딩을 시작합니다. 세로고침 혹은 화면을 종료시 데이터가 소실될 수 있습니다.'
+  );
+
+  let lastLogTime = 0;
+  const logInterval = 10000; // 10초 간격 (밀리초 단위)
+
+  ffmpeg.on('log', ({ message }) => {
+    const currentTime = Date.now();
+
+    if (currentTime - lastLogTime > logInterval) {
+      lastLogTime = currentTime;
+      const curProgressMessage = compareProgress(message, recordTime);
+      if (curProgressMessage)
+        toast.info(curProgressMessage, { autoClose: 5000 });
+    }
+  });
+
+  if (!ffmpeg.loaded) {
+    await ffmpeg.load({
+      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+      wasmURL: await toBlobURL(
+        `${baseURL}/ffmpeg-core.wasm`,
+        'application/wasm'
+      ),
+      workerURL: await toBlobURL(
+        `${baseURL}/ffmpeg-core.worker.js`,
+        'text/javascript'
+      ),
+    });
+  }
+
+  const arrayBuffer = await blob.arrayBuffer();
+  const uint8Array = new Uint8Array(arrayBuffer);
+  // ffmpeg의 파일 시스템에 파일 작성
+  await ffmpeg.writeFile('input.webm', uint8Array);
+
+  await ffmpeg.exec(['-i', 'input.webm', 'output.mp4']);
+  const data = await ffmpeg.readFile('output.mp4');
+  const newBlob = new Blob([data], { type: 'video/mp4' });
+  toast.info('성공적으로 Mp4 인코딩이 성공했습니다😊');
+
+  return newBlob;
 };
