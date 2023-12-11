@@ -19,11 +19,12 @@ import { Question } from './question/entity/question';
 import { Answer } from './answer/entity/answer';
 import { WorkbookModule } from './workbook/workbook.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { Workbook } from './workbook/entity/workbook';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync(MYSQL_OPTION),
-    TypeOrmModule.forFeature([Category, Member, Question, Answer]),
+    TypeOrmModule.forFeature([Category, Member, Question, Answer, Workbook]),
     MulterModule.register({
       dest: './uploads', // 파일이 저장될 경로 설정
     }),
