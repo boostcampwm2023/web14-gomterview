@@ -12,9 +12,17 @@ const KakaoInAppBrowserDetect: React.FC<PropsWithChildren> = ({ children }) => {
   useEffect(() => {
     if (isKakaoInAppBrowser) moveOtherBrowser();
   }, [isKakaoInAppBrowser, moveOtherBrowser]);
+
   if (isKakaoInAppBrowser)
     return (
-      <>
+      <div
+        css={css`
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        `}
+      >
         <img
           src={ErrorBear}
           alt={'노트북을 하는 곰돌이의 뒷모습'}
@@ -39,9 +47,9 @@ const KakaoInAppBrowserDetect: React.FC<PropsWithChildren> = ({ children }) => {
           <Typography variant="title2">
             아래의 버튼을 클릭하셔서 다른 브라우저에서 곰터뷰를 이용해주세요!
           </Typography>
-          <Button onClick={() => moveOtherBrowser()}>브라우저 열기</Button>
+          <Button onClick={moveOtherBrowser}>브라우저 열기</Button>
         </div>
-      </>
+      </div>
     );
   else return <>{children}</>;
 };
