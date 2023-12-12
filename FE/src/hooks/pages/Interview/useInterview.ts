@@ -81,10 +81,6 @@ const useInterview = () => {
 
   useEffect(() => {
     if (isAllSuccess) connectVideo();
-  }, [connectVideo, isAllSuccess]);
-
-  useEffect(() => {
-    if (isAllSuccess) connectVideo();
 
     return () => {
       if (media) stopMedia();
