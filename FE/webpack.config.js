@@ -26,9 +26,9 @@ module.exports = (env) => {
       port: 3000,
       hot: true,
       headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Embedder-Policy': 'require-corp',
-    },
+        'Cross-Origin-Opener-Policy': 'same-origin',
+        'Cross-Origin-Embedder-Policy': 'require-corp',
+      },
       static: path.resolve(__dirname, 'dist'),
       proxy: {
         '/api': {
