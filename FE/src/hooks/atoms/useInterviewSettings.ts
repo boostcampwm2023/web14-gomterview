@@ -4,6 +4,7 @@ import {
   videoSetting,
   recordSetting,
 } from '@atoms/interviewSetting';
+import { useCallback } from 'react';
 
 function useInterviewSettings() {
   const [{ isSuccess: questionSuccess }, setQuestion] =
@@ -14,11 +15,11 @@ function useInterviewSettings() {
 
   const isAllSuccess = questionSuccess && videoSuccess && recordSuccess;
 
-  const resetAllSettings = () => {
+  const resetAllSettings = useCallback(() => {
     setQuestion({ isSuccess: false, selectedData: [] });
     setVideo({ isSuccess: false });
     setRecord({ isSuccess: false, method: undefined });
-  };
+  }, [setQuestion, setRecord, setVideo]);
 
   return {
     isAllSuccess,
