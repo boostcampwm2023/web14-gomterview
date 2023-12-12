@@ -9,7 +9,10 @@ import {
 export const saveToRedis = async (key: string, value: string) => {
   const redis = new Redis(process.env.REDIS_URL as string);
   try {
-    await redis.set(key, value);
+    await redis.watch(key);
+    const transaction = redis.multi();
+    transaction.set(key, value);
+    await transaction.exec();
   } catch (error) {
     throw new RedisSaveException();
   } finally {
@@ -20,7 +23,10 @@ export const saveToRedis = async (key: string, value: string) => {
 export const deleteFromRedis = async (key: string) => {
   const redis = new Redis(process.env.REDIS_URL as string);
   try {
-    await redis.del(key);
+    await redis.watch(key);
+    const transaction = redis.multi();
+    transaction.del(key);
+    await transaction.exec();
   } catch (error) {
     throw new RedisDeleteException();
   } finally {
