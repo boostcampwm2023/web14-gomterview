@@ -2,6 +2,7 @@ import { questionSetting } from '@/atoms/interviewSetting';
 import { QuestionSelectionBox } from '@common/index';
 import { useRecoilValue } from 'recoil';
 import InterviewSettingContentLayout from '@components/interviewSettingPage/InterviewSettingContentLayout';
+import NoticeDialog from '@common/QuestionSelectionBox/NoticeDialog/NoticeDialog';
 
 type QuestionSettingPageProps = {
   onNextClick?: () => void;
@@ -15,13 +16,16 @@ const QuestionSettingPage: React.FC<QuestionSettingPageProps> = ({
   const setting = useRecoilValue(questionSetting);
 
   return (
-    <InterviewSettingContentLayout
-      onPrevClick={onPrevClick}
-      onNextClick={onNextClick}
-      disabledNext={!setting.isSuccess}
-    >
-      <QuestionSelectionBox />
-    </InterviewSettingContentLayout>
+    <>
+      <NoticeDialog />
+      <InterviewSettingContentLayout
+        onPrevClick={onPrevClick}
+        onNextClick={onNextClick}
+        disabledNext={!setting.isSuccess}
+      >
+        <QuestionSelectionBox />
+      </InterviewSettingContentLayout>
+    </>
   );
 };
 
