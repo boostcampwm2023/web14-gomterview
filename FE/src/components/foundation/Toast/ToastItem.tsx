@@ -6,11 +6,13 @@ import { Box, Icon } from '@foundation/index';
 import { collapseToast } from '@foundation/Toast/collapseToast';
 import { eventManager } from '@foundation/Toast/eventManger';
 import {
-  ToastFadeOutUpAnimation,
-  ToastProgressBarAnimation,
   ToastProgressBarStyle,
   ToastTypeIconName,
 } from '@foundation/Toast/Toast.styles';
+import {
+  ToastFadeOutUpAnimation,
+  ToastProgressBarAnimation,
+} from '@foundation/Toast/ToastAnimation.styles';
 
 const ToastItem: React.FC<ToastProps> = ({
   toastId,
@@ -19,6 +21,8 @@ const ToastItem: React.FC<ToastProps> = ({
   closeOnClick = true,
   type = 'default',
   pauseOnHover = true,
+  position,
+  toggle = false,
 }) => {
   const toastRef = useRef<HTMLDivElement>(null);
   const [isExiting, setIsExiting] = useState(false);

@@ -1,4 +1,4 @@
-import { css, keyframes } from '@emotion/react';
+import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
 
 const TOAST_GAP = '0.75rem';
@@ -58,23 +58,3 @@ export const ToastPositionStyle = {
     z-index: 10000;
   `,
 };
-
-export const ToastFadeOutUpAnimation = keyframes`
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-1.5rem);
-  }
-`;
-
-export const ToastProgressBarAnimation = keyframes`
-  from {
-    transform: scaleX(1);
-  }
-  to {
-    transform: scaleX(0);
-  }
-`;

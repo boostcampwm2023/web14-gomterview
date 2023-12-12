@@ -13,6 +13,7 @@ export type ToastProps = {
   type?: ToastType;
   pauseOnHover?: boolean;
   position?: ToastPosition;
+  toggle?: boolean;
 };
 
 export const enum ToastEvent {
