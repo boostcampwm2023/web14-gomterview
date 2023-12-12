@@ -266,6 +266,20 @@ describe('VideoController 단위 테스트', () => {
       );
     });
 
+    it('해시로 비디오 조회 시 Redis에 저장된 URL로 DB에서 조회되는 비디오가 없다면 VideoNotFoundException을 반환한다.', async () => {
+      // given
+
+      // when
+      mockVideoService.getVideoDetailByHash.mockRejectedValue(
+        new VideoNotFoundException(),
+      );
+
+      // then
+      expect(controller.getVideoDetailByHash(hash)).rejects.toThrow(
+        VideoNotFoundException,
+      );
+    });
+
     it('해시로 비디오 조회 시 탈퇴한 회원의 비디오라면 VideoOfWithdrawnMemberException을 반환한다.', async () => {
       // given
 
@@ -819,6 +833,23 @@ describe('VideoController 통합 테스트', () => {
       // when & then
       const agent = request.agent(app.getHttpServer());
       await agent.get(`/api/video/hash/${hash}`).expect(403);
+
+      await deleteFromRedis(hash);
+    });
+
+    it('해시로 Redis에서 조회한 비디오가 DB에서 조회되지 않는다면 404 상태 코드가 반환된다.', async () => {
+      // given
+      const video = await videoRepository.save(privateVideoFixture);
+      const hash = crypto
+        .createHash('md5')
+        .update(privateVideoFixture.url)
+        .digest('hex');
+      saveToRedis(hash, video.url);
+      videoRepository.remove(video);
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent.get(`/api/video/hash/${hash}`).expect(404);
 
       await deleteFromRedis(hash);
     });
