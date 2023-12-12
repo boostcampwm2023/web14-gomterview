@@ -67,7 +67,7 @@
 ### 1.0.0 pre-alpha 버전 소개 영상
 
 <a href="https://youtu.be/LtpJC6bO-2c">
-<img width="999" alt="image" src="https://github.com/boostcampwm2023/web14-gomterview/assets/77886826/2f1110d8-2212-4a26-bb4d-6ce584bd9b8e">
+<img width="999" alt="image" src="https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/491399ac-d50a-4022-880b-a5a8a6d7a68b">
 </a>
 
 > [1.0.0 Release](https://github.com/boostcampwm2023/web14-gomterview/releases/tag/v1.0.0)
