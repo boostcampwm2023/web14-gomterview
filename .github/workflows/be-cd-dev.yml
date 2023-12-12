@@ -34,6 +34,8 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      - name: Prune old Docker images
+        run: sudo docker image prune -a -f
       - name: Pull Docker image
         run: sudo docker pull ${{secrets.BE_DOCKER_USERNAME}}/${{secrets.BE_DOCKER_REPO}}:${{secrets.DOCKER_DEV_TAG}}
       - name: Delete Old docker container
