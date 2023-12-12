@@ -8,7 +8,8 @@
 
 ## 곰터뷰는 이런 기술을 사용했어요
 ### Frontend
-![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/ea076b5e-b826-4389-ad42-38c491b62796)
+![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/f3b39da5-f88c-41b0-9e88-a88feaa1d417)
+
 ### Backend
 ![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/3e0fdcb9-5537-4e75-852c-7afb98893a8d)
 
