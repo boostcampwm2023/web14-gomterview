@@ -13,7 +13,7 @@ const KakaoInAppBrowserDetect: React.FC<PropsWithChildren> = ({ children }) => {
     if (isKakaoInAppBrowser) moveOtherBrowser();
   }, [isKakaoInAppBrowser, moveOtherBrowser]);
 
-  if (!isKakaoInAppBrowser)
+  if (isKakaoInAppBrowser)
     return (
       <div
         css={css`
