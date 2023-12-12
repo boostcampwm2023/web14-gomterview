@@ -32,7 +32,7 @@ export const ModalLayout: React.FC<ModalLayoutProps> = ({
     <div
       css={css`
         position: fixed;
-        display: flex;
+        display: ${isOpen ? 'flex' : 'none'};
         justify-content: center;
         align-items: center;
         top: 0;
