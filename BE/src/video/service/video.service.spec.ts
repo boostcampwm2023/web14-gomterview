@@ -327,6 +327,22 @@ describe('VideoService 단위 테스트', () => {
       getValueFromRedisSpy.mockRestore();
     });
 
+    it('해시로 비디오 상세 정보 조회 시 Redis에서 얻어낸 URL로 조회되는 비디오가 없을 경우 VideoNotFoundException을 반환한다.', async () => {
+      // given
+      const getValueFromRedisSpy = jest.spyOn(redisUtil, 'getValueFromRedis');
+
+      // when
+      getValueFromRedisSpy.mockResolvedValue(url);
+      mockVideoRepository.findByUrl.mockResolvedValue(null);
+      mockMemberRepository.findById.mockResolvedValue(member);
+
+      // then
+      await expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
+        VideoNotFoundException,
+      );
+      getValueFromRedisSpy.mockRestore();
+    });
+
     it('해시로 비디오 상세 정보 조회 시 비디오가 삭제된 회원의 비디오라면 VideoOfWithdrawnMemberException을 반환한다.', async () => {
       // given
       const video = videoOfWithdrawnMemberFixture;
@@ -852,6 +868,23 @@ describe('VideoService 통합 테스트', () => {
       await expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
         InvalidHashException,
       );
+    });
+
+    it('해시로 비디오 상세 정보 조회 시 해시로 조회되는 비디오가 없다면 VideoNotFoundWithHashException을 반환한다.', async () => {
+      // given
+      const video = await videoRepository.save(videoFixture);
+      const hash = crypto.createHash('md5').update(video.url).digest('hex');
+      await redisUtil.saveToRedis(hash, video.url);
+      videoRepository.remove(video);
+
+      // when
+
+      // then
+      await expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
+        VideoNotFoundException,
+      );
+
+      await redisUtil.deleteFromRedis(hash);
     });
 
     it('해시로 비디오 상세 정보 조회 시 해시로 조회되는 비디오가 없다면 VideoNotFoundWithHashException을 반환한다.', async () => {
