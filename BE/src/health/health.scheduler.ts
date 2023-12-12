@@ -6,6 +6,7 @@ import {
   TypeOrmHealthIndicator,
 } from '@nestjs/terminus';
 import { LoggerService } from '../config/logger.config';
+import 'dotenv/config';
 
 @Injectable()
 export class HealthCheckScheduler {
@@ -35,10 +36,7 @@ export class HealthCheckScheduler {
     try {
       await this.health.check([
         async () =>
-          await this.http.pingCheck(
-            'gomterview-main',
-            'https://api.gomterview.com/api/member/name',
-          ),
+          await this.http.pingCheck('gomterview-main', process.env.BE_URL),
       ]);
       this.main.log(`${new Date()} : ON`);
     } catch (error) {
