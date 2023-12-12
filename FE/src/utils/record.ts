@@ -68,13 +68,12 @@ export const localDownload = async (
   a.click();
   window.URL.revokeObjectURL(url);
   document.body.removeChild(a);
-  toast.success('성공적으로 컴퓨터에 저장되었습니다.');
 };
 
 export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
   const baseURL = 'https://unpkg.com/@ffmpeg/core-mt@0.12.4/dist/umd';
   const toastId = toast.info(
-    '영상 인코딩을 시작합니다. 새로고침 혹은 화면을 종료시 데이터가 소실될 수 있습니다.',
+    '영상 인코딩을 시작합니다.\n새로고침 혹은 화면을 종료시 데이터가 소실될 수 있습니다.',
     { autoClose: false, closeOnClick: false, toggle: true }
   );
 
@@ -87,7 +86,10 @@ export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
     if (currentTime - lastLogTime > logInterval) {
       lastLogTime = currentTime;
       const curProgressMessage = compareProgress(message, recordTime);
-      if (curProgressMessage) toast.update(toastId, curProgressMessage);
+      if (curProgressMessage) {
+        console.log('videoLength', recordTime, curProgressMessage);
+        toast.update(toastId, recordTime + toastId + curProgressMessage);
+      }
     }
   };
 
@@ -117,6 +119,7 @@ export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
   const newBlob = new Blob([data], { type: 'video/mp4' });
   ffmpeg.off('log', ffmpegLogCallback);
   toast.delete(toastId);
+  toast.info('성공적으로 Mp4 인코딩이 완료되었습니다😊');
   return newBlob;
 };
 
@@ -131,7 +134,7 @@ const compareProgress = (logMessage: string, recordTime: string) => {
   const targetTime = convertTimeToMinutes(recordTime);
 
   if (currentTime >= targetTime) {
-    return '성공적으로 Mp4 인코딩이 완료되었습니다😊';
+    return null;
   } else {
     const progressPercent = ((currentTime / targetTime) * 100).toFixed(2);
     return `인코딩 ${progressPercent}% 진행중`;
