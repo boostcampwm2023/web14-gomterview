@@ -11,9 +11,11 @@ import {
 } from '@foundation/Toast/styles/Toast.styles';
 import {
   ToastFadeOutUpAnimation,
+  ToastLeftHideAnimation,
   ToastProgressBarAnimation,
 } from '@foundation/Toast/styles/ToastAnimation.styles';
 import { TOAST_DEFAULT_POSITION } from '@foundation/Toast/constants';
+import ToastToggleButton from '@foundation/Toast/ToastItem/ToastToggleButton';
 
 const ToastItem: React.FC<ToastProps> = ({
   toastId,
@@ -28,6 +30,9 @@ const ToastItem: React.FC<ToastProps> = ({
   const toastRef = useRef<HTMLDivElement>(null);
   const [isExiting, setIsExiting] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+
+  //toggle 모드가 켜져있을 때 펼쳐진 상태인지 저장
+  const [isShowing, setIsShowing] = useState(true);
 
   const handleExitingAnimationEnd = () => {
     collapseToast(toastRef.current!, () => {
@@ -64,6 +69,10 @@ const ToastItem: React.FC<ToastProps> = ({
       css={css`
         pointer-events: ${isExiting ? 'none' : 'auto'};
         touch-action: ${isExiting ? 'none' : 'auto'};
+        animation: ${isShowing
+          ? 'none'
+          : css`1s cubic-bezier(0.5, 1.5, 0.5, 1) 0s 1
+          ${ToastLeftHideAnimation}`};
       `}
     >
       <Box
@@ -95,13 +104,21 @@ const ToastItem: React.FC<ToastProps> = ({
         <div
           css={css`
             display: flex;
-            align-items: center;
-            column-gap: 1rem;
+            justify-content: space-between;
             padding: 1rem;
           `}
         >
-          <IconType />
-          {text}
+          <div
+            css={css`
+              display: flex;
+              align-items: center;
+              column-gap: 1rem;
+            `}
+          >
+            <IconType />
+            {text}
+          </div>
+          <ToastToggleButton position={position} isToggleMode={toggle} />
         </div>
         <div
           onAnimationEnd={handleProgressAnimationEnd}
