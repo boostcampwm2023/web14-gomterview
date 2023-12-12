@@ -21,6 +21,7 @@ module.exports = (env) => {
       filename: '[hash].js',
       clean: true,
     },
+
     devServer: {
       historyApiFallback: true,
       port: 3000,
@@ -63,7 +64,10 @@ module.exports = (env) => {
       }),
       new webpack.HotModuleReplacementPlugin(),
       new CopyPlugin({
-        patterns: [{ from: 'public/mockServiceWorker.js', to: '' }],
+        patterns: [
+          { from: 'public/mockServiceWorker.js', to: '' },
+          { from: 'public/_headers', to: '' },
+        ],
       }),
       new Dotenv({
         path: envPath,
