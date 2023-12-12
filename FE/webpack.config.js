@@ -25,6 +25,10 @@ module.exports = (env) => {
       historyApiFallback: true,
       port: 3000,
       hot: true,
+      headers: {
+        'Cross-Origin-Opener-Policy': 'same-origin',
+        'Cross-Origin-Embedder-Policy': 'require-corp',
+      },
       static: path.resolve(__dirname, 'dist'),
       proxy: {
         '/api': {
@@ -83,5 +87,6 @@ module.exports = (env) => {
         },
       ],
     },
+    ignoreWarnings: [/Critical dependency:/],
   };
 };

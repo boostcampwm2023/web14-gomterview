@@ -1,6 +1,10 @@
 import { SelectedQuestion } from '@/atoms/interviewSetting';
 import React, { MutableRefObject } from 'react';
 import { toast } from '@foundation/Toast/toast';
+import { FFmpeg } from '@ffmpeg/ffmpeg';
+import { toBlobURL } from '@ffmpeg/util';
+
+const ffmpeg = new FFmpeg();
 
 type StartRecordingProps = {
   media: MediaStream | null;
@@ -23,6 +27,7 @@ export const startRecording = ({
   try {
     mediaRecorderRef.current = new MediaRecorder(media, {
       mimeType: selectedMimeType,
+      videoBitsPerSecond: 300000,
     });
 
     mediaRecorderRef.current.ondataavailable = (event: BlobEvent) => {
@@ -47,19 +52,96 @@ export const stopRecording = (
   }
 };
 
-export const localDownload = (
+export const localDownload = async (
   blob: Blob,
-  currentQuestion: SelectedQuestion
+  currentQuestion: SelectedQuestion,
+  recordTime: string
 ) => {
-  const url = window.URL.createObjectURL(blob);
+  const mp4Blob = await EncodingWebmToMp4(blob, recordTime);
+  const url = window.URL.createObjectURL(mp4Blob);
   const a = document.createElement('a');
   a.style.display = 'none';
   a.href = url;
-  a.download = `${currentQuestion.questionContent}.webm`;
+  a.download = `${currentQuestion.questionContent}.mp4`;
 
   document.body.appendChild(a);
   a.click();
   window.URL.revokeObjectURL(url);
   document.body.removeChild(a);
   toast.success('성공적으로 컴퓨터에 저장되었습니다.');
+};
+
+export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
+  const baseURL = 'https://unpkg.com/@ffmpeg/core-mt@0.12.4/dist/umd';
+  toast.info(
+    '영상 인코딩을 시작합니다. 새로고침 혹은 화면을 종료시 데이터가 소실될 수 있습니다.'
+  );
+
+  let lastLogTime = 0;
+  const logInterval = 10000; // 10초 간격 (밀리초 단위)
+
+  ffmpeg.on('log', ({ message }) => {
+    const currentTime = Date.now();
+
+    if (currentTime - lastLogTime > logInterval) {
+      lastLogTime = currentTime;
+      const curProgressMessage = compareProgress(message, recordTime);
+      if (curProgressMessage)
+        toast.info(curProgressMessage, { autoClose: 5000 });
+    }
+  });
+
+  if (!ffmpeg.loaded) {
+    await ffmpeg.load({
+      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+      wasmURL: await toBlobURL(
+        `${baseURL}/ffmpeg-core.wasm`,
+        'application/wasm'
+      ),
+      workerURL: await toBlobURL(
+        `${baseURL}/ffmpeg-core.worker.js`,
+        'text/javascript'
+      ),
+    });
+  }
+
+  const arrayBuffer = await blob.arrayBuffer();
+  const uint8Array = new Uint8Array(arrayBuffer);
+  // ffmpeg의 파일 시스템에 파일 작성
+  await ffmpeg.writeFile('input.webm', uint8Array);
+
+  await ffmpeg.exec(['-i', 'input.webm', 'output.mp4']);
+  const data = await ffmpeg.readFile('output.mp4');
+  const newBlob = new Blob([data], { type: 'video/mp4' });
+  toast.info('성공적으로 Mp4 인코딩이 완료되었습니다😊');
+
+  return newBlob;
+};
+
+const compareProgress = (logMessage: string, recordTime: string) => {
+  const timeMatch = logMessage.match(
+    /time=([0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{2})/
+  );
+  if (!timeMatch) return null;
+
+  const currentTimeStr = timeMatch[1];
+  const currentTime = convertTimeToSeconds(currentTimeStr);
+  const targetTime = convertTimeToMinutes(recordTime);
+
+  if (currentTime >= targetTime) {
+    return '녹화가 완료되었습니다.';
+  } else {
+    const progressPercent = ((currentTime / targetTime) * 100).toFixed(2);
+    return `인코딩 ${progressPercent}% 진행중`;
+  }
+};
+
+const convertTimeToSeconds = (timeStr: string) => {
+  const [hours, minutes, seconds] = timeStr.split(':').map(Number);
+  return hours * 3600 + minutes * 60 + seconds;
+};
+
+const convertTimeToMinutes = (timeStr: string) => {
+  const [minutes, seconds] = timeStr.split(':').map(Number);
+  return minutes * 60 + seconds;
 };

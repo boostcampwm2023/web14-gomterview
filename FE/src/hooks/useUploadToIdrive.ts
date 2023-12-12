@@ -3,6 +3,7 @@ import useGetPreSignedUrlMutation from '@/hooks/apis/mutations/useGetPreSignedUr
 import { putVideoToIdrive } from '@/apis/idrive';
 import useAddVideoMutation from '@/hooks/apis/mutations/useAddVideoMutation';
 import { toast } from '@foundation/Toast/toast';
+import { EncodingWebmToMp4 } from '@/utils/record';
 
 type UploadParams = {
   blob: Blob;
@@ -20,13 +21,15 @@ export const useUploadToIDrive = () => {
     recordTime,
   }: UploadParams): Promise<void> => {
     try {
+      const mp4Blob = await EncodingWebmToMp4(blob, recordTime);
+
       toast.success('성공적으로 서버에 업로드를 준비합니다.');
       const preSignedResponse = await getPreSignedUrl();
       // response를 받습니다
 
       await putVideoToIdrive({
         url: preSignedResponse?.preSignedUrl,
-        blob: blob,
+        blob: mp4Blob,
       });
 
       videoToServer({
