@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '../Box/Box';
 import { css } from '@emotion/react';
 import { theme } from '@/styles/theme';
@@ -10,13 +10,24 @@ export type ModalLayoutProps = {
   closeModal: () => void;
 } & HTMLElementTypes<HTMLDivElement>;
 
-const ModalLayout: React.FC<ModalLayoutProps> = ({
+export const ModalLayout: React.FC<ModalLayoutProps> = ({
   children,
   isOpen,
   closeModal,
   ...args
 }) => {
+  const [isDisplayed, setIsDisplayed] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsDisplayed(true);
+    } else {
+      setIsDisplayed(false);
+    }
+  }, [isOpen]);
+
   document.body.style.overflow = isOpen ? 'hidden' : 'unset';
+
   return (
     <div
       css={css`
@@ -31,6 +42,8 @@ const ModalLayout: React.FC<ModalLayoutProps> = ({
         height: 100%;
         background-color: ${theme.colors.shadow.modalShadow};
         ${theme.typography.body1}
+        opacity: ${isDisplayed ? '1' : '0'};
+        transition: opacity 0.2s ease-out;
       `}
       onClick={() => {
         closeModal();
@@ -42,6 +55,8 @@ const ModalLayout: React.FC<ModalLayoutProps> = ({
           background-color: ${theme.colors.text.white};
           height: auto;
           width: auto;
+          transform: ${isDisplayed ? 'scale(1)' : 'scale(0.5)'};
+          transition: transform 0.2s ease-out;
         `}
         onClick={(e) => e.stopPropagation()}
         {...args}
