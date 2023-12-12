@@ -33,6 +33,7 @@ const ToastItem: React.FC<ToastProps> = ({
 
   //toggle 모드가 켜져있을 때 펼쳐진 상태인지 저장
   const [isShowing, setIsShowing] = useState(true);
+  const [isHiding, setIsHiding] = useState(false);
 
   const handleExitingAnimationEnd = () => {
     collapseToast(toastRef.current!, () => {
@@ -58,21 +59,48 @@ const ToastItem: React.FC<ToastProps> = ({
     }
   };
 
+  const handleToggleToast = () => {
+    setIsHiding((prev) => !prev);
+  };
+
+  const handleHideToast = () => {
+    if (!toastRef.current) return;
+
+    setIsShowing(false);
+    setIsHiding(false);
+    toastRef.current.style.opacity = '0';
+  };
+
+  const handleShowToast = () => {
+    setIsShowing(true);
+  };
+
   const IconType = () =>
     type === 'default' ? null : (
       <Icon id={ToastTypeIconName[type]} width="20" height="20" />
     );
 
+  if (!isShowing)
+    return (
+      <ToastToggleButton
+        position={position}
+        reverse={true}
+        isToggleMode={toggle}
+        onClick={handleShowToast}
+      />
+    );
+
   return (
     <div
       ref={toastRef}
+      onAnimationEnd={handleHideToast}
       css={css`
         pointer-events: ${isExiting ? 'none' : 'auto'};
         touch-action: ${isExiting ? 'none' : 'auto'};
-        animation: ${isShowing
-          ? 'none'
-          : css`1s cubic-bezier(0.5, 1.5, 0.5, 1) 0s 1
-          ${ToastLeftHideAnimation}`};
+        animation: ${isHiding
+          ? css`0.5s ease-in-out
+          ${ToastLeftHideAnimation}`
+          : 'none'};
       `}
     >
       <Box
@@ -118,7 +146,11 @@ const ToastItem: React.FC<ToastProps> = ({
             <IconType />
             {text}
           </div>
-          <ToastToggleButton position={position} isToggleMode={toggle} />
+          <ToastToggleButton
+            position={position}
+            isToggleMode={toggle}
+            onClick={handleToggleToast}
+          />
         </div>
         <div
           onAnimationEnd={handleProgressAnimationEnd}

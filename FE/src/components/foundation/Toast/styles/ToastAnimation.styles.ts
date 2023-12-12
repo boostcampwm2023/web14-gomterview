@@ -28,3 +28,12 @@ export const ToastLeftHideAnimation = keyframes`
     transform: translateX(-110%);
   }
 `;
+
+export const ToastRightHideAnimation = keyframes`
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(110%);
+  }
+`;
