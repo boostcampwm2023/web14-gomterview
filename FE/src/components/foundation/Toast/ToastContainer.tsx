@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
-import { ToastPositionStyle } from '@foundation/Toast/Toast.styles';
+import { ToastPositionStyle } from '@foundation/Toast/styles/Toast.styles';
 import useToastContainer from '@foundation/Toast/useToastContainer';
-import ToastItem from '@foundation/Toast/ToastItem';
+import ToastItem from '@foundation/Toast/ToastItem/ToastItem';
 import { theme } from '@styles/theme';
 
 export const ToastContainer = () => {
