@@ -3,15 +3,12 @@ import useMedia from '@/hooks/useMedia';
 import { theme } from '@/styles/theme';
 import { Mirror } from '@common/index';
 import { RecordStatus } from '@components/interviewPage/InterviewHeader';
-import {
-  Description,
-  InterviewSettingFooter,
-} from '@components/interviewSettingPage';
+import { Description } from '@components/interviewSettingPage';
 import { css } from '@emotion/react';
-import { Button } from '@foundation/index';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { toast } from '@foundation/Toast/toast';
+import InterviewSettingContentLayout from '@components/interviewSettingPage/InterviewSettingContentLayout';
 type VideoSettingPageProps = {
   onNextClick?: () => void;
   onPrevClick?: () => void;
@@ -59,7 +56,11 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
   }, [connectStatus, setVideoSettingState]);
 
   return (
-    <>
+    <InterviewSettingContentLayout
+      onPrevClick={onPrevClick}
+      onNextClick={onNextClick}
+      disabledNext={!videoSettingState.isSuccess}
+    >
       <Description title="문제 선택">
         - 면접 시작 전, 사용하시는 장치의 화면 및 소리가 정상적으로 연결되어
         있는지 확인해 주세요.
@@ -75,7 +76,6 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
       <div
         css={css`
           position: relative;
-          margin-top: 2rem;
           height: 100%;
         `}
       >
@@ -99,29 +99,7 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
           isSetting
         />
       </div>
-
-      <InterviewSettingFooter>
-        <Button
-          onClick={onPrevClick}
-          size="lg"
-          css={css`
-            padding: 0.6rem 2rem;
-          `}
-        >
-          이전
-        </Button>
-        <Button
-          onClick={onNextClick}
-          size="lg"
-          css={css`
-            padding: 0.6rem 2rem;
-          `}
-          disabled={!videoSettingState.isSuccess}
-        >
-          다음
-        </Button>
-      </InterviewSettingFooter>
-    </>
+    </InterviewSettingContentLayout>
   );
 };
 

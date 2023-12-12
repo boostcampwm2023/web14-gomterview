@@ -23,11 +23,13 @@ const NavigationMenu: React.FC<PropsWithChildren> = ({ children }) => {
         variants="secondary"
         onClick={() => setIsOpen(true)}
         css={css`
+          display: flex;
+          align-items: center;
           border: none;
           border-radius: 2rem;
         `}
       >
-        <Icon id="menu" width="40" height="40" />
+        <Icon id="menu" width="32" height="32" />
       </Button>
       <Menu
         open={isOpen}

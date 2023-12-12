@@ -17,7 +17,7 @@ const QuestionSelectionBox = () => {
 
   const { data: workbookListData } = useWorkbookTitleListQuery();
 
-  const [isSideBarOpen, setIsSideBarOpen] = useState(true);
+  const [isSidebarToggleOn, setIsSidebarToggleOn] = useState(true);
 
   if (!workbookListData) return;
   return (
@@ -38,7 +38,7 @@ const QuestionSelectionBox = () => {
           `}
         >
           <QuestionSelectionBoxSidebarAreaDiv
-            isSidebarOpen={isSideBarOpen}
+            isSidebarToggleOn={isSidebarToggleOn}
             isTabletWidth={isDeviceBreakpoint('tablet')}
           >
             <WorkbookAddButton />
@@ -50,8 +50,12 @@ const QuestionSelectionBox = () => {
                 key={workbook.workbookId}
                 tabIndex={index.toString()}
                 workbook={workbook}
-                isSidebarOpen={isSideBarOpen}
-                onSidebarToggleClick={() => setIsSideBarOpen((prev) => !prev)}
+                isSidebarOpen={
+                  isSidebarToggleOn && isDeviceBreakpoint('tablet')
+                }
+                onSidebarToggleClick={() =>
+                  setIsSidebarToggleOn((prev) => !prev)
+                }
               />
             ))}
           </QuestionSelectionBoxTabPanelAreaDiv>

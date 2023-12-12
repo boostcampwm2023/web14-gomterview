@@ -1,9 +1,7 @@
 import { questionSetting } from '@/atoms/interviewSetting';
 import { QuestionSelectionBox } from '@common/index';
-import { InterviewSettingFooter } from '@components/interviewSettingPage';
-import { css } from '@emotion/react';
-import { Button } from '@foundation/index';
 import { useRecoilValue } from 'recoil';
+import InterviewSettingContentLayout from '@components/interviewSettingPage/InterviewSettingContentLayout';
 
 type QuestionSettingPageProps = {
   onNextClick?: () => void;
@@ -17,36 +15,13 @@ const QuestionSettingPage: React.FC<QuestionSettingPageProps> = ({
   const setting = useRecoilValue(questionSetting);
 
   return (
-    <>
-      <div
-        css={css`
-          margin-top: 2rem;
-        `}
-      >
-        <QuestionSelectionBox />
-      </div>
-      <InterviewSettingFooter>
-        <Button
-          onClick={onPrevClick}
-          size="lg"
-          css={css`
-            padding: 0.6rem 2rem;
-          `}
-        >
-          이전
-        </Button>
-        <Button
-          onClick={onNextClick}
-          size="lg"
-          css={css`
-            padding: 0.6rem 2rem;
-          `}
-          disabled={!setting.isSuccess}
-        >
-          다음
-        </Button>
-      </InterviewSettingFooter>
-    </>
+    <InterviewSettingContentLayout
+      onPrevClick={onPrevClick}
+      onNextClick={onNextClick}
+      disabledNext={!setting.isSuccess}
+    >
+      <QuestionSelectionBox />
+    </InterviewSettingContentLayout>
   );
 };
 

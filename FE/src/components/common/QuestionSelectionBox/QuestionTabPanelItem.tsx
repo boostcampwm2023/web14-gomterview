@@ -93,9 +93,7 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
             align-items: center;
             column-gap: 0.5rem;
             padding: 1rem;
-            border-radius: ${isSidebarOpen && isDeviceBreakpoint('tablet')
-              ? '0 0 1rem 1rem'
-              : '0 0 1rem 0'};
+            border-radius: ${isSidebarOpen ? '0 0 1rem 1rem' : '0 0 1rem 0'};
             background-color: ${theme.colors.surface.default};
           `}
         >
@@ -127,7 +125,9 @@ const TabPanelItem: React.FC<TabPanelItemProps> = ({
               onClick={toggleShowSelectionOption}
               isToggled={onlySelectedOption}
             />
-            <Typography variant="body3">선택된 질문만 보기</Typography>
+            {!isSidebarOpen && isDeviceBreakpoint('mobile') ? null : (
+              <Typography variant="body3">선택된 질문만 보기</Typography>
+            )}
           </div>
         </div>
       </div>

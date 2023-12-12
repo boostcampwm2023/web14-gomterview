@@ -11,6 +11,7 @@ const Step = <T,>({ page, children, path }: StepProps<T>) => {
     <div
       css={css`
         display: ${page === path ? 'block' : 'none'};
+        height: 100%;
       `}
     >
       {children}

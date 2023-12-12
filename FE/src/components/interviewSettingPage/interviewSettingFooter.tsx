@@ -9,9 +9,7 @@ export const InterviewSettingFooter = styled.div`
     rgba(255, 255, 255, 0) 0%,
     rgba(255, 255, 255, 0.72) 100%
   );
-  padding: 0.5rem;
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-top: 2rem;
+  width: 100%;
 `;

@@ -1,5 +1,6 @@
 import enhanceChildElement from '@/utils/enhanceChildElement';
 import Step from './Step';
+import { css } from '@emotion/react';
 
 type StepPageProps<T> = {
   page: T;
@@ -8,7 +9,11 @@ type StepPageProps<T> = {
 
 const StepPage = <T,>({ page, children }: StepPageProps<T>) => {
   return (
-    <div>
+    <div
+      css={css`
+        height: 100%;
+      `}
+    >
       {enhanceChildElement({
         children,
         component: Step<T>,
