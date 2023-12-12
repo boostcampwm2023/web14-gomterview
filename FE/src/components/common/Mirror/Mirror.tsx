@@ -22,9 +22,9 @@ const Mirror: React.FC<MirrorProps> = ({
     <>
       <video
         ref={mirrorVideoRef}
-        crossOrigin="use-credentials"
         autoPlay
         muted
+        playsInline
         css={css`
           display: ${connectStatus === 'fail' ? 'none' : 'block'};
           height: 100%;
