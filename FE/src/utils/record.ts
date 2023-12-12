@@ -3,6 +3,7 @@ import React, { MutableRefObject } from 'react';
 import { toast } from '@foundation/Toast/toast';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { toBlobURL } from '@ffmpeg/util';
+
 const ffmpeg = new FFmpeg();
 
 type StartRecordingProps = {
@@ -73,7 +74,7 @@ export const localDownload = async (
 export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
   const baseURL = 'https://unpkg.com/@ffmpeg/core-mt@0.12.4/dist/umd';
   toast.info(
-    '영상 인코딩을 시작합니다. 세로고침 혹은 화면을 종료시 데이터가 소실될 수 있습니다.'
+    '영상 인코딩을 시작합니다. 새로고침 혹은 화면을 종료시 데이터가 소실될 수 있습니다.'
   );
 
   let lastLogTime = 0;
@@ -112,7 +113,7 @@ export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
   await ffmpeg.exec(['-i', 'input.webm', 'output.mp4']);
   const data = await ffmpeg.readFile('output.mp4');
   const newBlob = new Blob([data], { type: 'video/mp4' });
-  toast.info('성공적으로 Mp4 인코딩이 성공했습니다😊');
+  toast.info('성공적으로 Mp4 인코딩이 완료되었습니다😊');
 
   return newBlob;
 };
