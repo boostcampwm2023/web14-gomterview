@@ -8,16 +8,34 @@
 >  저희 팀원들이 많은 `성장`을 거듭할 수 있었던 프로젝트 입니다.
 >
 > 캠퍼분들께 자랑하고 싶어 매주 데모데이만를 기다렸습니다!  
-> 우리의 프로젝트 `곰터뷰` 함께 구경해주시죠!!  
-> https://www.gomterview.com
+> 우리의 프로젝트 `곰터뷰` 함께 구경해주시죠!!
 
+<br />
+
+<a href="https://www.gomterview.com">
+
+![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/400abacc-ef28-4927-a6bc-6f8efd57d249)
+
+</a>
 </div>
 
-## 곰터뷰 서비스는 이런걸 할 수 있어요!
+# 곰터뷰 서비스는 이런걸 할 수 있어요!
 
-여기에 그 사진들이 들어감
+![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/c7ee466b-9775-4adc-b482-ad17a41ecb7e)
 
-## 곰터뷰는 이런 기술을 사용했어요
+![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/f7bcd22b-f15b-4a36-96bc-b9ae2dba57ab)
+
+![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/ca884fd9-ed47-4418-92e6-4a8fc07f3e43)
+
+![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/b13cf1f0-e706-446e-b62b-4f2e38252401)
+
+![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/9376ec7e-9844-4b2d-9fcf-7131763371de)
+
+![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/4376600f-4722-415c-84d0-60ee4d2b6d45)
+
+![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/a5047baf-e0bd-44db-88ae-e2c28b9e917f)
+
+# 곰터뷰는 이런 기술을 사용했어요
 
 ### Frontend
 
@@ -27,7 +45,7 @@
 
 ![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/3e0fdcb9-5537-4e75-852c-7afb98893a8d)
 
-## 곰터뷰의 서비스 요청 흐름도
+# 곰터뷰의 서비스 요청 흐름도
 
 ![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/ff5719a8-2727-429d-9c34-7be2099a87d6)
 
@@ -45,6 +63,8 @@
 
 ### 1.2.1
 
+> Comming Soon!
+
 # 곰터뷰를 자세히 알고 싶다면
 
 ### 곰터뷰 `서비스`가 궁금하다면 -> [곰터뷰 서비스 바로가기](https://www.gomterview.com)
@@ -55,7 +75,7 @@
 
 ### 곰터뷰의 `디자인 기획`이 궁금하다면 -> [곰터뷰 피그마](https://www.figma.com/file/DGvVrbuTotapX9sTETDCqV/%EC%9B%B9-%EB%94%94%EC%9E%90%EC%9D%B8?type=design&node-id=0:1&mode=design&t=CZLWQG6hGeCCMeax-1)
 
-## 저희 NDD 팀원들은 이런 고민을 했어요
+# 저희 NDD 팀원들은 이런 고민을 했어요
 
 > 더 많은 내용들은 [팀 블로그](https://blog.gomterview.com)에 기록 되어있습니다.
 
@@ -96,7 +116,7 @@
 - [곰터뷰는 왜 IDrive e2를 사용하였을까? - 조용헌](https://lildev.tistory.com/178)
 - [IDrive e2를 사용한 비디오 저장/조회 - 조용헌](https://lildev.tistory.com/179)
 
-## 저흰 이렇게 함께 자라요
+# 저흰 이렇게 함께 자라요
 
 > 팀 프로젝트를 수행하다보면, 상대방을 설득을 해야할 일이 잦습니다.  
 > 하지만 설득을 할 때, 가장 큰 영향을 미치는 요소는 상대방에 대한 `호감`이라고 합니다.  
