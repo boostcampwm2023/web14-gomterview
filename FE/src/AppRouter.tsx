@@ -19,18 +19,21 @@ import APIErrorBoundary from './APIErrorBoundary';
 import SomethingWrongErrorPage from '@page/errorPage/SomethingWrong';
 import ModalProvider from './modalProvider';
 import MediaStreamPage from '@page/mediaStreamPage';
+import KakaoInAppBrowserDetect from './\bKakoInAppBrowserDetect';
 
 const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
   const routes = createBrowserRouter([
     {
       path: PATH.ROOT,
       element: (
-        <UnknownErrorBoundary>
-          <APIErrorBoundary>
-            <Outlet />
-            <ModalProvider />
-          </APIErrorBoundary>
-        </UnknownErrorBoundary>
+        <KakaoInAppBrowserDetect>
+          <UnknownErrorBoundary>
+            <APIErrorBoundary>
+              <Outlet />
+              <ModalProvider />
+            </APIErrorBoundary>
+          </UnknownErrorBoundary>
+        </KakaoInAppBrowserDetect>
       ),
       loader: () => rootLoader({ queryClient: queryClient }),
       errorElement: <LoaderErrorPage />,
