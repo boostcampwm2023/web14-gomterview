@@ -9,6 +9,8 @@
 ## 곰터뷰는 이런 기술을 사용했어요
 ### Frontend
 ![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/ea076b5e-b826-4389-ad42-38c491b62796)
+### Backend
+![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/3e0fdcb9-5537-4e75-852c-7afb98893a8d)
 
 ## 곰터뷰의 서비스 요청 흐름도
 ![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/ff5719a8-2727-429d-9c34-7be2099a87d6)
