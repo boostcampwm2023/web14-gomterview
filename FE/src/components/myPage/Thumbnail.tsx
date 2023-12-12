@@ -67,6 +67,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
           <Icon id="trash" width="20" height="20" />
         </div>
         <img
+          crossOrigin="use-credentials"
           src={image}
           alt={videoName}
           css={css`

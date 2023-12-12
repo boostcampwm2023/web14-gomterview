@@ -22,6 +22,7 @@ const Mirror: React.FC<MirrorProps> = ({
     <>
       <video
         ref={mirrorVideoRef}
+        crossOrigin="use-credentials"
         autoPlay
         muted
         css={css`

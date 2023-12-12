@@ -12,6 +12,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ url }) => {
       autoPlay
       controls
       muted
+      crossOrigin="use-credentials"
       css={css`
         background-color: ${theme.colors.surface.black100};
         max-height: 60svh;
