@@ -52,6 +52,7 @@ import { QuestionModule } from 'src/question/question.module';
 import { CreateVideoRequest } from '../dto/createVideoRequest';
 import { DEFAULT_THUMBNAIL } from '../../constant/constant';
 import * as idriveUtil from 'src/util/idrive.util';
+import redisMock from 'ioredis-mock';
 
 describe('VideoService 단위 테스트', () => {
   let videoService: VideoService;
@@ -837,12 +838,18 @@ describe('VideoService 통합 테스트', () => {
   });
 
   describe('getVideoDetailByHash', () => {
+    let mockRedis;
+
+    beforeEach(async () => {
+      mockRedis = new redisMock();
+    });
+
     it('해시로 비디오 세부 정보 조회 성공 시 VideoDetailResponse 형식으로 반환된다.', async () => {
       //given
       const video = await videoRepository.save(videoFixture);
       const member = await memberRepository.findById(video.memberId);
       const hash = crypto.createHash('md5').update(video.url).digest('hex');
-      await redisUtil.saveToRedis(hash, video.url);
+      await redisUtil.saveToRedis(hash, video.url, mockRedis);
 
       //when
       const result = await videoService.getVideoDetailByHash(hash);
@@ -855,8 +862,6 @@ describe('VideoService 통합 테스트', () => {
       expect(result.hash).toBe(
         crypto.createHash('md5').update(video.url).digest('hex'),
       );
-
-      await redisUtil.deleteFromRedis(hash);
     });
 
     it('해시로 비디오 상세 정보 조회 시 해시가 유효하지 않은 형태라면 InvalidHashException을 반환한다.', async () => {
@@ -870,12 +875,12 @@ describe('VideoService 통합 테스트', () => {
       );
     });
 
-    it('해시로 비디오 상세 정보 조회 시 해시로 조회되는 비디오가 없다면 VideoNotFoundWithHashException을 반환한다.', async () => {
+    it('해시로 비디오 상세 정보 조회 시 해시로 조회되는 비디오가 없다면 VideoNotFoundException을 반환한다.', async () => {
       // given
       const video = await videoRepository.save(videoFixture);
       const hash = crypto.createHash('md5').update(video.url).digest('hex');
-      await redisUtil.saveToRedis(hash, video.url);
-      videoRepository.remove(video);
+      await redisUtil.saveToRedis(hash, video.url, mockRedis);
+      await videoRepository.remove(video);
 
       // when
 
@@ -883,8 +888,6 @@ describe('VideoService 통합 테스트', () => {
       await expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
         VideoNotFoundException,
       );
-
-      await redisUtil.deleteFromRedis(hash);
     });
 
     it('해시로 비디오 상세 정보 조회 시 해시로 조회되는 비디오가 없다면 VideoNotFoundWithHashException을 반환한다.', async () => {
@@ -904,7 +907,7 @@ describe('VideoService 통합 테스트', () => {
       //given
       const video = await videoRepository.save(videoOfWithdrawnMemberFixture);
       const hash = crypto.createHash('md5').update(video.url).digest('hex');
-      await redisUtil.saveToRedis(hash, video.url);
+      await redisUtil.saveToRedis(hash, video.url, mockRedis);
 
       //when
 
@@ -912,15 +915,13 @@ describe('VideoService 통합 테스트', () => {
       await expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
         VideoOfWithdrawnMemberException,
       );
-
-      await redisUtil.deleteFromRedis(hash);
     });
 
     it('해시로 비디오 세부 정보 조회 시 private인 비디오를 조회하려 하면 VideoAccessForbiddenException을 반환한다.', async () => {
       //given
       const video = await videoRepository.save(privateVideoFixture);
       const hash = crypto.createHash('md5').update(video.url).digest('hex');
-      await redisUtil.saveToRedis(hash, video.url);
+      await redisUtil.saveToRedis(hash, video.url, mockRedis);
 
       //when
 
@@ -928,8 +929,10 @@ describe('VideoService 통합 테스트', () => {
       await expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
         VideoAccessForbiddenException,
       );
+    });
 
-      await redisUtil.deleteFromRedis(hash);
+    afterEach(() => {
+      redisUtil.clearRedis(mockRedis);
     });
   });
 

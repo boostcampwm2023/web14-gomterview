@@ -56,7 +56,8 @@ import { MemberRepository } from 'src/member/repository/member.repository';
 import { Category } from 'src/category/entity/category';
 import { CategoryRepository } from 'src/category/repository/category.repository';
 import { categoryFixtureWithId } from 'src/category/fixture/category.fixture';
-import { deleteFromRedis, saveToRedis } from 'src/util/redis.util';
+import { clearRedis, saveToRedis } from 'src/util/redis.util';
+import redisMock from 'ioredis-mock';
 
 describe('VideoController 단위 테스트', () => {
   let controller: VideoController;
@@ -756,6 +757,12 @@ describe('VideoController 통합 테스트', () => {
   });
 
   describe('getVideoDetailByHash', () => {
+    let mockRedis;
+
+    beforeEach(async () => {
+      mockRedis = new redisMock();
+    });
+
     it('쿠키를 가지고 해시로 비디오 조회를 요청하면 200 상태 코드와 비디오 정보가 반환된다.', async () => {
       // given
       await videoRepository.save(videoFixture);
@@ -763,7 +770,7 @@ describe('VideoController 통합 테스트', () => {
         .createHash('md5')
         .update(videoFixture.url)
         .digest('hex');
-      saveToRedis(hash, videoFixture.url);
+      await saveToRedis(hash, videoFixture.url, mockRedis);
 
       // when & then
       const agent = request.agent(app.getHttpServer());
@@ -780,8 +787,6 @@ describe('VideoController 통합 테스트', () => {
             ),
           ),
         );
-
-      await deleteFromRedis(hash);
     });
 
     it('쿠키 없이 해시로 비디오 조회를 요청하더라도 200 상태 코드와 비디오 정보가 반환된다.', async () => {
@@ -791,7 +796,7 @@ describe('VideoController 통합 테스트', () => {
         .createHash('md5')
         .update(videoFixture.url)
         .digest('hex');
-      saveToRedis(hash, videoFixture.url);
+      await saveToRedis(hash, videoFixture.url, mockRedis);
 
       // when & then
       const agent = request.agent(app.getHttpServer());
@@ -807,8 +812,6 @@ describe('VideoController 통합 테스트', () => {
             ),
           ),
         );
-
-      await deleteFromRedis(hash);
     });
 
     it('유효하지 않은 형태의 해시로 비디오 조회를 요청하면 400 상태 코드가 반환된다.', async () => {
@@ -828,13 +831,11 @@ describe('VideoController 통합 테스트', () => {
         .createHash('md5')
         .update(privateVideoFixture.url)
         .digest('hex');
-      await saveToRedis(hash, video.url);
+      await saveToRedis(hash, video.url, mockRedis);
 
       // when & then
       const agent = request.agent(app.getHttpServer());
       await agent.get(`/api/video/hash/${hash}`).expect(403);
-
-      await deleteFromRedis(hash);
     });
 
     it('해시로 Redis에서 조회한 비디오가 DB에서 조회되지 않는다면 404 상태 코드가 반환된다.', async () => {
@@ -844,14 +845,12 @@ describe('VideoController 통합 테스트', () => {
         .createHash('md5')
         .update(privateVideoFixture.url)
         .digest('hex');
-      saveToRedis(hash, video.url);
-      videoRepository.remove(video);
+      await saveToRedis(hash, video.url, mockRedis);
+      await videoRepository.remove(video);
 
       // when & then
       const agent = request.agent(app.getHttpServer());
       await agent.get(`/api/video/hash/${hash}`).expect(404);
-
-      await deleteFromRedis(hash);
     });
 
     it('해시로 탈퇴한 회원의 비디오 조회를 요청하면 404 상태 코드가 반환된다.', async () => {
@@ -861,13 +860,11 @@ describe('VideoController 통합 테스트', () => {
         .createHash('md5')
         .update(videoFixture.url)
         .digest('hex');
-      saveToRedis(hash, video.url);
+      await saveToRedis(hash, video.url, mockRedis);
 
       // when & then
       const agent = request.agent(app.getHttpServer());
       await agent.get(`/api/video/hash/${hash}`).expect(404);
-
-      deleteFromRedis(hash);
     });
 
     it('유효한 해시로 조회 시 조회되는 비디오가 없다면 404 상태 코드가 반환된다.', async () => {
@@ -881,6 +878,10 @@ describe('VideoController 통합 테스트', () => {
       // when & then
       const agent = request.agent(app.getHttpServer());
       await agent.get(`/api/video/hash/${hash}`).expect(404);
+    });
+
+    afterEach(async () => {
+      await clearRedis(mockRedis);
     });
   });
 
