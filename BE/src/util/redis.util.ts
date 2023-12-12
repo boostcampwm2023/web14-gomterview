@@ -8,7 +8,7 @@ import {
 import redisMock from 'ioredis-mock';
 
 const getNewRedis = () => {
-  return process.env.IS_PRODUCTION
+  return process.env.IS_PROD === 'true'
     ? new Redis(process.env.REDIS_URL as string)
     : new redisMock();
 };
