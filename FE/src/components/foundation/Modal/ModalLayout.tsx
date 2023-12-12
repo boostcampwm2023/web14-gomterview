@@ -1,6 +1,5 @@
-import React from 'react';
 import Box from '../Box/Box';
-import { css } from '@emotion/react';
+import { css, keyframes } from '@emotion/react';
 import { theme } from '@/styles/theme';
 import { HTMLElementTypes } from '@/types/utils';
 
@@ -10,18 +9,30 @@ export type ModalLayoutProps = {
   closeModal: () => void;
 } & HTMLElementTypes<HTMLDivElement>;
 
-const ModalLayout: React.FC<ModalLayoutProps> = ({
+const ModalAnimation = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
+
+export const ModalLayout: React.FC<ModalLayoutProps> = ({
   children,
   isOpen,
   closeModal,
   ...args
 }) => {
   document.body.style.overflow = isOpen ? 'hidden' : 'unset';
+
   return (
     <div
       css={css`
         position: fixed;
-        display: ${isOpen ? 'flex' : 'none'};
+        display: flex;
         justify-content: center;
         align-items: center;
         top: 0;
@@ -42,6 +53,7 @@ const ModalLayout: React.FC<ModalLayoutProps> = ({
           background-color: ${theme.colors.text.white};
           height: auto;
           width: auto;
+          animation: 0.2s ease-in-out ${ModalAnimation};
         `}
         onClick={(e) => e.stopPropagation()}
         {...args}
