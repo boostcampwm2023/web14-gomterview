@@ -5,11 +5,20 @@ import {
   RedisRetrieveException,
   RedisSaveException,
 } from 'src/video/exception/video.exception';
+import redisMock from 'ioredis-mock';
 
-export const saveToRedis = async (key: string, value: string) => {
-  const redis = new Redis(process.env.REDIS_URL as string);
+const getNewRedis = () => {
+  return process.env.IS_PRODUCTION
+    ? new Redis(process.env.REDIS_URL as string)
+    : new redisMock();
+};
+
+export const saveToRedis = async (
+  key: string,
+  value: string,
+  redis: Redis = getNewRedis(),
+) => {
   try {
-    await redis.watch(key);
     const transaction = redis.multi();
     transaction.set(key, value);
     await transaction.exec();
@@ -20,10 +29,11 @@ export const saveToRedis = async (key: string, value: string) => {
   }
 };
 
-export const deleteFromRedis = async (key: string) => {
-  const redis = new Redis(process.env.REDIS_URL as string);
+export const deleteFromRedis = async (
+  key: string,
+  redis: Redis = getNewRedis(),
+) => {
   try {
-    await redis.watch(key);
     const transaction = redis.multi();
     transaction.del(key);
     await transaction.exec();
@@ -34,13 +44,25 @@ export const deleteFromRedis = async (key: string) => {
   }
 };
 
-export const getValueFromRedis = async (key: string) => {
-  const redis = new Redis(process.env.REDIS_URL as string);
+export const getValueFromRedis = async (
+  key: string,
+  redis: Redis = getNewRedis(),
+) => {
   try {
     const value = await redis.get(key);
     return value;
   } catch (error) {
     throw new RedisRetrieveException();
+  } finally {
+    await redis.quit();
+  }
+};
+
+export const clearRedis = async (redis: Redis) => {
+  try {
+    await redis.flushdb();
+  } catch (error) {
+    throw new Error('Redis 초기화 실패');
   } finally {
     await redis.quit();
   }
