@@ -8,11 +8,12 @@ import { eventManager } from '@foundation/Toast/eventManger';
 import {
   ToastProgressBarStyle,
   ToastTypeIconName,
-} from '@foundation/Toast/Toast.styles';
+} from '@foundation/Toast/styles/Toast.styles';
 import {
   ToastFadeOutUpAnimation,
   ToastProgressBarAnimation,
-} from '@foundation/Toast/ToastAnimation.styles';
+} from '@foundation/Toast/styles/ToastAnimation.styles';
+import { TOAST_DEFAULT_POSITION } from '@foundation/Toast/constants';
 
 const ToastItem: React.FC<ToastProps> = ({
   toastId,
@@ -21,7 +22,7 @@ const ToastItem: React.FC<ToastProps> = ({
   closeOnClick = true,
   type = 'default',
   pauseOnHover = true,
-  position,
+  position = TOAST_DEFAULT_POSITION,
   toggle = false,
 }) => {
   const toastRef = useRef<HTMLDivElement>(null);

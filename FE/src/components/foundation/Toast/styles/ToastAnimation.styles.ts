@@ -19,3 +19,12 @@ export const ToastProgressBarAnimation = keyframes`
     transform: scaleX(0);
   }
 `;
+
+export const ToastLeftHideAnimation = keyframes`
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-110%);
+  }
+`;

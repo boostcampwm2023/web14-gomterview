@@ -1,7 +1,7 @@
 import {
   ToastPositionStyle,
   ToastProgressBarStyle,
-} from '@foundation/Toast/Toast.styles';
+} from '@foundation/Toast/styles/Toast.styles';
 
 export type ToastPosition = keyof typeof ToastPositionStyle;
 export type ToastType = keyof typeof ToastProgressBarStyle;
