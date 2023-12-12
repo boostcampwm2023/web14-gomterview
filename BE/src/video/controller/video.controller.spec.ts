@@ -56,7 +56,7 @@ import { MemberRepository } from 'src/member/repository/member.repository';
 import { Category } from 'src/category/entity/category';
 import { CategoryRepository } from 'src/category/repository/category.repository';
 import { categoryFixtureWithId } from 'src/category/fixture/category.fixture';
-import { saveToRedis } from 'src/util/redis.util';
+import { deleteFromRedis, saveToRedis } from 'src/util/redis.util';
 
 describe('VideoController 단위 테스트', () => {
   let controller: VideoController;
@@ -766,6 +766,8 @@ describe('VideoController 통합 테스트', () => {
             ),
           ),
         );
+
+      await deleteFromRedis(hash);
     });
 
     it('쿠키 없이 해시로 비디오 조회를 요청하더라도 200 상태 코드와 비디오 정보가 반환된다.', async () => {
@@ -791,6 +793,8 @@ describe('VideoController 통합 테스트', () => {
             ),
           ),
         );
+
+      await deleteFromRedis(hash);
     });
 
     it('유효하지 않은 형태의 해시로 비디오 조회를 요청하면 400 상태 코드가 반환된다.', async () => {
@@ -815,19 +819,24 @@ describe('VideoController 통합 테스트', () => {
       // when & then
       const agent = request.agent(app.getHttpServer());
       await agent.get(`/api/video/hash/${hash}`).expect(403);
+
+      await deleteFromRedis(hash);
     });
 
     it('해시로 탈퇴한 회원의 비디오 조회를 요청하면 404 상태 코드가 반환된다.', async () => {
       // give
-      await videoRepository.save(videoOfWithdrawnMemberFixture);
+      const video = await videoRepository.save(videoOfWithdrawnMemberFixture);
       const hash = crypto
         .createHash('md5')
         .update(videoFixture.url)
         .digest('hex');
+      saveToRedis(hash, video.url);
 
       // when & then
       const agent = request.agent(app.getHttpServer());
       await agent.get(`/api/video/hash/${hash}`).expect(404);
+
+      deleteFromRedis(hash);
     });
 
     it('유효한 해시로 조회 시 조회되는 비디오가 없다면 404 상태 코드가 반환된다.', async () => {
