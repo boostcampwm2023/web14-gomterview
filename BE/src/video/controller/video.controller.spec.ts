@@ -12,12 +12,14 @@ import { Request, Response } from 'express';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import {
   IDriveException,
+  InvalidHashException,
   Md5HashException,
   RedisDeleteException,
   RedisRetrieveException,
   RedisSaveException,
   VideoAccessForbiddenException,
   VideoNotFoundException,
+  VideoNotFoundWithHashException,
   VideoOfWithdrawnMemberException,
 } from '../exception/video.exception';
 import {
@@ -54,6 +56,8 @@ import { MemberRepository } from 'src/member/repository/member.repository';
 import { Category } from 'src/category/entity/category';
 import { CategoryRepository } from 'src/category/repository/category.repository';
 import { categoryFixtureWithId } from 'src/category/fixture/category.fixture';
+import { clearRedis, saveToRedis } from 'src/util/redis.util';
+import redisMock from 'ioredis-mock';
 
 describe('VideoController 단위 테스트', () => {
   let controller: VideoController;
@@ -235,6 +239,20 @@ describe('VideoController 단위 테스트', () => {
       expect(result).toBe(mockVideoDetailWithHash);
     });
 
+    it('해시로 비디오 조회 시 해시의 길이가 32자가 아니라면 InvalidHashException을 반환한다.', async () => {
+      // given
+
+      // when
+      mockVideoService.getVideoDetailByHash.mockRejectedValue(
+        new InvalidHashException(),
+      );
+
+      // then
+      expect(controller.getVideoDetailByHash(hash)).rejects.toThrow(
+        InvalidHashException,
+      );
+    });
+
     it('해시로 비디오 조회 시 비디오가 private이라면 VideoAccessForbiddenException을 반환한다.', async () => {
       // given
 
@@ -249,6 +267,20 @@ describe('VideoController 단위 테스트', () => {
       );
     });
 
+    it('해시로 비디오 조회 시 Redis에 저장된 URL로 DB에서 조회되는 비디오가 없다면 VideoNotFoundException을 반환한다.', async () => {
+      // given
+
+      // when
+      mockVideoService.getVideoDetailByHash.mockRejectedValue(
+        new VideoNotFoundException(),
+      );
+
+      // then
+      expect(controller.getVideoDetailByHash(hash)).rejects.toThrow(
+        VideoNotFoundException,
+      );
+    });
+
     it('해시로 비디오 조회 시 탈퇴한 회원의 비디오라면 VideoOfWithdrawnMemberException을 반환한다.', async () => {
       // given
 
@@ -260,6 +292,20 @@ describe('VideoController 단위 테스트', () => {
       // then
       expect(controller.getVideoDetailByHash(hash)).rejects.toThrow(
         VideoOfWithdrawnMemberException,
+      );
+    });
+
+    it('해시로 비디오 조회 시 유효한 해시지만 조회되는 비디오가 없다면 VideoNotFoundWithHashException을 반환한다.', async () => {
+      // given
+
+      // when
+      mockVideoService.getVideoDetailByHash.mockRejectedValue(
+        new VideoNotFoundWithHashException(),
+      );
+
+      // then
+      expect(controller.getVideoDetailByHash(hash)).rejects.toThrow(
+        VideoNotFoundWithHashException,
       );
     });
 
@@ -711,6 +757,12 @@ describe('VideoController 통합 테스트', () => {
   });
 
   describe('getVideoDetailByHash', () => {
+    let mockRedis;
+
+    beforeEach(async () => {
+      mockRedis = new redisMock();
+    });
+
     it('쿠키를 가지고 해시로 비디오 조회를 요청하면 200 상태 코드와 비디오 정보가 반환된다.', async () => {
       // given
       await videoRepository.save(videoFixture);
@@ -718,6 +770,7 @@ describe('VideoController 통합 테스트', () => {
         .createHash('md5')
         .update(videoFixture.url)
         .digest('hex');
+      await saveToRedis(hash, videoFixture.url, mockRedis);
 
       // when & then
       const agent = request.agent(app.getHttpServer());
@@ -743,6 +796,7 @@ describe('VideoController 통합 테스트', () => {
         .createHash('md5')
         .update(videoFixture.url)
         .digest('hex');
+      await saveToRedis(hash, videoFixture.url, mockRedis);
 
       // when & then
       const agent = request.agent(app.getHttpServer());
@@ -760,30 +814,74 @@ describe('VideoController 통합 테스트', () => {
         );
     });
 
-    it('해시로 private인 비디오 조회를 요청하면 403 상태 코드가 반환된다.', async () => {
+    it('유효하지 않은 형태의 해시로 비디오 조회를 요청하면 400 상태 코드가 반환된다.', async () => {
       // given
       await videoRepository.save(privateVideoFixture);
+      const hash = 'invalidHash';
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent.get(`/api/video/hash/${hash}`).expect(400);
+    });
+
+    it('해시로 private인 비디오 조회를 요청하면 403 상태 코드가 반환된다.', async () => {
+      // given
+      const video = await videoRepository.save(privateVideoFixture);
       const hash = crypto
         .createHash('md5')
         .update(privateVideoFixture.url)
         .digest('hex');
+      await saveToRedis(hash, video.url, mockRedis);
 
       // when & then
       const agent = request.agent(app.getHttpServer());
       await agent.get(`/api/video/hash/${hash}`).expect(403);
     });
 
+    it('해시로 Redis에서 조회한 비디오가 DB에서 조회되지 않는다면 404 상태 코드가 반환된다.', async () => {
+      // given
+      const video = await videoRepository.save(privateVideoFixture);
+      const hash = crypto
+        .createHash('md5')
+        .update(privateVideoFixture.url)
+        .digest('hex');
+      await saveToRedis(hash, video.url, mockRedis);
+      await videoRepository.remove(video);
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent.get(`/api/video/hash/${hash}`).expect(404);
+    });
+
     it('해시로 탈퇴한 회원의 비디오 조회를 요청하면 404 상태 코드가 반환된다.', async () => {
+      // give
+      const video = await videoRepository.save(videoOfWithdrawnMemberFixture);
+      const hash = crypto
+        .createHash('md5')
+        .update(videoFixture.url)
+        .digest('hex');
+      await saveToRedis(hash, video.url, mockRedis);
+
+      // when & then
+      const agent = request.agent(app.getHttpServer());
+      await agent.get(`/api/video/hash/${hash}`).expect(404);
+    });
+
+    it('유효한 해시로 조회 시 조회되는 비디오가 없다면 404 상태 코드가 반환된다.', async () => {
       // give
       await videoRepository.save(videoOfWithdrawnMemberFixture);
       const hash = crypto
         .createHash('md5')
-        .update(videoFixture.url)
+        .update(videoOfOtherFixture.url)
         .digest('hex');
 
       // when & then
       const agent = request.agent(app.getHttpServer());
       await agent.get(`/api/video/hash/${hash}`).expect(404);
+    });
+
+    afterEach(async () => {
+      await clearRedis(mockRedis);
     });
   });
 
@@ -810,7 +908,7 @@ describe('VideoController 통합 테스트', () => {
         );
     });
 
-    it('private 상태인 비디오 조회를 요청하면 200 상태 코드와 hash가 null인 상태로 비디어 정보가 반환된다.', async () => {
+    it('private 상태인 비디오 조회를 요청하면 200 상태 코드와 hash가 null인 상태로 비디오 정보가 반환된다.', async () => {
       // given
       const video = await videoRepository.save(privateVideoFixture);
 

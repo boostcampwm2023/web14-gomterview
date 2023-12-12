@@ -22,7 +22,7 @@ jobs:
       - name: Make .env
         run: |
           touch ./.env
-          echo "${{ secrets.BE_ENV }}" > ./.env
+          echo "${{ secrets.BE_CI_ENV }}" > ./.env
       - name: Make Cors Config
         run: |
           cd src/config

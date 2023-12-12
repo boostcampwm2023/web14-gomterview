@@ -8,9 +8,7 @@ import {
   Post,
   Req,
   Res,
-  UploadedFile,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { VideoService } from '../service/video.service';
 import { Request, Response } from 'express';
@@ -28,9 +26,6 @@ import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { VideoDetailResponse } from '../dto/videoDetailResponse';
 import { VideoHashResponse } from '../dto/videoHashResponse';
 import { SingleVideoResponse } from '../dto/singleVideoResponse';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { UPLOAD_UTIL } from '../../util/encoder.util';
-import { UploadVideoRequest } from '../dto/uploadVideoRequest';
 import { TokenHardGuard } from 'src/token/guard/token.hard.guard';
 
 @Controller('/api/video')
@@ -38,33 +33,33 @@ import { TokenHardGuard } from 'src/token/guard/token.hard.guard';
 export class VideoController {
   constructor(private videoService: VideoService) {}
 
-  @Post('upload')
-  @UseGuards(TokenHardGuard)
-  @ApiCookieAuth()
-  @ApiBody({ type: UploadVideoRequest })
-  @ApiOperation({
-    summary: '비디오를 인코딩/클라우드 저장/테이블 저장',
-  })
-  @ApiResponse(
-    createApiResponseOption(
-      201,
-      '비디오 인코딩/클라우드 저장/테이블 저장 완료',
-      null,
-    ),
-  )
-  @ApiResponse(createApiResponseOption(500, 'SERVER', null))
-  @UseInterceptors(FileInterceptor('file', UPLOAD_UTIL))
-  async uploadFile(
-    @UploadedFile() file: Express.Multer.File,
-    @Req() req: Request,
-    @Body() uploadVideoRequest: UploadVideoRequest,
-  ) {
-    await this.videoService.saveVideoOnCloud(
-      uploadVideoRequest,
-      req.user as Member,
-      file,
-    );
-  }
+  // @Post('upload')
+  // @UseGuards(TokenHardGuard)
+  // @ApiCookieAuth()
+  // @ApiBody({ type: UploadVideoRequest })
+  // @ApiOperation({
+  //   summary: '비디오를 인코딩/클라우드 저장/테이블 저장',
+  // })
+  // @ApiResponse(
+  //   createApiResponseOption(
+  //     201,
+  //     '비디오 인코딩/클라우드 저장/테이블 저장 완료',
+  //     null,
+  //   ),
+  // )
+  // @ApiResponse(createApiResponseOption(500, 'SERVER', null))
+  // @UseInterceptors(FileInterceptor('file', UPLOAD_UTIL))
+  // async uploadFile(
+  //   @UploadedFile() file: Express.Multer.File,
+  //   @Req() req: Request,
+  //   @Body() uploadVideoRequest: UploadVideoRequest,
+  // ) {
+  //   await this.videoService.saveVideoOnCloud(
+  //     uploadVideoRequest,
+  //     req.user as Member,
+  //     file,
+  //   );
+  // }
 
   @Post()
   @UseGuards(TokenHardGuard)
@@ -127,8 +122,9 @@ export class VideoController {
       VideoDetailResponse,
     ),
   )
+  @ApiResponse(createApiResponseOption(400, 'V10', null))
   @ApiResponse(createApiResponseOption(403, 'V02', null))
-  @ApiResponse(createApiResponseOption(404, 'V04, M01', null))
+  @ApiResponse(createApiResponseOption(404, 'V03, V04, V09, M01', null))
   @ApiResponse(createApiResponseOption(500, 'V06', null))
   async getVideoDetailByHash(@Param('hash') hash: string) {
     return await this.videoService.getVideoDetailByHash(hash);
