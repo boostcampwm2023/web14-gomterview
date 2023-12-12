@@ -27,14 +27,15 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
     connectStatus,
     media,
     startMedia,
+    connectVideo,
   } = useMedia();
 
   useEffect(() => {
-    if (isCurrentPage && !media) {
-      void startMedia();
+    if (isCurrentPage) {
+      media ? connectVideo() : void startMedia();
       return;
     }
-  }, [isCurrentPage, media, startMedia]);
+  }, [connectVideo, isCurrentPage, media, startMedia]);
 
   useEffect(() => {
     setVideoSettingState({
