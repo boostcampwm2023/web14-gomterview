@@ -27,7 +27,7 @@ const Avatar: React.FC<AvatarProps> = ({
       <img
         src={src}
         // TODO: alt에는 사용자 명이 들어가야함
-        crossOrigin="use-credentials"
+        crossOrigin="anonymous"
         css={css`
           border-radius: 50%;
           width: 100%;
