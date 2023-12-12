@@ -1,5 +1,4 @@
 import { videoSetting } from '@/atoms/interviewSetting';
-import useMedia from '@/hooks/useMedia';
 import { theme } from '@/styles/theme';
 import { Mirror } from '@common/index';
 import { RecordStatus } from '@components/interviewPage/InterviewHeader';
@@ -7,8 +6,8 @@ import { Description } from '@components/interviewSettingPage';
 import { css } from '@emotion/react';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import { toast } from '@foundation/Toast/toast';
 import InterviewSettingContentLayout from '@components/interviewSettingPage/InterviewSettingContentLayout';
+import useMedia from '@hooks/useMedia';
 type VideoSettingPageProps = {
   onNextClick?: () => void;
   onPrevClick?: () => void;
@@ -28,31 +27,20 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
     connectStatus,
     media,
     startMedia,
-    stopMedia,
+    connectVideo,
   } = useMedia();
 
   useEffect(() => {
-    if (isCurrentPage && !media) {
-      void startMedia();
-      toast.success('성공적으로 카메라에 연결되었습니다😊');
+    if (isCurrentPage) {
+      media ? connectVideo() : void startMedia();
       return;
     }
-
-    return () => {
-      if (!isCurrentPage && media) stopMedia();
-    };
-  }, [isCurrentPage, media, startMedia, stopMedia]);
+  }, [connectVideo, isCurrentPage, media, startMedia]);
 
   useEffect(() => {
-    if (connectStatus === 'connect') {
-      setVideoSettingState({
-        isSuccess: true,
-      });
-    } else {
-      setVideoSettingState({
-        isSuccess: false,
-      });
-    }
+    setVideoSettingState({
+      isSuccess: connectStatus === 'connect',
+    });
   }, [connectStatus, setVideoSettingState]);
 
   return (

@@ -3,10 +3,11 @@ import { Icon } from '@foundation/index';
 import { Tooltip } from '@foundation/index';
 import { theme } from '@styles/theme';
 import React, { RefObject } from 'react';
+import { ConnectStatus } from '@atoms/media';
 
 type MirrorProps = {
   mirrorVideoRef: RefObject<HTMLVideoElement>;
-  connectStatus: 'connect' | 'fail' | 'pending';
+  connectStatus: ConnectStatus;
   reloadMedia: () => void;
   isSetting?: boolean;
 };

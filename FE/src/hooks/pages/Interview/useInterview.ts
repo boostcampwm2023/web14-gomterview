@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { recordSetting } from '@/atoms/interviewSetting';
-import useMedia from '@/hooks/useMedia';
 import { localDownload, startRecording, stopRecording } from '@/utils/record';
 import { useUploadToIDrive } from '@/hooks/useUploadToIdrive';
 import useTimeTracker from '@/hooks/useTimeTracker';
 import useInterviewFlow from '@hooks/pages/Interview/useInterviewFlow';
 import useInterviewSettings from '@/hooks/atoms/useInterviewSettings';
+import useMedia from '@hooks/useMedia';
 
 const useInterview = () => {
   const {
@@ -29,6 +29,7 @@ const useInterview = () => {
     selectedMimeType,
     startMedia,
     stopMedia,
+    connectVideo,
   } = useMedia();
 
   const [isRecording, setIsRecording] = useState(false);
@@ -79,14 +80,8 @@ const useInterview = () => {
   ]);
 
   useEffect(() => {
-    if (!media && isAllSuccess) {
-      void startMedia();
-      return;
-    }
-    return () => {
-      if (media) stopMedia();
-    };
-  }, [media, startMedia, stopMedia, isAllSuccess]);
+    if (isAllSuccess) connectVideo();
+  }, [media, stopMedia, isAllSuccess, connectVideo]);
 
   useEffect(() => {
     if (isTimeOver) {

@@ -3,13 +3,14 @@ import { RefObject } from 'react';
 import { Mirror } from '@common/index';
 import { theme } from '@styles/theme';
 import { InterviewQuestion, InterviewAnswer } from './index';
+import { ConnectStatus } from '@atoms/media';
 
 type InterviewMainProps = {
   mirrorVideoRef: RefObject<HTMLVideoElement>;
   isScriptInView: boolean;
   question: string;
   answer: string;
-  connectStatus: 'connect' | 'fail' | 'pending';
+  connectStatus: ConnectStatus;
   reloadMedia: () => void;
 };
 

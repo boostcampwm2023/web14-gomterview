@@ -1,15 +1,22 @@
+import { useRecoilState } from 'recoil';
+import {
+  connectStatusState,
+  mediaState,
+  selectedMimeTypeState,
+} from '@atoms/media';
+import { useCallback, useEffect, useRef } from 'react';
 import { closeMedia, getMedia, getSupportedMimeTypes } from '@/utils/media';
-import { useState, useEffect, useCallback, useRef } from 'react';
-import useModal from './useModal';
+import useModal from '@hooks/useModal';
 import { MediaDisconnectedModal } from '@components/interviewPage/InterviewModal';
+import { toast } from '@foundation/Toast/toast';
 
 const useMedia = () => {
-  const [media, setMedia] = useState<MediaStream | null>(null);
-  const [selectedMimeType, setSelectedMimeType] = useState('');
+  const [media, setMedia] = useRecoilState(mediaState);
+  const [connectStatus, setConnectStatus] = useRecoilState(connectStatusState);
 
-  const [connectStatus, setConnectStatus] = useState<
-    'connect' | 'fail' | 'pending'
-  >('pending');
+  const [selectedMimeType, setSelectedMimeType] = useRecoilState(
+    selectedMimeTypeState
+  );
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const { openModal, closeModal } = useModal(() => {
@@ -22,11 +29,17 @@ const useMedia = () => {
       setMedia(newMedia);
       setConnectStatus('connect');
       if (videoRef.current) videoRef.current.srcObject = newMedia;
+      toast.success('성공적으로 카메라에 연결되었습니다😊');
     } catch (e) {
       setConnectStatus('fail');
       openModal();
     }
-  }, []);
+  }, [setConnectStatus, setMedia]);
+
+  const connectVideo = useCallback(() => {
+    if (videoRef.current) videoRef.current.srcObject = media;
+    setConnectStatus('connect');
+  }, [media, setConnectStatus]);
 
   const stopMedia = useCallback(() => {
     if (media) {
@@ -34,19 +47,19 @@ const useMedia = () => {
       setMedia(null);
       setConnectStatus('pending');
     }
-  }, [media]);
+  }, [media, setConnectStatus, setMedia]);
 
   useEffect(() => {
     const mimeTypes = getSupportedMimeTypes();
     if (mimeTypes.length > 0) setSelectedMimeType(mimeTypes[0]);
-  }, []);
+  }, [setSelectedMimeType]);
 
   useEffect(() => {
     const mediaStream = videoRef.current?.srcObject;
     if (mediaStream instanceof MediaStream) {
       const checkStream = () => {
         if (!mediaStream.active) {
-          setConnectStatus('fail');
+          setConnectStatus('pending');
 
           mediaStream.removeEventListener('inactive', checkStream);
         }
@@ -54,7 +67,7 @@ const useMedia = () => {
 
       mediaStream.addEventListener('inactive', checkStream);
     }
-  }, [videoRef, media]);
+  }, [videoRef, media, setConnectStatus]);
 
   return {
     media,
@@ -63,6 +76,7 @@ const useMedia = () => {
     selectedMimeType,
     startMedia,
     stopMedia,
+    connectVideo,
   };
 };
 

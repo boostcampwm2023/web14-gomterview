@@ -18,6 +18,7 @@ import UnknownErrorBoundary from './UnknownErrorBoundary';
 import APIErrorBoundary from './APIErrorBoundary';
 import SomethingWrongErrorPage from '@page/errorPage/SomethingWrong';
 import ModalProvider from './modalProvider';
+import MediaStreamPage from '@page/mediaStreamPage';
 
 const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
   const routes = createBrowserRouter([
@@ -40,11 +41,17 @@ const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
         },
         {
           path: PATH.INTERVIEW,
-          element: <InterviewPage />,
-        },
-        {
-          path: PATH.INTERVIEW_SETTING,
-          element: <InterviewSettingPage />,
+          element: <MediaStreamPage />,
+          children: [
+            {
+              index: true,
+              element: <InterviewPage />,
+            },
+            {
+              path: PATH.INTERVIEW_SETTING,
+              element: <InterviewSettingPage />,
+            },
+          ],
         },
         {
           path: PATH.WORKBOOK,
