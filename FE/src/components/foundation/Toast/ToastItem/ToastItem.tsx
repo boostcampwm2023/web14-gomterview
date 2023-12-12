@@ -11,7 +11,7 @@ import {
 } from '@foundation/Toast/styles/Toast.styles';
 import {
   ToastFadeOutUpAnimation,
-  ToastLeftHideAnimation,
+  ToastHideAnimation,
   ToastProgressBarAnimation,
 } from '@foundation/Toast/styles/ToastAnimation.styles';
 import { TOAST_DEFAULT_POSITION } from '@foundation/Toast/constants';
@@ -99,7 +99,7 @@ const ToastItem: React.FC<ToastProps> = ({
         touch-action: ${isExiting ? 'none' : 'auto'};
         animation: ${isHiding
           ? css`0.5s ease-in-out
-          ${ToastLeftHideAnimation}`
+          ${ToastHideAnimation(position)}`
           : 'none'};
       `}
     >

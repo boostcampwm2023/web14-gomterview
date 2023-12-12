@@ -1,4 +1,5 @@
 import { keyframes } from '@emotion/react';
+import { ToastPosition } from '@foundation/Toast/type';
 
 export const ToastFadeOutUpAnimation = keyframes`
   from {
@@ -20,7 +21,7 @@ export const ToastProgressBarAnimation = keyframes`
   }
 `;
 
-export const ToastLeftHideAnimation = keyframes`
+const ToastLeftHideAnimation = keyframes`
   0% {
     transform: translateX(0);
   }
@@ -29,7 +30,7 @@ export const ToastLeftHideAnimation = keyframes`
   }
 `;
 
-export const ToastRightHideAnimation = keyframes`
+const ToastRightHideAnimation = keyframes`
   0% {
     transform: translateX(0);
   }
@@ -37,3 +38,32 @@ export const ToastRightHideAnimation = keyframes`
     transform: translateX(110%);
   }
 `;
+
+const ToastUpHideAnimation = keyframes`
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-110%);
+  }
+`;
+
+const ToastBottomHideAnimation = keyframes`
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(110%);
+  }
+`;
+
+export const ToastHideAnimation = (position: ToastPosition) => {
+  return {
+    topLeft: ToastLeftHideAnimation,
+    topRight: ToastRightHideAnimation,
+    topCenter: ToastUpHideAnimation,
+    bottomLeft: ToastLeftHideAnimation,
+    bottomRight: ToastRightHideAnimation,
+    bottomCenter: ToastBottomHideAnimation,
+  }[position];
+};
