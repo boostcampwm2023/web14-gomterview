@@ -19,14 +19,30 @@ const useToastContainer = () => {
     });
   };
 
+  const updateToast = (id: string, text: string) => {
+    setToastList((prev) => {
+      const newMap = new Map(prev);
+
+      if (prev.has(id)) {
+        const updatedProps = { ...prev.get(id)!, text: text };
+        newMap.delete(id);
+        newMap.set(id, updatedProps);
+      }
+
+      return newMap;
+    });
+  };
+
   useEffect(() => {
     eventManager.on(ToastEvent.Add, addToast);
     eventManager.on(ToastEvent.Delete, deleteToast);
+    eventManager.on(ToastEvent.Update, updateToast);
 
     // 컴포넌트 언마운트 시 리스너 해제
     return () => {
       eventManager.off(ToastEvent.Add, addToast);
-      eventManager.off(ToastEvent.Delete, deleteToast);
+      eventManager.off(ToastEvent.Add, addToast);
+      eventManager.off(ToastEvent.Update, updateToast);
     };
   }, []);
 
