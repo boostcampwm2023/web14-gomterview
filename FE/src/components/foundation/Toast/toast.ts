@@ -22,6 +22,10 @@ const emitUpdateToast = (toastId: string, text: string) => {
   return toastId;
 };
 
+const emitDeleteToast = (toastId: string) => {
+  eventManager.emit(ToastEvent.Delete, toastId);
+};
+
 export const toast = {
   default: (text: string, toastOptions?: ToastOptions) =>
     emitAddToast('default', { text: text, ...toastOptions }),
@@ -34,4 +38,5 @@ export const toast = {
   error: (text: string, toastOptions?: ToastOptions) =>
     emitAddToast('error', { text: text, ...toastOptions }),
   update: (toastId: string, text: string) => emitUpdateToast(toastId, text),
+  delete: (toastId: string) => emitDeleteToast(toastId),
 };
