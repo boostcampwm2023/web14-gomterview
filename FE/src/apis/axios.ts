@@ -44,9 +44,11 @@ api.interceptors.response.use(
         queryClient.setQueryData(QUERY_KEY.MEMBER, null);
         return Promise.reject(err);
       }
+    } else if (error.response?.status === 401) {
+      return;
+    } else {
+      return Promise.reject(error);
     }
-
-    return Promise.reject(error);
   }
 );
 

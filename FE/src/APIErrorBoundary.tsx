@@ -42,8 +42,8 @@ const APIErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
           name: 'InvalidTokenException',
           level: 'warning',
         });
-        return;
-      // 페이지 이동은 하지 않는다.
+        // 아직은 해당 지점에 올 일이 없음
+        break;
       case 'T02':
         axios({
           method: 'patch',
@@ -62,6 +62,7 @@ const APIErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
           name: 'TokenExpiredException',
           level: 'warning',
         });
+        // 아직은 해당 지점에 올 일이 없음
         break;
 
       case 'A01':
@@ -152,7 +153,16 @@ const APIErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
           name: 'Md5HashException',
         });
         break;
-
+      case 'V09':
+        logAPIErrorToSentry(error, {
+          name: 'VideoNotFoundWithHashException',
+        });
+        break;
+      case 'V10':
+        logAPIErrorToSentry(error, {
+          name: 'InvalidHashException',
+        });
+        break;
       case 'SERVER':
         logAPIErrorToSentry(error, {
           name: 'ManipulatedTokenNotFiltered',
