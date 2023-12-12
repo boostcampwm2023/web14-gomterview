@@ -16,7 +16,7 @@ function useInterviewSettings() {
   const isAllSuccess = questionSuccess && videoSuccess && recordSuccess;
 
   const resetAllSettings = useCallback(() => {
-    setQuestion({ isSuccess: false, selectedData: [] });
+    setQuestion({ isSuccess: false, selectedData: [], from: undefined });
     setVideo({ isSuccess: false });
     setRecord({ isSuccess: false, method: undefined });
   }, [setQuestion, setRecord, setVideo]);
