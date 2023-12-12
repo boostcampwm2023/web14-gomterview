@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { ToastEvent, ToastProps } from '@foundation/Toast/type';
 import { css } from '@emotion/react';
 import { theme } from '@styles/theme';
-import { Box, Icon } from '@foundation/index';
+import { Box, Icon, Typography } from '@foundation/index';
 import { collapseToast } from '@foundation/Toast/collapseToast';
 import { eventManager } from '@foundation/Toast/eventManger';
 import {
@@ -115,8 +115,6 @@ const ToastItem: React.FC<ToastProps> = ({
             flex-direction: column;
             justify-content: center;
             row-gap: 0.5rem;
-            min-width: 20rem;
-            height: 4rem;
             border-radius: 0.5rem;
             overflow: hidden;
             background-color: ${theme.colors.surface.default};
@@ -133,6 +131,7 @@ const ToastItem: React.FC<ToastProps> = ({
           css={css`
             display: flex;
             justify-content: space-between;
+            align-items: center;
             padding: 1rem;
           `}
         >
@@ -144,7 +143,7 @@ const ToastItem: React.FC<ToastProps> = ({
             `}
           >
             <IconType />
-            {text}
+            <Typography>{text}</Typography>
           </div>
           <ToastToggleButton
             position={position}

@@ -42,6 +42,11 @@ export const ToastPositionStyle = {
     left: 50%;
     transform: translateX(-50%);
     z-index: 10000;
+    @media (max-width: ${theme.breakpoints.mobileL}) {
+      left: 0.25rem;
+      right: 0.25rem;
+      transform: none;
+    }
   `,
   bottomLeft: css`
     bottom: ${TOAST_GAP};
@@ -56,5 +61,10 @@ export const ToastPositionStyle = {
     left: 50%;
     transform: translateX(-50%);
     z-index: 10000;
+    @media (max-width: ${theme.breakpoints.mobileL}) {
+      left: 0.25rem;
+      right: 0.25rem;
+      transform: none;
+    }
   `,
 };

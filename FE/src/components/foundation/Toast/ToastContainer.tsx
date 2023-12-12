@@ -20,10 +20,13 @@ export const ToastContainer = () => {
           pointer-events: none;
           touch-action: none;
           z-index: ${theme.zIndex.toast.content};
+          min-width: 20rem;
+          max-width: 32rem;
           @media (max-width: ${theme.breakpoints.mobileL}) {
             left: 0.25rem;
             right: 0.25rem;
             min-width: auto;
+            max-width: 100%;
           }
         `,
         ToastPositionStyle[position],
