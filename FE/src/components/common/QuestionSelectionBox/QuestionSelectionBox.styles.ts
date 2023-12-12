@@ -21,7 +21,7 @@ export const showSidebar = keyframes`
 `;
 
 export const QuestionSelectionBoxSidebarAreaDiv = styled.div<{
-  isSidebarOpen: boolean;
+  isSidebarToggleOn: boolean;
   isTabletWidth: boolean;
 }>`
   display: flex;
@@ -33,7 +33,7 @@ export const QuestionSelectionBoxSidebarAreaDiv = styled.div<{
   overflow-y: auto;
   flex: 1 1 15rem;
   animation: ${(props) =>
-    props.isSidebarOpen && props.isTabletWidth
+    props.isSidebarToggleOn && props.isTabletWidth
       ? css`
           ${hideSidebar} 0.3s ease-in-out forwards
         `
