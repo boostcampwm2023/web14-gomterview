@@ -11,6 +11,7 @@ import {
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import useBreakpoint from '@hooks/useBreakPoint';
+import QuestionTabPanelBlank from '@common/QuestionSelectionBox/QuestionTabPanelBlank';
 
 const QuestionSelectionBox = () => {
   const isDeviceBreakpoint = useBreakpoint();
@@ -19,7 +20,7 @@ const QuestionSelectionBox = () => {
 
   const [isSidebarToggleOn, setIsSidebarToggleOn] = useState(true);
 
-  if (!workbookListData) return;
+  if (!workbookListData) return null;
   return (
     <>
       <Box
@@ -45,19 +46,23 @@ const QuestionSelectionBox = () => {
             <QuestionTabList workbookListData={workbookListData} />
           </QuestionSelectionBoxSidebarAreaDiv>
           <QuestionSelectionBoxTabPanelAreaDiv>
-            {workbookListData.map((workbook, index) => (
-              <TabPanelItem
-                key={workbook.workbookId}
-                tabIndex={index.toString()}
-                workbook={workbook}
-                isSidebarOpen={
-                  isSidebarToggleOn && isDeviceBreakpoint('tablet')
-                }
-                onSidebarToggleClick={() =>
-                  setIsSidebarToggleOn((prev) => !prev)
-                }
-              />
-            ))}
+            {workbookListData.length ? (
+              workbookListData.map((workbook, index) => (
+                <TabPanelItem
+                  key={workbook.workbookId}
+                  tabIndex={index.toString()}
+                  workbook={workbook}
+                  isSidebarOpen={
+                    isSidebarToggleOn && isDeviceBreakpoint('tablet')
+                  }
+                  onSidebarToggleClick={() =>
+                    setIsSidebarToggleOn((prev) => !prev)
+                  }
+                />
+              ))
+            ) : (
+              <QuestionTabPanelBlank />
+            )}
           </QuestionSelectionBoxTabPanelAreaDiv>
         </Tabs>
       </Box>
