@@ -7,16 +7,8 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import GlobalSVGProvider from '@/GlobalSvgProvider';
 import AppRouter from '@/AppRouter';
 import { ToastContainer } from '@foundation/Toast/ToastContainer';
-import useKakaoInAppBrowserDetect from '@hooks/useKakaoInAppBrowserDetect';
-import { useEffect } from 'react';
+
 function App() {
-  const { isKakaoInAppBrowser, moveOtherBrowser } =
-    useKakaoInAppBrowserDetect();
-
-  useEffect(() => {
-    if (isKakaoInAppBrowser) moveOtherBrowser();
-  }, [isKakaoInAppBrowser, moveOtherBrowser]);
-
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
