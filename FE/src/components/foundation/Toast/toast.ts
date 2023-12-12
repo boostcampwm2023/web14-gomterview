@@ -14,6 +14,7 @@ const emitToast = (type: ToastType, toastProps: ToastFunctionProps) => {
     toastId: id,
     type,
   });
+  return id;
 };
 
 export const toast = {
