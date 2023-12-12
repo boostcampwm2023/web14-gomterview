@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { Member } from 'src/member/entity/member';
 import { Video } from '../entity/video';
 import { VideoRepository } from '../repository/video.repository';
-import { getIdriveS3Client, getPutCommandObject } from 'src/util/idrive.util';
 import { v4 as uuidv4 } from 'uuid';
 import { PreSignedUrlResponse } from '../dto/preSignedUrlResponse';
 import { QuestionRepository } from 'src/question/repository/question.repository';
@@ -30,7 +29,7 @@ import {
 } from 'src/util/redis.util';
 import { SingleVideoResponse } from '../dto/singleVideoResponse';
 import { MemberNotFoundException } from 'src/member/exception/member.exception';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { getSignedUrlWithKey } from 'src/util/idrive.util';
 
 @Injectable()
 export class VideoService {
@@ -105,12 +104,9 @@ export class VideoService {
   async getPreSignedUrl(member: Member) {
     validateManipulatedToken(member);
     const key = `${uuidv4()}.mp4`;
-    const s3 = getIdriveS3Client();
-    const command = getPutCommandObject(key);
-    const expiresIn = 10;
 
     try {
-      const preSignedUrl = await getSignedUrl(s3, command, { expiresIn });
+      const preSignedUrl = await getSignedUrlWithKey(key);
       return new PreSignedUrlResponse(preSignedUrl, key);
     } catch (error) {
       throw new IDriveException();
@@ -134,6 +130,7 @@ export class VideoService {
     if (isEmpty(originUrl)) throw new VideoNotFoundWithHashException();
 
     const video = await this.videoRepository.findByUrl(originUrl);
+    if (isEmpty(video)) throw new VideoNotFoundException();
     if (!video.isPublic) throw new VideoAccessForbiddenException();
     if (isEmpty(video.memberId)) throw new VideoOfWithdrawnMemberException();
 

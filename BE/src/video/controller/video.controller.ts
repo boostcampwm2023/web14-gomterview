@@ -124,7 +124,7 @@ export class VideoController {
   )
   @ApiResponse(createApiResponseOption(400, 'V10', null))
   @ApiResponse(createApiResponseOption(403, 'V02', null))
-  @ApiResponse(createApiResponseOption(404, 'V04, V09, M01', null))
+  @ApiResponse(createApiResponseOption(404, 'V03, V04, V09, M01', null))
   @ApiResponse(createApiResponseOption(500, 'V06', null))
   async getVideoDetailByHash(@Param('hash') hash: string) {
     return await this.videoService.getVideoDetailByHash(hash);
