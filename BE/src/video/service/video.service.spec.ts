@@ -843,20 +843,28 @@ describe('VideoService 통합 테스트', () => {
       await redisUtil.deleteFromRedis(hash);
     });
 
-    it('해시로 비디오 세부 정보 조회 시 private인 비디오를 조회하려 하면 VideoAccessForbiddenException을 반환한다.', async () => {
-      //given
-      const video = await videoRepository.save(privateVideoFixture);
-      const hash = crypto.createHash('md5').update(video.url).digest('hex');
-      await redisUtil.saveToRedis(hash, video.url);
+    it('해시로 비디오 상세 정보 조회 시 해시가 유효하지 않은 형태라면 InvalidHashException을 반환한다.', async () => {
+      // given
+      const hash = 'invalidHash';
+      // when
 
-      //when
-
-      //then
+      // then
       await expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
-        VideoAccessForbiddenException,
+        InvalidHashException,
       );
+    });
 
-      await redisUtil.deleteFromRedis(hash);
+    it('해시로 비디오 상세 정보 조회 시 해시로 조회되는 비디오가 없다면 VideoNotFoundWithHashException을 반환한다.', async () => {
+      // given
+      const video = await videoRepository.save(videoFixture);
+      const hash = crypto.createHash('md5').update(video.url).digest('hex');
+
+      // when
+
+      // then
+      await expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
+        VideoNotFoundWithHashException,
+      );
     });
 
     it('해시로 비디오 세부 정보 조회 시 탈퇴한 회원의 비디오를 조회하려 하면 VideoOfWithdrawnMemberException을 반환한다.', async () => {
@@ -870,6 +878,22 @@ describe('VideoService 통합 테스트', () => {
       //then
       await expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
         VideoOfWithdrawnMemberException,
+      );
+
+      await redisUtil.deleteFromRedis(hash);
+    });
+
+    it('해시로 비디오 세부 정보 조회 시 private인 비디오를 조회하려 하면 VideoAccessForbiddenException을 반환한다.', async () => {
+      //given
+      const video = await videoRepository.save(privateVideoFixture);
+      const hash = crypto.createHash('md5').update(video.url).digest('hex');
+      await redisUtil.saveToRedis(hash, video.url);
+
+      //when
+
+      //then
+      await expect(videoService.getVideoDetailByHash(hash)).rejects.toThrow(
+        VideoAccessForbiddenException,
       );
 
       await redisUtil.deleteFromRedis(hash);
