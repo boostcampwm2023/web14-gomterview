@@ -20,6 +20,7 @@ import { Answer } from './answer/entity/answer';
 import { WorkbookModule } from './workbook/workbook.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { Workbook } from './workbook/entity/workbook';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { Workbook } from './workbook/entity/workbook';
     CategoryModule,
     AnswerModule,
     WorkbookModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [
