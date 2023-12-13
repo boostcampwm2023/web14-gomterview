@@ -34,6 +34,7 @@ export class WorkbookRepository {
       .leftJoinAndSelect('Workbook.category', 'category')
       .leftJoinAndSelect('Workbook.member', 'member')
       .where('Workbook.isPublic = :state', { state: true })
+      .orderBy('Workbook.copyCount', 'DESC')
       .getMany();
   }
 
@@ -44,6 +45,7 @@ export class WorkbookRepository {
       .leftJoinAndSelect('Workbook.category', 'category')
       .where('Workbook.isPublic = :state', { state: true })
       .andWhere('category.id = :categoryId', { categoryId })
+      .orderBy('Workbook.copyCount', 'DESC')
       .getMany();
   }
 
@@ -62,6 +64,7 @@ export class WorkbookRepository {
       .createQueryBuilder('Workbook')
       .leftJoinAndSelect('Workbook.member', 'member')
       .where('member.id = :memberId', { memberId })
+      .orderBy('Workbook.copyCount', 'DESC')
       .getMany();
   }
 
