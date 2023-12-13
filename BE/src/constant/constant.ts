@@ -28,3 +28,5 @@ export const HOUR_IN_SECONDS = 60 * 60000;
 
 export const ACCESS_TOKEN_EXPIRES_IN = process.env.ACCESS_TOKEN_EXPIRES_IN; // 1 시간
 export const REFRESH_TOKEN_EXPIRES_IN = process.env.REFRESH_TOKEN_EXPIRES_IN; // 7 일
+
+export const NO_CACHE_URL = ['/api/member', '/api/auth/reissue'];

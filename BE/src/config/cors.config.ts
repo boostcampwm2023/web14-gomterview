@@ -5,4 +5,5 @@ export const CORS_CONFIG: CorsOptions = {
   origin: CORS_ORIGIN,
   credentials: true,
   exposedHeaders: CORS_HEADERS,
+  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTION', 'HEADER'],
 };

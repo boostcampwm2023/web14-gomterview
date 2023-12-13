@@ -6,6 +6,7 @@ import { CORS_CONFIG } from './config/cors.config';
 import * as cookieParser from 'cookie-parser';
 import { initializeTransactionalContext } from 'typeorm-transactional';
 import { LoggerService } from './config/logger.config';
+import { NO_CACHE_URL } from './constant/constant';
 
 async function bootstrap() {
   initializeTransactionalContext();
@@ -20,6 +21,9 @@ async function bootstrap() {
   setupSwagger(app);
   // 캐시 제어 미들웨어 등록
   expressApp.use((req, res, next) => {
+    if (NO_CACHE_URL.includes(req.url)) {
+      res.setHeader('Cache-Control', 'no-cache');
+    }
     logger.info(req.url);
     next();
   });
