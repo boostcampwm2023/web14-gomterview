@@ -26,5 +26,5 @@ export const GONE = 410;
 export const INTERNAL_SERVER_ERROR = 500;
 export const HOUR_IN_SECONDS = 60 * 60000;
 
-export const ACCESS_TOKEN_EXPIRES_IN = '1h'; // 1 시간
-export const REFRESH_TOKEN_EXPIRES_IN = '7d'; // 7 일
+export const ACCESS_TOKEN_EXPIRES_IN = process.env.ACCESS_TOKEN_EXPIRES_IN; // 1 시간
+export const REFRESH_TOKEN_EXPIRES_IN = process.env.REFRESH_TOKEN_EXPIRES_IN; // 7 일

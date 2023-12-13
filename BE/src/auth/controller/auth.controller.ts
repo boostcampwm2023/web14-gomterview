@@ -19,6 +19,7 @@ import {
 } from 'src/util/swagger.util';
 import { TokenHardGuard } from 'src/token/guard/token.hard.guard';
 import { UNAUTHORIZED } from '../../constant/constant';
+import { NeedToLoginException } from '../../token/exception/token.exception';
 
 @Controller('/api/auth')
 @ApiTags('auth')
@@ -100,7 +101,8 @@ export class AuthController {
         .send();
     } catch (e) {
       if (e.status === UNAUTHORIZED) {
-        res.clearCookie('accessToken', COOKIE_OPTIONS).send();
+        res.status(401).clearCookie('accessToken', COOKIE_OPTIONS);
+        throw new NeedToLoginException();
       }
     }
   }

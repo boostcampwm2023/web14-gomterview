@@ -7,6 +7,7 @@ import { Category } from '../category/entity/category';
 import { Workbook } from '../workbook/entity/workbook';
 import { Question } from '../question/entity/question';
 import { Answer } from '../answer/entity/answer';
+import { Video } from '../video/entity/video';
 
 export const MYSQL_OPTION: TypeOrmModuleAsyncOptions = {
   useFactory() {
@@ -15,7 +16,7 @@ export const MYSQL_OPTION: TypeOrmModuleAsyncOptions = {
       name: 'main',
       host: process.env.DATABASE_HOST,
       port: Number(process.env.DATABASE_PORT),
-      entities: [Member, Category, Workbook, Question, Answer],
+      entities: [Member, Category, Workbook, Question, Answer, Video],
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE,
