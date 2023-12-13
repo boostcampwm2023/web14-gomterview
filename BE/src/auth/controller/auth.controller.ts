@@ -101,10 +101,8 @@ export class AuthController {
         .send();
     } catch (e) {
       if (e.status === UNAUTHORIZED) {
-        res
-          .status(401)
-          .clearCookie('accessToken', COOKIE_OPTIONS)
-          .send(new NeedToLoginException());
+        res.status(401).clearCookie('accessToken', COOKIE_OPTIONS);
+        throw new NeedToLoginException();
       }
     }
   }
