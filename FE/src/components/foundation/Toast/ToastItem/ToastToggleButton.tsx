@@ -31,11 +31,13 @@ const ToastToggleButton: React.FC<ToastToggleButtonProps> = ({
       variants="secondary"
       onClick={onClick}
       css={css`
+        display: flex;
+        align-items: center;
         border: none;
         pointer-events: auto;
         touch-action: auto;
         z-index: ${theme.zIndex.toast.content};
-        width: auto;
+        max-width: 3rem;
       `}
     >
       <Icon
