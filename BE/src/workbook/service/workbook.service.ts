@@ -11,6 +11,7 @@ import { isEmpty } from 'class-validator';
 import { validateWorkbook, validateWorkbookOwner } from '../util/workbook.util';
 import { WorkbookTitleResponse } from '../dto/workbookTitleResponse';
 import { UpdateWorkbookRequest } from '../dto/updateWorkbookRequest';
+import { Transactional } from 'typeorm-transactional';
 
 @Injectable()
 export class WorkbookService {
@@ -19,6 +20,7 @@ export class WorkbookService {
     private categoryRepository: CategoryRepository,
   ) {}
 
+  @Transactional()
   async createWorkbook(
     createWorkbookRequest: CreateWorkbookRequest,
     member: Member,
@@ -40,6 +42,7 @@ export class WorkbookService {
     return result.identifiers[0].id as number;
   }
 
+  @Transactional()
   async findWorkbooks(categoryId: number) {
     if (isEmpty(categoryId)) {
       return await this.findAllWorkbook();
@@ -63,6 +66,7 @@ export class WorkbookService {
     return workbooks.map(WorkbookResponse.of);
   }
 
+  @Transactional()
   async findWorkbookTitles(member: Member) {
     const workbooks = await this.findWorkbookByMember(member);
     return workbooks.map(WorkbookTitleResponse.of);
@@ -76,6 +80,7 @@ export class WorkbookService {
     return await this.workbookRepository.findMembersWorkbooks(member.id);
   }
 
+  @Transactional()
   async findSingleWorkbook(workbookId: number) {
     const workbook = await this.workbookRepository.findById(workbookId);
     validateWorkbook(workbook);
@@ -83,6 +88,7 @@ export class WorkbookService {
     return WorkbookResponse.of(workbook);
   }
 
+  @Transactional()
   async updateWorkbook(
     updateWorkbookRequest: UpdateWorkbookRequest,
     member: Member,
@@ -105,6 +111,7 @@ export class WorkbookService {
     return WorkbookResponse.of(workbook);
   }
 
+  @Transactional()
   async deleteWorkbookById(workbookId: number, member: Member) {
     validateManipulatedToken(member);
     const workbook =

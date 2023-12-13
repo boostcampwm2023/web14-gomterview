@@ -11,7 +11,6 @@ import {
 } from 'src/token/exception/token.exception';
 import { INestApplication } from '@nestjs/common';
 import { MemberModule } from '../member.module';
-import { Member } from '../entity/member';
 import { addAppModules, createIntegrationTestModule } from 'src/util/test.util';
 import { AuthModule } from 'src/auth/auth.module';
 import { AuthService } from 'src/auth/service/auth.service';
@@ -29,6 +28,10 @@ describe('MemberService 단위 테스트', () => {
     findById: jest.fn(),
     findByEmail: jest.fn(),
   };
+
+  jest.mock('typeorm-transactional', () => ({
+    Transactional: () => () => ({}),
+  }));
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -132,12 +135,8 @@ describe('MemberService 통합 테스트', () => {
 
   beforeAll(async () => {
     const modules = [MemberModule, AuthModule];
-    const entities = [Member];
-
-    const moduleFixture: TestingModule = await createIntegrationTestModule(
-      modules,
-      entities,
-    );
+    const moduleFixture: TestingModule =
+      await createIntegrationTestModule(modules);
 
     app = moduleFixture.createNestApplication();
     addAppModules(app);

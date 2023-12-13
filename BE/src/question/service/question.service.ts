@@ -16,6 +16,7 @@ import { CopyQuestionRequest } from '../dto/copyQuestionRequest';
 import { Workbook } from '../../workbook/entity/workbook';
 import { WorkbookIdResponse } from '../../workbook/dto/workbookIdResponse';
 import { NeedToFindByWorkbookIdException } from '../../workbook/exception/workbook.exception';
+import { Transactional } from 'typeorm-transactional';
 
 @Injectable()
 export class QuestionService {
@@ -24,6 +25,7 @@ export class QuestionService {
     private workbookRepository: WorkbookRepository,
   ) {}
 
+  @Transactional()
   async createQuestion(
     createQuestionRequest: CreateQuestionRequest,
     member: Member,
@@ -42,6 +44,7 @@ export class QuestionService {
     return QuestionResponse.from(question);
   }
 
+  @Transactional()
   async copyQuestions(
     copyQuestionRequest: CopyQuestionRequest,
     member: Member,
@@ -69,6 +72,7 @@ export class QuestionService {
     return WorkbookIdResponse.of(workbook);
   }
 
+  @Transactional()
   async findAllByWorkbookId(workbookId: number) {
     if (isEmpty(workbookId)) {
       throw new NeedToFindByWorkbookIdException();
@@ -79,6 +83,7 @@ export class QuestionService {
     return questions.map(QuestionResponse.from);
   }
 
+  @Transactional()
   async deleteQuestionById(questionId: number, member: Member) {
     validateManipulatedToken(member);
     const question = await this.questionRepository.findById(questionId);

@@ -17,7 +17,10 @@ import { MemberModule } from '../../member/member.module';
 import { AnswerModule } from '../answer.module';
 import { Question } from '../../question/entity/question';
 import { Member } from '../../member/entity/member';
-import { createIntegrationTestModule } from '../../util/test.util';
+import {
+  createIntegrationTestModule,
+  createTypeOrmModuleForTest,
+} from '../../util/test.util';
 import { QuestionModule } from '../../question/question.module';
 import {
   answerFixture,
@@ -39,7 +42,6 @@ import { WorkbookModule } from '../../workbook/workbook.module';
 import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { CategoryRepository } from '../../category/repository/category.repository';
 import { CategoryModule } from '../../category/category.module';
-import { Category } from '../../category/entity/category';
 import { QuestionResponse } from '../../question/dto/questionResponse';
 
 describe('AnswerService 단위 테스트', () => {
@@ -60,8 +62,13 @@ describe('AnswerService 단위 테스트', () => {
     findById: jest.fn(),
   };
 
+  jest.mock('typeorm-transactional', () => ({
+    Transactional: () => () => ({}),
+  }));
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [await createTypeOrmModuleForTest()],
       providers: [
         AnswerService,
         AnswerRepository,
@@ -193,9 +200,8 @@ describe('AnswerService 통합테스트', () => {
       WorkbookModule,
       CategoryModule,
     ];
-    const entities = [Answer, Question, Member, Answer, Workbook, Category];
 
-    const moduleFixture = await createIntegrationTestModule(modules, entities);
+    const moduleFixture = await createIntegrationTestModule(modules);
     app = moduleFixture.createNestApplication();
     await app.init();
 

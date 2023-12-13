@@ -7,6 +7,7 @@ import { INestApplication } from '@nestjs/common';
 import {
   addAppModules,
   createIntegrationTestModule,
+  createTypeOrmModuleForTest,
 } from '../../util/test.util';
 import { CategoryModule } from '../category.module';
 
@@ -18,8 +19,13 @@ describe('CategoryService 단위 테스트', () => {
     save: jest.fn(),
   };
 
+  jest.mock('typeorm-transactional', () => ({
+    Transactional: () => () => ({}),
+  }));
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [await createTypeOrmModuleForTest()],
       providers: [CategoryService, CategoryRepository],
     })
       .overrideProvider(CategoryRepository)
@@ -56,12 +62,9 @@ describe('CategoryService 통합 테스트', () => {
 
   beforeAll(async () => {
     const modules = [CategoryModule];
-    const entities = [Category];
 
-    const moduleFixture: TestingModule = await createIntegrationTestModule(
-      modules,
-      entities,
-    );
+    const moduleFixture: TestingModule =
+      await createIntegrationTestModule(modules);
 
     app = moduleFixture.createNestApplication();
     addAppModules(app);

@@ -36,13 +36,8 @@ import { MemberNotFoundException } from 'src/member/exception/member.exception';
 import { VideoHashResponse } from '../dto/videoHashResponse';
 import { VideoModule } from '../video.module';
 import { Video } from '../entity/video';
-import { Member } from 'src/member/entity/member';
-import { Question } from 'src/question/entity/question';
-import { Workbook } from 'src/workbook/entity/workbook';
-import { Category } from 'src/category/entity/category';
 import { addAppModules, createIntegrationTestModule } from 'src/util/test.util';
 import { INestApplication } from '@nestjs/common';
-import { Answer } from 'src/answer/entity/answer';
 import { CategoryRepository } from 'src/category/repository/category.repository';
 import { WorkbookRepository } from 'src/workbook/repository/workbook.repository';
 import { categoryFixtureWithId } from 'src/category/fixture/category.fixture';
@@ -73,6 +68,10 @@ describe('VideoService 단위 테스트', () => {
   const mockQuestionRepository = {
     findById: jest.fn(),
   };
+
+  jest.mock('typeorm-transactional', () => ({
+    Transactional: () => () => ({}),
+  }));
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -679,12 +678,9 @@ describe('VideoService 통합 테스트', () => {
 
   beforeAll(async () => {
     const modules = [VideoModule, QuestionModule];
-    const entities = [Video, Member, Question, Answer, Workbook, Category];
 
-    const moduleFixture: TestingModule = await createIntegrationTestModule(
-      modules,
-      entities,
-    );
+    const moduleFixture: TestingModule =
+      await createIntegrationTestModule(modules);
 
     app = moduleFixture.createNestApplication();
     addAppModules(app);

@@ -13,6 +13,7 @@ import { AnswerForbiddenException } from '../exception/answer.exception';
 import { WorkbookRepository } from '../../workbook/repository/workbook.repository';
 import { QuestionForbiddenException } from '../../question/exception/question.exception';
 import { validateWorkbook } from '../../workbook/util/workbook.util';
+import { Transactional } from 'typeorm-transactional';
 
 @Injectable()
 export class AnswerService {
@@ -22,6 +23,7 @@ export class AnswerService {
     private workbookRepository: WorkbookRepository,
   ) {}
 
+  @Transactional()
   async addAnswer(createAnswerRequest: CreateAnswerRequest, member: Member) {
     const question = await this.questionRepository.findOriginById(
       createAnswerRequest.questionId,
@@ -37,6 +39,7 @@ export class AnswerService {
     return AnswerResponse.from(answer, member);
   }
 
+  @Transactional()
   async setDefaultAnswer(
     defaultAnswerRequest: DefaultAnswerRequest,
     member: Member,
@@ -64,6 +67,7 @@ export class AnswerService {
     await this.questionRepository.update(question);
   }
 
+  @Transactional()
   async deleteAnswer(id: number, member: Member) {
     const answer = await this.answerRepository.findById(id);
 
@@ -77,6 +81,7 @@ export class AnswerService {
     throw new AnswerForbiddenException();
   }
 
+  @Transactional()
   async getAnswerList(id: number) {
     const question =
       await this.questionRepository.findQuestionWithOriginById(id);

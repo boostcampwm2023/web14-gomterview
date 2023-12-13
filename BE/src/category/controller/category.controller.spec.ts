@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CategoryRepository } from '../repository/category.repository';
-import { Category } from '../entity/category';
 import { CategoryResponse } from '../dto/categoryResponse';
 import { INestApplication } from '@nestjs/common';
 import {
@@ -61,12 +60,9 @@ describe('CategoryController 통합 테스트', () => {
 
   beforeAll(async () => {
     const modules = [CategoryModule];
-    const entities = [Category];
 
-    const moduleFixture: TestingModule = await createIntegrationTestModule(
-      modules,
-      entities,
-    );
+    const moduleFixture: TestingModule =
+      await createIntegrationTestModule(modules);
 
     app = moduleFixture.createNestApplication();
     addAppModules(app);

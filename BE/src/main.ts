@@ -4,9 +4,13 @@ import { ValidationPipe } from '@nestjs/common';
 import { setupSwagger } from './config/swagger.config';
 import { CORS_CONFIG } from './config/cors.config';
 import * as cookieParser from 'cookie-parser';
+import { initializeTransactionalContext } from 'typeorm-transactional';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  initializeTransactionalContext();
+  const app = await NestFactory.create(AppModule, {
+    abortOnError: true,
+  });
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors(CORS_CONFIG);

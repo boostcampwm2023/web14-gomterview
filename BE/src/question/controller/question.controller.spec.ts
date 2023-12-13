@@ -9,7 +9,6 @@ import {
 } from '../fixture/question.fixture';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { TokenModule } from '../../token/token.module';
-import { Member } from '../../member/entity/member';
 import { createIntegrationTestModule } from '../../util/test.util';
 import { QuestionModule } from '../question.module';
 import { AuthModule } from '../../auth/auth.module';
@@ -26,7 +25,6 @@ import { Question } from '../entity/question';
 import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 import * as cookieParser from 'cookie-parser';
 import { QuestionRepository } from '../repository/question.repository';
-import { Answer } from '../../answer/entity/answer';
 import { WorkbookRepository } from '../../workbook/repository/workbook.repository';
 import { workbookFixture } from '../../workbook/fixture/workbook.fixture';
 import { WorkbookModule } from '../../workbook/workbook.module';
@@ -34,7 +32,6 @@ import { Workbook } from '../../workbook/entity/workbook';
 import { MemberRepository } from '../../member/repository/member.repository';
 import { CategoryRepository } from '../../category/repository/category.repository';
 import { CategoryModule } from '../../category/category.module';
-import { Category } from '../../category/entity/category';
 import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { CopyQuestionRequest } from '../dto/copyQuestionRequest';
 
@@ -131,12 +128,9 @@ describe('QuestionController 통합테스트', () => {
       WorkbookModule,
       CategoryModule,
     ];
-    const entities = [Member, Workbook, Question, Answer, Category];
 
-    const moduleFixture: TestingModule = await createIntegrationTestModule(
-      modules,
-      entities,
-    );
+    const moduleFixture: TestingModule =
+      await createIntegrationTestModule(modules);
 
     app = moduleFixture.createNestApplication();
     app.use(cookieParser());

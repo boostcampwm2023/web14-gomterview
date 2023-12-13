@@ -22,6 +22,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.465.0",
     "@aws-sdk/s3-request-presigner": "^3.465.0",
+    "@nestjs/axios": "^3.0.1",
     "@nestjs/class-transformer": "^0.4.0",
     "@nestjs/class-validator": "^0.13.4",
     "@nestjs/common": "^10.0.0",
@@ -30,7 +31,9 @@
     "@nestjs/jwt": "^10.1.1",
     "@nestjs/passport": "^10.0.2",
     "@nestjs/platform-express": "^10.2.10",
+    "@nestjs/schedule": "^4.0.0",
     "@nestjs/swagger": "^7.1.14",
+    "@nestjs/terminus": "^10.2.0",
     "@nestjs/typeorm": "^10.0.0",
     "@types/bcrypt": "^5.0.1",
     "@types/cookie-parser": "^1.4.5",
@@ -39,6 +42,7 @@
     "@types/passport": "^1.0.14",
     "@types/passport-google-oauth20": "^2.0.13",
     "@types/passport-jwt": "^3.0.12",
+    "axios": "^1.6.2",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
@@ -56,6 +60,7 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.17",
+    "typeorm-transactional": "^0.5.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
@@ -116,7 +121,8 @@
       "main.ts",
       "google.strategy.ts",
       "/src/auth/",
-      "/src/token/"
+      "/src/token/",
+      "/src/health/"
     ]
   }
 }

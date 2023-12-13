@@ -7,7 +7,10 @@ import {
   questionFixture,
 } from '../fixture/question.fixture';
 import { QuestionResponse } from '../dto/questionResponse';
-import { createIntegrationTestModule } from '../../util/test.util';
+import {
+  createIntegrationTestModule,
+  createTypeOrmModuleForTest,
+} from '../../util/test.util';
 import { QuestionModule } from '../question.module';
 import { Question } from '../entity/question';
 import { INestApplication } from '@nestjs/common';
@@ -20,7 +23,6 @@ import {
 } from '../../member/fixture/member.fixture';
 import { QuestionNotFoundException } from '../exception/question.exception';
 import { ManipulatedTokenNotFiltered } from '../../token/exception/token.exception';
-import { Answer } from '../../answer/entity/answer';
 import { AnswerModule } from '../../answer/answer.module';
 import { WorkbookRepository } from '../../workbook/repository/workbook.repository';
 import {
@@ -37,7 +39,6 @@ import {
 import { CategoryRepository } from '../../category/repository/category.repository';
 import { categoryFixtureWithId } from '../../category/fixture/category.fixture';
 import { CategoryModule } from '../../category/category.module';
-import { Category } from '../../category/entity/category';
 import { WorkbookIdResponse } from '../../workbook/dto/workbookIdResponse';
 import { CopyQuestionRequest } from '../dto/copyQuestionRequest';
 
@@ -59,8 +60,13 @@ describe('QuestionService', () => {
     update: jest.fn(),
   };
 
+  jest.mock('typeorm-transactional', () => ({
+    Transactional: () => () => ({}),
+  }));
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [await createTypeOrmModuleForTest()],
       providers: [QuestionService, QuestionRepository, WorkbookRepository],
     })
       .overrideProvider(QuestionRepository)
@@ -283,9 +289,8 @@ describe('QuestionService 통합 테스트', () => {
       AnswerModule,
       CategoryModule,
     ];
-    const entities = [Question, Workbook, Member, Answer, Category];
 
-    const moduleFixture = await createIntegrationTestModule(modules, entities);
+    const moduleFixture = await createIntegrationTestModule(modules);
     app = moduleFixture.createNestApplication();
     await app.init();
 
