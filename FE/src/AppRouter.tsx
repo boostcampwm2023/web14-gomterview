@@ -19,7 +19,7 @@ import APIErrorBoundary from './APIErrorBoundary';
 import SomethingWrongErrorPage from '@page/errorPage/SomethingWrong';
 import ModalProvider from './modalProvider';
 import MediaStreamPage from '@page/mediaStreamPage';
-import KakaoInAppBrowserDetect from './\bKakoInAppBrowserDetect';
+import KakaoInAppBrowserDetect from './KakaoInAppBrowserDetect';
 
 const AppRouter = ({ queryClient }: { queryClient: QueryClient }) => {
   const routes = createBrowserRouter([
