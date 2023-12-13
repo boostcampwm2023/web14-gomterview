@@ -4,14 +4,35 @@ import { toast } from '@foundation/Toast/toast';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { toBlobURL } from '@ffmpeg/util';
 
-const ffmpeg = new FFmpeg();
-
 type StartRecordingProps = {
   media: MediaStream | null;
   selectedMimeType: string;
   mediaRecorderRef: MutableRefObject<MediaRecorder | null>;
   setRecordedBlobs: React.Dispatch<React.SetStateAction<Blob[]>>;
 };
+
+type VideoRecordQueue = {
+  recordTime: string;
+  toastId?: string;
+}[];
+
+const ffmpeg = new FFmpeg();
+const videoRecordQueue: VideoRecordQueue = [];
+
+const ffmpegLogCallback = ({ message }: { message: string }) => {
+  const { toastId, recordTime } = videoRecordQueue[0];
+  if (toastId) {
+    const curProgressMessage = compareProgress(message, recordTime);
+    curProgressMessage && toast.update(toastId, curProgressMessage);
+    return;
+  }
+
+  videoRecordQueue[0].toastId = toast.info(
+    '영상 인코딩을 시작합니다.\n새로고침 혹은 화면을 종료시 데이터가 소실될 수 있습니다.',
+    { autoClose: false, closeOnClick: false, toggle: true }
+  );
+};
+ffmpeg.on('log', ffmpegLogCallback);
 
 export const startRecording = ({
   media,
@@ -72,28 +93,7 @@ export const localDownload = async (
 
 export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
   const baseURL = 'https://unpkg.com/@ffmpeg/core-mt@0.12.4/dist/umd';
-  const toastId = toast.info(
-    '영상 인코딩을 시작합니다.\n새로고침 혹은 화면을 종료시 데이터가 소실될 수 있습니다.',
-    { autoClose: false, closeOnClick: false, toggle: true }
-  );
-
-  let lastLogTime = 0;
-  const logInterval = 1000;
-
-  const ffmpegLogCallback = ({ message }: { message: string }) => {
-    const currentTime = Date.now();
-
-    if (currentTime - lastLogTime > logInterval) {
-      lastLogTime = currentTime;
-      const curProgressMessage = compareProgress(message, recordTime);
-      if (curProgressMessage) {
-        console.log('videoLength', recordTime, curProgressMessage);
-        toast.update(toastId, recordTime + toastId + curProgressMessage);
-      }
-    }
-  };
-
-  ffmpeg.on('log', ffmpegLogCallback);
+  videoRecordQueue.push({ recordTime });
 
   if (!ffmpeg.loaded) {
     await ffmpeg.load({
@@ -113,13 +113,12 @@ export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
   const uint8Array = new Uint8Array(arrayBuffer);
   // ffmpeg의 파일 시스템에 파일 작성
   await ffmpeg.writeFile('input.webm', uint8Array);
-
   await ffmpeg.exec(['-i', 'input.webm', 'output.mp4']);
   const data = await ffmpeg.readFile('output.mp4');
   const newBlob = new Blob([data], { type: 'video/mp4' });
-  ffmpeg.off('log', ffmpegLogCallback);
-  toast.delete(toastId);
   toast.info('성공적으로 Mp4 인코딩이 완료되었습니다😊');
+  toast.delete(videoRecordQueue[0].toastId!);
+  videoRecordQueue.shift();
   return newBlob;
 };
 
