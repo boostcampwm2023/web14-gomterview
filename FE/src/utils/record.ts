@@ -3,8 +3,7 @@ import React, { MutableRefObject } from 'react';
 import { toast } from '@foundation/Toast/toast';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { toBlobURL } from '@ffmpeg/util';
-
-const ffmpeg = new FFmpeg();
+import { isIOSUser } from '@/utils/userAgent';
 
 type StartRecordingProps = {
   media: MediaStream | null;
@@ -12,6 +11,37 @@ type StartRecordingProps = {
   mediaRecorderRef: MutableRefObject<MediaRecorder | null>;
   setRecordedBlobs: React.Dispatch<React.SetStateAction<Blob[]>>;
 };
+
+type VideoRecordQueue = {
+  recordTime: string;
+  toastId?: string;
+  questionNumber: number;
+}[];
+
+const ffmpeg = new FFmpeg();
+let index = 1;
+const videoRecordQueue: VideoRecordQueue = [];
+
+const ffmpegLogCallback = ({ message }: { message: string }) => {
+  const { toastId, recordTime, questionNumber } = videoRecordQueue[0];
+  if (toastId) {
+    const curProgressMessage = compareProgress(message, recordTime);
+    curProgressMessage &&
+      toast.update(toastId, `질문${questionNumber} : ${curProgressMessage}`);
+    return;
+  }
+
+  videoRecordQueue[0].toastId = toast.info(
+    '영상 인코딩을 시작합니다.\n새로고침 혹은 화면을 종료시 데이터가 소실될 수 있습니다.',
+    {
+      autoClose: false,
+      closeOnClick: false,
+      toggle: true,
+      position: 'bottomLeft',
+    }
+  );
+};
+ffmpeg.on('log', ffmpegLogCallback);
 
 export const startRecording = ({
   media,
@@ -68,28 +98,15 @@ export const localDownload = async (
   a.click();
   window.URL.revokeObjectURL(url);
   document.body.removeChild(a);
-  toast.success('성공적으로 컴퓨터에 저장되었습니다.');
 };
 
 export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
+  if (isIOSUser()) {
+    return blob;
+  }
+
   const baseURL = 'https://unpkg.com/@ffmpeg/core-mt@0.12.4/dist/umd';
-  toast.info(
-    '영상 인코딩을 시작합니다. 새로고침 혹은 화면을 종료시 데이터가 소실될 수 있습니다.'
-  );
-
-  let lastLogTime = 0;
-  const logInterval = 10000; // 10초 간격 (밀리초 단위)
-
-  ffmpeg.on('log', ({ message }) => {
-    const currentTime = Date.now();
-
-    if (currentTime - lastLogTime > logInterval) {
-      lastLogTime = currentTime;
-      const curProgressMessage = compareProgress(message, recordTime);
-      if (curProgressMessage)
-        toast.info(curProgressMessage, { autoClose: 5000 });
-    }
-  });
+  videoRecordQueue.push({ recordTime, questionNumber: index++ });
 
   if (!ffmpeg.loaded) {
     await ffmpeg.load({
@@ -109,12 +126,14 @@ export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
   const uint8Array = new Uint8Array(arrayBuffer);
   // ffmpeg의 파일 시스템에 파일 작성
   await ffmpeg.writeFile('input.webm', uint8Array);
-
   await ffmpeg.exec(['-i', 'input.webm', 'output.mp4']);
   const data = await ffmpeg.readFile('output.mp4');
   const newBlob = new Blob([data], { type: 'video/mp4' });
-  toast.info('성공적으로 Mp4 인코딩이 완료되었습니다😊');
-
+  toast.info('성공적으로 Mp4 인코딩이 완료되었습니다😊', {
+    position: 'bottomLeft',
+  });
+  toast.delete(videoRecordQueue[0].toastId!);
+  videoRecordQueue.shift();
   return newBlob;
 };
 
@@ -129,7 +148,7 @@ const compareProgress = (logMessage: string, recordTime: string) => {
   const targetTime = convertTimeToMinutes(recordTime);
 
   if (currentTime >= targetTime) {
-    return '녹화가 완료되었습니다.';
+    return null;
   } else {
     const progressPercent = ((currentTime / targetTime) * 100).toFixed(2);
     return `인코딩 ${progressPercent}% 진행중`;
