@@ -29,7 +29,7 @@ api.interceptors.response.use(
       }
       await api({
         method: 'patch',
-        url: API.REISSUE,
+        url: API.REISSUE(),
       });
     } else if (error.response?.status === 401) {
       if (error.response?.data.errorCode === 'T03') {
