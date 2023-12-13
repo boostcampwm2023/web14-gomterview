@@ -20,7 +20,6 @@ async function bootstrap() {
   setupSwagger(app);
   // 캐시 제어 미들웨어 등록
   expressApp.use((req, res, next) => {
-    res.setHeader('Cache-Control', 'no-cache');
     logger.info(req.url);
     next();
   });
