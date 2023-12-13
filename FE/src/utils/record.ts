@@ -29,7 +29,12 @@ const ffmpegLogCallback = ({ message }: { message: string }) => {
 
   videoRecordQueue[0].toastId = toast.info(
     '영상 인코딩을 시작합니다.\n새로고침 혹은 화면을 종료시 데이터가 소실될 수 있습니다.',
-    { autoClose: false, closeOnClick: false, toggle: true }
+    {
+      autoClose: false,
+      closeOnClick: false,
+      toggle: true,
+      position: 'bottomLeft',
+    }
   );
 };
 ffmpeg.on('log', ffmpegLogCallback);

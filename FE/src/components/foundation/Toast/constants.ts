@@ -1,1 +1,1 @@
-export const TOAST_DEFAULT_POSITION = 'bottomLeft';
+export const TOAST_DEFAULT_POSITION = 'bottomRight';
