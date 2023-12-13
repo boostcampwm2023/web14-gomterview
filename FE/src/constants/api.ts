@@ -7,7 +7,7 @@ export const API = {
   LOGIN: '/auth/login',
   LOGOUT: '/auth/logout',
   REISSUE: () => `/auth/reissue?v=${Date.now()}`,
-  MEMBER: `/member`,
+  MEMBER: () => `/member?v=${Date.now()}`,
   MEMBER_NAME: '/member/name',
   VIDEO: '/video',
   VIDEO_PRE_SIGNED: '/video/pre-signed',

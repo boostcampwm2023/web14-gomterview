@@ -3,7 +3,7 @@ import { http, HttpResponse } from 'msw';
 import memberData from '../../data/member.json';
 
 const memberHandlers = [
-  http.get(API.MEMBER, () => {
+  http.get(API.MEMBER(), () => {
     const isLogin =
       new URLSearchParams(window.location.search).get('login') || 'true';
     return HttpResponse.json(memberData, {
