@@ -48,16 +48,16 @@
 
 ## 곰터뷰는 이런걸 했어요
 ### 쿠키를 사용하며 발생한 여러 문제들
-- 쿠키의 same origin이 달라서 개발 환경에서 쿠키를 테스트할 수 없었던 이슈[^1]
+- 쿠키의 same origin이 달라서 개발 환경에서 쿠키를 테스트할 수 없었던 이슈 - [김수민](#김수민)
 - 리이슈 무한 개미지옥
 
 ### 크로스 브라우징을 대응하기 위한 비디오 인코딩
-- 인코딩 서버를 구축했으나 실패하고, 클라이언트 인코딩을 진행하게 된 이야기[^3][^3]
-- 미디어 데이터 저장 파이프라인 구축[^5]
+- 인코딩 서버를 구축했으나 실패하고, 클라이언트 인코딩을 진행하게 된 이야기 - [이성인](#이성인), [이장희](#이장희)
+- 미디어 데이터 저장 파이프라인 구축[조용헌](#조용헌)
 ### 서비스의 안전성을 위한 노력
-- custom 에러 코드를 작성후 sentry로 수집[^2]
-- FE 4개의 계층으로 에러 계층 분리해서 관리[^2]
-- BE 로깅?, docker 죽을때 되살아나게 (여기에 적어주세요)[^4]
+- custom 에러 코드를 작성후 sentry로 수집[윤해민](#윤해민)
+- FE 4개의 계층으로 에러 계층 분리해서 관리[윤해민](#윤해민)
+- BE 로깅?, docker 죽을때 되살아나게 (여기에 적어주세요)[이장희](#이장희)
 
 ### 팀 문화를 위한 노력
 - [코드 스타일을 맞추기 위한 노력](https://github.com/boostcampwm2023/web14-gomterview/pull/27)
@@ -88,7 +88,7 @@
 
 > 더 많은 내용들은 [팀 블로그](https://blog.gomterview.com)에 기록 되어있습니다.
 
-### [^1]: 김수민
+### 김수민
 
 <a href="https://github.com/milk717"><img src="https://avatars.githubusercontent.com/u/57657868?v=4" width="150"></a>
 
@@ -96,7 +96,7 @@
 - [Oauth2를 도입하신다고요? 꼭 쿠키 사용하세요 ^^ - 김수민](https://www.milk717.com/gomterview-2/)
 - [console.log처럼 쓸 수 있는 toast 만들기 - 김수민](https://www.milk717.com/gomterview-3/)
 
-### [^2]윤해민
+### 윤해민
 
 <a href="https://github.com/Yoon-Hae-Min"><img src="https://avatars.githubusercontent.com/u/49224104?v=4" width="150"></a>
 
@@ -104,21 +104,21 @@
 - [React에서 페이지 흐름을 “잘” 관리해 보자 - 윤해민](https://yoonhaemin.com/tag/experience/react-page-flow/)
 - [React에서 많은 Modal을 "잘" 관리해 보자 - 윤해민](https://yoonhaemin.com/tag/experience/react-modal/)
 
-### [^3]이성인
+### 이성인
 
 <a href="https://github.com/adultlee"><img src="https://avatars.githubusercontent.com/u/77886826?v=4" width="100"></a>
 
 - [우리는 함께 자랄 수 있을까? - 이성인](https://velog.io/@adultlee/%EC%9A%B0%EB%A6%AC%EB%8A%94-%ED%95%A8%EA%BB%98-%EC%9E%90%EB%9E%84-%EC%88%98-%EC%9E%88%EC%9D%84%EA%B9%8C)
 - [React + Media Streams API를 통한 Web Recorder 기능 구현 - 이성인](https://velog.io/@adultlee/Media-Streams-API%EC%9D%84-%ED%86%B5%ED%95%9C-Web-Recorder-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84)
 
-### [^4]이장희
+### 이장희
 
 <a href="https://github.com/JangAJang"><img src="https://avatars.githubusercontent.com/u/99702271?v=4" width="100"></a>
 
 - [[NestJS] 쿼리 헤치우기(1. 인덱스 넣기 & 쓸데없는 쿼리 줄이기) - 이장희](https://jangsarchive.tistory.com/147)
 - [Team NDD. 영상 인코딩~클라우드 업로딩까지의 험난한 여정(그리고 쓰지 못한 이유...)](https://jangsarchive.tistory.com/148)
 
-### [^5]조용헌
+### 조용헌
 
 <a href="https://github.com/quiet-honey"><img src="https://avatars.githubusercontent.com/u/99426344?v=4" width="100"></a>
 
