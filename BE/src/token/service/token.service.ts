@@ -47,7 +47,7 @@ export class TokenService {
       throw new NeedToLoginException();
     }
 
-    return this.updateToken(accessToken, refreshToken);
+    return await this.updateToken(accessToken, refreshToken);
   }
 
   async getPayload(singleToken: string) {
