@@ -64,7 +64,6 @@ const VideoSettingPage: React.FC<VideoSettingPageProps> = ({
       <div
         css={css`
           position: relative;
-          height: 100%;
         `}
       >
         <div
