@@ -33,8 +33,8 @@ export const saveToRedisWithExpireIn = async (
   key: string,
   value: string,
   ttl: number,
+  redis = getNewRedis(),
 ) => {
-  const redis = new Redis(process.env.REDIS_URL as string);
   try {
     await redis.set(key, value, 'EX', ttl);
   } catch (error) {

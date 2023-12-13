@@ -770,5 +770,6 @@ describe('WorkbookController 통합테스트', () => {
     await workbookRepository.query('delete from Workbook');
     await workbookRepository.query('delete from Member');
     await workbookRepository.query('delete from Category');
+    await workbookRepository.query('DELETE FROM sqlite_sequence'); // Auto Increment 초기화
   });
 });
