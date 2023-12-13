@@ -54,6 +54,7 @@
 ### 크로스 브라우징을 대응하기 위한 비디오 인코딩
 - 인코딩 서버를 구축했으나 실패하고, 클라이언트 인코딩을 진행하게 된 이야기 - [이성인](#이성인), [이장희](#이장희)
 - 미디어 데이터 저장 파이프라인 구축 - [조용헌](#조용헌)
+
 ### 서비스의 안전성을 위한 노력
 - custom 에러 코드를 작성후 sentry로 수집 - [윤해민](#윤해민)
 - FE 4개의 계층으로 에러 계층 분리해서 관리 - [윤해민](#윤해민)
@@ -63,7 +64,7 @@
 - [코드 스타일을 맞추기 위한 노력](https://github.com/boostcampwm2023/web14-gomterview/pull/27)
 - [꼼꼼한 코드리뷰 문화 형성](https://github.com/boostcampwm2023/web14-gomterview/pull/37)
 - [테스트와 효율적인 구조를 위한 적극적인 의견 교환](https://github.com/boostcampwm2023/web14-gomterview/pull/29)
-- 함께 자라기 위한 노력 (아래 우린 이렇게 함께 자라요로 링크 (스크롤 내려감))
+- [함께 자라기 위한 노력](#저흰-이렇게-함께-자라요)
 
 ## 곰터뷰는 이런 기술을 사용했어요
 ![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/22bc2b5c-bfab-4a9a-b711-e1718d985024)
