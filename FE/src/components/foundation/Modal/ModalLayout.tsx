@@ -26,8 +26,6 @@ export const ModalLayout: React.FC<ModalLayoutProps> = ({
   closeModal,
   ...args
 }) => {
-  document.body.style.overflow = isOpen ? 'hidden' : 'unset';
-
   return (
     <div
       css={css`
