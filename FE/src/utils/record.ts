@@ -67,7 +67,6 @@ export const startRecording = ({
     };
 
     mediaRecorderRef.current.start();
-    toast.success('녹화를 시작합니다');
   } catch (error) {
     toast.error('미디어 레코딩 중 오류가 발생했습니다.');
   }
@@ -78,7 +77,6 @@ export const stopRecording = (
 ) => {
   if (mediaRecorderRef.current) {
     mediaRecorderRef.current.stop();
-    toast.success('녹화를 종료합니다');
   }
 };
 
