@@ -7,10 +7,14 @@ import {
   NOT_FOUND,
   UNAUTHORIZED,
 } from '../constant/constant';
+import { LoggerService } from '../config/logger.config';
+
+const errorLogger = new LoggerService('ERROR');
 
 class HttpCustomException extends HttpException {
   constructor(message: string, errorCode: string, status: number) {
     super({ message: message, errorCode: errorCode }, status);
+    errorLogger.error(errorCode, super.stack);
   }
 }
 
