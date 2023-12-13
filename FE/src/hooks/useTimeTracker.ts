@@ -7,25 +7,33 @@ const useTimeTracker = () => {
   const [startTime, setStartTime] = useState<Dayjs | null>(null);
   const [endTime, setEndTime] = useState<Dayjs | null>(null);
   const [isTimeOver, setIsTimeOver] = useState(false);
+  const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null);
 
   const startTimer = () => {
     setStartTime(dayjs());
     setIsTimeOver(false);
+    const timer = setTimeout(() => {
+      setIsTimeOver(true);
+    }, TIME_OVER);
+    setTimerId(timer);
   };
 
   const stopTimer = () => {
     setEndTime(dayjs());
+    setIsTimeOver(false);
+    if (timerId) {
+      clearTimeout(timerId);
+      setTimerId(null);
+    }
   };
 
   useEffect(() => {
-    if (startTime) {
-      const timer = setTimeout(() => {
-        setIsTimeOver(true);
-      }, TIME_OVER);
-
-      return () => clearTimeout(timer);
-    }
-  }, [startTime]);
+    return () => {
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+    };
+  }, [timerId]);
 
   const calculateDuration = () => {
     if (!startTime || !endTime) {
