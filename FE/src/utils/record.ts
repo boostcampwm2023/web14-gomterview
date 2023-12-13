@@ -15,16 +15,19 @@ type StartRecordingProps = {
 type VideoRecordQueue = {
   recordTime: string;
   toastId?: string;
+  questionNumber: number;
 }[];
 
 const ffmpeg = new FFmpeg();
+let index = 1;
 const videoRecordQueue: VideoRecordQueue = [];
 
 const ffmpegLogCallback = ({ message }: { message: string }) => {
-  const { toastId, recordTime } = videoRecordQueue[0];
+  const { toastId, recordTime, questionNumber } = videoRecordQueue[0];
   if (toastId) {
     const curProgressMessage = compareProgress(message, recordTime);
-    curProgressMessage && toast.update(toastId, curProgressMessage);
+    curProgressMessage &&
+      toast.update(toastId, `질문${questionNumber} : ${curProgressMessage}`);
     return;
   }
 
@@ -103,7 +106,7 @@ export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
   }
 
   const baseURL = 'https://unpkg.com/@ffmpeg/core-mt@0.12.4/dist/umd';
-  videoRecordQueue.push({ recordTime });
+  videoRecordQueue.push({ recordTime, questionNumber: index++ });
 
   if (!ffmpeg.loaded) {
     await ffmpeg.load({
@@ -126,7 +129,9 @@ export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
   await ffmpeg.exec(['-i', 'input.webm', 'output.mp4']);
   const data = await ffmpeg.readFile('output.mp4');
   const newBlob = new Blob([data], { type: 'video/mp4' });
-  toast.info('성공적으로 Mp4 인코딩이 완료되었습니다😊');
+  toast.info('성공적으로 Mp4 인코딩이 완료되었습니다😊', {
+    position: 'bottomLeft',
+  });
   toast.delete(videoRecordQueue[0].toastId!);
   videoRecordQueue.shift();
   return newBlob;
