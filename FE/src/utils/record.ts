@@ -3,6 +3,7 @@ import React, { MutableRefObject } from 'react';
 import { toast } from '@foundation/Toast/toast';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { toBlobURL } from '@ffmpeg/util';
+import { isIOSUser } from '@/utils/userAgent';
 
 type StartRecordingProps = {
   media: MediaStream | null;
@@ -97,6 +98,10 @@ export const localDownload = async (
 };
 
 export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
+  if (isIOSUser()) {
+    return blob;
+  }
+
   const baseURL = 'https://unpkg.com/@ffmpeg/core-mt@0.12.4/dist/umd';
   videoRecordQueue.push({ recordTime });
 
