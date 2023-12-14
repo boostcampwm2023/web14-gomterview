@@ -11,8 +11,8 @@ export const getMedia = async (): Promise<MediaStream | null> => {
         echoCancellation: { exact: true },
       },
       video: {
-        width: 640, // 1280
-        height: 360, // 720
+        width: 640,
+        height: 360,
         frameRate: 30,
       },
     });

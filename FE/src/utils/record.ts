@@ -3,7 +3,7 @@ import React, { MutableRefObject } from 'react';
 import { toast } from '@foundation/Toast/toast';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { toBlobURL } from '@ffmpeg/util';
-import { isIOSUser } from '@/utils/userAgent';
+import { isAndroid } from '@/utils/userAgent';
 
 type StartRecordingProps = {
   media: MediaStream | null;
@@ -99,7 +99,11 @@ export const localDownload = async (
 };
 
 export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
-  if (isIOSUser()) {
+  if (blob.type === 'video/mp4') {
+    return blob;
+  }
+
+  if (isAndroid()) {
     return blob;
   }
 
@@ -128,7 +132,7 @@ export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
     '-i',
     'input.webm', // 입력 파일
     '-s',
-    '640x360', // 해상도 설정: 640x360
+    '640x360',
     '-r',
     '30', // 프레임 레이트 설정: 30fps
     'output.mp4', // 출력 파일
