@@ -8,7 +8,7 @@ export const API = {
   LOGOUT: '/auth/logout',
   REISSUE: () => `/auth/reissue?v=${Date.now()}`,
   MEMBER: () => `/member?v=${Date.now()}`,
-  MEMBER_NAME: '/member/name',
+  MEMBER_NAME: () => '/member/name?v=${Date.now()}',
   VIDEO: '/video',
   VIDEO_PRE_SIGNED: '/video/pre-signed',
   VIDEO_ALL: '/video/all',

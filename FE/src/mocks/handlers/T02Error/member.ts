@@ -6,7 +6,7 @@ const memberHandlers = [
   http.get(API.MEMBER(), () => {
     return HttpResponse.json(memberData, { status: 200 });
   }),
-  http.get(API.MEMBER_NAME, () => {
+  http.get(API.MEMBER_NAME(), () => {
     return HttpResponse.json(
       {
         message: '토큰이 만료되었습니다',

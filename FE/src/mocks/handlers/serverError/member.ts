@@ -11,7 +11,7 @@ const memberHandlers = [
       { status: 500 }
     );
   }),
-  http.get(API.MEMBER_NAME, () => {
+  http.get(API.MEMBER_NAME(), () => {
     return HttpResponse.json(
       {
         message: '',

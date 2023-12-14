@@ -12,6 +12,6 @@ export const getMemberInfo = async () => {
 export const getMemberName = async () => {
   return await getAPIResponseData<MemberNameResDto>({
     method: 'get',
-    url: API.MEMBER_NAME,
+    url: API.MEMBER_NAME(),
   });
 };

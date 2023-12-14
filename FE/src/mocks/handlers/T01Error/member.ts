@@ -11,7 +11,7 @@ const memberHandlers = [
       { status: 401 }
     );
   }),
-  http.get(API.MEMBER_NAME, () => {
+  http.get(API.MEMBER_NAME(), () => {
     return HttpResponse.json(
       {
         message: '유효하지 않은 토큰입니다',

@@ -10,7 +10,7 @@ const memberHandlers = [
       status: isLogin === 'true' ? 200 : 401,
     });
   }),
-  http.get(API.MEMBER_NAME, () => {
+  http.get(API.MEMBER_NAME(), () => {
     return HttpResponse.json({
       nickname: '토스에서 모셔간 이성인',
     });
