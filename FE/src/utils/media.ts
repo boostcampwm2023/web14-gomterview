@@ -13,6 +13,7 @@ export const getMedia = async (): Promise<MediaStream | null> => {
       video: {
         width: 640, // 1280
         height: 360, // 720
+        frameRate: 30,
       },
     });
 
