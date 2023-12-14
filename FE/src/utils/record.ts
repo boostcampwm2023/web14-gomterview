@@ -23,6 +23,7 @@ let index = 1;
 const videoRecordQueue: VideoRecordQueue = [];
 
 const ffmpegLogCallback = ({ message }: { message: string }) => {
+  console.log(message);
   const { toastId, recordTime, questionNumber } = videoRecordQueue[0];
   if (toastId) {
     const curProgressMessage = compareProgress(message, recordTime);
@@ -124,7 +125,19 @@ export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
   const uint8Array = new Uint8Array(arrayBuffer);
   // ffmpeg의 파일 시스템에 파일 작성
   await ffmpeg.writeFile('input.webm', uint8Array);
-  await ffmpeg.exec(['-i', 'input.webm', 'output.mp4']);
+  await ffmpeg.exec([
+    '-i',
+    'input.webm', // 입력 파일
+    '-s',
+    '640x360', // 해상도 설정: 640x360
+    '-r',
+    '30', // 프레임 레이트 설정: 30fps
+    '-c:v',
+    'libx264', // 비디오 코덱 설정: libx264
+    '-c:a',
+    'copy', // 오디오 코덱 설정: 원본 복사
+    'output.mp4', // 출력 파일
+  ]);
   const data = await ffmpeg.readFile('output.mp4');
   const newBlob = new Blob([data], { type: 'video/mp4' });
   toast.info('성공적으로 Mp4 인코딩이 완료되었습니다😊', {

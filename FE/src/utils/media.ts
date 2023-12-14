@@ -25,8 +25,8 @@ export const getMedia = async (): Promise<MediaStream | null> => {
 
 export const getSupportedMimeTypes = () => {
   const types = [
-    'video/webm; codecs=vp8',
-    'video/webm; codecs=vp9',
+    // 'video/webm; codecs=vp8',
+    // 'video/webm; codecs=vp9',
     'video/webm; codecs=h264',
     'video/mp4; codecs=h264',
   ];
