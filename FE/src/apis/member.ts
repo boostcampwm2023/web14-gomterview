@@ -5,7 +5,7 @@ import { API } from '@constants/api';
 export const getMemberInfo = async () => {
   return await getAPIResponseData<MemberItemResDto>({
     method: 'get',
-    url: API.MEMBER,
+    url: API.MEMBER(),
   });
 };
 

@@ -15,7 +15,6 @@ const redirectToGoogleLogin = async () => {
   }
 
   window.location.href = `${BASE_URL}${API.LOGIN}`;
-  toast.success('로그인 되었습니다. 환영합니다🤗');
 };
 
 export default redirectToGoogleLogin;

@@ -6,8 +6,8 @@ type Hash = string;
 export const API = {
   LOGIN: '/auth/login',
   LOGOUT: '/auth/logout',
-  REISSUE: '/auth/reissue',
-  MEMBER: '/member',
+  REISSUE: () => `/auth/reissue?v=${Date.now()}`,
+  MEMBER: () => `/member?v=${Date.now()}`,
   MEMBER_NAME: '/member/name',
   VIDEO: '/video',
   VIDEO_PRE_SIGNED: '/video/pre-signed',

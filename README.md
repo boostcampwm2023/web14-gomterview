@@ -46,35 +46,34 @@
 
 ![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/a5047baf-e0bd-44db-88ae-e2c28b9e917f)
 
+## 곰터뷰는 이런걸 했어요
+### 쿠키를 사용하며 발생한 여러 문제들
+- 쿠키의 same origin이 달라서 개발 환경에서 쿠키를 테스트할 수 없었던 이슈 - [김수민](#김수민)
+- 리이슈 무한 개미지옥
+
+### 크로스 브라우징을 대응하기 위한 비디오 인코딩
+- 인코딩 서버를 구축했으나 실패하고, 클라이언트 인코딩을 진행하게 된 이야기 - [이성인](#이성인), [이장희](#이장희)
+- 미디어 데이터 저장 파이프라인 구축 - [조용헌](#조용헌)
+
+### 서비스의 안전성을 위한 노력
+- custom 에러 코드를 작성후 sentry로 수집 - [윤해민](#윤해민)
+- FE 4개의 계층으로 에러 계층 분리해서 관리 - [윤해민](#윤해민)
+- BE 로깅, docker 죽을때 되살아나게 (여기에 적어주세요) - [이장희](#이장희)
+
+### 팀 문화를 위한 노력
+- [코드 스타일을 맞추기 위한 노력](https://github.com/boostcampwm2023/web14-gomterview/pull/27)
+- [꼼꼼한 코드리뷰 문화 형성](https://github.com/boostcampwm2023/web14-gomterview/pull/37)
+- [테스트와 효율적인 구조를 위한 적극적인 의견 교환](https://github.com/boostcampwm2023/web14-gomterview/pull/29)
+- [함께 자라기 위한 노력](#저흰-이렇게-함께-자라요)
+
 ## 곰터뷰는 이런 기술을 사용했어요
-
-### Frontend
-
-![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/f3b39da5-f88c-41b0-9e88-a88feaa1d417)
-
-### Backend
-
-![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/3e0fdcb9-5537-4e75-852c-7afb98893a8d)
+![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/22bc2b5c-bfab-4a9a-b711-e1718d985024)
 
 ## 곰터뷰의 서비스 요청 흐름도
 
 ![image](https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/ff5719a8-2727-429d-9c34-7be2099a87d6)
 
-## 곰터뷰의 발전 과정은 아래와 같아요!
 
-> 사진을 클릭하시면 해당 youtube 영상으로 이동합니다.
-
-### 1.0.0 pre-alpha 버전 소개 영상
-
-<a href="https://youtu.be/LtpJC6bO-2c">
-<img width="999" alt="image" src="https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/491399ac-d50a-4022-880b-a5a8a6d7a68b">
-</a>
-
-> [1.0.0 Release](https://github.com/boostcampwm2023/web14-gomterview/releases/tag/v1.0.0)
-
-### 1.2.1
-
-> Comming Soon!
 
 ## 곰터뷰를 자세히 알고 싶다면
 
@@ -126,6 +125,22 @@
 
 - [곰터뷰는 왜 IDrive e2를 사용하였을까? - 조용헌](https://lildev.tistory.com/178)
 - [IDrive e2를 사용한 비디오 저장/조회 - 조용헌](https://lildev.tistory.com/179)
+
+## 곰터뷰의 발전 과정은 아래와 같아요!
+
+> 사진을 클릭하시면 해당 youtube 영상으로 이동합니다.
+
+### 1.0.0 pre-alpha 버전 소개 영상
+
+<a href="https://youtu.be/LtpJC6bO-2c">
+<img width="999" alt="image" src="https://github.com/boostcampwm2023/web14-gomterview/assets/57657868/491399ac-d50a-4022-880b-a5a8a6d7a68b">
+</a>
+
+> [1.0.0 Release](https://github.com/boostcampwm2023/web14-gomterview/releases/tag/v1.0.0)
+
+### 1.2.1
+
+> Comming Soon!
 
 ## 저흰 이렇게 함께 자라요
 

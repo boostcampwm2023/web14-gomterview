@@ -47,7 +47,7 @@ const APIErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
       case 'T02':
         axios({
           method: 'patch',
-          url: API.REISSUE,
+          url: API.REISSUE(),
           withCredentials: true,
         })
           .then(() => {
