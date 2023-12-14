@@ -10,12 +10,14 @@ import {
 } from '../exception/token.exception';
 import {
   ACCESS_TOKEN_EXPIRES_IN,
+  HOUR_IN_SECONDS,
   REFRESH_TOKEN_EXPIRES_IN,
+  WEEK_IN_SECONDS,
 } from 'src/constant/constant';
 import {
   deleteFromRedis,
   getValueFromRedis,
-  saveToRedis,
+  saveToRedisWithExpireIn,
 } from 'src/util/redis.util';
 import { isEmpty } from 'class-validator';
 
@@ -26,8 +28,8 @@ export class TokenService {
     readonly jwtService: JwtService,
   ) {}
 
-  async assignToken(memberId: number) {
-    return await this.createToken(memberId);
+  async assignToken(memberId: number, email: string) {
+    return await this.createToken(memberId, email);
   }
 
   async removeToken(accessToken: string) {
@@ -74,14 +76,14 @@ export class TokenService {
   }
 
   async getDevToken() {
-    return this.createToken(1); // 1번은 developndd 이메일로 가입한 개발자용 회원임
+    return this.createToken(1, 'developndd@gmail.com'); // 1번은 developndd 이메일로 가입한 개발자용 회원임
   }
 
   private async updateToken(accessToken: string, refreshToken: string) {
     const payload = await this.validateRefreshToken(refreshToken);
     const newToken = await this.signToken(payload.id, ACCESS_TOKEN_EXPIRES_IN);
     await deleteFromRedis(accessToken); // 기존 토큰 삭제
-    await saveToRedis(newToken, refreshToken); // 새로운 토큰 저장
+    await saveToRedisWithExpireIn(newToken, refreshToken, WEEK_IN_SECONDS); // 새로운 토큰 저장
     return newToken;
   }
 
@@ -104,13 +106,14 @@ export class TokenService {
     }
   }
 
-  private async createToken(memberId: number) {
+  private async createToken(memberId: number, email: string) {
     const accessToken = await this.signToken(memberId, ACCESS_TOKEN_EXPIRES_IN);
     const refreshToken = await this.signToken(
       memberId,
       REFRESH_TOKEN_EXPIRES_IN,
     );
-    await saveToRedis(accessToken, refreshToken);
+    await saveToRedisWithExpireIn(email, accessToken, HOUR_IN_SECONDS);
+    await saveToRedisWithExpireIn(accessToken, refreshToken, WEEK_IN_SECONDS);
     return accessToken;
   }
 

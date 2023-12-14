@@ -19,6 +19,7 @@ import {
   memberFixturesOAuthRequest,
   mockReqWithMemberFixture,
   oauthRequestFixture,
+  otherMemberFixture,
 } from '../../member/fixture/member.fixture';
 import * as request from 'supertest';
 import { Question } from '../entity/question';
@@ -26,7 +27,10 @@ import { CreateQuestionRequest } from '../dto/createQuestionRequest';
 import * as cookieParser from 'cookie-parser';
 import { QuestionRepository } from '../repository/question.repository';
 import { WorkbookRepository } from '../../workbook/repository/workbook.repository';
-import { workbookFixture } from '../../workbook/fixture/workbook.fixture';
+import {
+  otherWorkbookFixture,
+  workbookFixture,
+} from '../../workbook/fixture/workbook.fixture';
 import { WorkbookModule } from '../../workbook/workbook.module';
 import { Workbook } from '../../workbook/entity/workbook';
 import { MemberRepository } from '../../member/repository/member.repository';
@@ -231,18 +235,19 @@ describe('QuestionController 통합테스트', () => {
 
     it('question의 카테고리를 조회했을 때 카테고리가 Member의 카테고리가 아니라면 권한 없음을 발생시킨다.', async () => {
       //given
-      await memberRepository.save(memberFixture);
-      const workbook = await workbookRepository.save(workbookFixture);
+      const token = await authService.login(memberFixturesOAuthRequest);
+      await memberRepository.save(otherMemberFixture);
+      const workbook = await workbookRepository.save(otherWorkbookFixture);
       const question = await questionRepository.save(
         Question.of(workbook, null, 'tester'),
       );
 
       //when & then
-      const token = await authService.login(oauthRequestFixture);
       const agent = request.agent(app.getHttpServer());
       await agent
         .delete(`/api/question/${question.id}`)
         .set('Cookie', [`accessToken=${token}`])
+        .expect((error) => console.log(error))
         .expect(403);
     });
   });
@@ -257,9 +262,9 @@ describe('QuestionController 통합테스트', () => {
         Question.of(workbook, null, 'tester'),
       );
 
-      const token = await authService.login(oauthRequestFixture);
+      const token = await authService.login(memberFixturesOAuthRequest);
       const requester = await memberRepository.findByEmail(
-        oauthRequestFixture.email,
+        memberFixturesOAuthRequest.email,
       );
       const copyWorkbook = await workbookRepository.save(
         Workbook.of('copy', 'copy', category, requester, true),
@@ -376,5 +381,6 @@ describe('QuestionController 통합테스트', () => {
     await workbookRepository.query('delete from Question');
     await workbookRepository.query('delete from Workbook');
     await workbookRepository.query('delete from Member');
+    await workbookRepository.query('DELETE FROM sqlite_sequence'); // Auto Increment 초기화
   });
 });
