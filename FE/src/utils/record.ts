@@ -124,7 +124,7 @@ export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
   const uint8Array = new Uint8Array(arrayBuffer);
   // ffmpeg의 파일 시스템에 파일 작성
   await ffmpeg.writeFile('input.webm', uint8Array);
-  await ffmpeg.exec(['-i', 'input.webm', '-c:v', 'copy', 'output.mp4']);
+  await ffmpeg.exec(['-i', 'input.webm', 'output.mp4']);
   const data = await ffmpeg.readFile('output.mp4');
   const newBlob = new Blob([data], { type: 'video/mp4' });
   toast.info('성공적으로 Mp4 인코딩이 완료되었습니다😊', {
