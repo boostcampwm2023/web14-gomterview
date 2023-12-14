@@ -3,7 +3,7 @@ import React, { MutableRefObject } from 'react';
 import { toast } from '@foundation/Toast/toast';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { toBlobURL } from '@ffmpeg/util';
-import { isAndroid } from '@/utils/userAgent';
+import { isAndroid, isIOSUser } from '@/utils/userAgent';
 
 type StartRecordingProps = {
   media: MediaStream | null;
@@ -99,11 +99,7 @@ export const localDownload = async (
 };
 
 export const EncodingWebmToMp4 = async (blob: Blob, recordTime: string) => {
-  if (blob.type === 'video/mp4') {
-    return blob;
-  }
-
-  if (isAndroid()) {
+  if (isIOSUser() || isAndroid()) {
     return blob;
   }
 
