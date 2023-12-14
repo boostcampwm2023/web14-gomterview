@@ -2,6 +2,8 @@ import { ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { TokenService } from '../service/token.service';
 import { getTokenValue } from 'src/util/token.util';
+import { isEmpty } from 'class-validator';
+import { InvalidTokenException } from '../exception/token.exception';
 
 @Injectable()
 export class TokenHardGuard extends AuthGuard('jwt') {
@@ -13,6 +15,10 @@ export class TokenHardGuard extends AuthGuard('jwt') {
     const request = context.switchToHttp().getRequest();
     const token = getTokenValue(request);
 
+    if (isEmpty(token)) {
+      throw new InvalidTokenException();
+    }
+
     try {
       request.user = await this.validateToken(token);
       return true;
@@ -22,6 +28,6 @@ export class TokenHardGuard extends AuthGuard('jwt') {
   }
 
   private async validateToken(token: string) {
-    return this.tokenService.findMemberByToken(token, true);
+    return await this.tokenService.findMemberByToken(token, true);
   }
 }

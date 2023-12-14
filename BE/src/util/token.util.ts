@@ -8,11 +8,7 @@ export const getTokenValue = (request: Request) => {
     return request.cookies['accessToken'].split(' ').pop();
   }
 
-  if (request.get('cookie')) {
-    return request.get('cookie').split('Bearer ').pop();
-  }
-
-  return '';
+  return null;
 };
 
 export const validateManipulatedToken = (member: Member | undefined) => {
