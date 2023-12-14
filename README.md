@@ -58,7 +58,7 @@
 ### 서비스의 안전성을 위한 노력
 - custom 에러 코드를 작성후 sentry로 수집 - [윤해민](#윤해민)
 - FE 4개의 계층으로 에러 계층 분리해서 관리 - [윤해민](#윤해민)
-- BE 로깅, docker 죽을때 되살아나게 (여기에 적어주세요) - [이장희](#이장희)
+- BE 로깅, docker 죽을때 되살아나게 - [이장희](#이장희)
 
 ### 팀 문화를 위한 노력
 - [코드 스타일을 맞추기 위한 노력](https://github.com/boostcampwm2023/web14-gomterview/pull/27)
@@ -117,7 +117,10 @@
 <a href="https://github.com/JangAJang"><img src="https://avatars.githubusercontent.com/u/99702271?v=4" width="100"></a>
 
 - [[NestJS] 쿼리 헤치우기(1. 인덱스 넣기 & 쓸데없는 쿼리 줄이기) - 이장희](https://jangsarchive.tistory.com/147)
+- [[NestJS] 쿼리 헤치우기(2. 트랜잭션화 하기, 그리고 이걸로 테스트하기 === 왜이래이거;;) - 이장희](https://jangsarchive.tistory.com/151)
 - [Team NDD. 영상 인코딩~클라우드 업로딩까지의 험난한 여정(그리고 쓰지 못한 이유...)](https://jangsarchive.tistory.com/148)
+- [[Infra] 난 도커만 하면 다 괜찮을 줄 알았지...(어. 안돼. 그건 사실이야.) - 이장희](https://jangsarchive.tistory.com/149)
+- [[NestJS] 헬스체크?? 라잇웨잇베이베!!!(Cron, HealthCheck로 주기적으로 서버 확인하기, 로깅하기)](https://jangsarchive.tistory.com/150)
 
 ### 조용헌
 
