@@ -1,3 +1,17 @@
+## 변경된 레포지토리
+frontend: https://github.com/the-NDD/Gomterview-FE
+
+
+backend: https://github.com/the-NDD/Gomterview-BE
+
+
+<br/>
+
+<br/>
+
+<br/>
+
+
 <div align="center">
 
 ## [곰터뷰 바로가기](https://www.gomterview.com)
