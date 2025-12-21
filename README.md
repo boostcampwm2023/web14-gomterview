@@ -107,9 +107,9 @@ backend: https://github.com/the-NDD/Gomterview-BE
 
 <a href="https://github.com/milk717"><img src="https://avatars.githubusercontent.com/u/57657868?v=4" width="150"></a>
 
-- [[NDD] 곰터뷰는 왜 Cloudflare를 사용해서 배포하게 되었을까 - 김수민](https://www.milk717.com/gomterview-1/)
-- [Oauth2를 도입하신다고요? 꼭 쿠키 사용하세요 ^^ - 김수민](https://www.milk717.com/gomterview-2/)
-- [console.log처럼 쓸 수 있는 toast 만들기 - 김수민](https://www.milk717.com/gomterview-3/)
+- [[NDD] 곰터뷰는 왜 Cloudflare를 사용해서 배포하게 되었을까 - 김수민](https://www.milk717.me/gomterview-1/)
+- [Oauth2를 도입하신다고요? 꼭 쿠키 사용하세요 ^^ - 김수민](https://www.milk717.me/gomterview-2/)
+- [console.log처럼 쓸 수 있는 toast 만들기 - 김수민](https://www.milk717.me/gomterview-3/)
 
 ### 윤해민
 
